@@ -55,3 +55,5 @@ include(":tasks-core")
 include(":tasks-app-shared")
 include(":tasks-app-desktop")
 include(":tasks-app-android")
+
+include(":google:keep")
