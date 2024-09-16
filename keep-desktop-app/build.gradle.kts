@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
+
 /*
  * Copyright (c) 2024 Olivier Patry
  *
@@ -23,7 +25,13 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.jetbrains.kotlin.compose.compiler)
+    alias(libs.plugins.jetbrains.compose)
     application
+}
+
+composeCompiler {
+    featureFlags.add(ComposeFeatureFlag.StrongSkipping)
 }
 
 kotlin {
@@ -38,6 +46,12 @@ kotlin {
             implementation(libs.bundles.ktor.server)
             implementation(project(":google:oauth"))
             implementation(project(":google:tasks"))
+
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(compose.components.resources)
         }
 
         jvmMain.dependencies {
@@ -47,6 +61,8 @@ kotlin {
 //                // java.lang.IllegalStateException: Module with the Main dispatcher is missing. Add dependency providing the Main dispatcher, e.g. 'kotlinx-coroutines-android' and ensure it has the same version as 'kotlinx-coroutines-core'
 //                // see also https://github.com/JetBrains/compose-jb/releases/tag/v1.1.1
 //            }
+
+            implementation(compose.desktop.currentOs)
         }
     }
 }
