@@ -20,38 +20,31 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
+package net.opatry.google.servicediscovery
+
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
+import net.opatry.google.servicediscovery.entity.DiscoveryDirectoryList
+
+class GoogleServiceDiscovery(
+    private val httpClient: HttpClient
+) {
+    suspend fun list(name: String? = null, preferred: Boolean = false): DiscoveryDirectoryList {
+        val response = httpClient.get("https://discovery.googleapis.com/discovery/v1/apis") {
+            if (name != null) {
+                parameter("name", name)
             }
+            parameter("preferred", preferred.toString())
         }
-        mavenCentral()
-        gradlePluginPortal()
+        if (response.status.isSuccess()) {
+            return response.body()
+        } else {
+            throw ClientRequestException(response, response.bodyAsText())
+        }
     }
 }
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
-
-rootProject.name = "Taskfolio"
-
-include(":google:oauth")
-include(":google:service-discovery")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")
-include(":tasks-app-desktop")
-include(":tasks-app-android")
