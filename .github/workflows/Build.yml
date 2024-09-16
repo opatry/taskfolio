@@ -1,0 +1,38 @@
+name: Build & Test
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+        contents: read
+        checks: write
+        id-token: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'adopt'
+
+    - name: Build
+      run: ./gradlew --no-daemon packageDistributionForCurrentOS
+
+    - name: Test
+      run: ./gradlew --no-daemon test
+
+    - name: Publish Test Reports
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
