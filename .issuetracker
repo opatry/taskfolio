@@ -1,0 +1,7 @@
+# Integration with Issue Tracker
+#
+# (note that '\' need to be escaped).
+
+[issuetracker "opatry/tasks-app GitHub Rule"]
+  regex = "#(\\d+)"
+  url = "https://github.com/opatry/tasks-app/issues/$1"
