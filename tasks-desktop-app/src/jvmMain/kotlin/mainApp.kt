@@ -36,6 +36,9 @@ import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.model.TaskList
 import net.opatry.tasks.app.TasksApp
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.onboarding_screen_authorize_cta
+import org.jetbrains.compose.resources.stringResource
 
 
 fun main() = application {
@@ -51,15 +54,17 @@ fun main() = application {
                         val httpClient = buildGoogleHttpClient(
                             "https://tasks.googleapis.com",
                             "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json",
-                            listOf(GoogleAuthenticator.Permission.Tasks)
-                        ,
-                        uriHandler::openUri)
+                            listOf(
+                                GoogleAuthenticator.Permission.Tasks
+                            ),
+                            uriHandler::openUri
+                        )
                         val api = TaskListsApi(httpClient)
                         taskLists = api.listAll()
                     }
                 }
             ) {
-                Text("Authenticate")
+                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
             }
             TasksApp(taskLists)
         }
