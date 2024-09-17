@@ -4,5 +4,9 @@
       <element module="lucide-icons" copyright="Lucide License" />
       <element module="Project Files" copyright="opatry" />
     </module2copyright>
+    <LanguageOptions name="XML">
+      <option name="fileTypeOverride" value="3" />
+      <option name="prefixLines" value="false" />
+    </LanguageOptions>
   </settings>
 </component>
