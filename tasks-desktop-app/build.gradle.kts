@@ -52,6 +52,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(compose.components.resources)
+            implementation(compose.material3AdaptiveNavigationSuite)
         }
 
         jvmMain.dependencies {
