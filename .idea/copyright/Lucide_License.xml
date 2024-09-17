@@ -1,0 +1,8 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="allowReplaceRegexp" value="Lucide" />
+    <option name="keyword" value="ISC License" />
+    <option name="notice" value="Lucide License&#10;ISC License&#10;&#10;Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT).&#10;All other copyright (c) for Lucide are held by Lucide Contributors 2022.&#10;&#10;Permission to use, copy, modify, and/or distribute this software for any purpose with or without&#10;fee is hereby granted, provided that the above copyright notice and this permission notice&#10;appear in all copies.&#10;&#10;THE SOFTWARE IS PROVIDED &quot;AS IS&quot; AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH&#10;REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY&#10;AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,&#10;INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING&#10;FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,&#10;NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE&#10;USE OR PERFORMANCE OF THIS SOFTWARE." />
+    <option name="myName" value="Lucide License" />
+  </copyright>
+</component>
