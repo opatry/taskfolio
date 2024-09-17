@@ -17,4 +17,5 @@ rootProject.name = "google-tasks-kmp"
 
 include(":google:oauth")
 include(":google:tasks")
-include(":keep-desktop-app")
+include(":lucide-icons")
+include(":tasks-desktop-app")

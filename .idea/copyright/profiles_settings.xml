@@ -1,3 +1,8 @@
 <component name="CopyrightManager">
-  <settings default="opatry" />
+  <settings default="opatry">
+    <module2copyright>
+      <element module="lucide-icons" copyright="Lucide License" />
+      <element module="Project Files" copyright="opatry" />
+    </module2copyright>
+  </settings>
 </component>

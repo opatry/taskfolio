@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="lucide-icons" pattern="file[google-tasks-kmp.lucide-icons*]:*//*" />
+</component>
