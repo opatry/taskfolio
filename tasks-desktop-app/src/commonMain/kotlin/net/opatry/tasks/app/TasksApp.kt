@@ -38,18 +38,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import net.opatry.google.tasks.model.TaskList
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.app_name
+import net.opatry.tasks.resources.navigation_search
+import net.opatry.tasks.resources.navigation_settings
+import net.opatry.tasks.resources.navigation_tasks
+import net.opatry.tasks.resources.search_screen_tbd
+import net.opatry.tasks.resources.settings_screen_tbd
+import net.opatry.tasks.resources.task_lists_screen_empty_state_title
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import ListTodo as LucideListTodo
 import Search as LucideSearch
 import Settings as LucideSettings
 
 enum class Destination(
-    val label: String,
+    val labelRes: StringResource,
     val icon: ImageVector,
     val contentDescription: String? = null,
 ) {
-    Tasks("Account", LucideListTodo),
-    Search("Search", LucideSearch),
-    Settings("Settings", LucideSettings),
+    Tasks(Res.string.navigation_tasks, LucideListTodo),
+    Search(Res.string.navigation_search, LucideSearch),
+    Settings(Res.string.navigation_settings, LucideSettings),
 }
 
 @Composable
@@ -57,7 +67,7 @@ fun TasksApp(taskLists: List<TaskList>) {
     Scaffold(
         topBar = {
             TopAppBar(title = {
-                Text("Tasks")
+                Text(stringResource(Res.string.app_name))
             })
         },
     ) { innerPadding ->
@@ -70,7 +80,7 @@ fun TasksApp(taskLists: List<TaskList>) {
                 item(
                     selected = selectedItem.value == it,
                     onClick = { selectedItem.value = it },
-                    label = { Text(it.label) },
+                    label = { Text(stringResource(it.labelRes)) },
                     icon = {
                         Icon(
                             imageVector = it.icon,
@@ -97,7 +107,7 @@ fun TasksApp(taskLists: List<TaskList>) {
 @Composable
 fun TasksScreen(taskLists: List<TaskList>) {
     if (taskLists.isEmpty()) {
-        Text("No task list")
+        Text(stringResource(Res.string.task_lists_screen_empty_state_title))
     } else {
         LazyColumn {
             item(taskLists) {
@@ -111,10 +121,10 @@ fun TasksScreen(taskLists: List<TaskList>) {
 
 @Composable
 fun SearchScreen() {
-    Text("Search")
+    Text(stringResource(Res.string.search_screen_tbd))
 }
 
 @Composable
 fun SettingsScreen() {
-    Text("Settings")
+    Text(stringResource(Res.string.settings_screen_tbd))
 }
