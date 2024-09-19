@@ -75,7 +75,13 @@ class TaskListsViewModel(
         // cold flow?
         viewModelScope.launch {
             // TODO flow?
-            taskLists.value = taskRepository.getTaskLists()
+            taskLists.value = try {
+                taskRepository.getTaskLists()
+            } catch (e: Exception) {
+                println("Error fetching task lists: $e")
+                // TODO error handling
+                emptyList()
+            }
         }
     }
 
