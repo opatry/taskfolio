@@ -20,38 +20,23 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.google.people.model
 
-rootProject.name = "Taskfolio"
 
-include(":google:oauth")
-include(":google:tasks")
-include(":google:people")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")
-include(":tasks-app-desktop")
-include(":tasks-app-android")
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class FieldMetadata(
+    @SerialName("primary")
+    val isPrimary: Boolean = false,
+    @SerialName("sourcePrimary")
+    val isSourcePrimary: Boolean = false,
+    @SerialName("verified")
+    val isVerified: Boolean = false,
+    @SerialName("source")
+    val source: Source = Source()
+) {
+    @Serializable
+    class Source
+}

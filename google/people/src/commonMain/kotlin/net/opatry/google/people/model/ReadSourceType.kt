@@ -20,38 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.google.people.model
 
-rootProject.name = "Taskfolio"
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-include(":google:oauth")
-include(":google:tasks")
-include(":google:people")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")
-include(":tasks-app-desktop")
-include(":tasks-app-android")
+@Serializable
+enum class ReadSourceType {
+    @SerialName("READ_SOURCE_TYPE_UNSPECIFIED")
+    Unspecified,
+
+    @SerialName("READ_SOURCE_TYPE_PROFILE")
+    Profile,
+
+    @SerialName("READ_SOURCE_TYPE_CONTACT")
+    Contact,
+
+    @SerialName("READ_SOURCE_TYPE_DOMAIN_CONTACT")
+    DomainContact,
+
+    @SerialName("READ_SOURCE_TYPE_OTHER_CONTACT")
+    OtherContact,
+}
