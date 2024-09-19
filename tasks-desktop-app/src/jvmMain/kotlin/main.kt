@@ -24,6 +24,7 @@ import kotlinx.coroutines.runBlocking
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
+import net.opatry.google.tasks.TasksScopes
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
 import kotlin.system.exitProcess
@@ -33,7 +34,7 @@ fun main() {
         val tasksHttpClient = buildGoogleHttpClient(
             "https://tasks.googleapis.com",
             "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json",
-            listOf(GoogleAuthenticator.Permission.Tasks)
+            listOf(GoogleAuthenticator.Permission(TasksScopes.Tasks))
         ) {
             println("Please open the following URL in your browser to authenticate:")
             println(it)

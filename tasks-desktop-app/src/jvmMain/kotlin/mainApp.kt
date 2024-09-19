@@ -31,42 +31,53 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.launch
 import net.opatry.google.auth.GoogleAuthenticator
-import net.opatry.google.tasks.TaskListsApi
-import net.opatry.google.tasks.model.TaskList
-import net.opatry.tasks.app.TasksApp
+import net.opatry.google.tasks.TasksScopes
+import net.opatry.tasks.app.di.tasksModule
+import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.onboarding_screen_authorize_cta
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.context.startKoin
 
+fun main() {
+    startKoin {
+        modules(tasksModule)
+    }
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        val uriHandler = LocalUriHandler.current
-        val coroutineScope = rememberCoroutineScope()
-        var taskLists by remember { mutableStateOf(emptyList<TaskList>()) }
+    application {
+        Window(onCloseRequest = ::exitApplication) {
+            val viewModel = koinViewModel<TaskListsViewModel>()
 
-        Column {
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        val httpClient = buildGoogleHttpClient(
-                            "https://tasks.googleapis.com",
-                            "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json",
-                            listOf(
-                                GoogleAuthenticator.Permission.Tasks
-                            ),
-                            uriHandler::openUri
-                        )
-                        val api = TaskListsApi(httpClient)
-                        taskLists = api.listAll()
+            val uriHandler = LocalUriHandler.current
+            val coroutineScope = rememberCoroutineScope()
+
+            var httpClient by remember { mutableStateOf<HttpClient?>(null) }
+
+            Column {
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            httpClient = buildGoogleHttpClient(
+                                "https://tasks.googleapis.com",
+                                "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json",
+                                listOf(
+                                    GoogleAuthenticator.Permission.Profile,
+                                    GoogleAuthenticator.Permission(TasksScopes.Tasks),
+                                ),
+                                uriHandler::openUri
+                            )
+                        }
                     }
+                ) {
+                    Text(stringResource(Res.string.onboarding_screen_authorize_cta))
                 }
-            ) {
-                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+                TasksApp(viewModel)
             }
-            TasksApp(taskLists)
         }
     }
 }
