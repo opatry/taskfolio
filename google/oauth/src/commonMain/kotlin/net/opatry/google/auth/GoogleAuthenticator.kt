@@ -45,6 +45,7 @@ import io.ktor.server.application.call
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.channels.awaitClose
@@ -192,6 +193,15 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
                 val url = Url(config.redirectUrl)
                 val server = embeddedServer(Netty, port = url.port, host = url.host) {
                     routing {
+                        get("signed-in") {
+                            val status = HttpStatusCode.OK
+                            call.respond(status, "$status: Authorization accepted.")
+                        }
+                        get("error") {
+                            val errorMessage = call.request.queryParameters["message"] ?: "Unknown error"
+                            val status = HttpStatusCode.BadRequest
+                            call.respond(status, "$status: $errorMessage")
+                        }
                         get(url.fullPath.takeIf(String::isNotEmpty) ?: "/") {
                             fun Parameters.require(key: String): String =
                                 requireNotNull(get(key)) { "Expected '$key' query parameter not available." }
@@ -204,13 +214,12 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
                                 val state = queryParams.require("state")
                                 require(uuid == UUID.fromString(state)) { "Mismatch between expected & provided state ($state)." }
                                 val authCode = queryParams.require("code")
-                                val status = HttpStatusCode.OK
-                                call.respond(status, "$status: Authorization accepted.")
+                                // redirect to another endpoint to hide the code from the user as quickly as possible
+                                call.respondRedirect("${url}/signed-in")
                                 send(authCode)
                                 close(null)
                             } catch (e: Exception) {
-                                val status = HttpStatusCode.BadRequest
-                                call.respond(status, "$status: ${e.message}")
+                                call.respondRedirect("${url}/error?message=${e.message}")
                                 close(e)
                             }
                         }
