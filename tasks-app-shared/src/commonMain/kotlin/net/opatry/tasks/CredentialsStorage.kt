@@ -41,6 +41,7 @@ data class TokenCache(
 
 
 interface CredentialsStorage {
+    var tempRootPath: String
     suspend fun load(): TokenCache?
     suspend fun store(tokenCache: TokenCache)
 }

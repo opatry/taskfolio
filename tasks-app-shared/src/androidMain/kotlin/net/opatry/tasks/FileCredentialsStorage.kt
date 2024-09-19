@@ -29,9 +29,11 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 
-actual class FileCredentialsStorage actual constructor(filename: String) : CredentialsStorage {
+actual class FileCredentialsStorage actual constructor(private val filename: String) : CredentialsStorage {
     // FIXME root dir
-    private val file: File = File(filename)
+    override var tempRootPath: String = ""
+    private val file: File
+        get() = File(tempRootPath, filename)
 
     override suspend fun load(): TokenCache? {
         return withContext(Dispatchers.IO) {
