@@ -50,5 +50,5 @@ rootProject.name = "google-tasks-kmp"
 include(":google:oauth")
 include(":google:tasks")
 include(":lucide-icons")
-include(":tasks-desktop-app")
-include(":tasks-android-app")
+include(":tasks-app-shared")
+include(":tasks-app-android")
