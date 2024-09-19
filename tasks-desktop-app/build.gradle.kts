@@ -21,6 +21,8 @@
  */
 
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 /*
  * Copyright (c) 2024 Olivier Patry
@@ -49,7 +51,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.jetbrains.compose)
-    application
+    alias(libs.plugins.android.library)
+//    application
 }
 
 composeCompiler {
@@ -64,6 +67,14 @@ compose.resources {
 
 kotlin {
     jvm()
+    androidTarget()
+
+    jvmToolchain(17)
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        languageVersion.set(KotlinVersion.KOTLIN_2_0)
+    }
 
     sourceSets {
         all {
@@ -107,5 +118,15 @@ kotlin {
 
             implementation(compose.desktop.currentOs)
         }
+    }
+}
+
+
+android {
+    namespace = "net.opatry.tasks"
+    compileSdk = 34
+
+    defaultConfig {
+        minSdk = 24
     }
 }

@@ -20,12 +20,22 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-    alias(libs.plugins.jetbrains.kotlin.compose.compiler) apply false
-    alias(libs.plugins.jetbrains.compose) apply false
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
+package net.opatry.tasks.app
+
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.TasksApp
+import org.koin.android.ext.android.inject
+
+class MainActivity : AppCompatActivity() {
+    private val viewModel by inject<TaskListsViewModel>()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            TasksApp(viewModel)
+        }
+    }
 }
