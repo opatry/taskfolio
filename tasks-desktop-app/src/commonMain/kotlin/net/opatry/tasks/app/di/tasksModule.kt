@@ -34,22 +34,50 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.datetime.Clock
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import net.opatry.google.auth.GoogleAuth
+import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.google.auth.HttpGoogleAuthenticator
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.FileCredentialsStorage
+import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TaskRepository
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import kotlin.time.Duration.Companion.seconds
 
 enum class HttpClientName {
     Tasks,
 }
 
+@OptIn(ExperimentalResourceApi::class, ExperimentalSerializationApi::class)
 val tasksModule = module {
+    single<GoogleAuthenticator> {
+        val credentialsFilename = "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json"
+        // FIXME KMP resources
+//        val googleAuthCredentials = Res.getUri("files/$credentialsFilename").byteInputStream().use { inputStream ->
+//            Json.decodeFromStream<GoogleAuth>(inputStream).credentials
+//        }
+        val googleAuthCredentials = ClassLoader.getSystemResourceAsStream(credentialsFilename)?.let { inputStream ->
+            Json.decodeFromStream<GoogleAuth>(inputStream).credentials
+        } ?: error("Failed to load Google Auth credentials $credentialsFilename")
+        val config = HttpGoogleAuthenticator.ApplicationConfig(
+            redirectUrl = googleAuthCredentials.redirectUris.first(),
+            clientId = googleAuthCredentials.clientId,
+            clientSecret = googleAuthCredentials.clientSecret,
+        )
+        HttpGoogleAuthenticator(config)
+    }
+
     single<CredentialsStorage> {
         FileCredentialsStorage("google_auth_token_cache.json")
     }
@@ -65,12 +93,27 @@ val tasksModule = module {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val tokenCache = credentialsStorage.load()?.takeIf { it.expirationTimeMillis > System.currentTimeMillis() }
+                        val tokenCache = credentialsStorage.load() //?.takeIf { it.expirationTimeMillis > System.currentTimeMillis() }
                         BearerTokens(tokenCache?.accessToken ?: "", tokenCache?.refreshToken ?: "")
                     }
-//                    refreshTokens {
-//                        // TODO
-//                    }
+                    refreshTokens {
+                        val refreshToken = oldTokens?.refreshToken?.let(GoogleAuthenticator.Grant::RefreshToken) ?: return@refreshTokens oldTokens
+                        val authenticator = get<GoogleAuthenticator>()
+                        val t0 = Clock.System.now()
+                        // return OAuthToken might not have a refreshToken, reuse old one in such a case
+                        authenticator.getToken(refreshToken)
+                            .also { token ->
+                                credentialsStorage.store(
+                                    TokenCache(
+                                        accessToken = token.accessToken,
+                                        refreshToken = token.refreshToken ?: oldTokens?.refreshToken,
+                                        expirationTimeMillis = (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                                    )
+                                )
+                            }.let {
+                                BearerTokens(it.accessToken, it.refreshToken ?: oldTokens?.refreshToken ?: "")
+                            }
+                    }
                 }
             }
             defaultRequest {
