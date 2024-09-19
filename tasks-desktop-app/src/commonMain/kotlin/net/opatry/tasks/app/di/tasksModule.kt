@@ -34,6 +34,7 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -48,6 +49,7 @@ import net.opatry.tasks.FileCredentialsStorage
 import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TaskRepository
+import net.opatry.tasks.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -63,13 +65,11 @@ enum class HttpClientName {
 val tasksModule = module {
     single<GoogleAuthenticator> {
         val credentialsFilename = "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json"
-        // FIXME KMP resources
-//        val googleAuthCredentials = Res.getUri("files/$credentialsFilename").byteInputStream().use { inputStream ->
-//            Json.decodeFromStream<GoogleAuth>(inputStream).credentials
-//        }
-        val googleAuthCredentials = ClassLoader.getSystemResourceAsStream(credentialsFilename)?.let { inputStream ->
-            Json.decodeFromStream<GoogleAuth>(inputStream).credentials
-        } ?: error("Failed to load Google Auth credentials $credentialsFilename")
+        val googleAuthCredentials = runBlocking {
+            Res.readBytes("files/$credentialsFilename").inputStream().use { inputStream ->
+                Json.decodeFromStream<GoogleAuth>(inputStream).credentials
+            }
+        }
         val config = HttpGoogleAuthenticator.ApplicationConfig(
             redirectUrl = googleAuthCredentials.redirectUris.first(),
             clientId = googleAuthCredentials.clientId,
