@@ -16,4 +16,4 @@ build/
 .idea/misc.xml
 .idea/uiDesigner.xml
 .idea/vcs.xml
-tasks-desktop-app/src/commonMain/resources/client_secret_*.apps.googleusercontent.com.json
+client_secret_*.apps.googleusercontent.com.json
