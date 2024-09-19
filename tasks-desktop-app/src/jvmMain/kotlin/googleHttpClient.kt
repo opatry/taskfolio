@@ -48,8 +48,10 @@ import kotlin.time.Duration.Companion.seconds
 suspend fun getGoogleAuthToken(credentialsFilename: String, scope: List<GoogleAuthenticator.Permission>, onAuth: (url: String) -> Unit): Pair<String?, String?> {
     val tokenCacheFile = File("google_auth_token_cache.json")
     val credentialsStorage: CredentialsStorage = FileCredentialsStorage(tokenCacheFile.absolutePath)
-    val tokenCache = credentialsStorage.load()?.takeIf { it.expirationTimeMillis > System.currentTimeMillis() }
-    return tokenCache?.let { it.accessToken to it.refreshToken } ?: run {
+    val tokenCache = credentialsStorage.load()
+    return if (tokenCache?.accessToken != null && tokenCache.refreshToken != null && tokenCache.expirationTimeMillis > System.currentTimeMillis()) {
+        tokenCache.accessToken to tokenCache.refreshToken
+    } else {
         val googleAuthCredentials = ClassLoader.getSystemResourceAsStream(credentialsFilename)?.let { inputStream ->
             Json.decodeFromStream<GoogleAuth>(inputStream).credentials
         } ?: error("Failed to load Google Auth credentials $credentialsFilename")
@@ -60,8 +62,9 @@ suspend fun getGoogleAuthToken(credentialsFilename: String, scope: List<GoogleAu
         )
         val t0 = System.currentTimeMillis()
         val googleAuthenticator: GoogleAuthenticator = HttpGoogleAuthenticator(config)
-        val code = googleAuthenticator.authorize(scope, force = true, requestUserAuthorization = onAuth)
-        val token = googleAuthenticator.getToken(code)
+        val grant = tokenCache?.refreshToken?.let(GoogleAuthenticator.Grant::RefreshToken)
+            ?: googleAuthenticator.authorize(scope, true, onAuth).let(GoogleAuthenticator.Grant::AuthorizationCode)
+        val token = googleAuthenticator.getToken(grant)
         credentialsStorage.store(
             TokenCache(
                 token.accessToken,

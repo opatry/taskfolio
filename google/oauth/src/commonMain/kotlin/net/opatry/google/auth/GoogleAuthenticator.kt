@@ -55,7 +55,6 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Bearer
-import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Mac
 import java.net.URLEncoder
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
@@ -101,17 +100,24 @@ interface GoogleAuthenticator {
         /**
          * Value is case insensitive.
          *
-         * @property Bearer `"bearer"` token type defined in [RFC6750](https://datatracker.ietf.org/doc/html/rfc6750) is utilized by simply including the access token string in the request.
-         * @property Mac `"mac"` token type defined in [OAuth-HTTP-MAC](https://datatracker.ietf.org/doc/html/rfc6749#ref-OAuth-HTTP-MAC) is utilized by issuing a Message Authentication Code (MAC) key together with the access token that is used to sign certain components of the HTTP requests.
+         * @property Bearer `"Bearer"` token type defined in [RFC6750](https://datatracker.ietf.org/doc/html/rfc6750) is utilized by simply including the access token string in the request.
          */
         enum class TokenType {
-
-//            @SerialName("bearer")
             @SerialName("Bearer")
             Bearer,
+        }
+    }
 
-            @SerialName("mac")
-            Mac,
+    sealed class Grant {
+        abstract val type: String
+
+        data class AuthorizationCode(val code: String) : Grant() {
+            override val type: String = "authorization_code"
+        }
+
+        data class RefreshToken(val refreshToken: String) : Grant() {
+            override val type: String
+                get() = "refresh_token"
         }
     }
 
@@ -133,7 +139,7 @@ interface GoogleAuthenticator {
      *
      * @see Permission
      */
-    suspend fun getToken(code: String): OAuthToken
+    suspend fun getToken(grant: Grant): OAuthToken
 }
 
 class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAuthenticator {
@@ -234,15 +240,22 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         }
     }
 
-    override suspend fun getToken(code: String): GoogleAuthenticator.OAuthToken {
-        // TODO depending on grant type, consider a refresh token or a authorization code
+    override suspend fun getToken(grant: GoogleAuthenticator.Grant): GoogleAuthenticator.OAuthToken {
         val response = httpClient.post("https://oauth2.googleapis.com/token") {
             parameter("client_id", config.clientId)
             parameter("client_secret", config.clientSecret)
-            parameter("code", code)
-//            parameter("code_verifier", TODO())
-            parameter("grant_type", "authorization_code")
-            parameter("redirect_uri", config.redirectUrl)
+            parameter("grant_type", grant.type)
+            when (grant) {
+                is GoogleAuthenticator.Grant.AuthorizationCode -> {
+                    parameter("code", grant.code)
+                    // TODO PKCE "code_verifier"
+                    parameter("redirect_uri", config.redirectUrl)
+                }
+
+                is GoogleAuthenticator.Grant.RefreshToken -> {
+                    parameter("refresh_token", grant.refreshToken)
+                }
+            }
             contentType(ContentType.Application.FormUrlEncoded)
         }
 
