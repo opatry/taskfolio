@@ -55,36 +55,18 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Bearer
 import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Mac
-import net.opatry.google.auth.GoogleAuthenticator.Permission.Books
-import net.opatry.google.auth.GoogleAuthenticator.Permission.Email
-import net.opatry.google.auth.GoogleAuthenticator.Permission.Keep
-import net.opatry.google.auth.GoogleAuthenticator.Permission.KeepReadOnly
-import net.opatry.google.auth.GoogleAuthenticator.Permission.OpenID
-import net.opatry.google.auth.GoogleAuthenticator.Permission.Profile
 import java.net.URLEncoder
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
 
 interface GoogleAuthenticator {
-
-    /**
-     * @property Profile `"https://www.googleapis.com/auth/userinfo.profile"` See your primary Google Account email address
-     * @property Email `"https://www.googleapis.com/auth/userinfo.email"` See your personal info, including any personal info you've made publicly available
-     * @property OpenID `"openid"` Associate you with your personal info on Google
-     * @property Books Manage your books
-     * @property Keep See, edit, create and permanently delete all your Google Keep data
-     * @property KeepReadOnly View all your Google Keep data
-     */
-    enum class Permission(val scope: String) {
-        Profile("https://www.googleapis.com/auth/userinfo.profile"),
-        Email("https://www.googleapis.com/auth/userinfo.email"),
-        OpenID("openid"),
-        Books("https://www.googleapis.com/auth/books"),
-        Keep("https://www.googleapis.com/auth/keep"),
-        KeepReadOnly("https://www.googleapis.com/auth/keep.readonly"),
-        Tasks("https://www.googleapis.com/auth/tasks"),
-        TasksReadOnly("https://www.googleapis.com/auth/tasks.readonly"),
-        CustomSearch("https://www.googleapis.com/auth/cse"),
+    @JvmInline
+    value class Permission(val scope: String) {
+        companion object {
+            val Profile = Permission("https://www.googleapis.com/auth/userinfo.profile")
+            val Email = Permission("https://www.googleapis.com/auth/userinfo.email")
+            val OpenID = Permission("openid")
+        }
     }
 
     @Serializable
@@ -133,8 +115,8 @@ interface GoogleAuthenticator {
     }
 
     /**
-     * @param permissions Permission scope. The currently available scopes are [Permission.Profile], [Permission.Email], [Permission.OpenID].
-     * @param requestUserAuthorization The URL to which to request user authorization before direction
+     * @param permissions Permission scope.
+     * @param requestUserAuthorization The URL to which to request user authorization before redirection
      *
      * @return auth code
      *
@@ -181,17 +163,15 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         }
     }
 
-    override suspend fun authorize(
-        permissions: List<GoogleAuthenticator.Permission>, requestUserAuthorization: (url: String) -> Unit
-    ): String {
+    override suspend fun authorize(permissions: List<GoogleAuthenticator.Permission>, requestUserAuthorization: (url: String) -> Unit): String {
         val uuid = UUID.randomUUID()
         val params = mapOf(
             "client_id" to config.clientId,
             "response_type" to "code",
             "redirect_uri" to URLEncoder.encode(config.redirectUrl, Charsets.UTF_8),
-            "scope" to permissions.joinToString("+", transform = {
+            "scope" to permissions.joinToString("+") {
                 URLEncoder.encode(it.scope, Charsets.UTF_8)
-            }),
+            },
             "state" to uuid.toString(),
         ).entries.joinToString(prefix = "?", separator = "&") {
             "${it.key}=${it.value}"
