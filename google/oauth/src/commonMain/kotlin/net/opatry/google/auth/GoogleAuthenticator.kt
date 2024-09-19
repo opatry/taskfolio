@@ -24,7 +24,6 @@ package net.opatry.google.auth
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.CurlUserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -43,7 +42,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.call
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.get
@@ -56,10 +54,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Bearer
 import java.net.URLEncoder
-import java.util.*
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import io.ktor.client.engine.cio.CIO as ClientEngineCIO
+import io.ktor.server.cio.CIO as ServerEngineCIO
 
 interface GoogleAuthenticator {
     @JvmInline
@@ -162,7 +161,7 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
     }
 
     private val httpClient: HttpClient by lazy {
-        HttpClient(CIO) {
+        HttpClient(ClientEngineCIO) {
             CurlUserAgent()
             install(ContentNegotiation) {
                 json()
@@ -201,7 +200,7 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         return withTimeout(5.minutes) {
             callbackFlow {
                 val url = Url(config.redirectUrl)
-                val server = embeddedServer(Netty, port = url.port, host = url.host) {
+                val server = embeddedServer(ServerEngineCIO, port = url.port, host = url.host) {
                     routing {
                         get("signed-in") {
                             val status = HttpStatusCode.OK
