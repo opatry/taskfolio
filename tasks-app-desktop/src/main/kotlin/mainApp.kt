@@ -148,6 +148,7 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
                 },
                 enabled = !ongoingAuth
             ) {
+                // FIXME Res from shared/library module
 //                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
                 Text("Authorize")
             }
