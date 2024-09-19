@@ -179,7 +179,7 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         force: Boolean,
         requestUserAuthorization: (url: String) -> Unit
     ): String {
-        // FIXME URLEncoder is not KMP
+        // FIXME URLEncoder is not KMP, maybe ktor has something?
         val uuid = Uuid.random()
         val params = buildMap {
             put("client_id", config.clientId)
