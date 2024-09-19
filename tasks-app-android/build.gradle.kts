@@ -81,6 +81,5 @@ dependencies {
 
     implementation(compose.runtime)
     implementation(compose.foundation)
-
-    implementation(project(":tasks-desktop-app"))
+    implementation(project(":tasks-app-shared"))
 }
