@@ -23,7 +23,6 @@
 package net.opatry.tasks.app
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContent
@@ -66,15 +65,14 @@ enum class SignInStatus {
 }
 
 class MainActivity : AppCompatActivity() {
-    //    private val viewModel by inject<TaskListsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-//            TasksApp(viewModel)
             val coroutineScope = rememberCoroutineScope()
             var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
             val credentialsStorage = koinInject<CredentialsStorage>()
+            credentialsStorage.tempRootPath = cacheDir.absolutePath
             LaunchedEffect(Unit) {
                 signInStatus = if (credentialsStorage.load() != null) {
                     SignInStatus.SignedIn
@@ -138,9 +136,7 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
                             GoogleAuthenticator.Permission(TasksScopes.Tasks),
                         )
                         try {
-                            val authCode = authenticator.authorize(scope, true) {
-                                Log.d("XXX", it)
-                            }
+                            val authCode = authenticator.authorize(scope, true, uriHandler::openUri)
                                 .let(GoogleAuthenticator.Grant::AuthorizationCode)
                             val oauthToken = authenticator.getToken(authCode)
                             onSuccess(oauthToken)
