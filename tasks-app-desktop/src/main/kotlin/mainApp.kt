@@ -64,6 +64,7 @@ enum class SignInStatus {
 }
 
 fun main() {
+    // TODO use KoinApplication
     startKoin {
         modules(tasksModule)
     }
