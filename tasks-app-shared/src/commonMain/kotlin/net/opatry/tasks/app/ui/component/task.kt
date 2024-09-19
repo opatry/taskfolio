@@ -24,7 +24,6 @@ package net.opatry.tasks.app.ui.component
 
 import CircleFadingPlus
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,10 +43,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.runBlocking
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
 import net.opatry.tasks.resources.Res
@@ -55,7 +52,6 @@ import net.opatry.tasks.resources.task_lists_screen_add_task
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.decodeToSvgPainter
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
@@ -88,10 +84,10 @@ fun TaskListColumn(taskList: TaskList, tasks: List<Task>, onNewTaskClick: () -> 
                     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)) {
 
                         // FIXME async load + caching, feasible with Coil & KMP Res?
-                        val bytes = runBlocking {
-                            Res.readBytes("files/undraw_to_do_list_re_9nt7.svg")
-                        }
-                        Image(bytes.decodeToSvgPainter(LocalDensity.current), null)
+//                        val bytes = runBlocking {
+//                            Res.readBytes("files/undraw_to_do_list_re_9nt7.svg")
+//                        }
+//                        Image(bytes.decodeToSvgPainter(LocalDensity.current), null)
 
 //                        AsyncImage(Res.getUri("files/undraw_to_do_list_re_9nt7.svg"), null)
                         Text(stringResource(Res.string.task_lists_screen_empty_list_title), style = MaterialTheme.typography.headlineMedium)
