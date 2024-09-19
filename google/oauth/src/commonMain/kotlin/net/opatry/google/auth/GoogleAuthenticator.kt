@@ -58,6 +58,8 @@ import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Bearer
 import java.net.URLEncoder
 import java.util.*
 import kotlin.time.Duration.Companion.minutes
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 interface GoogleAuthenticator {
     @JvmInline
@@ -171,12 +173,14 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun authorize(
         permissions: List<GoogleAuthenticator.Permission>,
         force: Boolean,
         requestUserAuthorization: (url: String) -> Unit
     ): String {
-        val uuid = UUID.randomUUID()
+        // FIXME URLEncoder is not KMP
+        val uuid = Uuid.random()
         val params = buildMap {
             put("client_id", config.clientId)
             put("response_type", "code")
@@ -218,7 +222,7 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
                                 queryParams["error"]?.let(::error)
 
                                 val state = queryParams.require("state")
-                                require(uuid == UUID.fromString(state)) { "Mismatch between expected & provided state ($state)." }
+                                require(uuid == Uuid.parse(state)) { "Mismatch between expected & provided state ($state)." }
                                 val authCode = queryParams.require("code")
                                 // redirect to another endpoint to hide the code from the user as quickly as possible
                                 call.respondRedirect("${url}/signed-in")
