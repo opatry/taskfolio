@@ -20,8 +20,6 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
-
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
@@ -29,10 +27,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.android.library)
-}
-
-composeCompiler {
-    featureFlags.add(ComposeFeatureFlag.StrongSkipping)
 }
 
 compose.resources {
@@ -51,7 +45,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
 
-            implementation(libs.kotlinx.datetime)
+            api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
             implementation(libs.bundles.ktor.server)
             implementation(project(":google:oauth"))

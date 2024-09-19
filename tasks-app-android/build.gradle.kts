@@ -75,10 +75,15 @@ dependencies {
 
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.compose.viewmodel)
 
+    implementation(compose.material)
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.androidx.appcompat)
 
+    implementation(project(":google:oauth"))
+    implementation(project(":google:tasks"))
     implementation(project(":tasks-app-shared"))
 }
