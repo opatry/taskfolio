@@ -184,9 +184,9 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         val params = buildMap {
             put("client_id", config.clientId)
             put("response_type", "code")
-            put("redirect_uri", URLEncoder.encode(config.redirectUrl, Charsets.UTF_8))
+            put("redirect_uri", URLEncoder.encode(config.redirectUrl, Charsets.UTF_8.name()))
             put("scope", permissions.joinToString("+") {
-                URLEncoder.encode(it.scope, Charsets.UTF_8)
+                URLEncoder.encode(it.scope, Charsets.UTF_8.name())
             })
             put("state", uuid.toString())
             // to get a refresh token, need to request consent & offline access
