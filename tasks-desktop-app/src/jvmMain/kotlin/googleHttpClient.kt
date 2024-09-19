@@ -60,7 +60,7 @@ suspend fun getGoogleAuthToken(credentialsFilename: String, scope: List<GoogleAu
         )
         val t0 = System.currentTimeMillis()
         val googleAuthenticator: GoogleAuthenticator = HttpGoogleAuthenticator(config)
-        val code = googleAuthenticator.authorize(scope, onAuth)
+        val code = googleAuthenticator.authorize(scope, force = true, requestUserAuthorization = onAuth)
         val token = googleAuthenticator.getToken(code)
         credentialsStorage.store(
             TokenCache(
