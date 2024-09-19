@@ -20,8 +20,13 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -35,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import kotlinx.coroutines.launch
@@ -110,22 +116,45 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
     val uriHandler = LocalUriHandler.current
     val coroutineScope = rememberCoroutineScope()
     val authenticator = koinInject<GoogleAuthenticator>()
+    var ongoingAuth by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
 
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Button(
-            onClick = {
-                coroutineScope.launch {
-                    val scope = listOf(
-                        GoogleAuthenticator.Permission.Profile,
-                        GoogleAuthenticator.Permission(TasksScopes.Tasks),
-                    )
-                    val authCode = authenticator.authorize(scope, true, uriHandler::openUri).let(GoogleAuthenticator.Grant::AuthorizationCode)
-                    val oauthToken = authenticator.getToken(authCode)
-                    onSuccess(oauthToken)
-                }
+    Column(
+        Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (ongoingAuth) {
+                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp)
+            } else {
+                Spacer(Modifier.size(24.dp))
             }
-        ) {
-            Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+            Button(
+                onClick = {
+                    ongoingAuth = true
+                    coroutineScope.launch {
+                        val scope = listOf(
+                            GoogleAuthenticator.Permission.Profile,
+                            GoogleAuthenticator.Permission(TasksScopes.Tasks),
+                        )
+                        try {
+                            val authCode = authenticator.authorize(scope, true, uriHandler::openUri).let(GoogleAuthenticator.Grant::AuthorizationCode)
+                            val oauthToken = authenticator.getToken(authCode)
+                            onSuccess(oauthToken)
+                        } catch (e: Exception) {
+                            error = e.message
+                            ongoingAuth = false
+                        }
+                    }
+                },
+                enabled = !ongoingAuth
+            ) {
+                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+            }
+        }
+        AnimatedContent(error) {
+            Text(error ?: "")
         }
     }
 }
