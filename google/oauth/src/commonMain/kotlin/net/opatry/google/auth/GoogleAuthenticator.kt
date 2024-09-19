@@ -116,13 +116,14 @@ interface GoogleAuthenticator {
 
     /**
      * @param permissions Permission scope.
+     * @param force To force user consent screen again (allowing to get a refresh token).
      * @param requestUserAuthorization The URL to which to request user authorization before redirection
      *
      * @return auth code
      *
      * @see Permission
      */
-    suspend fun authorize(permissions: List<Permission>, requestUserAuthorization: (url: String) -> Unit): String
+    suspend fun authorize(permissions: List<Permission>, force: Boolean = false, requestUserAuthorization: (url: String) -> Unit): String
 
     /**
      * @param code The code obtained through [authorize].
@@ -163,17 +164,26 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         }
     }
 
-    override suspend fun authorize(permissions: List<GoogleAuthenticator.Permission>, requestUserAuthorization: (url: String) -> Unit): String {
+    override suspend fun authorize(
+        permissions: List<GoogleAuthenticator.Permission>,
+        force: Boolean,
+        requestUserAuthorization: (url: String) -> Unit
+    ): String {
         val uuid = UUID.randomUUID()
-        val params = mapOf(
-            "client_id" to config.clientId,
-            "response_type" to "code",
-            "redirect_uri" to URLEncoder.encode(config.redirectUrl, Charsets.UTF_8),
-            "scope" to permissions.joinToString("+") {
+        val params = buildMap {
+            put("client_id", config.clientId)
+            put("response_type", "code")
+            put("redirect_uri", URLEncoder.encode(config.redirectUrl, Charsets.UTF_8))
+            put("scope", permissions.joinToString("+") {
                 URLEncoder.encode(it.scope, Charsets.UTF_8)
-            },
-            "state" to uuid.toString(),
-        ).entries.joinToString(prefix = "?", separator = "&") {
+            })
+            put("state", uuid.toString())
+            // to get a refresh token, need to request consent & offline access
+            if (force) {
+                put("prompt", "consent")
+                put("access_type", "offline")
+            }
+        }.entries.joinToString(prefix = "?", separator = "&") {
             "${it.key}=${it.value}"
         }
 
