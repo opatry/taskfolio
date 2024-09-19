@@ -93,7 +93,7 @@ val tasksModule = module {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        val tokenCache = credentialsStorage.load() //?.takeIf { it.expirationTimeMillis > System.currentTimeMillis() }
+                        val tokenCache = credentialsStorage.load()
                         BearerTokens(tokenCache?.accessToken ?: "", tokenCache?.refreshToken ?: "")
                     }
                     refreshTokens {

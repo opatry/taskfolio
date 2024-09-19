@@ -23,19 +23,142 @@
 package net.opatry.tasks.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.google.tasks.TasksScopes
+import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
-import org.koin.android.ext.android.inject
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Duration.Companion.seconds
+
+enum class SignInStatus {
+    Loading,
+    SignedIn,
+    SignedOut,
+}
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel by inject<TaskListsViewModel>()
+    //    private val viewModel by inject<TaskListsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            TasksApp(viewModel)
+//            TasksApp(viewModel)
+            val coroutineScope = rememberCoroutineScope()
+            var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
+            val credentialsStorage = koinInject<CredentialsStorage>()
+            LaunchedEffect(Unit) {
+                signInStatus = if (credentialsStorage.load() != null) {
+                    SignInStatus.SignedIn
+                } else {
+                    SignInStatus.SignedOut
+                }
+            }
+
+            when (signInStatus) {
+                SignInStatus.Loading -> CircularProgressIndicator()
+                SignInStatus.SignedIn -> {
+                    val viewModel = koinViewModel<TaskListsViewModel>()
+                    TasksApp(viewModel)
+                }
+
+                SignInStatus.SignedOut -> {
+                    val t0 = Clock.System.now()
+                    AuthorizationScreen { token ->
+                        signInStatus = SignInStatus.SignedIn
+                        coroutineScope.launch {
+                            credentialsStorage.store(
+                                TokenCache(
+                                    token.accessToken,
+                                    token.refreshToken,
+                                    (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
+    val uriHandler = LocalUriHandler.current
+    val coroutineScope = rememberCoroutineScope()
+    val authenticator = koinInject<GoogleAuthenticator>()
+    var ongoingAuth by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
+
+    Column(
+        Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (ongoingAuth) {
+                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp)
+            } else {
+                Spacer(Modifier.size(24.dp))
+            }
+            Button(
+                onClick = {
+                    ongoingAuth = true
+                    coroutineScope.launch {
+                        val scope = listOf(
+                            GoogleAuthenticator.Permission.Profile,
+                            GoogleAuthenticator.Permission(TasksScopes.Tasks),
+                        )
+                        try {
+                            val authCode = authenticator.authorize(scope, true) {
+                                Log.d("XXX", it)
+                            }
+                                .let(GoogleAuthenticator.Grant::AuthorizationCode)
+                            val oauthToken = authenticator.getToken(authCode)
+                            onSuccess(oauthToken)
+                        } catch (e: Exception) {
+                            error = e.message
+                            ongoingAuth = false
+                        }
+                    }
+                },
+                enabled = !ongoingAuth
+            ) {
+                // FIXME Res from shared/library module
+//                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+                Text("Authorize")
+            }
+        }
+        AnimatedContent(error, label = "authorize_error_message") {
+            Text(it ?: "")
         }
     }
 }
