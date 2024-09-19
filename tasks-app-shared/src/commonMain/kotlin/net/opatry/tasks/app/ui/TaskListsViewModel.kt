@@ -68,14 +68,15 @@ class TaskRepository(
 class TaskListsViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
+    private val _taskLists = MutableStateFlow<List<TaskList>>(emptyList())
     val taskLists: StateFlow<List<TaskList>>
-            field = MutableStateFlow<List<TaskList>>(emptyList())
+        get() = _taskLists
 
     init {
         // cold flow?
         viewModelScope.launch {
             // TODO flow?
-            taskLists.value = try {
+            _taskLists.value = try {
                 taskRepository.getTaskLists()
             } catch (e: Exception) {
                 println("Error fetching task lists: $e")

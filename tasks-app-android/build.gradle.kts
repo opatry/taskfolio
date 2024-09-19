@@ -73,13 +73,12 @@ dependencies {
         // see also https://github.com/JetBrains/compose-jb/releases/tag/v1.1.1
     }
 
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity.compose)
-
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.android)
 
-    implementation(compose.runtime)
-    implementation(compose.foundation)
+    implementation(libs.androidx.activity.compose)
+
+    implementation(libs.androidx.appcompat)
+
     implementation(project(":tasks-app-shared"))
 }
