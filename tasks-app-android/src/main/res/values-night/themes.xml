@@ -22,7 +22,7 @@
 
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.TasksApp" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.TasksApp" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryDark">@color/purple_700</item>
