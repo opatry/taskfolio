@@ -52,9 +52,6 @@ import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.di.tasksModule
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
-import net.opatry.tasks.resources.Res
-import net.opatry.tasks.resources.onboarding_screen_authorize_cta
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.startKoin
@@ -150,7 +147,8 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
                 },
                 enabled = !ongoingAuth
             ) {
-                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+//                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+                Text("Authorize")
             }
         }
         AnimatedContent(error) {
