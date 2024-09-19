@@ -38,13 +38,17 @@ import kotlinx.serialization.json.decodeFromStream
 import net.opatry.google.auth.GoogleAuth
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.auth.HttpGoogleAuthenticator
+import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.FileCredentialsStorage
+import net.opatry.tasks.TokenCache
 import java.io.File
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalSerializationApi::class)
 suspend fun getGoogleAuthToken(credentialsFilename: String, scope: List<GoogleAuthenticator.Permission>, onAuth: (url: String) -> Unit): Pair<String?, String?> {
     val tokenCacheFile = File("google_auth_token_cache.json")
-    val tokenCache = tokenCacheFile.loadTokenCache()?.takeIf { it.expirationTimeMillis > System.currentTimeMillis() }
+    val credentialsStorage: CredentialsStorage = FileCredentialsStorage(tokenCacheFile.absolutePath)
+    val tokenCache = credentialsStorage.load()?.takeIf { it.expirationTimeMillis > System.currentTimeMillis() }
     return tokenCache?.let { it.accessToken to it.refreshToken } ?: run {
         val googleAuthCredentials = ClassLoader.getSystemResourceAsStream(credentialsFilename)?.let { inputStream ->
             Json.decodeFromStream<GoogleAuth>(inputStream).credentials
@@ -58,7 +62,7 @@ suspend fun getGoogleAuthToken(credentialsFilename: String, scope: List<GoogleAu
         val googleAuthenticator: GoogleAuthenticator = HttpGoogleAuthenticator(config)
         val code = googleAuthenticator.authorize(scope, onAuth)
         val token = googleAuthenticator.getToken(code)
-        tokenCacheFile.storeTokenCache(
+        credentialsStorage.store(
             TokenCache(
                 token.accessToken,
                 token.refreshToken,

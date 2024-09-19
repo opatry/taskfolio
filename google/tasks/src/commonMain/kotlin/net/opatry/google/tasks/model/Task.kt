@@ -90,6 +90,8 @@ data class Task(
     @SerialName("assignmentInfo")
     val assignmentInfo: AssignmentInfo? = null,
 ) {
+    val isCompleted = completedDate != null && status == Status.Completed
+
     @Serializable
     enum class Status {
         @SerialName("needsAction")

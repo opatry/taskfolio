@@ -20,43 +20,32 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 
 
-@Serializable
-data class TokenCache(
+actual class FileCredentialsStorage actual constructor(filename: String) : CredentialsStorage {
+    private val file: File = File(filename)
 
-    @SerialName("access_token")
-    val accessToken: String? = null,
-
-    @SerialName("refresh_token")
-    val refreshToken: String? = null,
-
-    @SerialName("expiration_time_millis")
-    val expirationTimeMillis: Long,
-)
-
-suspend fun File.storeTokenCache(tokenCache: TokenCache) {
-    val self = this
-    val json = Json { prettyPrint = true }
-    withContext(Dispatchers.IO) {
-        self.writeText(json.encodeToString(tokenCache))
+    override suspend fun load(): TokenCache? {
+        return withContext(Dispatchers.IO) {
+            if (file.isFile) {
+                file.readText().let(Json::decodeFromString)
+            } else {
+                null
+            }
+        }
     }
-}
 
-suspend fun File.loadTokenCache(): TokenCache? {
-    val self = this
-    return withContext(Dispatchers.IO) {
-        if (self.isFile) {
-            self.readText().let(Json::decodeFromString)
-        } else {
-            null
+    override suspend fun store(tokenCache: TokenCache) {
+        val json = Json { prettyPrint = true }
+        withContext(Dispatchers.IO) {
+            file.writeText(json.encodeToString(tokenCache))
         }
     }
 }

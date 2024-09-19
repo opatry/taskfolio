@@ -66,6 +66,10 @@ kotlin {
     jvm()
 
     sourceSets {
+        all {
+            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+        }
+
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
 
@@ -81,6 +85,14 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.material3AdaptiveNavigationSuite)
+            implementation(libs.bundles.coil)
+
+            implementation(libs.jetbrains.lifecycle.viewmodel.compose)
+
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
 
             implementation(project(":lucide-icons"))
         }
