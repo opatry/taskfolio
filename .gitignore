@@ -17,3 +17,7 @@ build/
 .idea/uiDesigner.xml
 .idea/vcs.xml
 client_secret_*.apps.googleusercontent.com.json
+.idea/assetWizardSettings.xml
+.idea/caches/deviceStreaming.xml
+.idea/deploymentTargetSelector.xml
+.idea/migrations.xml
