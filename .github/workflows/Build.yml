@@ -26,7 +26,7 @@ jobs:
         distribution: 'adopt'
 
     - name: Build
-      run: ./gradlew --no-daemon packageDistributionForCurrentOS
+      run: ./gradlew --no-daemon :tasks-app-android:assembleDebug :tasks-app-desktop:assemble
 
     - name: Test
       run: ./gradlew --no-daemon test
