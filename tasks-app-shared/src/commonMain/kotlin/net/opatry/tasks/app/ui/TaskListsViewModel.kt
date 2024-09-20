@@ -51,6 +51,7 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
 private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
     // TODO date formatter
     return TaskUIModel(
+        id = id,
         title = title,
         dueDate = dueDate?.toString() ?: "",
         isCompleted = false
