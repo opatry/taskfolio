@@ -174,7 +174,7 @@ fun ProfileIcon(httpClient: HttpClient?) {
                 if (hasAvatar) {
                     AsyncImage(avatarUrl, null, Modifier.clip(CircleShape))
                 } else {
-                    CircularProgressIndicator(strokeWidth = 2.dp, color = LocalContentColor.current)
+                    CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
                 }
             }
         }
