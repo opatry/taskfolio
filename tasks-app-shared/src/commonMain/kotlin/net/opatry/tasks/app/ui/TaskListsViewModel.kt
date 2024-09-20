@@ -54,7 +54,9 @@ private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
         id = id,
         title = title,
         dueDate = dueDate?.toString() ?: "",
-        isCompleted = false
+        isCompleted = false,
+        position = position,
+        indent = indent,
     )
 }
 

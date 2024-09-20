@@ -27,4 +27,6 @@ data class TaskUIModel(
     val title: String,
     val dueDate: String,
     val isCompleted: Boolean,
+    val position: String, // FIXME for debug?
+    val indent: Int,
 )

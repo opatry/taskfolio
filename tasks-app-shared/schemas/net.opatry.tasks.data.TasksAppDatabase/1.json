@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "31d25507995568dc3a16eaede0ede0aa",
+    "identityHash": "f69cda5f0ea80535f96c5a385b323d26",
     "entities": [
       {
         "tableName": "task_list",
@@ -42,7 +42,7 @@
       },
       {
         "tableName": "task",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `notes` TEXT NOT NULL DEFAULT '')",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `notes` TEXT NOT NULL DEFAULT '', `position` TEXT NOT NULL, `parent_local_id` INTEGER, `remote_parent_id` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -80,6 +80,22 @@
             "affinity": "TEXT",
             "notNull": true,
             "defaultValue": "''"
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentTaskLocalId",
+            "columnName": "parent_local_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "parentTaskRemoteId",
+            "columnName": "remote_parent_id",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -92,7 +108,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '31d25507995568dc3a16eaede0ede0aa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f69cda5f0ea80535f96c5a385b323d26')"
     ]
   }
 }

@@ -55,25 +55,74 @@ private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?): TaskEntity {
         etag = etag,
         title = title,
         notes = notes ?: "",
+        position = position,
+        // TODO parentTaskLocalId = ,
+        parentTaskRemoteId = parent,
     )
 }
 
 private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskListDataModel {
+    val sortedTasks = sortTasks(tasks).map { (task, indent) ->
+        task.asTaskDataModel(indent)
+    }
     return TaskListDataModel(
         id = id,
         title = title,
         lastUpdate = Clock.System.now(),
-        tasks = tasks.map(TaskEntity::asTaskDataModel)
+        tasks = sortedTasks,
     )
 }
 
-private fun TaskEntity.asTaskDataModel(): TaskDataModel {
+private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
     return TaskDataModel(
         id = id,
         title = title,
         notes = notes,
-        dueDate = Clock.System.now()
+        dueDate = Clock.System.now(),
+        position = position,
+        indent = indent,
     )
+}
+
+fun sortTasks(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
+    // Step 1: Create a map of tasks by their IDs for easy lookup
+    val taskMap = tasks.associateBy { it.remoteId }.toMutableMap() // FIXME local data only?
+
+    // Step 2: Build a tree structure with parent-child relationships
+    val tree = mutableMapOf<String, MutableList<TaskEntity>>()
+    tasks.forEach { task ->
+        val parentId = task.parentTaskRemoteId // FIXME local data only?
+        if (parentId == null) {
+            // Tasks with no parent go directly into the root of the tree
+            tree.getOrPut(task.remoteId ?: "") { mutableListOf() } // FIXME local data only?
+        } else {
+            // Add child task under its parent's list of children
+            tree.getOrPut(parentId) { mutableListOf() }.add(task)
+        }
+    }
+
+    // Step 3: Sort the child tasks by position
+    tree.forEach { (_, children) ->
+        children.sortBy { it.position }
+    }
+
+    // Step 4: Recursive function to traverse tasks and assign indentation levels
+    fun traverseTasks(taskId: String, level: Int, result: MutableList<Pair<TaskEntity, Int>>) {
+        val task = taskMap[taskId] ?: return
+        result.add(task to level)
+        val children = tree[taskId] ?: return
+        for (child in children) {
+            traverseTasks(child.remoteId ?: "", level + 1, result) // FIXME local data only?
+        }
+    }
+
+    // Step 5: Start traversal from the root tasks (tasks with no parents)
+    val sortedTasks = mutableListOf<Pair<TaskEntity, Int>>()
+    tree.keys.filter { taskMap[it]?.parentTaskRemoteId == null }.sortedBy { taskMap[it]?.position }.forEach {
+        traverseTasks(it, 0, sortedTasks)
+    }
+
+    return sortedTasks
 }
 
 class TaskRepository(
@@ -87,7 +136,8 @@ class TaskRepository(
         .distinctUntilChanged()
         .mapLatest { entries ->
             entries.map { (list, tasks) ->
-            list.asTaskListDataModel(tasks)
+                // FIXME Where should happen the sorting, on SQL side or here or in UI layer?
+                list.asTaskListDataModel(tasks)
         }
     }
 
@@ -163,7 +213,7 @@ class TaskRepository(
     }
 
     suspend fun createTask(taskListId: Long, title: String, dueDate: Instant? = null) {
-        val taskId = taskDao.insert(TaskEntity(parentListLocalId = taskListId, title = title))
+        val taskId = taskDao.insert(TaskEntity(parentListLocalId = taskListId, title = title, position = ""/*TODO local position value?*/))
         val taskListEntity = taskListDao.getById(taskListId)
         if (taskListEntity?.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
