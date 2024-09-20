@@ -41,4 +41,8 @@ val dataModule = module {
     factory {
         get<TasksAppDatabase>().getTaskListDao()
     }
+
+    factory {
+        get<TasksAppDatabase>().getTaskDao()
+    }
 }

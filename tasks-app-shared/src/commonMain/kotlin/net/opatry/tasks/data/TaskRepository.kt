@@ -30,8 +30,11 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
+import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
+import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
+import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 
 private fun TaskList.asTaskListEntity(localId: Long?): TaskListEntity {
@@ -41,28 +44,53 @@ private fun TaskList.asTaskListEntity(localId: Long?): TaskListEntity {
         title = title
     )
 }
+private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?): TaskEntity {
+    return TaskEntity(
+        id = localId ?: 0,
+        remoteId = id,
+        parentListLocalId = parentLocalId,
+        title = title,
+        notes = notes ?: "",
+    )
+}
 
 class TaskRepository(
     private val taskListDao: TaskListDao,
+    private val taskDao: TaskDao,
     private val taskListsApi: TaskListsApi,
     private val tasksApi: TasksApi,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTaskLists() = taskListDao.getAllAsFlow().mapLatest { taskListEntities ->
-        taskListEntities.map { TaskListDataModel(it.id, it.title, Clock.System.now(), emptyList()) }
+        // FIXME do it in a single query
+        // TODO mapper fn
+        taskListEntities.map { listEntity ->
+            val children = taskDao.getAllByParentId(listEntity.id).map {
+                TaskDataModel(it.id, it.title, it.notes, Clock.System.now())
+            }
+            TaskListDataModel(listEntity.id, listEntity.title, Clock.System.now(), children)
+        }
     }
 
     suspend fun fetchTaskLists() {
+        val taskListIds = mutableMapOf<Long, String>()
         withContext(Dispatchers.IO) {
             taskListsApi.listAll()
-        }.forEach {
+        }.onEach {
             // FIXME suboptimal
             //  - check stale ones in DB and remove them if not only local
             //  - check no update, and ignore/filter
             //  - check new ones
             //  - etc.
             val localId = taskListDao.getByRemoteId(it.id)?.id ?: 0
-            taskListDao.insert(it.asTaskListEntity(localId))
+            val finalLocalId = taskListDao.insert(it.asTaskListEntity(localId))
+            taskListIds[finalLocalId] = it.id
+        }
+        taskListIds.forEach { (localListId, remoteListId) ->
+            tasksApi.listAll(remoteListId).onEach { task ->
+                val localTaskId = taskDao.getByRemoteId(task.id)?.id ?: 0
+                taskDao.insert(task.asTaskEntity(localListId, localTaskId))
+            }
         }
     }
 

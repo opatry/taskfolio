@@ -29,17 +29,28 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.data.TaskRepository
+import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 
 private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
     // TODO children
     // TODO date formatter
     return TaskListUIModel(
-        id,
-        title,
-        lastUpdate.toString(),
-        emptyList()
+        id = id,
+        title = title,
+        lastUpdate = lastUpdate.toString(),
+        tasks = tasks.map(TaskDataModel::asTaskUIModel)
+    )
+}
+
+private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
+    // TODO date formatter
+    return TaskUIModel(
+        title = title,
+        dueDate = dueDate?.toString() ?: "",
+        isCompleted = false
     )
 }
 
@@ -55,6 +66,7 @@ class TaskListsViewModel(
     init {
         // cold flow?
         viewModelScope.launch {
+            taskRepository.fetchTaskLists()
             taskRepository.getTaskLists().collect { allLists ->
                 _taskLists.value = allLists.map(TaskListDataModel::asTaskListUIModel)
             }

@@ -26,6 +26,7 @@ import kotlinx.datetime.Instant
 
 
 data class TaskDataModel(
+    val id: Long,
     val title: String,
     val notes: String = "",
     val dueDate: Instant? = null,

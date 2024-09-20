@@ -31,17 +31,20 @@ import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import kotlinx.coroutines.flow.Flow
+import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 
 @Database(
     entities = [
         TaskListEntity::class,
+        TaskEntity::class,
     ],
     version = 1
 )
 @ConstructedBy(TasksAppDatabaseConstructor::class)
 abstract class TasksAppDatabase : RoomDatabase() {
     abstract fun getTaskListDao(): TaskListDao
+    abstract fun getTaskDao(): TaskDao
 }
 
 // The Room compiler generates the `actual` implementations.
@@ -53,7 +56,7 @@ expect object TasksAppDatabaseConstructor : RoomDatabaseConstructor<TasksAppData
 @Dao
 interface TaskListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(item: TaskListEntity)
+    suspend fun insert(item: TaskListEntity): Long
 
     @Query("SELECT * FROM task_list WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): TaskListEntity?
@@ -63,4 +66,22 @@ interface TaskListDao {
 
     @Query("SELECT * FROM task_list")
     fun getAllAsFlow(): Flow<List<TaskListEntity>>
+}
+
+@Dao
+interface TaskDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(item: TaskEntity): Long
+
+    @Query("SELECT * FROM task WHERE remote_id = :remoteId")
+    suspend fun getByRemoteId(remoteId: String): TaskEntity?
+
+    @Query("SELECT count(*) FROM task")
+    suspend fun count(): Int
+
+    @Query("SELECT * FROM task")
+    fun getAllAsFlow(): Flow<List<TaskEntity>>
+
+    @Query("SELECT * FROM task WHERE parent_list_local_id = :parentId")
+    suspend fun getAllByParentId(parentId: Long): List<TaskEntity>
 }
