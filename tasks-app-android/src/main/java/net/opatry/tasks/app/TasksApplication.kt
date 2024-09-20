@@ -23,6 +23,7 @@
 package net.opatry.tasks.app
 
 import android.app.Application
+import net.opatry.tasks.app.di.dataModule
 import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksModule
 import org.koin.android.ext.koin.androidContext
@@ -36,6 +37,7 @@ class TasksApplication : Application() {
             androidContext(this@TasksApplication)
             modules(
                 platformModule(),
+                dataModule,
                 tasksModule,
             )
         }

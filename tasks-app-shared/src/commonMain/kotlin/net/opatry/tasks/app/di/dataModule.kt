@@ -22,27 +22,19 @@
 
 package net.opatry.tasks.app.di
 
-import android.content.Context
-import androidx.room.Room
-import net.opatry.tasks.CredentialsStorage
-import net.opatry.tasks.FileCredentialsStorage
+import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.coroutines.Dispatchers
 import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.core.module.Module
 import org.koin.dsl.module
-import java.io.File
 
-actual fun platformModule(): Module = module {
+private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
+    .setDriver(BundledSQLiteDriver())
+    .setQueryCoroutineContext(Dispatchers.IO)
+    .build()
+
+val dataModule = module {
     single {
-        val context = get<Context>()
-        val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath("tasks.db")
-        Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
-    }
-
-    single<CredentialsStorage> {
-        // TODO store in database
-        val context = get<Context>()
-        val credentialsFile = File(context.cacheDir, "google_auth_token_cache.json")
-        FileCredentialsStorage(credentialsFile.absolutePath)
+        getRoomDatabase(get())
     }
 }
