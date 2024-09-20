@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity() {
             val coroutineScope = rememberCoroutineScope()
             var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
             val credentialsStorage = koinInject<CredentialsStorage>()
-            credentialsStorage.tempRootPath = cacheDir.absolutePath
             LaunchedEffect(Unit) {
                 signInStatus = if (credentialsStorage.load() != null) {
                     SignInStatus.SignedIn
