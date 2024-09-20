@@ -35,8 +35,10 @@ data class TaskEntity(
     val remoteId: String? = null,
     @ColumnInfo(name = "parent_list_local_id")
     val parentListLocalId: Long, // FIXME @ForeignKey?
+    @ColumnInfo(name = "etag", defaultValue = "")
+    val etag: String = "",
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "notes", defaultValue = "")
-    val notes: String,
+    val notes: String = "",
 )

@@ -58,6 +58,9 @@ interface TaskListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: TaskListEntity): Long
 
+    @Query("SELECT * FROM task_list WHERE local_id = :id")
+    suspend fun getById(id: Long): TaskListEntity?
+
     @Query("SELECT * FROM task_list WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): TaskListEntity?
 
@@ -84,4 +87,10 @@ interface TaskDao {
 
     @Query("SELECT * FROM task WHERE parent_list_local_id = :parentId")
     suspend fun getAllByParentId(parentId: Long): List<TaskEntity>
+
+    @Query(
+        """SELECT * FROM task
+JOIN task_list ON task.parent_list_local_id = task_list.local_id"""
+    )
+    fun getAllTasksWithParent(): Flow<Map<TaskListEntity, List<TaskEntity>>>
 }

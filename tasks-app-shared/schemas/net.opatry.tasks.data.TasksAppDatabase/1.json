@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "401900d9e3f92edc4e088870df007f01",
+    "identityHash": "31d25507995568dc3a16eaede0ede0aa",
     "entities": [
       {
         "tableName": "task_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `title` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -18,6 +18,13 @@
             "fieldPath": "remoteId",
             "columnName": "remote_id",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "etag",
+            "columnName": "etag",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "title",
@@ -35,7 +42,7 @@
       },
       {
         "tableName": "task",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `title` TEXT NOT NULL, `notes` TEXT NOT NULL DEFAULT '')",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `notes` TEXT NOT NULL DEFAULT '')",
         "fields": [
           {
             "fieldPath": "id",
@@ -53,6 +60,13 @@
             "columnName": "parent_list_local_id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "etag",
+            "columnName": "etag",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "''"
           },
           {
             "fieldPath": "title",
@@ -78,7 +92,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '401900d9e3f92edc4e088870df007f01')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '31d25507995568dc3a16eaede0ede0aa')"
     ]
   }
 }
