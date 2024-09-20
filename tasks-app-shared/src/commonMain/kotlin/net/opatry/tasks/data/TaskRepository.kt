@@ -100,34 +100,47 @@ class TaskRepository(
                 emptyList()
             }
         }
-        remoteTaskLists.onEach {
+        remoteTaskLists.onEach { remoteTaskList ->
             // FIXME suboptimal
             //  - check stale ones in DB and remove them if not only local
             //  - check no update, and ignore/filter
             //  - check new ones
             //  - etc.
-            val existingEntity = taskListDao.getByRemoteId(it.id)
-            val finalLocalId = taskListDao.insert(it.asTaskListEntity(existingEntity?.id))
-            println("task list ${it.etag} vs ${existingEntity?.etag}) with final local id $finalLocalId")
-            taskListIds[finalLocalId] = it.id
+            val existingEntity = taskListDao.getByRemoteId(remoteTaskList.id)
+            val finalLocalId = taskListDao.insert(remoteTaskList.asTaskListEntity(existingEntity?.id))
+            println("task list ${remoteTaskList.etag} vs ${existingEntity?.etag}) with final local id $finalLocalId")
+            taskListIds[finalLocalId] = remoteTaskList.id
         }
         taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
-        taskListDao.getLocalOnlyTaskLists().onEach {
+        taskListDao.getLocalOnlyTaskLists().onEach { localTaskList ->
             val remoteId = try {
-                taskListsApi.insert(TaskList(title = it.title)).id
+                taskListsApi.insert(TaskList(title = localTaskList.title)).id
             } catch (e: Exception) {
                 null
             }
             if (remoteId != null) {
-                taskListDao.insert(it.copy(remoteId = remoteId))
+                taskListDao.insert(localTaskList.copy(remoteId = remoteId))
             }
         }
-        // TODO remove stale tasks
-        // TODO sync local only tasks
         taskListIds.forEach { (localListId, remoteListId) ->
-            tasksApi.listAll(remoteListId).onEach { task ->
-                val existingEntity = taskDao.getByRemoteId(task.id)
-                taskDao.insert(task.asTaskEntity(localListId, existingEntity?.id))
+            // TODO deal with showDeleted, showHidden, etc.
+            // TODO updatedMin could be used to filter out unchanged tasks since last sync
+            //  /!\ this would impact the deleteStaleTasks logic
+            val remoteTasks = tasksApi.listAll(remoteListId)
+            remoteTasks.onEach { remoteTask ->
+                val existingEntity = taskDao.getByRemoteId(remoteTask.id)
+                taskDao.insert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
+            }
+            taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
+            taskDao.getLocalOnlyTasks().onEach { localTask ->
+                val remoteId = try {
+                    tasksApi.insert(remoteListId, Task(title = localTask.title)).id
+                } catch (e: Exception) {
+                    null
+                }
+                if (remoteId != null) {
+                    taskDao.insert(localTask.copy(remoteId = remoteId))
+                }
             }
         }
     }
