@@ -1,3 +1,5 @@
+[![Build & Test](https://github.com/opatry/tasks-app/actions/workflows/Build.yml/badge.svg)](https://github.com/opatry/tasks-app/actions/workflows/Build.yml)
+
 # Tasks app
 
 A basic TODO list application based on [Google Tasks REST API](https://developers.google.com/tasks/reference/rest) to showcase [KMP](https://kotlinlang.org/docs/multiplatform.html) app capabilities.
