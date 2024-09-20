@@ -23,12 +23,15 @@
 package net.opatry.tasks.app.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,9 +61,38 @@ fun TaskListsScreen(viewModel: TaskListsViewModel) {
                 val tasks = List(30) { Task(title = "This is my task $it") }
                 items(taskLists) { taskList ->
                     // TODO provide width
-                    TaskListColumn(taskList, tasks.take(Random.nextInt(tasks.size))) {
-                        // TODO dialog to ask for data
-                        viewModel.createTask(taskList, "This is a new task")
+                    Column {
+                        Row {
+                            TextButton(onClick = {
+                                viewModel.updateTitleList(taskList)
+                            }) {
+                                Text("UPD")
+                            }
+                            TextButton(onClick = {
+                                viewModel.removeRandomTask(taskList)
+                            }) {
+                                Text("DEL CH")
+                            }
+                            TextButton(onClick = {
+                                viewModel.addRandomTask(taskList)
+                            }) {
+                                Text("ADD CH")
+                            }
+                            TextButton(onClick = {
+                                viewModel.updateRandomTask(taskList)
+                            }) {
+                                Text("UPD CH")
+                            }
+                            TextButton(onClick = {
+                                viewModel.updateRandomTaskDueDate(taskList)
+                            }) {
+                                Text("UPD CH2")
+                            }
+                        }
+                        TaskListColumn(taskList, tasks.take(Random.nextInt(tasks.size))) {
+                            // TODO dialog to ask for data
+                            viewModel.createTask(taskList, "This is a new task")
+                        }
                     }
                 }
             }

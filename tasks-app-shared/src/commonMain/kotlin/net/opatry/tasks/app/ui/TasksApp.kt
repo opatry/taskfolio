@@ -69,6 +69,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import ListTodo as LucideListTodo
+import RefreshCw as LucideRefreshClockWise
 import Search as LucideSearch
 import Settings as LucideSettings
 
@@ -93,6 +94,9 @@ fun TasksApp(viewModel: TaskListsViewModel) {
                     Text(stringResource(Res.string.app_name))
                 },
                 actions = {
+                    IconButton(onClick = viewModel::fetch) {
+                        Icon(LucideRefreshClockWise, null) // TODO stringRes("refresh")
+                    }
                     ProfileIcon(httpClient)
                 }
             )
