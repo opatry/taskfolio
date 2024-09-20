@@ -30,4 +30,6 @@ data class TaskDataModel(
     val title: String,
     val notes: String = "",
     val dueDate: Instant? = null,
+    val position: String,
+    val indent: Int,
 )
