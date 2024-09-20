@@ -20,24 +20,24 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app
+package net.opatry.tasks.app.di
 
-import android.app.Application
-import net.opatry.tasks.app.di.platformModule
-import net.opatry.tasks.app.di.tasksModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.FileCredentialsStorage
+import org.koin.core.module.Module
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import java.io.File
 
-class TasksApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
+actual fun platformModule(): Module = module {
+    single(named("app_root_dir")) {
+        val userHome = File(System.getProperty("user.home"))
+        File(userHome, ".tasksApp")
+    }
 
-        startKoin {
-            androidContext(this@TasksApplication)
-            modules(
-                platformModule(),
-                tasksModule,
-            )
-        }
+    single<CredentialsStorage> {
+        // TODO store in database
+        val credentialsFile = File(get<File>(named("app_root_dir")), "google_auth_token_cache.json")
+        FileCredentialsStorage(credentialsFile.absolutePath)
     }
 }

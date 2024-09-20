@@ -29,11 +29,9 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 
-actual class FileCredentialsStorage actual constructor(private val filename: String) : CredentialsStorage {
-    // FIXME root dir
-    override var tempRootPath: String = ""
-    private val file: File
-        get() = File(tempRootPath, filename)
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual class FileCredentialsStorage actual constructor(filepath: String) : CredentialsStorage {
+    private val file: File = File(filepath)
 
     override suspend fun load(): TokenCache? {
         return withContext(Dispatchers.IO) {
@@ -48,6 +46,7 @@ actual class FileCredentialsStorage actual constructor(private val filename: Str
     override suspend fun store(tokenCache: TokenCache) {
         val json = Json { prettyPrint = true }
         withContext(Dispatchers.IO) {
+            file.parentFile?.mkdirs()
             file.writeText(json.encodeToString(tokenCache))
         }
     }

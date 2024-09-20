@@ -41,9 +41,12 @@ data class TokenCache(
 
 
 interface CredentialsStorage {
-    var tempRootPath: String
     suspend fun load(): TokenCache?
     suspend fun store(tokenCache: TokenCache)
 }
 
-expect class FileCredentialsStorage(filename: String) : CredentialsStorage
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+/**
+ * ⚠️ Convenience implementation for development, totally unsecure way to store OAuth credentials.
+ */
+expect class FileCredentialsStorage(filepath: String) : CredentialsStorage

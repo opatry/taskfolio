@@ -49,6 +49,7 @@ import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.TasksScopes
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
+import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksModule
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
@@ -66,7 +67,10 @@ enum class SignInStatus {
 fun main() {
     // TODO use KoinApplication
     startKoin {
-        modules(tasksModule)
+        modules(
+            platformModule(),
+            tasksModule,
+        )
     }
 
     application {
