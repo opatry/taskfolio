@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.component
 
 import CircleFadingPlus
+import EllipsisVertical
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,17 +37,15 @@ import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.ListItem
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
@@ -60,19 +59,29 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun TaskListColumn(taskList: TaskListUIModel, onNewTaskClick: () -> Unit) {
-    val tasks by remember { mutableStateOf(taskList.tasks) }
-
     Card(Modifier.width(250.dp)) {
         LazyColumn {
             stickyHeader {
                 // TODO elevation on lift
                 Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
-                    Text(
-                        taskList.title, // + " ETag(${taskList.etag})",
+                    Row(
                         Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            taskList.title, // + " ETag(${taskList.etag})",
+                            Modifier.weight(1f),
+                            //                        textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        IconButton(onClick = {}) {
+                            // TODO stringResource
+                            Icon(EllipsisVertical, "List actions")
+                        }
+                    }
                     TextButton(onClick = onNewTaskClick) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -84,6 +93,8 @@ fun TaskListColumn(taskList: TaskListUIModel, onNewTaskClick: () -> Unit) {
                     }
                 }
             }
+
+            val tasks = taskList.tasks
             if (tasks.isEmpty()) {
                 item {
                     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)) {
@@ -116,8 +127,14 @@ fun TaskRow(task: TaskUIModel) {
     ListItem(
         icon = {
             Checkbox(checked = task.isCompleted, onCheckedChange = {})
+        },
+        trailing = {
+            IconButton(onClick = {}) {
+                // TODO stringResource
+                Icon(EllipsisVertical, "Task actions")
+            }
         }
     ) {
-        Text(task.title)
+        Text(task.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }

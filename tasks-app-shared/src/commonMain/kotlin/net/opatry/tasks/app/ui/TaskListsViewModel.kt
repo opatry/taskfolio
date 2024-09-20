@@ -24,8 +24,11 @@ package net.opatry.tasks.app.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import net.opatry.tasks.app.ui.model.TaskListUIModel
@@ -57,18 +60,19 @@ private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
 class TaskListsViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    private val _taskLists = MutableStateFlow<List<TaskListUIModel>>(emptyList())
-
-    // TODO UI model
-    val taskLists: StateFlow<List<TaskListUIModel>>
-        get() = _taskLists
+    // FIXME won't work for empty list
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val taskLists: Flow<List<TaskListUIModel>> = taskRepository.getTaskLists().mapLatest { allLists ->
+        allLists.map(TaskListDataModel::asTaskListUIModel)
+    }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     init {
         // cold flow?
         viewModelScope.launch {
-            taskRepository.fetchTaskLists()
-            taskRepository.getTaskLists().collect { allLists ->
-                _taskLists.value = allLists.map(TaskListDataModel::asTaskListUIModel)
+            try {
+                taskRepository.fetchTaskLists()
+            } catch (e: Exception) {
+                // most likely no network
             }
         }
     }
@@ -106,6 +110,10 @@ class TaskListsViewModel(
     }
 
     private suspend fun refresh() {
-        taskRepository.fetchTaskLists()
+        try {
+            taskRepository.fetchTaskLists()
+        } catch (e: Exception) {
+            // most likely no network
+        }
     }
 }

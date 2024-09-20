@@ -41,16 +41,37 @@ private fun TaskList.asTaskListEntity(localId: Long?): TaskListEntity {
     return TaskListEntity(
         id = localId ?: 0,
         remoteId = id,
-        title = title
+        etag = etag,
+        title = title,
     )
 }
+
 private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?): TaskEntity {
     return TaskEntity(
         id = localId ?: 0,
         remoteId = id,
         parentListLocalId = parentLocalId,
+        etag = etag,
         title = title,
         notes = notes ?: "",
+    )
+}
+
+private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskListDataModel {
+    return TaskListDataModel(
+        id = id,
+        title = title,
+        lastUpdate = Clock.System.now(),
+        tasks = tasks.map(TaskEntity::asTaskDataModel)
+    )
+}
+
+private fun TaskEntity.asTaskDataModel(): TaskDataModel {
+    return TaskDataModel(
+        id = id,
+        title = title,
+        notes = notes,
+        dueDate = Clock.System.now()
     )
 }
 
@@ -61,14 +82,9 @@ class TaskRepository(
     private val tasksApi: TasksApi,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getTaskLists() = taskListDao.getAllAsFlow().mapLatest { taskListEntities ->
-        // FIXME do it in a single query
-        // TODO mapper fn
-        taskListEntities.map { listEntity ->
-            val children = taskDao.getAllByParentId(listEntity.id).map {
-                TaskDataModel(it.id, it.title, it.notes, Clock.System.now())
-            }
-            TaskListDataModel(listEntity.id, listEntity.title, Clock.System.now(), children)
+    fun getTaskLists() = taskDao.getAllTasksWithParent().mapLatest {
+        it.map { (list, tasks) ->
+            list.asTaskListDataModel(tasks)
         }
     }
 
@@ -82,34 +98,56 @@ class TaskRepository(
             //  - check no update, and ignore/filter
             //  - check new ones
             //  - etc.
-            val localId = taskListDao.getByRemoteId(it.id)?.id ?: 0
-            val finalLocalId = taskListDao.insert(it.asTaskListEntity(localId))
+            val existingEntity = taskListDao.getByRemoteId(it.id)
+            val finalLocalId = taskListDao.insert(it.asTaskListEntity(existingEntity?.id))
+            println("task list ${it.etag} vs ${existingEntity?.etag}) with final local id $finalLocalId")
             taskListIds[finalLocalId] = it.id
         }
         taskListIds.forEach { (localListId, remoteListId) ->
             tasksApi.listAll(remoteListId).onEach { task ->
-                val localTaskId = taskDao.getByRemoteId(task.id)?.id ?: 0
-                taskDao.insert(task.asTaskEntity(localListId, localTaskId))
+                val existingEntity = taskDao.getByRemoteId(task.id)
+                taskDao.insert(task.asTaskEntity(localListId, existingEntity?.id))
             }
         }
     }
 
-    suspend fun createTaskList(title: String): TaskList {
-        taskListDao.insert(TaskListEntity(title = title))
-        return withContext(Dispatchers.IO) {
-            taskListsApi.insert(TaskList(title = title))
+    suspend fun createTaskList(title: String) {
+        val taskListId = taskListDao.insert(TaskListEntity(title = title))
+        val taskListEntity = taskListDao.getById(taskListId)
+        if (taskListEntity != null) {
+            val taskList = withContext(Dispatchers.IO) {
+                try {
+                    taskListsApi.insert(TaskList(title = title))
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            if (taskList != null) {
+                taskListDao.insert(taskList.asTaskListEntity(taskListId))
+            }
         }
     }
 
     suspend fun createTask(taskListId: Long, title: String, dueDate: Instant? = null) {
-//        withContext(Dispatchers.IO) {
-//            tasksApi.insert(
-//                taskList.id,
-//                Task(
-//                    title = title,
-//                    dueDate = dueDate
-//                )
-//            )
-//        }
+        val taskId = taskDao.insert(TaskEntity(parentListLocalId = taskListId, title = title))
+        val taskListEntity = taskListDao.getById(taskListId)
+        if (taskListEntity?.remoteId != null) {
+            val task = withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.insert(
+                        taskListEntity.remoteId,
+                        Task(
+                            title = title,
+                            dueDate = dueDate
+                        )
+                    )
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            if (task != null) {
+                taskDao.insert(task.asTaskEntity(taskListId, taskId))
+            }
+        }
     }
 }

@@ -48,7 +48,7 @@ import ListPlus as LucideListPlus
 
 @Composable
 fun TaskListsScreen(viewModel: TaskListsViewModel) {
-    val taskLists by viewModel.taskLists.collectAsState()
+    val taskLists by viewModel.taskLists.collectAsState(emptyList())
 
     Surface(Modifier.fillMaxSize()) {
         if (taskLists.isEmpty()) {

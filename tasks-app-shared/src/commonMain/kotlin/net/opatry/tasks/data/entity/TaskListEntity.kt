@@ -32,8 +32,10 @@ data class TaskListEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "local_id")
     val id: Long = 0,
-    @ColumnInfo(name = "remote_id") // TODO must be unique
+    @ColumnInfo(name = "remote_id") // TODO should be unique when not null
     val remoteId: String? = null,
+    @ColumnInfo(name = "etag", defaultValue = "")
+    val etag: String = "",
     @ColumnInfo(name = "title")
     val title: String,
 )
