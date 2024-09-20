@@ -20,24 +20,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app
+package net.opatry.tasks.app.di
 
-import android.app.Application
-import net.opatry.tasks.app.di.platformModule
-import net.opatry.tasks.app.di.tasksModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 
-class TasksApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-
-        startKoin {
-            androidContext(this@TasksApplication)
-            modules(
-                platformModule(),
-                tasksModule,
-            )
-        }
-    }
-}
+expect fun platformModule(): Module

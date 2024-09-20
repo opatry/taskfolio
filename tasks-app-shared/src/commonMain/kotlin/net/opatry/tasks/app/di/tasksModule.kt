@@ -45,7 +45,6 @@ import net.opatry.google.auth.HttpGoogleAuthenticator
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
-import net.opatry.tasks.FileCredentialsStorage
 import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TaskRepository
@@ -78,12 +77,8 @@ val tasksModule = module {
         HttpGoogleAuthenticator(config)
     }
 
-    single<CredentialsStorage> {
-        FileCredentialsStorage("google_auth_token_cache.json")
-    }
-
     single(named(HttpClientName.Tasks)) {
-        val credentialsStorage: CredentialsStorage = get()
+        val credentialsStorage = get<CredentialsStorage>()
 
         HttpClient(CIO) {
             CurlUserAgent()
