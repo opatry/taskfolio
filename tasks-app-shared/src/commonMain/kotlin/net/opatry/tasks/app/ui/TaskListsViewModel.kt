@@ -24,68 +24,39 @@ package net.opatry.tasks.app.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import net.opatry.google.tasks.TaskListsApi
-import net.opatry.google.tasks.TasksApi
-import net.opatry.google.tasks.model.Task
-import net.opatry.google.tasks.model.TaskList
-import kotlin.random.Random
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
+import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.data.TaskRepository
+import net.opatry.tasks.data.model.TaskListDataModel
 
-class TaskRepository(
-    /*private*/ val taskListsApi: TaskListsApi,
-    /*private*/ val tasksApi: TasksApi,
-    // TODO database
-) {
-    suspend fun getTaskLists(): List<TaskList> {
-        return withContext(Dispatchers.IO) {
-            taskListsApi.listAll()
-        }
-    }
-
-    suspend fun createTaskList(title: String): TaskList {
-        return withContext(Dispatchers.IO) {
-            taskListsApi.insert(TaskList(title = title))
-        }
-    }
-
-    suspend fun createTask(taskList: TaskList, title: String, dueDate: Instant? = null): Task {
-        return withContext(Dispatchers.IO) {
-            tasksApi.insert(
-                taskList.id,
-                Task(
-                    title = title,
-                    dueDate = dueDate
-                )
-            )
-        }
-    }
+private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
+    // TODO children
+    // TODO date formatter
+    return TaskListUIModel(
+        id,
+        title,
+        lastUpdate.toString(),
+        emptyList()
+    )
 }
 
 class TaskListsViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    private val _taskLists = MutableStateFlow<List<TaskList>>(emptyList())
-    val taskLists: StateFlow<List<TaskList>>
+    private val _taskLists = MutableStateFlow<List<TaskListUIModel>>(emptyList())
+
+    // TODO UI model
+    val taskLists: StateFlow<List<TaskListUIModel>>
         get() = _taskLists
 
     init {
         // cold flow?
         viewModelScope.launch {
-            // TODO flow?
-            _taskLists.value = try {
-                taskRepository.getTaskLists()
-            } catch (e: Exception) {
-                println("Error fetching task lists: $e")
-                // TODO error handling
-                emptyList()
+            taskRepository.getTaskLists().collect { allLists ->
+                _taskLists.value = allLists.map(TaskListDataModel::asTaskListUIModel)
             }
         }
     }
@@ -105,10 +76,10 @@ class TaskListsViewModel(
     //  - either apply it remotely and on undo, do another request to restore through API
     //  - or "hide" locally, on undo "un-hide", on dismiss, apply remotely
 
-    fun createTask(taskList: TaskList, title: String, dueDate: Instant? = null) {
+    fun createTask(taskList: TaskListUIModel, title: String, dueDate: Instant? = null) {
         viewModelScope.launch {
             try {
-                taskRepository.createTask(taskList, title, dueDate)
+                taskRepository.createTask(taskList.id, title, dueDate)
             } catch (e: Exception) {
                 println("Error creating task: $e")
                 // TODO error handling
@@ -123,67 +94,6 @@ class TaskListsViewModel(
     }
 
     private suspend fun refresh() {
-        _taskLists.value = try {
-            taskRepository.getTaskLists().onEach { l ->
-                println("${l.id}: ${l.etag}")
-            }
-        } catch (e: Exception) {
-            println("Error fetching task lists: $e")
-            emptyList()
-        }
-    }
-
-    fun updateTitleList(taskList: TaskList) {
-        viewModelScope.launch {
-            taskRepository.taskListsApi.update(taskList.id, taskList.copy(title = "Dev tasks list ${System.currentTimeMillis()}"))
-            refresh()
-        }
-    }
-
-    fun removeRandomTask(taskList: TaskList) {
-        viewModelScope.launch {
-            val children = taskRepository.tasksApi.listAll(taskList.id, showHidden = true, showDeleted = true)
-            children.randomOrNull()?.let {
-                println("BEFORE: " + children.joinToString(", ") { t -> "${t.id}  ${t.isDeleted}" })
-                taskRepository.tasksApi.delete(taskList.id, it.id)
-                val children2 = taskRepository.tasksApi.listAll(taskList.id, showHidden = true, showDeleted = true)
-                println("AFTER : " + children2.joinToString(", ") { t -> "${t.id}  ${t.isDeleted}" })
-                refresh()
-            }
-        }
-    }
-
-    fun addRandomTask(taskList: TaskList) {
-        viewModelScope.launch {
-            taskRepository.tasksApi.insert(taskList.id, Task(title = "Toto"))
-            refresh()
-        }
-    }
-
-    fun updateRandomTask(taskList: TaskList) {
-        viewModelScope.launch {
-            val children = taskRepository.tasksApi.listAll(taskList.id)
-            children.randomOrNull()?.let {
-                taskRepository.tasksApi.update(taskList.id, it.id, it.copy(title = "Updated (${System.currentTimeMillis()})"))
-                refresh()
-            }
-        }
-    }
-
-    fun updateRandomTaskDueDate(taskList: TaskList) {
-        viewModelScope.launch {
-            val children = taskRepository.tasksApi.listAll(taskList.id)
-            children.randomOrNull()?.let {
-                println("BEFORE: " + children.joinToString(", ") { t -> "${t.id}  ${t.dueDate}" })
-                taskRepository.tasksApi.update(
-                    taskList.id,
-                    it.id,
-                    it.copy(dueDate = (it.dueDate ?: Clock.System.now()) + Random.nextInt(3).days + Random.nextInt(8, 20).hours)
-                )
-                val children2 = taskRepository.tasksApi.listAll(taskList.id, showDeleted = false)
-                println("AFTER : " + children2.joinToString(", ") { t -> "${t.id}  ${t.dueDate}" })
-                refresh()
-            }
-        }
+        taskRepository.fetchTaskLists()
     }
 }

@@ -23,27 +23,27 @@
 package net.opatry.tasks.app.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import net.opatry.google.tasks.model.Task
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.component.TaskListColumn
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_empty_state_title
 import org.jetbrains.compose.resources.stringResource
-import kotlin.random.Random
+import ListPlus as LucideListPlus
 
 
 @Composable
@@ -56,44 +56,26 @@ fun TaskListsScreen(viewModel: TaskListsViewModel) {
         } else {
             // TODO master detail layout
 
-            LazyRow(Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                // TODO stub + UI data model
-                val tasks = List(30) { Task(title = "This is my task $it") }
-                items(taskLists) { taskList ->
-                    // TODO provide width
-                    Column {
-                        Row {
-                            TextButton(onClick = {
-                                viewModel.updateTitleList(taskList)
-                            }) {
-                                Text("UPD")
-                            }
-                            TextButton(onClick = {
-                                viewModel.removeRandomTask(taskList)
-                            }) {
-                                Text("DEL CH")
-                            }
-                            TextButton(onClick = {
-                                viewModel.addRandomTask(taskList)
-                            }) {
-                                Text("ADD CH")
-                            }
-                            TextButton(onClick = {
-                                viewModel.updateRandomTask(taskList)
-                            }) {
-                                Text("UPD CH")
-                            }
-                            TextButton(onClick = {
-                                viewModel.updateRandomTaskDueDate(taskList)
-                            }) {
-                                Text("UPD CH2")
-                            }
-                        }
-                        TaskListColumn(taskList, tasks.take(Random.nextInt(tasks.size))) {
+            Box(Modifier.fillMaxSize()) {
+                LazyRow(Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(taskLists) { taskList ->
+                        // TODO provide width
+                        TaskListColumn(taskList) {
                             // TODO dialog to ask for data
                             viewModel.createTask(taskList, "This is a new task")
                         }
                     }
+                }
+
+                FloatingActionButton(
+                    onClick = {
+                        // TODO dialog to ask for data
+                        viewModel.createTaskList("This is a new task list")
+                    },
+                    modifier = Modifier.padding(24.dp).align(Alignment.BottomEnd)
+                ) {
+                    // TODO stringResource("create new task list")
+                    Icon(LucideListPlus, null)
                 }
             }
         }

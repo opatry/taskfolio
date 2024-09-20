@@ -20,25 +20,21 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.data.entity
 
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import kotlinx.coroutines.Dispatchers
-import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.dsl.module
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
-    .setDriver(BundledSQLiteDriver())
-    .setQueryCoroutineContext(Dispatchers.IO)
-    .build()
 
-val dataModule = module {
-    single {
-        getRoomDatabase(get())
-    }
+@Entity(tableName = "task_list")
+data class TaskListEntity(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "local_id")
+    val id: Long = 0,
+    @ColumnInfo(name = "remote_id") // TODO must be unique
+    val remoteId: String? = null,
+    @ColumnInfo(name = "title")
+    val title: String,
+)
 
-    factory {
-        get<TasksAppDatabase>().getTaskListDao()
-    }
-}

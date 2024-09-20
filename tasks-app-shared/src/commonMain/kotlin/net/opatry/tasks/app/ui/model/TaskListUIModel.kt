@@ -20,25 +20,13 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.app.ui.model
 
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import kotlinx.coroutines.Dispatchers
-import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.dsl.module
-
-private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
-    .setDriver(BundledSQLiteDriver())
-    .setQueryCoroutineContext(Dispatchers.IO)
-    .build()
-
-val dataModule = module {
-    single {
-        getRoomDatabase(get())
-    }
-
-    factory {
-        get<TasksAppDatabase>().getTaskListDao()
-    }
+data class TaskListUIModel(
+    val id: Long,
+    val title: String,
+    val lastUpdate: String,
+    val tasks: List<TaskUIModel>,
+) {
+    val isEmpty: Boolean = tasks.isEmpty()
 }
