@@ -18,7 +18,6 @@
  * USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
@@ -28,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val ListTodo: ImageVector
+public val RefreshCw: ImageVector
     get() {
-        if (_ListTodo != null) {
-            return _ListTodo!!
+        if (_RefreshCw != null) {
+            return _RefreshCw!!
         }
-        _ListTodo = ImageVector.Builder(
-            name = "ListTodo",
+        _RefreshCw = ImageVector.Builder(
+            name = "RefreshCw",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -51,16 +50,10 @@ public val ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(4f, 5f)
-                horizontalLineTo(8f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, 6f)
-                verticalLineTo(10f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 8f, 11f)
-                horizontalLineTo(4f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 10f)
-                verticalLineTo(6f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 4f, 5f)
-                close()
+                moveTo(3f, 12f)
+                arcToRelative(9f, 9f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, -9f)
+                arcToRelative(9.75f, 9.75f, 0f, isMoreThanHalf = false, isPositiveArc = true, 6.74f, 2.74f)
+                lineTo(21f, 8f)
             }
             path(
                 fill = null,
@@ -73,9 +66,9 @@ public val ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(3f, 17f)
-                lineToRelative(2f, 2f)
-                lineToRelative(4f, -4f)
+                moveTo(21f, 3f)
+                verticalLineToRelative(5f)
+                horizontalLineToRelative(-5f)
             }
             path(
                 fill = null,
@@ -88,8 +81,10 @@ public val ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(13f, 6f)
-                horizontalLineToRelative(8f)
+                moveTo(21f, 12f)
+                arcToRelative(9f, 9f, 0f, isMoreThanHalf = false, isPositiveArc = true, -9f, 9f)
+                arcToRelative(9.75f, 9.75f, 0f, isMoreThanHalf = false, isPositiveArc = true, -6.74f, -2.74f)
+                lineTo(3f, 16f)
             }
             path(
                 fill = null,
@@ -102,25 +97,12 @@ public val ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(13f, 12f)
-                horizontalLineToRelative(8f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(13f, 18f)
-                horizontalLineToRelative(8f)
+                moveTo(8f, 16f)
+                horizontalLineTo(3f)
+                verticalLineToRelative(5f)
             }
         }.build()
-        return _ListTodo!!
+        return _RefreshCw!!
     }
 
-private var _ListTodo: ImageVector? = null
+private var _RefreshCw: ImageVector? = null
