@@ -47,7 +47,7 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.TaskRepository
+import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.module.dsl.factoryOf

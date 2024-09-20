@@ -41,12 +41,15 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import net.opatry.google.tasks.model.Task
-import net.opatry.google.tasks.model.TaskList
+import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_add_task
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
@@ -56,14 +59,16 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
-fun TaskListColumn(taskList: TaskList, tasks: List<Task>, onNewTaskClick: () -> Unit) {
+fun TaskListColumn(taskList: TaskListUIModel, onNewTaskClick: () -> Unit) {
+    val tasks by remember { mutableStateOf(taskList.tasks) }
+
     Card(Modifier.width(250.dp)) {
         LazyColumn {
             stickyHeader {
                 // TODO elevation on lift
                 Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
                     Text(
-                        taskList.title + " ETag(${taskList.etag})",
+                        taskList.title, // + " ETag(${taskList.etag})",
                         Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleMedium
@@ -106,7 +111,7 @@ fun TaskListColumn(taskList: TaskList, tasks: List<Task>, onNewTaskClick: () -> 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TaskRow(task: Task) {
+fun TaskRow(task: TaskUIModel) {
     // TODO nice rounded checks or so?
     ListItem(
         icon = {

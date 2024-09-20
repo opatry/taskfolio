@@ -25,14 +25,13 @@ package net.opatry.tasks.data
 import androidx.room.ConstructedBy
 import androidx.room.Dao
 import androidx.room.Database
-import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import kotlinx.coroutines.flow.Flow
+import net.opatry.tasks.data.entity.TaskListEntity
 
 @Database(
     entities = [
@@ -56,17 +55,12 @@ interface TaskListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: TaskListEntity)
 
+    @Query("SELECT * FROM task_list WHERE remote_id = :remoteId")
+    suspend fun getByRemoteId(remoteId: String): TaskListEntity?
+
     @Query("SELECT count(*) FROM task_list")
     suspend fun count(): Int
 
     @Query("SELECT * FROM task_list")
     fun getAllAsFlow(): Flow<List<TaskListEntity>>
 }
-
-@Entity(tableName = "task_list")
-data class TaskListEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val title: String,
-    val content: String
-)
