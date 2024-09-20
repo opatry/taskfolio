@@ -63,7 +63,7 @@ fun TaskListColumn(taskList: TaskList, tasks: List<Task>, onNewTaskClick: () -> 
                 // TODO elevation on lift
                 Column(Modifier.background(MaterialTheme.colorScheme.surface)) {
                     Text(
-                        taskList.title,
+                        taskList.title + " ETag(${taskList.etag})",
                         Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleMedium
