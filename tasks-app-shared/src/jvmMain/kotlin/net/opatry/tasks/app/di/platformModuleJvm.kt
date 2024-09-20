@@ -22,8 +22,10 @@
 
 package net.opatry.tasks.app.di
 
+import androidx.room.Room
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.FileCredentialsStorage
+import net.opatry.tasks.data.TasksAppDatabase
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -33,6 +35,11 @@ actual fun platformModule(): Module = module {
     single(named("app_root_dir")) {
         val userHome = File(System.getProperty("user.home"))
         File(userHome, ".tasksApp")
+    }
+
+    single {
+        val dbFile = File(get<File>(named("app_root_dir")), "tasks.db")
+        Room.databaseBuilder<TasksAppDatabase>(dbFile.absolutePath)
     }
 
     single<CredentialsStorage> {

@@ -25,8 +25,10 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.androidx.room)
 }
 
 compose.resources {
@@ -51,6 +53,9 @@ kotlin {
             implementation(project(":google:oauth"))
             implementation(project(":google:tasks"))
 
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
@@ -72,6 +77,16 @@ kotlin {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+    generateKotlin = true
+}
+
+dependencies {
+    // FIXME deprecated, rely on add("kspJvm", project(...)) and counterparts (to be clarified)
+    //  see https://kotlinlang.org/docs/ksp-multiplatform.html
+    ksp(libs.androidx.room.compiler)
+}
 
 android {
     namespace = "net.opatry.tasks"
