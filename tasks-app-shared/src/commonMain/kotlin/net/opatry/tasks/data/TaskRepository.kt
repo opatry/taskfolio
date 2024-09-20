@@ -24,6 +24,7 @@ package net.opatry.tasks.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -82,17 +83,24 @@ class TaskRepository(
     private val tasksApi: TasksApi,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getTaskLists() = taskDao.getAllTasksWithParent().mapLatest {
-        it.map { (list, tasks) ->
+    fun getTaskLists() = taskListDao.getAllTaskListsWithTasksAsFlow()
+        .distinctUntilChanged()
+        .mapLatest { entries ->
+            entries.map { (list, tasks) ->
             list.asTaskListDataModel(tasks)
         }
     }
 
-    suspend fun fetchTaskLists() {
+    suspend fun sync() {
         val taskListIds = mutableMapOf<Long, String>()
-        withContext(Dispatchers.IO) {
-            taskListsApi.listAll()
-        }.onEach {
+        val remoteTaskLists = withContext(Dispatchers.IO) {
+            try {
+                taskListsApi.listAll()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+        remoteTaskLists.onEach {
             // FIXME suboptimal
             //  - check stale ones in DB and remove them if not only local
             //  - check no update, and ignore/filter
@@ -103,6 +111,19 @@ class TaskRepository(
             println("task list ${it.etag} vs ${existingEntity?.etag}) with final local id $finalLocalId")
             taskListIds[finalLocalId] = it.id
         }
+        taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
+        taskListDao.getLocalOnlyTaskLists().onEach {
+            val remoteId = try {
+                taskListsApi.insert(TaskList(title = it.title)).id
+            } catch (e: Exception) {
+                null
+            }
+            if (remoteId != null) {
+                taskListDao.insert(it.copy(remoteId = remoteId))
+            }
+        }
+        // TODO remove stale tasks
+        // TODO sync local only tasks
         taskListIds.forEach { (localListId, remoteListId) ->
             tasksApi.listAll(remoteListId).onEach { task ->
                 val existingEntity = taskDao.getByRemoteId(task.id)
