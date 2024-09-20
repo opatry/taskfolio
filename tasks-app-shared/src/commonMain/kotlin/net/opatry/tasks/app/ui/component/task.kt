@@ -94,8 +94,7 @@ fun TaskListColumn(taskList: TaskListUIModel, onNewTaskClick: () -> Unit) {
                 }
             }
 
-            val tasks = taskList.tasks
-            if (tasks.isEmpty()) {
+            if (taskList.isEmpty) {
                 item {
                     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)) {
 
@@ -111,7 +110,7 @@ fun TaskListColumn(taskList: TaskListUIModel, onNewTaskClick: () -> Unit) {
                     }
                 }
             } else {
-                items(tasks) { task ->
+                items(taskList.tasks, TaskUIModel::id) { task ->
                     // TODO indentation & parent hierarchy
                     TaskRow(task)
                 }

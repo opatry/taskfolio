@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.model
 
 data class TaskUIModel(
+    val id: Long,
     val title: String,
     val dueDate: String,
     val isCompleted: Boolean,

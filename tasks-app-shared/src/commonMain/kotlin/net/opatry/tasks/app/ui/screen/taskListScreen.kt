@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.component.TaskListColumn
+import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_empty_state_title
 import org.jetbrains.compose.resources.stringResource
@@ -58,7 +59,7 @@ fun TaskListsScreen(viewModel: TaskListsViewModel) {
 
             Box(Modifier.fillMaxSize()) {
                 LazyRow(Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(taskLists) { taskList ->
+                    items(taskLists, TaskListUIModel::id) { taskList ->
                         // TODO provide width
                         TaskListColumn(taskList) {
                             // TODO dialog to ask for data
