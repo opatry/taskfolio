@@ -61,7 +61,6 @@ private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
 class TaskListsViewModel(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
-    // FIXME won't work for empty list
     @OptIn(ExperimentalCoroutinesApi::class)
     val taskLists: Flow<List<TaskListUIModel>> = taskRepository.getTaskLists().mapLatest { allLists ->
         allLists.map(TaskListDataModel::asTaskListUIModel)
@@ -71,7 +70,7 @@ class TaskListsViewModel(
         // cold flow?
         viewModelScope.launch {
             try {
-                taskRepository.fetchTaskLists()
+                taskRepository.sync()
             } catch (e: Exception) {
                 // most likely no network
             }
@@ -112,7 +111,7 @@ class TaskListsViewModel(
 
     private suspend fun refresh() {
         try {
-            taskRepository.fetchTaskLists()
+            taskRepository.sync()
         } catch (e: Exception) {
             // most likely no network
         }

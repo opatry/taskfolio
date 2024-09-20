@@ -69,6 +69,20 @@ interface TaskListDao {
 
     @Query("SELECT * FROM task_list")
     fun getAllAsFlow(): Flow<List<TaskListEntity>>
+
+    // FIXME order should use "parent" lexicographic order
+    // use LEFT JOIN to get all task lists even if they have no task
+    @Query(
+        """SELECT * FROM task_list
+LEFT JOIN task ON task_list.local_id = task.parent_list_local_id ORDER BY task_list.local_id ASC, task.local_id ASC"""
+    )
+    fun getAllTaskListsWithTasksAsFlow(): Flow<Map<TaskListEntity, List<TaskEntity>>>
+
+    @Query("SELECT * FROM task_list WHERE remote_id IS NULL")
+    suspend fun getLocalOnlyTaskLists(): List<TaskListEntity>
+
+    @Query("DELETE FROM task_list WHERE remote_id IS NOT NULL AND remote_id NOT IN (:validRemoteIds)")
+    suspend fun deleteStaleTaskLists(validRemoteIds: List<String>)
 }
 
 @Dao
@@ -87,10 +101,4 @@ interface TaskDao {
 
     @Query("SELECT * FROM task WHERE parent_list_local_id = :parentId")
     suspend fun getAllByParentId(parentId: Long): List<TaskEntity>
-
-    @Query(
-        """SELECT * FROM task
-JOIN task_list ON task.parent_list_local_id = task_list.local_id"""
-    )
-    fun getAllTasksWithParent(): Flow<Map<TaskListEntity, List<TaskEntity>>>
 }
