@@ -21,3 +21,4 @@ client_secret_*.apps.googleusercontent.com.json
 .idea/caches/deviceStreaming.xml
 .idea/deploymentTargetSelector.xml
 .idea/migrations.xml
+.kotlin/errors/errors-*.log
