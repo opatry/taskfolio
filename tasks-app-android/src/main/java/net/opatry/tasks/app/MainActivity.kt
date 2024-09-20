@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             when (signInStatus) {
-                SignInStatus.Loading -> CircularProgressIndicator()
+                SignInStatus.Loading -> CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
                 SignInStatus.SignedIn -> {
                     val viewModel = koinViewModel<TaskListsViewModel>()
                     TasksApp(viewModel)
@@ -123,7 +123,7 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             if (ongoingAuth) {
-                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 2.dp)
+                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
             } else {
                 Spacer(Modifier.size(24.dp))
             }
