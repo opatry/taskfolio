@@ -60,6 +60,8 @@ val networkModule = module {
             }
             install(Auth) {
                 bearer {
+                    // TODO handle 401 (clear storage)
+                    // TODO handle no network
                     loadTokens {
                         val tokenCache = credentialsStorage.load()
                         BearerTokens(tokenCache?.accessToken ?: "", tokenCache?.refreshToken ?: "")
