@@ -34,49 +34,22 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import net.opatry.google.auth.GoogleAuth
 import net.opatry.google.auth.GoogleAuthenticator
-import net.opatry.google.auth.HttpGoogleAuthenticator
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.data.TaskRepository
-import net.opatry.tasks.resources.Res
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.time.Duration.Companion.seconds
+
 
 enum class HttpClientName {
     Tasks,
 }
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalSerializationApi::class)
-val tasksModule = module {
-    single<GoogleAuthenticator> {
-        val credentialsFilename = "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json"
-        val googleAuthCredentials = runBlocking {
-            Res.readBytes("files/$credentialsFilename").inputStream().use { inputStream ->
-                Json.decodeFromStream<GoogleAuth>(inputStream).credentials
-            }
-        }
-        val config = HttpGoogleAuthenticator.ApplicationConfig(
-            redirectUrl = googleAuthCredentials.redirectUris.first(),
-            clientId = googleAuthCredentials.clientId,
-            clientSecret = googleAuthCredentials.clientSecret,
-        )
-        HttpGoogleAuthenticator(config)
-    }
-
+val networkModule = module {
     single(named(HttpClientName.Tasks)) {
         val credentialsStorage = get<CredentialsStorage>()
 
@@ -132,8 +105,4 @@ val tasksModule = module {
     single {
         TasksApi(get(named(HttpClientName.Tasks)))
     }
-
-    singleOf(::TaskRepository)
-
-    factoryOf(::TaskListsViewModel)
 }
