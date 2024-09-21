@@ -20,30 +20,17 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app
+package net.opatry.tasks.app.di
 
-import android.app.Application
-import net.opatry.tasks.app.di.authModule
-import net.opatry.tasks.app.di.dataModule
-import net.opatry.tasks.app.di.networkModule
-import net.opatry.tasks.app.di.platformModule
-import net.opatry.tasks.app.di.tasksAppModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.data.TaskRepository
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-class TasksApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
 
-        startKoin {
-            androidContext(this@TasksApplication)
-            modules(
-                platformModule(),
-                dataModule,
-                authModule,
-                networkModule,
-                tasksAppModule,
-            )
-        }
-    }
+val tasksAppModule = module {
+    singleOf(::TaskRepository)
+
+    factoryOf(::TaskListsViewModel)
 }

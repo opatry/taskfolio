@@ -49,9 +49,11 @@ import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.TasksScopes
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
+import net.opatry.tasks.app.di.authModule
 import net.opatry.tasks.app.di.dataModule
+import net.opatry.tasks.app.di.networkModule
 import net.opatry.tasks.app.di.platformModule
-import net.opatry.tasks.app.di.tasksModule
+import net.opatry.tasks.app.di.tasksAppModule
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
 import org.koin.compose.koinInject
@@ -71,7 +73,9 @@ fun main() {
         modules(
             platformModule(),
             dataModule,
-            tasksModule,
+            authModule,
+            networkModule,
+            tasksAppModule,
         )
     }
 
