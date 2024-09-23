@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val RefreshCw: ImageVector
+public val LucideIcons.CircleChevronDown: ImageVector
     get() {
-        if (_RefreshCw != null) {
-            return _RefreshCw!!
+        if (_CircleChevronDown != null) {
+            return _CircleChevronDown!!
         }
-        _RefreshCw = ImageVector.Builder(
-            name = "RefreshCw",
+        _CircleChevronDown = ImageVector.Builder(
+            name = "CircleChevronDown",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,10 +50,11 @@ public val RefreshCw: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(3f, 12f)
-                arcToRelative(9f, 9f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, -9f)
-                arcToRelative(9.75f, 9.75f, 0f, isMoreThanHalf = false, isPositiveArc = true, 6.74f, 2.74f)
-                lineTo(21f, 8f)
+                moveTo(22f, 12f)
+                arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 12f, 22f)
+                arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2f, 12f)
+                arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 22f, 12f)
+                close()
             }
             path(
                 fill = null,
@@ -66,43 +67,12 @@ public val RefreshCw: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(21f, 3f)
-                verticalLineToRelative(5f)
-                horizontalLineToRelative(-5f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(21f, 12f)
-                arcToRelative(9f, 9f, 0f, isMoreThanHalf = false, isPositiveArc = true, -9f, 9f)
-                arcToRelative(9.75f, 9.75f, 0f, isMoreThanHalf = false, isPositiveArc = true, -6.74f, -2.74f)
-                lineTo(3f, 16f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(8f, 16f)
-                horizontalLineTo(3f)
-                verticalLineToRelative(5f)
+                moveTo(16f, 10f)
+                lineToRelative(-4f, 4f)
+                lineToRelative(-4f, -4f)
             }
         }.build()
-        return _RefreshCw!!
+        return _CircleChevronDown!!
     }
 
-private var _RefreshCw: ImageVector? = null
+private var _CircleChevronDown: ImageVector? = null

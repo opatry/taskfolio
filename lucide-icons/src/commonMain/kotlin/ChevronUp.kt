@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.Search: ImageVector
+public val LucideIcons.ChevronUp: ImageVector
     get() {
-        if (_Search != null) {
-            return _Search!!
+        if (_ChevronUp != null) {
+            return _ChevronUp!!
         }
-        _Search = ImageVector.Builder(
-            name = "Search",
+        _ChevronUp = ImageVector.Builder(
+            name = "ChevronUp",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,28 +50,12 @@ public val LucideIcons.Search: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(19f, 11f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 11f, 19f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 11f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 19f, 11f)
-                close()
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(21f, 21f)
-                lineToRelative(-4.3f, -4.3f)
+                moveTo(18f, 15f)
+                lineToRelative(-6f, -6f)
+                lineToRelative(-6f, 6f)
             }
         }.build()
-        return _Search!!
+        return _ChevronUp!!
     }
 
-private var _Search: ImageVector? = null
+private var _ChevronUp: ImageVector? = null

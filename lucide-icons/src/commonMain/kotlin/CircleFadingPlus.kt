@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val CircleFadingPlus: ImageVector
+public val LucideIcons.CircleFadingPlus: ImageVector
     get() {
         if (_CircleFadingPlus != null) {
             return _CircleFadingPlus!!

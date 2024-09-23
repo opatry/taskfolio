@@ -22,6 +22,8 @@
 
 package net.opatry.tasks.app.ui.screen
 
+import ListPlus
+import LucideIcons
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +46,6 @@ import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_empty_state_title
 import org.jetbrains.compose.resources.stringResource
-import ListPlus as LucideListPlus
 
 
 @Composable
@@ -76,7 +77,7 @@ fun TaskListsScreen(viewModel: TaskListsViewModel) {
                     modifier = Modifier.padding(24.dp).align(Alignment.BottomEnd)
                 ) {
                     // TODO stringResource("create new task list")
-                    Icon(LucideListPlus, null)
+                    Icon(LucideIcons.ListPlus, null)
                 }
             }
         }

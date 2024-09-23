@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListPlus: ImageVector
+public val LucideIcons.CopyCheck: ImageVector
     get() {
-        if (_ListPlus != null) {
-            return _ListPlus!!
+        if (_CopyCheck != null) {
+            return _CopyCheck!!
         }
-        _ListPlus = ImageVector.Builder(
-            name = "ListPlus",
+        _CopyCheck = ImageVector.Builder(
+            name = "CopyCheck",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,8 +50,9 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(11f, 12f)
-                horizontalLineTo(3f)
+                moveTo(12f, 15f)
+                lineToRelative(2f, 2f)
+                lineToRelative(4f, -4f)
             }
             path(
                 fill = null,
@@ -64,8 +65,16 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 6f)
-                horizontalLineTo(3f)
+                moveTo(10f, 8f)
+                horizontalLineTo(20f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 22f, 10f)
+                verticalLineTo(20f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 20f, 22f)
+                horizontalLineTo(10f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 8f, 20f)
+                verticalLineTo(10f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 10f, 8f)
+                close()
             }
             path(
                 fill = null,
@@ -78,39 +87,15 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 18f)
-                horizontalLineTo(3f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(18f, 9f)
-                verticalLineToRelative(6f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(21f, 12f)
-                horizontalLineToRelative(-6f)
+                moveTo(4f, 16f)
+                curveToRelative(-1.1f, 0f, -2f, -0.9f, -2f, -2f)
+                verticalLineTo(4f)
+                curveToRelative(0f, -1.1f, 0.9f, -2f, 2f, -2f)
+                horizontalLineToRelative(10f)
+                curveToRelative(1.1f, 0f, 2f, 0.9f, 2f, 2f)
             }
         }.build()
-        return _ListPlus!!
+        return _CopyCheck!!
     }
 
-private var _ListPlus: ImageVector? = null
+private var _CopyCheck: ImageVector? = null

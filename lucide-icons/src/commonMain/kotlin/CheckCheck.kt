@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListPlus: ImageVector
+public val LucideIcons.CheckCheck: ImageVector
     get() {
-        if (_ListPlus != null) {
-            return _ListPlus!!
+        if (_CheckCheck != null) {
+            return _CheckCheck!!
         }
-        _ListPlus = ImageVector.Builder(
-            name = "ListPlus",
+        _CheckCheck = ImageVector.Builder(
+            name = "CheckCheck",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,8 +50,9 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(11f, 12f)
-                horizontalLineTo(3f)
+                moveTo(18f, 6f)
+                lineTo(7f, 17f)
+                lineToRelative(-5f, -5f)
             }
             path(
                 fill = null,
@@ -64,53 +65,12 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 6f)
-                horizontalLineTo(3f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(16f, 18f)
-                horizontalLineTo(3f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(18f, 9f)
-                verticalLineToRelative(6f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(21f, 12f)
-                horizontalLineToRelative(-6f)
+                moveTo(22f, 10f)
+                lineToRelative(-7.5f, 7.5f)
+                lineTo(13f, 16f)
             }
         }.build()
-        return _ListPlus!!
+        return _CheckCheck!!
     }
 
-private var _ListPlus: ImageVector? = null
+private var _CheckCheck: ImageVector? = null

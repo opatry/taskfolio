@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListPlus: ImageVector
+public val LucideIcons.CalendarOff: ImageVector
     get() {
-        if (_ListPlus != null) {
-            return _ListPlus!!
+        if (_CalendarOff != null) {
+            return _CalendarOff!!
         }
-        _ListPlus = ImageVector.Builder(
-            name = "ListPlus",
+        _CalendarOff = ImageVector.Builder(
+            name = "CalendarOff",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,8 +50,12 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(11f, 12f)
-                horizontalLineTo(3f)
+                moveTo(4.2f, 4.2f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = false, 3f, 6f)
+                verticalLineToRelative(14f)
+                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = false, 2f, 2f)
+                horizontalLineToRelative(14f)
+                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = false, 1.82f, -1.18f)
             }
             path(
                 fill = null,
@@ -64,8 +68,10 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 6f)
-                horizontalLineTo(3f)
+                moveTo(21f, 15.5f)
+                verticalLineTo(6f)
+                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = false, -2f, -2f)
+                horizontalLineTo(9.5f)
             }
             path(
                 fill = null,
@@ -78,8 +84,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 18f)
-                horizontalLineTo(3f)
+                moveTo(16f, 2f)
+                verticalLineToRelative(4f)
             }
             path(
                 fill = null,
@@ -92,8 +98,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(18f, 9f)
-                verticalLineToRelative(6f)
+                moveTo(3f, 10f)
+                horizontalLineToRelative(7f)
             }
             path(
                 fill = null,
@@ -106,11 +112,25 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(21f, 12f)
-                horizontalLineToRelative(-6f)
+                moveTo(21f, 10f)
+                horizontalLineToRelative(-5.5f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(2f, 2f)
+                lineToRelative(20f, 20f)
             }
         }.build()
-        return _ListPlus!!
+        return _CalendarOff!!
     }
 
-private var _ListPlus: ImageVector? = null
+private var _CalendarOff: ImageVector? = null

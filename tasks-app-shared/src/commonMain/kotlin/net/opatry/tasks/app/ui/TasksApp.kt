@@ -22,6 +22,11 @@
 
 package net.opatry.tasks.app.ui
 
+import ListTodo
+import LucideIcons
+import RefreshCw
+import Search
+import Settings
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -68,19 +73,15 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
-import ListTodo as LucideListTodo
-import RefreshCw as LucideRefreshClockWise
-import Search as LucideSearch
-import Settings as LucideSettings
 
 enum class Destination(
     val labelRes: StringResource,
     val icon: ImageVector,
     val contentDescription: StringResource? = null,
 ) {
-    Tasks(Res.string.navigation_tasks, LucideListTodo),
-    Search(Res.string.navigation_search, LucideSearch),
-    Settings(Res.string.navigation_settings, LucideSettings),
+    Tasks(Res.string.navigation_tasks, LucideIcons.ListTodo),
+    Search(Res.string.navigation_search, LucideIcons.Search),
+    Settings(Res.string.navigation_settings, LucideIcons.Settings),
 }
 
 @Composable
@@ -95,7 +96,7 @@ fun TasksApp(viewModel: TaskListsViewModel) {
                 },
                 actions = {
                     IconButton(onClick = viewModel::fetch) {
-                        Icon(LucideRefreshClockWise, null) // TODO stringRes("refresh")
+                        Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
                     }
                     ProfileIcon(httpClient)
                 }

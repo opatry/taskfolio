@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val EllipsisVertical: ImageVector
+public val LucideIcons.EllipsisVertical: ImageVector
     get() {
         if (_EllipsisVertical != null) {
             return _EllipsisVertical!!

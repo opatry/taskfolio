@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.Search: ImageVector
+public val LucideIcons.Circle: ImageVector
     get() {
-        if (_Search != null) {
-            return _Search!!
+        if (_Circle != null) {
+            return _Circle!!
         }
-        _Search = ImageVector.Builder(
-            name = "Search",
+        _Circle = ImageVector.Builder(
+            name = "Circle",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,28 +50,14 @@ public val LucideIcons.Search: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(19f, 11f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 11f, 19f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 11f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 19f, 11f)
+                moveTo(22f, 12f)
+                arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 12f, 22f)
+                arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2f, 12f)
+                arcTo(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 22f, 12f)
                 close()
             }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(21f, 21f)
-                lineToRelative(-4.3f, -4.3f)
-            }
         }.build()
-        return _Search!!
+        return _Circle!!
     }
 
-private var _Search: ImageVector? = null
+private var _Circle: ImageVector? = null

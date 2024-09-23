@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListPlus: ImageVector
+public val LucideIcons.LayoutList: ImageVector
     get() {
-        if (_ListPlus != null) {
-            return _ListPlus!!
+        if (_LayoutList != null) {
+            return _LayoutList!!
         }
-        _ListPlus = ImageVector.Builder(
-            name = "ListPlus",
+        _LayoutList = ImageVector.Builder(
+            name = "LayoutList",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,8 +50,16 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(11f, 12f)
-                horizontalLineTo(3f)
+                moveTo(4f, 3f)
+                horizontalLineTo(9f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 10f, 4f)
+                verticalLineTo(9f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, 10f)
+                horizontalLineTo(4f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 9f)
+                verticalLineTo(4f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 4f, 3f)
+                close()
             }
             path(
                 fill = null,
@@ -64,8 +72,16 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 6f)
-                horizontalLineTo(3f)
+                moveTo(4f, 14f)
+                horizontalLineTo(9f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 10f, 15f)
+                verticalLineTo(20f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, 21f)
+                horizontalLineTo(4f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 20f)
+                verticalLineTo(15f)
+                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 4f, 14f)
+                close()
             }
             path(
                 fill = null,
@@ -78,8 +94,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 18f)
-                horizontalLineTo(3f)
+                moveTo(14f, 4f)
+                horizontalLineToRelative(7f)
             }
             path(
                 fill = null,
@@ -92,8 +108,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(18f, 9f)
-                verticalLineToRelative(6f)
+                moveTo(14f, 9f)
+                horizontalLineToRelative(7f)
             }
             path(
                 fill = null,
@@ -106,11 +122,25 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(21f, 12f)
-                horizontalLineToRelative(-6f)
+                moveTo(14f, 15f)
+                horizontalLineToRelative(7f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(14f, 20f)
+                horizontalLineToRelative(7f)
             }
         }.build()
-        return _ListPlus!!
+        return _LayoutList!!
     }
 
-private var _ListPlus: ImageVector? = null
+private var _LayoutList: ImageVector? = null
