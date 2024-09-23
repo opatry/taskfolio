@@ -18,7 +18,6 @@
  * USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
@@ -28,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListTodo: ImageVector
+public val LucideIcons.CalendarDays: ImageVector
     get() {
-        if (_ListTodo != null) {
-            return _ListTodo!!
+        if (_CalendarDays != null) {
+            return _CalendarDays!!
         }
-        _ListTodo = ImageVector.Builder(
-            name = "ListTodo",
+        _CalendarDays = ImageVector.Builder(
+            name = "CalendarDays",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -51,15 +50,43 @@ public val LucideIcons.ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(4f, 5f)
-                horizontalLineTo(8f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 9f, 6f)
-                verticalLineTo(10f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 8f, 11f)
-                horizontalLineTo(4f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 10f)
+                moveTo(8f, 2f)
+                verticalLineToRelative(4f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(16f, 2f)
+                verticalLineToRelative(4f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(5f, 4f)
+                horizontalLineTo(19f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 21f, 6f)
+                verticalLineTo(20f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 19f, 22f)
+                horizontalLineTo(5f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 20f)
                 verticalLineTo(6f)
-                arcTo(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = true, 4f, 5f)
+                arcTo(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = true, 5f, 4f)
                 close()
             }
             path(
@@ -73,9 +100,8 @@ public val LucideIcons.ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(3f, 17f)
-                lineToRelative(2f, 2f)
-                lineToRelative(4f, -4f)
+                moveTo(3f, 10f)
+                horizontalLineToRelative(18f)
             }
             path(
                 fill = null,
@@ -88,8 +114,8 @@ public val LucideIcons.ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(13f, 6f)
-                horizontalLineToRelative(8f)
+                moveTo(8f, 14f)
+                horizontalLineToRelative(0.01f)
             }
             path(
                 fill = null,
@@ -102,8 +128,8 @@ public val LucideIcons.ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(13f, 12f)
-                horizontalLineToRelative(8f)
+                moveTo(12f, 14f)
+                horizontalLineToRelative(0.01f)
             }
             path(
                 fill = null,
@@ -116,11 +142,53 @@ public val LucideIcons.ListTodo: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(13f, 18f)
-                horizontalLineToRelative(8f)
+                moveTo(16f, 14f)
+                horizontalLineToRelative(0.01f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(8f, 18f)
+                horizontalLineToRelative(0.01f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(12f, 18f)
+                horizontalLineToRelative(0.01f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(16f, 18f)
+                horizontalLineToRelative(0.01f)
             }
         }.build()
-        return _ListTodo!!
+        return _CalendarDays!!
     }
 
-private var _ListTodo: ImageVector? = null
+private var _CalendarDays: ImageVector? = null

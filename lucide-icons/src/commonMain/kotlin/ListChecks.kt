@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListPlus: ImageVector
+public val LucideIcons.ListChecks: ImageVector
     get() {
-        if (_ListPlus != null) {
-            return _ListPlus!!
+        if (_ListChecks != null) {
+            return _ListChecks!!
         }
-        _ListPlus = ImageVector.Builder(
-            name = "ListPlus",
+        _ListChecks = ImageVector.Builder(
+            name = "ListChecks",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,8 +50,9 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(11f, 12f)
-                horizontalLineTo(3f)
+                moveTo(3f, 17f)
+                lineToRelative(2f, 2f)
+                lineToRelative(4f, -4f)
             }
             path(
                 fill = null,
@@ -64,8 +65,9 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 6f)
-                horizontalLineTo(3f)
+                moveTo(3f, 7f)
+                lineToRelative(2f, 2f)
+                lineToRelative(4f, -4f)
             }
             path(
                 fill = null,
@@ -78,8 +80,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 18f)
-                horizontalLineTo(3f)
+                moveTo(13f, 6f)
+                horizontalLineToRelative(8f)
             }
             path(
                 fill = null,
@@ -92,8 +94,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(18f, 9f)
-                verticalLineToRelative(6f)
+                moveTo(13f, 12f)
+                horizontalLineToRelative(8f)
             }
             path(
                 fill = null,
@@ -106,11 +108,11 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(21f, 12f)
-                horizontalLineToRelative(-6f)
+                moveTo(13f, 18f)
+                horizontalLineToRelative(8f)
             }
         }.build()
-        return _ListPlus!!
+        return _ListChecks!!
     }
 
-private var _ListPlus: ImageVector? = null
+private var _ListChecks: ImageVector? = null

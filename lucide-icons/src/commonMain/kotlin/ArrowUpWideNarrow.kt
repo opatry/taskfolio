@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListPlus: ImageVector
+public val LucideIcons.ArrowUpWideNarrow: ImageVector
     get() {
-        if (_ListPlus != null) {
-            return _ListPlus!!
+        if (_ArrowUpWideNarrow != null) {
+            return _ArrowUpWideNarrow!!
         }
-        _ListPlus = ImageVector.Builder(
-            name = "ListPlus",
+        _ArrowUpWideNarrow = ImageVector.Builder(
+            name = "ArrowUpWideNarrow",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,8 +50,37 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
+                moveTo(3f, 8f)
+                lineToRelative(4f, -4f)
+                lineToRelative(4f, 4f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(7f, 4f)
+                verticalLineToRelative(16f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
                 moveTo(11f, 12f)
-                horizontalLineTo(3f)
+                horizontalLineToRelative(10f)
             }
             path(
                 fill = null,
@@ -64,8 +93,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 6f)
-                horizontalLineTo(3f)
+                moveTo(11f, 16f)
+                horizontalLineToRelative(7f)
             }
             path(
                 fill = null,
@@ -78,39 +107,11 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 18f)
-                horizontalLineTo(3f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(18f, 9f)
-                verticalLineToRelative(6f)
-            }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(21f, 12f)
-                horizontalLineToRelative(-6f)
+                moveTo(11f, 20f)
+                horizontalLineToRelative(4f)
             }
         }.build()
-        return _ListPlus!!
+        return _ArrowUpWideNarrow!!
     }
 
-private var _ListPlus: ImageVector? = null
+private var _ArrowUpWideNarrow: ImageVector? = null

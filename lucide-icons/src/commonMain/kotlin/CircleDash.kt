@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.ListPlus: ImageVector
+public val LucideIcons.CircleDashed: ImageVector
     get() {
-        if (_ListPlus != null) {
-            return _ListPlus!!
+        if (_CircleDashed != null) {
+            return _CircleDashed!!
         }
-        _ListPlus = ImageVector.Builder(
-            name = "ListPlus",
+        _CircleDashed = ImageVector.Builder(
+            name = "CircleDashed",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,8 +50,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(11f, 12f)
-                horizontalLineTo(3f)
+                moveTo(10.1f, 2.182f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3.8f, 0f)
             }
             path(
                 fill = null,
@@ -64,8 +64,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 6f)
-                horizontalLineTo(3f)
+                moveTo(13.9f, 21.818f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, -3.8f, 0f)
             }
             path(
                 fill = null,
@@ -78,8 +78,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(16f, 18f)
-                horizontalLineTo(3f)
+                moveTo(17.609f, 3.721f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2.69f, 2.7f)
             }
             path(
                 fill = null,
@@ -92,8 +92,8 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(18f, 9f)
-                verticalLineToRelative(6f)
+                moveTo(2.182f, 13.9f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 0f, -3.8f)
             }
             path(
                 fill = null,
@@ -106,11 +106,53 @@ public val LucideIcons.ListPlus: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(21f, 12f)
-                horizontalLineToRelative(-6f)
+                moveTo(20.279f, 17.609f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, -2.7f, 2.69f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(21.818f, 10.1f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 0f, 3.8f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(3.721f, 6.391f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, 2.7f, -2.69f)
+            }
+            path(
+                fill = null,
+                fillAlpha = 1.0f,
+                stroke = SolidColor(Color(0xFF000000)),
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(6.391f, 20.279f)
+                arcToRelative(10f, 10f, 0f, isMoreThanHalf = false, isPositiveArc = true, -2.69f, -2.7f)
             }
         }.build()
-        return _ListPlus!!
+        return _CircleDashed!!
     }
 
-private var _ListPlus: ImageVector? = null
+private var _CircleDashed: ImageVector? = null

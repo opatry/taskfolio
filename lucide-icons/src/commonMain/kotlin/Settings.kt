@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val Settings: ImageVector
+public val LucideIcons.Settings: ImageVector
     get() {
         if (_Settings != null) {
             return _Settings!!

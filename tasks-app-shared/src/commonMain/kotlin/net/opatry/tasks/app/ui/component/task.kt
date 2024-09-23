@@ -24,6 +24,7 @@ package net.opatry.tasks.app.ui.component
 
 import CircleFadingPlus
 import EllipsisVertical
+import LucideIcons
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -80,7 +81,7 @@ fun TaskListColumn(taskList: TaskListUIModel, onNewTaskClick: () -> Unit) {
                         )
                         IconButton(onClick = {}) {
                             // TODO stringResource
-                            Icon(EllipsisVertical, "List actions")
+                            Icon(LucideIcons.EllipsisVertical, "List actions")
                         }
                     }
                     TextButton(onClick = onNewTaskClick) {
@@ -88,7 +89,7 @@ fun TaskListColumn(taskList: TaskListUIModel, onNewTaskClick: () -> Unit) {
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(CircleFadingPlus, null)
+                            Icon(LucideIcons.CircleFadingPlus, null)
                             Text(stringResource(Res.string.task_lists_screen_add_task))
                         }
                     }
@@ -132,7 +133,7 @@ fun TaskRow(task: TaskUIModel) {
         trailing = {
             IconButton(onClick = {}) {
                 // TODO stringResource
-                Icon(EllipsisVertical, "Task actions")
+                Icon(LucideIcons.EllipsisVertical, "Task actions")
             }
         }
     ) {

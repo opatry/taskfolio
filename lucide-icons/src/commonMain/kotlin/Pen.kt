@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val LucideIcons.Search: ImageVector
+public val LucideIcons.Pen: ImageVector
     get() {
-        if (_Search != null) {
-            return _Search!!
+        if (_Pen != null) {
+            return _Pen!!
         }
-        _Search = ImageVector.Builder(
-            name = "Search",
+        _Pen = ImageVector.Builder(
+            name = "Pen",
             defaultWidth = 24.dp,
             defaultHeight = 24.dp,
             viewportWidth = 24f,
@@ -50,28 +50,18 @@ public val LucideIcons.Search: ImageVector
                 strokeLineMiter = 1.0f,
                 pathFillType = PathFillType.NonZero
             ) {
-                moveTo(19f, 11f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 11f, 19f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 3f, 11f)
-                arcTo(8f, 8f, 0f, isMoreThanHalf = false, isPositiveArc = true, 19f, 11f)
+                moveTo(21.174f, 6.812f)
+                arcToRelative(1f, 1f, 0f, isMoreThanHalf = false, isPositiveArc = false, -3.986f, -3.987f)
+                lineTo(3.842f, 16.174f)
+                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = false, -0.5f, 0.83f)
+                lineToRelative(-1.321f, 4.352f)
+                arcToRelative(0.5f, 0.5f, 0f, isMoreThanHalf = false, isPositiveArc = false, 0.623f, 0.622f)
+                lineToRelative(4.353f, -1.32f)
+                arcToRelative(2f, 2f, 0f, isMoreThanHalf = false, isPositiveArc = false, 0.83f, -0.497f)
                 close()
             }
-            path(
-                fill = null,
-                fillAlpha = 1.0f,
-                stroke = SolidColor(Color(0xFF000000)),
-                strokeAlpha = 1.0f,
-                strokeLineWidth = 1f,
-                strokeLineCap = StrokeCap.Round,
-                strokeLineJoin = StrokeJoin.Round,
-                strokeLineMiter = 1.0f,
-                pathFillType = PathFillType.NonZero
-            ) {
-                moveTo(21f, 21f)
-                lineToRelative(-4.3f, -4.3f)
-            }
         }.build()
-        return _Search!!
+        return _Pen!!
     }
 
-private var _Search: ImageVector? = null
+private var _Pen: ImageVector? = null
