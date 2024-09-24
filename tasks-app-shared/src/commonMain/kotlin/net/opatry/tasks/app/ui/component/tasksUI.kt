@@ -22,7 +22,6 @@
 
 package net.opatry.tasks.app.ui.component
 
-import Calendar
 import ChevronDown
 import ChevronRight
 import Circle
@@ -46,7 +45,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
@@ -553,7 +551,7 @@ fun TaskRow(
             if (task.dueDate != null) {
                 AssistChip(
                     onClick = onUpdateDueDate,
-                    leadingIcon = { Icon(LucideIcons.Calendar, null, Modifier.size(18.dp)) },
+                    shape = MaterialTheme.shapes.large,
                     label = { Text(task.dateRange.toLabel(), color = task.dateRange.toColor()) },
                 )
             }
