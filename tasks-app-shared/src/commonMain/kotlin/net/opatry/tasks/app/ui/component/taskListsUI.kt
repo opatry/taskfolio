@@ -68,7 +68,7 @@ fun TaskListRow(
     onClick: () -> Unit
 ) {
     val cellBackground = when {
-        isSelected -> LocalContentColor.current.copy(alpha = 0.1f)
+        isSelected -> LocalContentColor.current.copy(alpha = .05f)
         else -> Color.Transparent
     }
 

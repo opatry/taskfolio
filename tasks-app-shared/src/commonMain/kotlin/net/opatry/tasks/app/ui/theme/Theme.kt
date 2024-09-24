@@ -28,6 +28,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
+// TODO simplify and minimize the amount of colors
+
 private val DarkColorScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
@@ -59,11 +61,11 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = inversePrimaryDark,
     surfaceDim = surfaceDimDark,
     surfaceBright = surfaceBrightDark,
-    surfaceContainerLowest = surfaceContainerLowestDark,
-    surfaceContainerLow = surfaceContainerLowDark,
-    surfaceContainer = surfaceContainerDark,
-    surfaceContainerHigh = surfaceContainerHighDark,
-    surfaceContainerHighest = surfaceContainerHighestDark,
+    surfaceContainerLowest = surfaceDark,// surfaceContainerLowestDark,
+    surfaceContainerLow = surfaceDark,// surfaceContainerLowDark,
+    surfaceContainer = surfaceDark,// surfaceContainerDark,
+    surfaceContainerHigh = surfaceDark,// surfaceContainerHighDark,
+    surfaceContainerHighest = surfaceDark,// surfaceContainerHighestDark,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -97,11 +99,11 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = inversePrimaryLight,
     surfaceDim = surfaceDimLight,
     surfaceBright = surfaceBrightLight,
-    surfaceContainerLowest = surfaceContainerLowestLight,
-    surfaceContainerLow = surfaceContainerLowLight,
-    surfaceContainer = surfaceContainerLight,
-    surfaceContainerHigh = surfaceContainerHighLight,
-    surfaceContainerHighest = surfaceContainerHighestLight,
+    surfaceContainerLowest = surfaceLight, //surfaceContainerLowestLight,
+    surfaceContainerLow = surfaceLight, //surfaceContainerLowLight,
+    surfaceContainer = surfaceLight, //surfaceContainerLight,
+    surfaceContainerHigh = surfaceLight, //surfaceContainerHighLight,
+    surfaceContainerHighest = surfaceLight, //surfaceContainerHighestLight,
 )
 
 @Composable
