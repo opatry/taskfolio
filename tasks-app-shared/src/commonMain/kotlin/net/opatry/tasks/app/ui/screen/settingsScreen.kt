@@ -22,7 +22,7 @@
 
 package net.opatry.tasks.app.ui.screen
 
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.settings_screen_tbd
