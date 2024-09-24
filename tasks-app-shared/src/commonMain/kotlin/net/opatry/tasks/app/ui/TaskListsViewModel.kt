@@ -188,10 +188,11 @@ class TaskListsViewModel(
         }
     }
 
-    fun updateTask(task: TaskUIModel, title: String, notes: String, dueDate: LocalDate?) {
+    fun updateTask(targetTaskList: TaskListUIModel, task: TaskUIModel, title: String, notes: String, dueDate: LocalDate?) {
         viewModelScope.launch {
             try {
                 taskRepository.updateTask(
+                    targetTaskList.id,
                     task.id,
                     title.trim(),
                     notes.trim(),
