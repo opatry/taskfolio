@@ -309,6 +309,31 @@ class TaskRepository(
         }
     }
 
+    suspend fun deleteTask(taskId: Long) {
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        // TODO pending deletion?
+        taskDao.deleteTask(taskId)
+        // FIXME should already be available in entity, quick & dirty workaround
+        val taskListRemoteId = taskEntity.parentTaskRemoteId
+            ?: taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && taskEntity.remoteId != null) {
+            withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.delete(
+                        taskListRemoteId,
+                        taskEntity.remoteId,
+                    )
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+    }
+
+    suspend fun restoreTask(taskId: Long) {
+        // TODO pending deletion
+    }
+
     suspend fun toggleTaskCompletionState(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val now = Clock.System.now()
@@ -342,5 +367,32 @@ class TaskRepository(
                 }
             }
         }
+    }
+
+    suspend fun indentTask(taskId: Long) {
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val now = Clock.System.now()
+    }
+
+    suspend fun unindentTask(taskId: Long) {
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val now = Clock.System.now()
+    }
+
+    suspend fun moveToTop(taskId: Long) {
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val now = Clock.System.now()
+    }
+
+    suspend fun moveToList(taskId: Long, targetListId: Long) {
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val taskListEntity = requireNotNull(taskListDao.getById(targetListId)) { "Invalid task list id $targetListId" }
+        val now = Clock.System.now()
+    }
+
+    suspend fun moveToNewList(taskId: Long, newListTitle: String) {
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val now = Clock.System.now()
+        // TODO ideally transactional
     }
 }

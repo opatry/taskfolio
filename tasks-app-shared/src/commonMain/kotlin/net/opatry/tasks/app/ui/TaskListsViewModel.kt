@@ -138,16 +138,38 @@ class TaskListsViewModel(
         }
     }
 
-    // TODO when "delete task" (or list) is done, manage a "Undo" snackbar
-    //  - either apply it remotely and on undo, do another request to restore through API
-    //  - or "hide" locally, on undo "un-hide", on dismiss, apply remotely
-
     fun createTask(taskList: TaskListUIModel, title: String, dueDate: Instant? = null) {
         viewModelScope.launch {
             try {
                 taskRepository.createTask(taskList.id, title, dueDate)
             } catch (e: Exception) {
-                println("Error creating task: $e")
+                println("Error while creating task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun deleteTask(task: TaskUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.deleteTask(task.id)
+            } catch (e: Exception) {
+                println("Error while deleting task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun confirmTaskDeletion(task: TaskUIModel) {
+        // TODO(?) purge pending deletion?
+    }
+
+    fun restoreTask(task: TaskUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.restoreTask(task.id)
+            } catch (e: Exception) {
+                println("Error while restoring task: $e")
                 // TODO error handling
             }
         }
@@ -158,7 +180,62 @@ class TaskListsViewModel(
             try {
                 taskRepository.toggleTaskCompletionState(task.id)
             } catch (e: Exception) {
-                println("Error creating task: $e")
+                println("Error while toggling task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun unindentTask(task: TaskUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.unindentTask(task.id)
+            } catch (e: Exception) {
+                println("Error while indenting task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun indentTask(task: TaskUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.indentTask(task.id)
+            } catch (e: Exception) {
+                println("Error while indenting task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun moveToTop(task: TaskUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.moveToTop(task.id)
+            } catch (e: Exception) {
+                println("Error while moving task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun moveToList(task: TaskUIModel, targetTaskList: TaskListUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.moveToList(task.id, targetTaskList.id)
+            } catch (e: Exception) {
+                println("Error while moving task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun moveToNewList(task: TaskUIModel, targetTaskListTitle: String) {
+        viewModelScope.launch {
+            try {
+                taskRepository.moveToNewList(task.id, targetTaskListTitle.trim())
+            } catch (e: Exception) {
+                println("Error while moving task: $e")
                 // TODO error handling
             }
         }

@@ -50,8 +50,8 @@ sealed class TaskMenuAction {
     data object MoveToTop : TaskMenuAction()
     data object Unindent : TaskMenuAction()
     data object Indent : TaskMenuAction()
-    data class MoveInList(val newParentList: TaskListUIModel) : TaskMenuAction()
-    data object MoveInNewList : TaskMenuAction()
+    data class MoveToList(val targetParentList: TaskListUIModel) : TaskMenuAction()
+    data object MoveToNewList : TaskMenuAction()
     data object Delete : TaskMenuAction()
 }
 
@@ -113,7 +113,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
             text = {
                 RowWithIcon("New list", LucideIcons.ListPlus)
             },
-            onClick = { onAction(TaskMenuAction.MoveInNewList) }
+            onClick = { onAction(TaskMenuAction.MoveToNewList) }
         )
 
         // FIXME not ideal when a lot of list, maybe ask for a dialog or bottom sheet in which to choose?
@@ -129,7 +129,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                     }
                 },
                 enabled = taskList.id != currentTaskList?.id,
-                onClick = { onAction(TaskMenuAction.MoveInList(taskList)) }
+                onClick = { onAction(TaskMenuAction.MoveToList(taskList)) }
             )
         }
 

@@ -94,6 +94,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
@@ -118,6 +119,9 @@ fun TaskListDetail(
 ) {
     val taskLists by viewModel.taskLists.collectAsState(emptyList())
 
+    // TODO extract a smart state for all this mess
+    var taskOfInterest by remember { mutableStateOf<TaskUIModel?>(null) }
+
     var showTaskListActions by remember { mutableStateOf(false) }
     var showRenameTaskListDialog by remember { mutableStateOf(false) }
     var showClearTaskListCompletedTasksDialog by remember { mutableStateOf(false) }
@@ -135,18 +139,20 @@ fun TaskListDetail(
 
     if (showUndoTaskDeletionSnackbar) {
         LaunchedEffect(Unit) {
-            val result = snackbarHostState.showSnackbar(
-                message = "Task deleted",
-                actionLabel = "Undo",
-                duration = SnackbarDuration.Long
-            )
-            when (result) {
-                SnackbarResult.Dismissed -> {
-                    // TODO?
-                }
-                SnackbarResult.ActionPerformed -> {
-                    // TODO
-                    snackbarHostState.showSnackbar("Task restored")
+            taskOfInterest?.let { task ->
+                val result = snackbarHostState.showSnackbar(
+                    message = "Task deleted",
+                    actionLabel = "Undo",
+                    duration = SnackbarDuration.Short
+                )
+                taskOfInterest = null
+                showUndoTaskDeletionSnackbar = false
+                when (result) {
+                    SnackbarResult.Dismissed -> viewModel.confirmTaskDeletion(task)
+                    SnackbarResult.ActionPerformed -> {
+                        viewModel.restoreTask(task)
+                        snackbarHostState.showSnackbar("Task restored")
+                    }
                 }
             }
         }
@@ -188,9 +194,9 @@ fun TaskListDetail(
                 Icon(LucideIcons.Plus, null)
             }
         }
-    ) {
+    ) { innerPadding ->
         // FIXME tasks not updated on delete action
-        Box(Modifier.padding(it)) {
+        Box(Modifier.padding(innerPadding)) {
             if (taskList.isEmpty) {
                 // TODO SVG undraw.co illustration `files/undraw_to_do_list_re_9nt7.svg`
                 EmptyState(
@@ -203,15 +209,31 @@ fun TaskListDetail(
                     taskLists,
                     taskList.tasks,
                     onToggleCompletionState = viewModel::toggleTaskCompletionState,
-                    onEditTask = { showEditTaskSheet = true },
-                    onUpdateDueDate = { showDatePickerDialog = true },
-                    onNewSubTask = { showNewTaskSheet = true },
-                    onUnindent = {},
-                    onIndent = {},
-                    onMoveToTop = {},
-                    onMoveInList = { task, newParentList -> },
-                    onMoveInNewList = { showNewTaskListAlert = true },
-                    onDeleteTask = { showUndoTaskDeletionSnackbar = true },
+                    onEditTask = {
+                        taskOfInterest = it
+                        showEditTaskSheet = true
+                    },
+                    onUpdateDueDate = {
+                        taskOfInterest = it
+                        showDatePickerDialog = true
+                    },
+                    onNewSubTask = {
+                        taskOfInterest = it
+                        showNewTaskSheet = true
+                    },
+                    onUnindent = viewModel::unindentTask,
+                    onIndent = viewModel::indentTask,
+                    onMoveToTop = viewModel::moveToTop,
+                    onMoveToList = viewModel::moveToList,
+                    onMoveToNewList = {
+                        taskOfInterest = it
+                        showNewTaskListAlert = true
+                    },
+                    onDeleteTask = {
+                        taskOfInterest = it
+                        showUndoTaskDeletionSnackbar = true
+                        viewModel.deleteTask(it)
+                    },
                 )
             }
         }
@@ -323,48 +345,67 @@ fun TaskListDetail(
     if (showEditTaskSheet) {
         ModalBottomSheet(
             sheetState = editTaskSheetState,
-            onDismissRequest = { showEditTaskSheet = false }
+            onDismissRequest = {
+                taskOfInterest = null
+                showEditTaskSheet = false
+            }
         ) {
             MissingScreen("Edit task", LucideIcons.Pen)
         }
     }
 
     if (showDatePickerDialog) {
-        // TODO task.dueDate
-        val state = rememberDatePickerState()
-        DatePickerDialog(
-            onDismissRequest = { showDatePickerDialog = false },
-            dismissButton = {
-                TextButton(onClick = { showDatePickerDialog = false }) {
-                    Text("Cancel")
-                }
-            },
-            confirmButton = {
-                Button(onClick = {
+        taskOfInterest?.dueDate?.let { initialDate ->
+            val state = rememberDatePickerState(initialDate.atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds())
+            DatePickerDialog(
+                onDismissRequest = {
+                    taskOfInterest = null
                     showDatePickerDialog = false
-                    val newDate = state.selectedDateMillis?.let(Instant::fromEpochMilliseconds)?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
-                    println(newDate)
-                    // TODO
-                }) {
-                    Text("Update")
-                }
-            },
-        ) {
-            DatePicker(state)
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        taskOfInterest = null
+                        showDatePickerDialog = false
+                    }) {
+                        Text("Cancel")
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        taskOfInterest = null
+                        showDatePickerDialog = false
+                        val newDate =
+                            state.selectedDateMillis?.let(Instant::fromEpochMilliseconds)?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
+                        println(newDate)
+                        // TODO
+                    }) {
+                        Text("Update")
+                    }
+                },
+            ) {
+                DatePicker(state)
+            }
         }
     }
 
     if (showNewTaskSheet) {
         ModalBottomSheet(
             sheetState = newTaskSheetState,
-            onDismissRequest = { showNewTaskSheet = false }
+            onDismissRequest = {
+                taskOfInterest = null
+                showNewTaskSheet = false
+            }
         ) {
-                MissingScreen("New task", LucideIcons.CircleFadingPlus)
+            MissingScreen("New task", LucideIcons.CircleFadingPlus)
         }
     }
 
     if (showNewTaskListAlert) {
-        AlertDialog(onDismissRequest = { showNewTaskListAlert = false }) {
+        // FIXME should be a dialog
+        ModalBottomSheet(onDismissRequest = {
+            taskOfInterest = null
+            showNewTaskListAlert = false
+        }) {
             MissingScreen("New task list", LucideIcons.LayoutList)
         }
     }
@@ -382,8 +423,8 @@ fun TasksColumn(
     onUnindent: (TaskUIModel) -> Unit,
     onIndent: (TaskUIModel) -> Unit,
     onMoveToTop: (TaskUIModel) -> Unit,
-    onMoveInList: (TaskUIModel, TaskListUIModel) -> Unit,
-    onMoveInNewList: (TaskUIModel) -> Unit,
+    onMoveToList: (TaskUIModel, TaskListUIModel) -> Unit,
+    onMoveToNewList: (TaskUIModel) -> Unit,
     onDeleteTask: (TaskUIModel) -> Unit,
 ) {
     var showCompleted by remember(tasks) { mutableStateOf(false) }
@@ -449,8 +490,8 @@ fun TasksColumn(
                         onUnindent = { onUnindent(task) },
                         onIndent = { onIndent(task) },
                         onMoveToTop = { onMoveToTop(task) },
-                        onMoveInList = { onMoveInList(task, it) },
-                        onMoveInNewList = { onMoveInNewList(task) },
+                        onMoveToList = { onMoveToList(task, it) },
+                        onMoveToNewList = { onMoveToNewList(task) },
                         onDeleteTask = { onDeleteTask(task) },
                     )
                 }
@@ -505,8 +546,8 @@ fun TaskRow(
     onUnindent: () -> Unit,
     onIndent: () -> Unit,
     onMoveToTop: () -> Unit,
-    onMoveInList: (TaskListUIModel) -> Unit,
-    onMoveInNewList: () -> Unit,
+    onMoveToList: (TaskListUIModel) -> Unit,
+    onMoveToNewList: () -> Unit,
     onDeleteTask: () -> Unit,
 ) {
     var showContextualMenu by remember { mutableStateOf(false) }
@@ -531,7 +572,8 @@ fun TaskRow(
         Column(
             Modifier
                 .weight(1f)
-                .padding(vertical = 8.dp)) {
+                .padding(vertical = 8.dp)
+        ) {
             Text(
                 task.title,
                 textDecoration = TextDecoration.LineThrough.takeIf { task.isCompleted },
@@ -573,8 +615,8 @@ fun TaskRow(
                         TaskMenuAction.Indent -> onIndent()
                         TaskMenuAction.Unindent -> onUnindent()
                         TaskMenuAction.MoveToTop -> onMoveToTop()
-                        is TaskMenuAction.MoveInList -> onMoveInList(action.newParentList)
-                        TaskMenuAction.MoveInNewList -> onMoveInNewList()
+                        is TaskMenuAction.MoveToList -> onMoveToList(action.targetParentList)
+                        TaskMenuAction.MoveToNewList -> onMoveToNewList()
                         TaskMenuAction.Delete -> onDeleteTask()
                     }
                 }
