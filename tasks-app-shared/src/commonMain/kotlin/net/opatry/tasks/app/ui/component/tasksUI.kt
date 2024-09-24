@@ -202,7 +202,7 @@ fun TaskListDetail(
                 TasksColumn(
                     taskLists,
                     taskList.tasks,
-                    onToggleCompletionState = {},
+                    onToggleCompletionState = viewModel::toggleTaskCompletionState,
                     onEditTask = { showEditTaskSheet = true },
                     onUpdateDueDate = { showDatePickerDialog = true },
                     onNewSubTask = { showNewTaskSheet = true },

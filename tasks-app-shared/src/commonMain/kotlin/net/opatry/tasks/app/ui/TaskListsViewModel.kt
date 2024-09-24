@@ -80,6 +80,20 @@ class TaskListsViewModel(
         }
     }
 
+    fun fetch() {
+        viewModelScope.launch {
+            refresh()
+        }
+    }
+
+    private suspend fun refresh() {
+        try {
+            taskRepository.sync()
+        } catch (e: Exception) {
+            // most likely no network
+        }
+    }
+
     fun createTaskList(title: String) {
         viewModelScope.launch {
             try {
@@ -139,17 +153,14 @@ class TaskListsViewModel(
         }
     }
 
-    fun fetch() {
+    fun toggleTaskCompletionState(task: TaskUIModel) {
         viewModelScope.launch {
-            refresh()
-        }
-    }
-
-    private suspend fun refresh() {
-        try {
-            taskRepository.sync()
-        } catch (e: Exception) {
-            // most likely no network
+            try {
+                taskRepository.toggleTaskCompletionState(task.id)
+            } catch (e: Exception) {
+                println("Error creating task: $e")
+                // TODO error handling
+            }
         }
     }
 }
