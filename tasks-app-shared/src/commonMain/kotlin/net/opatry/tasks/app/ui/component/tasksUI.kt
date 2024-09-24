@@ -31,6 +31,7 @@ import CircleFadingPlus
 import CircleOff
 import EllipsisVertical
 import LayoutList
+import ListPlus
 import LucideIcons
 import NotepadText
 import Plus
@@ -54,12 +55,16 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -130,9 +135,8 @@ fun TaskListDetail(
 
     var showEditTaskSheet by remember { mutableStateOf(false) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
-    val editTaskSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val taskEditorSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showNewTaskSheet by remember { mutableStateOf(false) }
-    val newTaskSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     var showNewTaskListAlert by remember { mutableStateOf(false) }
 
     var showUndoTaskDeletionSnackbar by remember { mutableStateOf(false) }
@@ -346,48 +350,54 @@ fun TaskListDetail(
     // FIXME extract a reusable dialog with proper callbacks instead of putting `if`s everywhere
     if (showEditTaskSheet || showNewTaskSheet) {
         val task = taskOfInterest
-            ModalBottomSheet(
-                sheetState = editTaskSheetState,
-                onDismissRequest = {
-                    taskOfInterest = null
-                    showEditTaskSheet = false
-                    showNewTaskSheet = false
+        ModalBottomSheet(
+            sheetState = taskEditorSheetState,
+            onDismissRequest = {
+                taskOfInterest = null
+                showEditTaskSheet = false
+                showNewTaskSheet = false
+            }
+        ) {
+            var newTitle by remember { mutableStateOf(task?.title ?: "") }
+            val titleHasError by remember {
+                derivedStateOf {
+                    showEditTaskSheet && newTitle.isBlank()
                 }
-            ) {
-                var newTitle by remember { mutableStateOf(task?.title ?: "") }
-                val titleHasError by remember {
-                    derivedStateOf {
-                        newTitle.isBlank()
-                    }
-                }
-                var newNotes by remember { mutableStateOf(task?.notes ?: "") }
+            }
+            var newNotes by remember { mutableStateOf(task?.notes ?: "") }
+            var expandTaskListsDropDown by remember { mutableStateOf(false) }
+            var targetList by remember { mutableStateOf(taskList) }
 
-                // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
-                Column(Modifier.padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Edit task", style = MaterialTheme.typography.titleMedium)
+            // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
+            Column(Modifier.padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Edit task", style = MaterialTheme.typography.titleMedium)
 
-                    OutlinedTextField(
-                        newTitle,
-                        onValueChange = { newTitle = it },
-                        Modifier.fillMaxWidth(),
-                        maxLines = 1,
-                        supportingText = {
-                            AnimatedVisibility(visible = titleHasError) {
-                                Text("Title cannot be empty")
-                            }
-                        },
-                        isError = titleHasError,
-                    )
+                OutlinedTextField(
+                    newTitle,
+                    onValueChange = { newTitle = it },
+                    Modifier.fillMaxWidth(),
+                    maxLines = 1,
+                    supportingText = {
+                        AnimatedVisibility(visible = titleHasError) {
+                            Text("Title cannot be empty")
+                        }
+                    },
+                    isError = titleHasError,
+                )
 
-                    OutlinedTextField(
-                        newNotes,
-                        onValueChange = { newNotes = it },
-                        Modifier.fillMaxWidth(),
-                        leadingIcon = { Icon(LucideIcons.NotepadText, null) },
-                        singleLine = false,
-                        minLines = 2,
-                    )
+                OutlinedTextField(
+                    newNotes,
+                    onValueChange = { newNotes = it },
+                    Modifier.fillMaxWidth(),
+                    leadingIcon = { Icon(LucideIcons.NotepadText, null) },
+                    singleLine = false,
+                    minLines = 2,
+                )
 
+                // TODO one of top of the other or side by side Date|TaskList
+                //  if one on top of the other, need to revise expansion height to display all content
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    // TODO Add shortcuts for Today, Tomorrow, Next Week
                     // FIXME when dialog is dismissed, current state is reset but shouldn't need to extract date picker dialog use
                     val dueDateLabel = task?.dateRange?.toLabel()?.takeUnless(String::isBlank) ?: "No due date"
                     AssistChip(
@@ -397,37 +407,74 @@ fun TaskListDetail(
                         label = { Text(dueDateLabel, color = task?.dateRange.toColor()) },
                     )
 
-                    Row(
-                        Modifier.align(Alignment.End),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ExposedDropdownMenuBox(
+                        expanded = expandTaskListsDropDown,
+                        onExpandedChange = { expandTaskListsDropDown = it }
                     ) {
-                        TextButton(onClick = {
-                            taskOfInterest = null
-                            showEditTaskSheet = false
-                            showNewTaskSheet = false
-                        }) {
-                            Text("Cancel")
-                        }
-                        Button(
-                            onClick = {
-                                if (showEditTaskSheet) {
-                                    taskOfInterest = null
-                                    showEditTaskSheet = false
-
-                                    // TODO deal with due date and nested alert dialogs
-                                    viewModel.updateTask(requireNotNull(task), newTitle, newNotes, task.dueDate /*FIXME*/)
-                                } else if (showNewTaskSheet) {
-                                    showNewTaskSheet = false
-
-                                    viewModel.createTask(taskList, newTitle, newNotes, null /*TODO*/)
-                                }
+                        OutlinedTextField(
+                            targetList.title,
+                            onValueChange = {},
+                            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
+                            readOnly = true,
+                            trailingIcon = {
+                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandTaskListsDropDown)
                             },
-                            enabled = !titleHasError
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = expandTaskListsDropDown,
+                            onDismissRequest = { expandTaskListsDropDown = false }
                         ) {
-                            Text("Validate")
+                            taskLists.forEach { taskList ->
+                                DropdownMenuItem(
+                                    text = { Text(taskList.title) },
+                                    onClick = {
+                                        targetList = taskList
+                                        expandTaskListsDropDown = false
+                                    }
+                                )
+                            }
                         }
                     }
+
+                    // TODO instead of a button opening a dialog, TextField could be editable to let user
+                    //  enter the new list name, if targetList isn't part of taskLists, then, it's a new one
+                    IconButton(onClick = {}) {
+                        Icon(LucideIcons.ListPlus, null)
+                    }
+                }
+
+                Row(
+                    Modifier.align(Alignment.End),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TextButton(onClick = {
+                        taskOfInterest = null
+                        showEditTaskSheet = false
+                        showNewTaskSheet = false
+                    }) {
+                        Text("Cancel")
+                    }
+                    Button(
+                        onClick = {
+                            if (showEditTaskSheet) {
+                                taskOfInterest = null
+                                showEditTaskSheet = false
+
+                                // TODO deal with due date and nested alert dialogs
+                                viewModel.updateTask(targetList, requireNotNull(task), newTitle, newNotes, task.dueDate /*FIXME*/)
+                            } else if (showNewTaskSheet) {
+                                showNewTaskSheet = false
+
+                                viewModel.createTask(targetList, newTitle, newNotes, null /*TODO*/)
+                            }
+                        },
+                        enabled = newTitle.isNotBlank()
+                    ) {
+                        Text("Validate")
+                    }
+                }
             }
         }
     }
