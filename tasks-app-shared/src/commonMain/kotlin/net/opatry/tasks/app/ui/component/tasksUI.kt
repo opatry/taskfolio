@@ -440,6 +440,8 @@ fun TaskListDetail(
                         }
                     }
 
+                    // TODO instead of a button opening a dialog, TextField could be editable to let user
+                    //  enter the new list name, if targetList isn't part of taskLists, then, it's a new one
                     IconButton(onClick = {}) {
                         Icon(LucideIcons.ListPlus, null)
                     }
