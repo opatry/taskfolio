@@ -79,18 +79,7 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
         detailPane = {
             AnimatedPane {
                 navigator.currentDestination?.content?.let { taskList ->
-                    TaskListDetail(
-                        taskLists,
-                        taskList,
-                        onRenameTaskList = viewModel::renameTaskList,
-                        onClearTaskListCompletedTasks = viewModel::clearTaskListCompletedTasks,
-                        onDeleteTaskList = {
-                            if (navigator.currentDestination?.content?.id == it.id) {
-                                navigator.navigateBack()
-                            }
-                            viewModel.deleteTaskList(it)
-                        },
-                    )
+                    TaskListDetail(viewModel, taskList, navigator::navigateBack)
                 } ?: run {
                     NoTaskListSelectedEmptyState()
                 }

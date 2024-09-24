@@ -50,7 +50,7 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
         if (taskLists.isEmpty()) {
             NoTaskListEmptyState()
         } else {
-            Box(Modifier.weight(.25f)) {
+            Box(Modifier.weight(.3f)) {
                 TaskListsColumn(
                     taskLists,
                     selectedItem = currentTaskList,
@@ -63,20 +63,11 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
             VerticalDivider()
         }
 
-        Box(Modifier.weight(.75f)) {
+        Box(Modifier.weight(.7f)) {
             currentTaskList?.let { taskList ->
-                TaskListDetail(
-                    taskLists,
-                    taskList,
-                    onRenameTaskList = viewModel::renameTaskList,
-                    onClearTaskListCompletedTasks = viewModel::clearTaskListCompletedTasks,
-                    onDeleteTaskList = {
-                        if (currentTaskList?.id == it.id) {
-                            currentTaskList = null
-                        }
-                        viewModel.deleteTaskList(it)
-                    },
-                )
+                TaskListDetail(viewModel, taskList) {
+                    currentTaskList = null
+                }
             } ?: run {
                 NoTaskListSelectedEmptyState()
             }

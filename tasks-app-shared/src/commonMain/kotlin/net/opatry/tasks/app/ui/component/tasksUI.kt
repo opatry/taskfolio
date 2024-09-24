@@ -76,6 +76,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -99,6 +100,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
+import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
@@ -112,12 +114,12 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListDetail(
-    taskLists: List<TaskListUIModel>,
+    viewModel: TaskListsViewModel,
     taskList: TaskListUIModel,
-    onRenameTaskList: (TaskListUIModel, String) -> Unit,
-    onClearTaskListCompletedTasks: (TaskListUIModel) -> Unit,
-    onDeleteTaskList: (TaskListUIModel) -> Unit
+    onBack: () -> Unit
 ) {
+    val taskLists by viewModel.taskLists.collectAsState(emptyList())
+
     var showTaskListActions by remember { mutableStateOf(false) }
     var showRenameTaskListDialog by remember { mutableStateOf(false) }
     var showClearTaskListCompletedTasksDialog by remember { mutableStateOf(false) }
@@ -257,7 +259,7 @@ fun TaskListDetail(
                         Button(
                             onClick = {
                                 showRenameTaskListDialog = false
-                                onRenameTaskList(taskList, newTitle.trim())
+                                viewModel.renameTaskList(taskList, newTitle)
                             },
                             enabled = !hasError
                         ) {
@@ -286,7 +288,7 @@ fun TaskListDetail(
             confirmButton = {
                 Button(onClick = {
                     showClearTaskListCompletedTasksDialog = false
-                    onClearTaskListCompletedTasks(taskList)
+                    viewModel.clearTaskListCompletedTasks(taskList)
                 }) {
                     Text("Clear")
                 }
@@ -311,7 +313,8 @@ fun TaskListDetail(
             confirmButton = {
                 Button(onClick = {
                     showDeleteTaskListDialog = false
-                    onDeleteTaskList(taskList)
+                    viewModel.deleteTaskList(taskList)
+                    onBack()
                 }) {
                     Text("Delete")
                 }
