@@ -126,4 +126,7 @@ interface TaskDao {
 
     @Query("DELETE FROM task WHERE parent_list_local_id = :taskListId AND remote_id IS NOT NULL AND remote_id NOT IN (:validRemoteIds)")
     suspend fun deleteStaleTasks(taskListId: Long, validRemoteIds: List<String>)
+
+    @Query("SELECT * FROM task WHERE local_id = :id")
+    suspend fun getById(id: Long): TaskEntity?
 }

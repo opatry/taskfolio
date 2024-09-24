@@ -221,10 +221,10 @@ class TaskRepository(
         }
     }
 
-    suspend fun deleteTaskList(id: Long) {
+    suspend fun deleteTaskList(taskListId: Long) {
         // TODO deal with deleted locally but not remotely yet (no internet)
-        val taskListEntity = taskListDao.getById(id) ?: return
-        taskListDao.deleteTaskList(id)
+        val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
+        taskListDao.deleteTaskList(taskListId)
         if (taskListEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
@@ -236,9 +236,10 @@ class TaskRepository(
         }
     }
 
-    suspend fun editTaskList(id: Long, newTitle: String) {
+    suspend fun editTaskList(taskListId: Long, newTitle: String) {
         val now = Clock.System.now()
-        val taskListEntity = taskListDao.getById(id)?.copy(title = newTitle, lastUpdateDate = now) ?: return
+        val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
+            .copy(title = newTitle, lastUpdateDate = now)
         taskListDao.insert(taskListEntity)
         if (taskListEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
@@ -254,10 +255,10 @@ class TaskRepository(
         }
     }
 
-    suspend fun clearTaskListCompletedTasks(id: Long) {
-        val taskList = taskListDao.getById(id) ?: return
+    suspend fun clearTaskListCompletedTasks(taskListId: Long) {
+        val taskList = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         // TODO local update date task list
-        val completedTasks = taskDao.getCompletedTasks(id)
+        val completedTasks = taskDao.getCompletedTasks(taskListId)
         taskDao.deleteTasks(completedTasks.map(TaskEntity::id))
         if (taskList.remoteId != null) {
             coroutineScope {
@@ -286,8 +287,8 @@ class TaskRepository(
                 position = ""/*TODO local position value?*/
             )
         )
-        val taskListEntity = taskListDao.getById(taskListId)
-        if (taskListEntity?.remoteId != null) {
+        val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
+        if (taskListEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
                     tasksApi.insert(
@@ -304,6 +305,41 @@ class TaskRepository(
             }
             if (task != null) {
                 taskDao.insert(task.asTaskEntity(taskListId, taskId))
+            }
+        }
+    }
+
+    suspend fun toggleTaskCompletionState(taskId: Long) {
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val now = Clock.System.now()
+        val updatedTask = taskEntity.copy(
+            isCompleted = !taskEntity.isCompleted,
+            completionDate = if (taskEntity.isCompleted) null else now,
+            lastUpdateDate = now,
+        )
+        taskDao.insert(updatedTask)
+        // FIXME should already be available in entity, quick & dirty workaround
+        val taskListRemoteId = taskEntity.parentTaskRemoteId
+            ?: taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && taskEntity.remoteId != null) {
+            withContext(Dispatchers.IO) {
+                try {
+                    val status = if (updatedTask.isCompleted) Task.Status.Completed else Task.Status.NeedsAction
+                    tasksApi.update(
+                        taskListRemoteId,
+                        taskEntity.remoteId,
+                        Task(
+                            id = taskEntity.remoteId,
+                            title = taskEntity.title,
+                            dueDate = taskEntity.dueDate,
+                            updatedDate = taskEntity.lastUpdateDate,
+                            status = status,
+                            completedDate = updatedTask.completionDate,
+                        )
+                    )
+                } catch (e: Exception) {
+                    null
+                }
             }
         }
     }
