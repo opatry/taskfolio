@@ -41,6 +41,8 @@ data class TaskEntity(
     val title: String,
     @ColumnInfo(name = "notes", defaultValue = "")
     val notes: String = "",
+    @ColumnInfo(name = "is_completed")
+    val isCompleted: Boolean = false,
     @ColumnInfo(name = "position")
     val position: String, // FIXME how to adopt this for local only tasks?
     @ColumnInfo(name = "parent_local_id")

@@ -20,20 +20,18 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.model
+package net.opatry.tasks.app.ui.component
 
-enum class TaskListSorting {
-    Manual,
-    Date,
-}
+import AppWindow
+import LucideIcons
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 
-data class TaskListUIModel(
-    val id: Long,
-    val title: String,
-    val lastUpdate: String,
-    val tasks: List<TaskUIModel>,
-) {
-    val isEmpty: Boolean = tasks.isEmpty()
-    val hasCompletedTasks: Boolean = tasks.any { it.isCompleted }
-    val canDelete: Boolean = true // FIXME default list can't be deleted, how to know it?
+@Composable
+fun MissingScreen(screenName: String, screenIcon: ImageVector? = null) {
+    EmptyState(
+        icon = screenIcon ?: LucideIcons.AppWindow,
+        title = "Missing screen '$screenName'",
+        description = "This screen is not implemented yet"
+    )
 }

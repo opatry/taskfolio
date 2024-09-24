@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f69cda5f0ea80535f96c5a385b323d26",
+    "identityHash": "e7ec2542356f89db80dde58d3b57c3f8",
     "entities": [
       {
         "tableName": "task_list",
@@ -42,7 +42,7 @@
       },
       {
         "tableName": "task",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `notes` TEXT NOT NULL DEFAULT '', `position` TEXT NOT NULL, `parent_local_id` INTEGER, `remote_parent_id` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `notes` TEXT NOT NULL DEFAULT '', `is_completed` INTEGER NOT NULL, `position` TEXT NOT NULL, `parent_local_id` INTEGER, `remote_parent_id` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -82,6 +82,12 @@
             "defaultValue": "''"
           },
           {
+            "fieldPath": "isCompleted",
+            "columnName": "is_completed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "position",
             "columnName": "position",
             "affinity": "TEXT",
@@ -108,7 +114,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f69cda5f0ea80535f96c5a385b323d26')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e7ec2542356f89db80dde58d3b57c3f8')"
     ]
   }
 }

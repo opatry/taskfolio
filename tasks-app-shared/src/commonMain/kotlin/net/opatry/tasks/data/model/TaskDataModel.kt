@@ -29,6 +29,7 @@ data class TaskDataModel(
     val id: Long,
     val title: String,
     val notes: String = "",
+    val isCompleted: Boolean = false,
     val dueDate: Instant? = null,
     val position: String,
     val indent: Int,

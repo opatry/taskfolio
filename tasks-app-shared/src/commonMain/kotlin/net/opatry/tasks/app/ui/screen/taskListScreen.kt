@@ -22,63 +22,64 @@
 
 package net.opatry.tasks.app.ui.screen
 
-import ListPlus
+import CheckCheck
+import CircleOff
 import LucideIcons
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.component.TaskListColumn
+import net.opatry.tasks.app.ui.component.EmptyState
+import net.opatry.tasks.app.ui.component.TaskListDetail
+import net.opatry.tasks.app.ui.component.TaskListsColumn
 import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.resources.Res
-import net.opatry.tasks.resources.task_lists_screen_empty_state_title
-import org.jetbrains.compose.resources.stringResource
-
 
 @Composable
-fun TaskListsScreen(viewModel: TaskListsViewModel) {
-    val taskLists by viewModel.taskLists.collectAsState(emptyList())
+fun TaskListsMasterDetail(taskLists: List<TaskListUIModel>) {
+    var currentTaskList by remember { mutableStateOf<TaskListUIModel?>(null) }
 
-    Surface(Modifier.fillMaxSize()) {
+    Row(Modifier.fillMaxWidth()) {
         if (taskLists.isEmpty()) {
-            Text(stringResource(Res.string.task_lists_screen_empty_state_title))
+            EmptyState(
+                icon = LucideIcons.CheckCheck,
+                title = "No task list",
+                description = "Create a new task list to get started",
+            )
         } else {
-            // TODO master detail layout
-
-            Box(Modifier.fillMaxSize()) {
-                LazyRow(Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(taskLists, TaskListUIModel::id) { taskList ->
-                        // TODO provide width
-                        TaskListColumn(taskList) {
-                            // TODO dialog to ask for data
-                            viewModel.createTask(taskList, "This is a new task")
-                        }
+            Box(Modifier.weight(.25f)) {
+                TaskListsColumn(
+                    taskLists,
+                    selectedItem = currentTaskList,
+                    onItemClick = { taskList ->
+                        currentTaskList = taskList
                     }
-                }
+                )
+            }
 
-                FloatingActionButton(
-                    onClick = {
-                        // TODO dialog to ask for data
-                        viewModel.createTaskList("This is a new task list")
-                    },
-                    modifier = Modifier.padding(24.dp).align(Alignment.BottomEnd)
-                ) {
-                    // TODO stringResource("create new task list")
-                    Icon(LucideIcons.ListPlus, null)
-                }
+            VerticalDivider()
+        }
+
+        Box(Modifier.weight(.75f)) {
+            currentTaskList?.let { taskList ->
+                TaskListDetail(
+                    taskLists,
+                    taskList,
+                    onRenameTaskList = { _, _ -> },
+                    onClearTaskListCompletedTasks = {},
+                    onDeleteTaskList = {},
+                )
+            } ?: run {
+                EmptyState(
+                    icon = LucideIcons.CircleOff,
+                    title = "No task list selected",
+                    description = "Select a task list to see its tasks",
+                )
             }
         }
     }

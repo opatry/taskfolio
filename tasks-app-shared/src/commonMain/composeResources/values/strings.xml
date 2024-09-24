@@ -24,6 +24,7 @@
     <string name="app_name">Tasks app</string>
 
     <string name="navigation_tasks">Tasks</string>
+    <string name="navigation_calendar">Calendar</string>
     <string name="navigation_search">Search</string>
     <string name="navigation_settings">Settings</string>
 

@@ -22,11 +22,50 @@
 
 package net.opatry.tasks.app.ui.model
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.toLocalDateTime
+
+sealed class DateRange {
+    data object None : DateRange()
+    data class Overdue(val date: LocalDate, val numberOfDays: Int) : DateRange()
+    data object Yesterday : DateRange()
+    data object Today : DateRange()
+    data object Tomorrow : DateRange()
+    data class Later(val date: LocalDate, val numberOfDays: Int) : DateRange()
+}
+
 data class TaskUIModel(
     val id: Long,
     val title: String,
-    val dueDate: String,
-    val isCompleted: Boolean,
-    val position: String, // FIXME for debug?
-    val indent: Int,
-)
+    val dueDate: LocalDate? = null,
+    val notes: String = "",
+    val isCompleted: Boolean = false,
+    val position: String = "", // FIXME for debug?
+    val indent: Int = 0,
+) {
+    val dateRange: DateRange
+        get() {
+            val now = Clock.System.now()
+
+            // get number of weeks between two dates
+            val todayLocalDate = now.toLocalDateTime(TimeZone.UTC).date
+            val dueLocalDate = dueDate ?: return DateRange.None
+            val daysUntilDueDate = todayLocalDate.daysUntil(dueLocalDate)
+
+            return when {
+                daysUntilDueDate < -1 -> DateRange.Overdue(dueLocalDate, -daysUntilDueDate)
+                daysUntilDueDate == -1 -> DateRange.Yesterday
+                daysUntilDueDate == 0 -> DateRange.Today
+                daysUntilDueDate == 1 -> DateRange.Tomorrow
+                // daysUntilDueDate > 1
+                else -> DateRange.Later(dueLocalDate, daysUntilDueDate)
+            }
+        }
+
+    val canUnindent: Boolean = indent > 0
+    val canIndent: Boolean = indent < 1
+    val canCreateSubTask: Boolean = indent == 0
+}

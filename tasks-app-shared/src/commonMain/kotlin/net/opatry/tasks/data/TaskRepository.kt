@@ -55,6 +55,7 @@ private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?): TaskEntity {
         etag = etag,
         title = title,
         notes = notes ?: "",
+        isCompleted = isCompleted,
         position = position,
         // TODO parentTaskLocalId = ,
         parentTaskRemoteId = parent,
@@ -78,6 +79,7 @@ private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
         id = id,
         title = title,
         notes = notes,
+        isCompleted = isCompleted,
         dueDate = Clock.System.now(),
         position = position,
         indent = indent,
@@ -176,7 +178,7 @@ class TaskRepository(
             // TODO deal with showDeleted, showHidden, etc.
             // TODO updatedMin could be used to filter out unchanged tasks since last sync
             //  /!\ this would impact the deleteStaleTasks logic
-            val remoteTasks = tasksApi.listAll(remoteListId)
+            val remoteTasks = tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
             remoteTasks.onEach { remoteTask ->
                 val existingEntity = taskDao.getByRemoteId(remoteTask.id)
                 taskDao.insert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
