@@ -35,6 +35,10 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "
 
 jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 
+androidx-compose-m3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version = "1.0.0" }
+androidx-compose-m3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version = "1.0.0" }
+androidx-compose-m3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version = "1.0.0" }
+
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
