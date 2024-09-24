@@ -93,7 +93,7 @@ enum class AppTasksScreen(
 fun TasksApp(viewModel: TaskListsViewModel) {
     val httpClient = koinInject<HttpClient>(named(HttpClientName.Tasks))
 
-    val selectedScreen = remember { mutableStateOf(AppTasksScreen.Tasks) }
+    var selectedScreen by remember { mutableStateOf(AppTasksScreen.Tasks) }
 
     NavigationSuiteScaffold(navigationSuiteItems = {
         // Only if expanded state
@@ -109,20 +109,20 @@ fun TasksApp(viewModel: TaskListsViewModel) {
                 modifier = Modifier.padding(vertical = 12.dp),
             )
         }
-        AppTasksScreen.entries.forEach { destination ->
+        AppTasksScreen.entries.forEach { screen ->
             item(
-                selected = selectedScreen.value == destination,
-                onClick = { selectedScreen.value = destination },
-                label = { Text(stringResource(destination.labelRes)) },
+                selected = selectedScreen == screen,
+                onClick = { selectedScreen = screen },
+                label = { Text(stringResource(screen.labelRes)) },
                 icon = {
-                    Icon(destination.icon, destination.contentDescription?.let { stringResource(it) })
+                    Icon(screen.icon, screen.contentDescription?.let { stringResource(it) })
                 },
                 alwaysShowLabel = false,
             )
         }
     }) {
         Column {
-            when (selectedScreen.value) {
+            when (selectedScreen) {
                 AppTasksScreen.Tasks -> {
                     Card(Modifier.padding(16.dp), shape = MaterialTheme.shapes.extraLarge) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
