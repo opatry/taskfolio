@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.app.ui.component
 
+import CalendarDays
 import ChevronDown
 import ChevronRight
 import Circle
@@ -31,7 +32,7 @@ import CircleOff
 import EllipsisVertical
 import LayoutList
 import LucideIcons
-import Pen
+import NotepadText
 import Plus
 import Trash
 import androidx.compose.animation.AnimatedVisibility
@@ -343,20 +344,89 @@ fun TaskListDetail(
     }
 
     if (showEditTaskSheet) {
-        ModalBottomSheet(
-            sheetState = editTaskSheetState,
-            onDismissRequest = {
-                taskOfInterest = null
-                showEditTaskSheet = false
+        taskOfInterest?.let { task ->
+            ModalBottomSheet(
+                sheetState = editTaskSheetState,
+                onDismissRequest = {
+                    taskOfInterest = null
+                    showEditTaskSheet = false
+                }
+            ) {
+                var newTitle by remember { mutableStateOf(task.title) }
+                val titleHasError by remember {
+                    derivedStateOf {
+                        newTitle.isBlank()
+                    }
+                }
+                var newNotes by remember { mutableStateOf(task.notes) }
+
+                // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
+                Column(Modifier.padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Edit task", style = MaterialTheme.typography.titleMedium)
+
+                    OutlinedTextField(
+                        newTitle,
+                        onValueChange = { newTitle = it },
+                        Modifier.fillMaxWidth(),
+                        maxLines = 1,
+                        supportingText = {
+                            AnimatedVisibility(visible = titleHasError) {
+                                Text("Title cannot be empty")
+                            }
+                        },
+                        isError = titleHasError,
+                    )
+
+                    OutlinedTextField(
+                        newNotes,
+                        onValueChange = { newNotes = it },
+                        Modifier.fillMaxWidth(),
+                        leadingIcon = { Icon(LucideIcons.NotepadText, null) },
+                        singleLine = false,
+                        minLines = 2,
+                    )
+
+                    // FIXME when dialog is dismissed, current state is reset but shouldn't need to extract date picker dialog use
+                    val dueDateLabel = task.dateRange.toLabel().takeUnless(String::isBlank) ?: "No due date"
+                    AssistChip(
+                        onClick = { showDatePickerDialog = true },
+                        shape = MaterialTheme.shapes.large,
+                        leadingIcon = { Icon(LucideIcons.CalendarDays, null) },
+                        label = { Text(dueDateLabel, color = task.dateRange.toColor()) },
+                    )
+
+                    Row(
+                        Modifier.align(Alignment.End),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TextButton(onClick = {
+                            taskOfInterest = null
+                            showEditTaskSheet = false
+                        }) {
+                            Text("Cancel")
+                        }
+                        Button(
+                            onClick = {
+                                taskOfInterest = null
+                                showEditTaskSheet = false
+
+                                // TODO deal with due date and nested alert dialogs
+                                viewModel.updateTask(task, newTitle, newNotes, task.dueDate /*FIXME*/)
+                            },
+                            enabled = !titleHasError
+                        ) {
+                            Text("Validate")
+                        }
+                    }
+                }
             }
-        ) {
-            MissingScreen("Edit task", LucideIcons.Pen)
         }
     }
 
     if (showDatePickerDialog) {
-        taskOfInterest?.dueDate?.let { initialDate ->
-            val state = rememberDatePickerState(initialDate.atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds())
+        taskOfInterest?.let { task ->
+            val state = rememberDatePickerState(task.dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())?.toEpochMilliseconds())
             DatePickerDialog(
                 onDismissRequest = {
                     taskOfInterest = null
@@ -374,10 +444,11 @@ fun TaskListDetail(
                     Button(onClick = {
                         taskOfInterest = null
                         showDatePickerDialog = false
-                        val newDate =
-                            state.selectedDateMillis?.let(Instant::fromEpochMilliseconds)?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
-                        println(newDate)
-                        // TODO
+                        val newDate = state.selectedDateMillis
+                            ?.let(Instant::fromEpochMilliseconds)
+                            ?.toLocalDateTime(TimeZone.currentSystemDefault())
+                            ?.date
+                        viewModel.updateTaskDueDate(task, dueDate = newDate)
                     }) {
                         Text("Update")
                     }

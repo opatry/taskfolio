@@ -31,7 +31,9 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
@@ -54,6 +56,7 @@ private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
     return TaskUIModel(
         id = id,
         title = title,
+        notes = notes,
         dueDate = dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
         isCompleted = isCompleted,
         position = position,
@@ -119,7 +122,7 @@ class TaskListsViewModel(
     fun renameTaskList(taskList: TaskListUIModel, newTitle: String) {
         viewModelScope.launch {
             try {
-                taskRepository.editTaskList(taskList.id, newTitle.trim())
+                taskRepository.renameTaskList(taskList.id, newTitle.trim())
             } catch (e: Exception) {
                 println("Error creating task: $e")
                 // TODO error handling
@@ -181,6 +184,55 @@ class TaskListsViewModel(
                 taskRepository.toggleTaskCompletionState(task.id)
             } catch (e: Exception) {
                 println("Error while toggling task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun updateTask(task: TaskUIModel, title: String, notes: String, dueDate: LocalDate?) {
+        viewModelScope.launch {
+            try {
+                taskRepository.updateTask(
+                    task.id,
+                    title.trim(),
+                    notes.trim(),
+                    dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())
+                )
+            } catch (e: Exception) {
+                println("Error while updating task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun updateTaskTitle(task: TaskUIModel, title: String) {
+        viewModelScope.launch {
+            try {
+                taskRepository.updateTaskTitle(task.id, title.trim())
+            } catch (e: Exception) {
+                println("Error while updating task title: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun updateTaskNotes(task: TaskUIModel, notes: String) {
+        viewModelScope.launch {
+            try {
+                taskRepository.updateTaskNotes(task.id, notes.trim())
+            } catch (e: Exception) {
+                println("Error while updating task notes: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun updateTaskDueDate(task: TaskUIModel, dueDate: LocalDate?) {
+        viewModelScope.launch {
+            try {
+                taskRepository.updateTaskDueDate(task.id, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
+            } catch (e: Exception) {
+                println("Error while updating task due date: $e")
                 // TODO error handling
             }
         }
