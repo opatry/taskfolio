@@ -40,9 +40,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPlacement
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
@@ -59,6 +64,9 @@ import net.opatry.tasks.app.ui.TasksApp
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.startKoin
+import java.awt.Dimension
+import java.awt.Toolkit
+import javax.swing.UIManager
 import kotlin.time.Duration.Companion.seconds
 
 enum class SignInStatus {
@@ -79,8 +87,45 @@ fun main() {
         )
     }
 
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+
     application {
-        Window(onCloseRequest = ::exitApplication) {
+        val screenSize by remember {
+            mutableStateOf(Toolkit.getDefaultToolkit().screenSize)
+        }
+
+        val defaultSize = DpSize(1024.dp, 800.dp)
+        val minSize = Dimension(600, 400)
+
+        var windowState = rememberWindowState(
+            position = WindowPosition(Alignment.Center), width = defaultSize.width, height = defaultSize.height
+        )
+
+        Window(
+            onCloseRequest = ::exitApplication,
+            state = windowState,
+            title = "Tasks App",
+        ) {
+            if (window.minimumSize != minSize) window.minimumSize = minSize
+
+            if (windowState.placement == WindowPlacement.Floating) {
+                val insets = window.insets
+                val maxWidth = screenSize.width - insets.left - insets.right
+                val finalWidth = if (window.size.width > maxWidth) maxWidth else window.size.width
+                val maxHeight = screenSize.height - insets.bottom - insets.top
+                val finalHeight = if (window.size.height > maxHeight) maxHeight else window.size.height
+
+                if (finalWidth != window.size.width || finalHeight != window.size.height) {
+                    windowState = WindowState(
+                        placement = windowState.placement,
+                        position = windowState.position,
+                        isMinimized = windowState.isMinimized,
+                        width = finalWidth.dp,
+                        height = finalHeight.dp
+                    )
+                }
+            }
+
             val coroutineScope = rememberCoroutineScope()
             var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
             val credentialsStorage = koinInject<CredentialsStorage>()

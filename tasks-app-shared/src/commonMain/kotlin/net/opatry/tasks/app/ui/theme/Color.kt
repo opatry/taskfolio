@@ -20,20 +20,14 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.model
+package net.opatry.app.ui.theme
 
-enum class TaskListSorting {
-    Manual,
-    Date,
-}
+import androidx.compose.ui.graphics.Color
 
-data class TaskListUIModel(
-    val id: Long,
-    val title: String,
-    val lastUpdate: String,
-    val tasks: List<TaskUIModel>,
-) {
-    val isEmpty: Boolean = tasks.isEmpty()
-    val hasCompletedTasks: Boolean = tasks.any { it.isCompleted }
-    val canDelete: Boolean = true // FIXME default list can't be deleted, how to know it?
-}
+val Purple80 = Color(0xFFD0BCFF)
+val PurpleGrey80 = Color(0xFFCCC2DC)
+val Pink80 = Color(0xFFEFB8C8)
+
+val Purple40 = Color(0xFF6650a4)
+val PurpleGrey40 = Color(0xFF625b71)
+val Pink40 = Color(0xFF7D5260)

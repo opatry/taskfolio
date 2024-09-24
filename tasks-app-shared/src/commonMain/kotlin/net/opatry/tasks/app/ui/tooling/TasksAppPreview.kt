@@ -20,20 +20,38 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.model
+package net.opatry.tasks.app.ui.tooling
 
-enum class TaskListSorting {
-    Manual,
-    Date,
-}
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import net.opatry.app.ui.theme.TasksAppTheme
 
-data class TaskListUIModel(
-    val id: Long,
-    val title: String,
-    val lastUpdate: String,
-    val tasks: List<TaskUIModel>,
-) {
-    val isEmpty: Boolean = tasks.isEmpty()
-    val hasCompletedTasks: Boolean = tasks.any { it.isCompleted }
-    val canDelete: Boolean = true // FIXME default list can't be deleted, how to know it?
+@Retention(AnnotationRetention.BINARY)
+@Target(
+    AnnotationTarget.ANNOTATION_CLASS,
+    AnnotationTarget.FUNCTION
+)
+//@Preview(
+//    name = "Light",
+//    widthDp = 400,
+//    heightDp = 600,
+//    showBackground = true,
+//    uiMode = UI_MODE_NIGHT_NO or UI_MODE_TYPE_NORMAL,
+//    device = Devices.NEXUS_6)
+//@Preview(
+//    name = "Night",
+//    widthDp = 400,
+//    heightDp = 600,
+//    showBackground = true,
+//    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
+//    device = Devices.NEXUS_6)
+annotation class TasksAppPreview
+
+@Composable
+fun TasksAppThemedPreview(content: @Composable () -> Unit) {
+    TasksAppTheme {
+        Surface {
+            content()
+        }
+    }
 }

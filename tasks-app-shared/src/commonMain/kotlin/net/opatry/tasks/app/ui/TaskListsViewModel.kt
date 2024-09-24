@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.data.TaskRepository
@@ -49,12 +51,11 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
 }
 
 private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
-    // TODO date formatter
     return TaskUIModel(
         id = id,
         title = title,
-        dueDate = dueDate?.toString() ?: "",
-        isCompleted = false,
+        dueDate = dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
+        isCompleted = isCompleted,
         position = position,
         indent = indent,
     )

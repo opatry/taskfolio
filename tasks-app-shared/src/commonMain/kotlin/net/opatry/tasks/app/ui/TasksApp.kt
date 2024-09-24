@@ -22,6 +22,8 @@
 
 package net.opatry.tasks.app.ui
 
+import AlignJustify
+import Calendar
 import ListTodo
 import LucideIcons
 import RefreshCw
@@ -30,18 +32,21 @@ import Settings
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentColor
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,11 +66,11 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.tasks.app.di.HttpClientName
-import net.opatry.tasks.app.ui.screen.SearchScreen
-import net.opatry.tasks.app.ui.screen.SettingsScreen
-import net.opatry.tasks.app.ui.screen.TaskListsScreen
+import net.opatry.tasks.app.ui.component.MissingScreen
+import net.opatry.tasks.app.ui.screen.TaskListsMasterDetail
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.app_name
+import net.opatry.tasks.resources.navigation_calendar
 import net.opatry.tasks.resources.navigation_search
 import net.opatry.tasks.resources.navigation_settings
 import net.opatry.tasks.resources.navigation_tasks
@@ -74,12 +79,13 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
-enum class Destination(
+enum class AppTasksScreen(
     val labelRes: StringResource,
     val icon: ImageVector,
     val contentDescription: StringResource? = null,
 ) {
     Tasks(Res.string.navigation_tasks, LucideIcons.ListTodo),
+    Calendar(Res.string.navigation_calendar, LucideIcons.Calendar),
     Search(Res.string.navigation_search, LucideIcons.Search),
     Settings(Res.string.navigation_settings, LucideIcons.Settings),
 }
@@ -88,44 +94,61 @@ enum class Destination(
 fun TasksApp(viewModel: TaskListsViewModel) {
     val httpClient = koinInject<HttpClient>(named(HttpClientName.Tasks))
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(stringResource(Res.string.app_name))
-                },
-                actions = {
-                    IconButton(onClick = viewModel::fetch) {
-                        Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
-                    }
-                    ProfileIcon(httpClient)
-                }
-            )
-        },
-    ) { innerPadding ->
-        // TODO scaffold + bottom bar vs nav rail WindowSizeClass
-        // TODO where to put Theme+Surface
+    val selectedScreen = remember { mutableStateOf(AppTasksScreen.Tasks) }
 
-        val selectedItem = remember { mutableStateOf(Destination.Tasks) }
-        NavigationSuiteScaffold(navigationSuiteItems = {
-            Destination.entries.forEach { destination ->
-                item(
-                    selected = selectedItem.value == destination,
-                    onClick = { selectedItem.value = destination },
-                    label = { Text(stringResource(destination.labelRes)) },
-                    icon = {
-                        Icon(destination.icon, destination.contentDescription?.let { stringResource(it) })
-                    },
-                    alwaysShowLabel = true,
-                )
-            }
-        }) {
-            Column {
-                when (selectedItem.value) {
-                    Destination.Tasks -> TaskListsScreen(viewModel)
-                    Destination.Search -> SearchScreen()
-                    Destination.Settings -> SettingsScreen()
+    NavigationSuiteScaffold(navigationSuiteItems = {
+        // Only if expanded state
+        if (false) {
+            item(
+                selected = false,
+                onClick = { },
+                enabled = false,
+                icon = {
+                    Icon(LucideIcons.AlignJustify, null)
+                },
+                alwaysShowLabel = false,
+                modifier = Modifier.padding(vertical = 12.dp),
+            )
+        }
+        AppTasksScreen.entries.forEach { destination ->
+            item(
+                selected = selectedScreen.value == destination,
+                onClick = { selectedScreen.value = destination },
+                label = { Text(stringResource(destination.labelRes)) },
+                icon = {
+                    Icon(destination.icon, destination.contentDescription?.let { stringResource(it) })
+                },
+                alwaysShowLabel = false,
+            )
+        }
+    }) {
+        Column {
+            when (selectedScreen.value) {
+                AppTasksScreen.Tasks -> {
+                    val taskLists by viewModel.taskLists.collectAsState(emptyList())
+
+                    Card(Modifier.padding(16.dp), shape = MaterialTheme.shapes.extraLarge) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                stringResource(Res.string.app_name),
+                                Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 16.dp),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            IconButton(onClick = viewModel::fetch) {
+                                Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
+                            }
+                            ProfileIcon(httpClient)
+                        }
+                    }
+
+                    TaskListsMasterDetail(taskLists)
                 }
+
+                AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)
+                AppTasksScreen.Search -> MissingScreen(stringResource(AppTasksScreen.Search.labelRes), LucideIcons.Search)
+                AppTasksScreen.Settings -> MissingScreen(stringResource(AppTasksScreen.Settings.labelRes), LucideIcons.Settings)
             }
         }
     }
