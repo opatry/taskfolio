@@ -78,7 +78,7 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
 
-    implementation(compose.material)
+    implementation(compose.material3)
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.androidx.appcompat)

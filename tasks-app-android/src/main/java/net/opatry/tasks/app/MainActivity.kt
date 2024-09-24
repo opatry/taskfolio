@@ -27,14 +27,16 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -82,25 +84,32 @@ class MainActivity : AppCompatActivity() {
             }
 
             TasksAppTheme {
-                when (signInStatus) {
-                    SignInStatus.Loading -> CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
-                    SignInStatus.SignedIn -> {
-                        val viewModel = koinViewModel<TaskListsViewModel>()
-                        TasksApp(viewModel)
-                    }
+                Surface {
+                    when (signInStatus) {
+                        SignInStatus.Loading -> {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
+                            }
+                        }
 
-                    SignInStatus.SignedOut -> {
-                        val t0 = Clock.System.now()
-                        AuthorizationScreen { token ->
-                            signInStatus = SignInStatus.SignedIn
-                            coroutineScope.launch {
-                                credentialsStorage.store(
-                                    TokenCache(
-                                        token.accessToken,
-                                        token.refreshToken,
-                                        (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                        SignInStatus.SignedIn -> {
+                            val viewModel = koinViewModel<TaskListsViewModel>()
+                            TasksApp(viewModel)
+                        }
+
+                        SignInStatus.SignedOut -> {
+                            val t0 = Clock.System.now()
+                            AuthorizationScreen { token ->
+                                signInStatus = SignInStatus.SignedIn
+                                coroutineScope.launch {
+                                    credentialsStorage.store(
+                                        TokenCache(
+                                            token.accessToken,
+                                            token.refreshToken,
+                                            (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }
