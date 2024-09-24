@@ -297,27 +297,24 @@ class TaskRepository(
         }
     }
 
-    suspend fun createTask(taskListId: Long, title: String, dueDate: Instant? = null) {
+    suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null) {
         val now = Clock.System.now()
-        val taskId = taskDao.insert(
-            TaskEntity(
-                parentListLocalId = taskListId,
-                title = title,
-                lastUpdateDate = now,
-                position = ""/*TODO local position value?*/
-            )
+        val taskEntity = TaskEntity(
+            parentListLocalId = taskListId,
+            title = title,
+            notes = notes,
+            lastUpdateDate = now,
+            dueDate = dueDate,
+            position = ""/*TODO local position value?*/
         )
+        val taskId = taskDao.insert(taskEntity)
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         if (taskListEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
                     tasksApi.insert(
                         taskListEntity.remoteId,
-                        Task(
-                            title = taskListEntity.title,
-                            dueDate = dueDate,
-                            updatedDate = now,
-                        )
+                        taskEntity.asTask()
                     )
                 } catch (e: Exception) {
                     null
@@ -339,10 +336,7 @@ class TaskRepository(
         if (taskListRemoteId != null && taskEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
-                    tasksApi.delete(
-                        taskListRemoteId,
-                        taskEntity.remoteId,
-                    )
+                    tasksApi.delete(taskListRemoteId, taskEntity.remoteId)
                 } catch (e: Exception) {
                     null
                 }

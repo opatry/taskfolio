@@ -343,22 +343,24 @@ fun TaskListDetail(
         )
     }
 
-    if (showEditTaskSheet) {
-        taskOfInterest?.let { task ->
+    // FIXME extract a reusable dialog with proper callbacks instead of putting `if`s everywhere
+    if (showEditTaskSheet || showNewTaskSheet) {
+        val task = taskOfInterest
             ModalBottomSheet(
                 sheetState = editTaskSheetState,
                 onDismissRequest = {
                     taskOfInterest = null
                     showEditTaskSheet = false
+                    showNewTaskSheet = false
                 }
             ) {
-                var newTitle by remember { mutableStateOf(task.title) }
+                var newTitle by remember { mutableStateOf(task?.title ?: "") }
                 val titleHasError by remember {
                     derivedStateOf {
                         newTitle.isBlank()
                     }
                 }
-                var newNotes by remember { mutableStateOf(task.notes) }
+                var newNotes by remember { mutableStateOf(task?.notes ?: "") }
 
                 // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
                 Column(Modifier.padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -387,12 +389,12 @@ fun TaskListDetail(
                     )
 
                     // FIXME when dialog is dismissed, current state is reset but shouldn't need to extract date picker dialog use
-                    val dueDateLabel = task.dateRange.toLabel().takeUnless(String::isBlank) ?: "No due date"
+                    val dueDateLabel = task?.dateRange?.toLabel()?.takeUnless(String::isBlank) ?: "No due date"
                     AssistChip(
                         onClick = { showDatePickerDialog = true },
                         shape = MaterialTheme.shapes.large,
                         leadingIcon = { Icon(LucideIcons.CalendarDays, null) },
-                        label = { Text(dueDateLabel, color = task.dateRange.toColor()) },
+                        label = { Text(dueDateLabel, color = task?.dateRange.toColor()) },
                     )
 
                     Row(
@@ -403,23 +405,29 @@ fun TaskListDetail(
                         TextButton(onClick = {
                             taskOfInterest = null
                             showEditTaskSheet = false
+                            showNewTaskSheet = false
                         }) {
                             Text("Cancel")
                         }
                         Button(
                             onClick = {
-                                taskOfInterest = null
-                                showEditTaskSheet = false
+                                if (showEditTaskSheet) {
+                                    taskOfInterest = null
+                                    showEditTaskSheet = false
 
-                                // TODO deal with due date and nested alert dialogs
-                                viewModel.updateTask(task, newTitle, newNotes, task.dueDate /*FIXME*/)
+                                    // TODO deal with due date and nested alert dialogs
+                                    viewModel.updateTask(requireNotNull(task), newTitle, newNotes, task.dueDate /*FIXME*/)
+                                } else if (showNewTaskSheet) {
+                                    showNewTaskSheet = false
+
+                                    viewModel.createTask(taskList, newTitle, newNotes, null /*TODO*/)
+                                }
                             },
                             enabled = !titleHasError
                         ) {
                             Text("Validate")
                         }
                     }
-                }
             }
         }
     }
@@ -456,18 +464,6 @@ fun TaskListDetail(
             ) {
                 DatePicker(state)
             }
-        }
-    }
-
-    if (showNewTaskSheet) {
-        ModalBottomSheet(
-            sheetState = newTaskSheetState,
-            onDismissRequest = {
-                taskOfInterest = null
-                showNewTaskSheet = false
-            }
-        ) {
-            MissingScreen("New task", LucideIcons.CircleFadingPlus)
         }
     }
 
@@ -572,14 +568,15 @@ fun TasksColumn(
 }
 
 @Composable
-fun DateRange.toColor(): Color = when (this) {
+fun DateRange?.toColor(): Color = when (this) {
     is DateRange.Overdue,
     DateRange.Yesterday -> MaterialTheme.colorScheme.error
 
     DateRange.Today -> MaterialTheme.colorScheme.primary
     DateRange.Tomorrow,
     is DateRange.Later,
-    DateRange.None -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+    DateRange.None,
+    null -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
 }
 
 @Composable
