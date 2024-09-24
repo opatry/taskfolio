@@ -97,16 +97,19 @@ fun TasksApp(viewModel: TaskListsViewModel) {
     val selectedScreen = remember { mutableStateOf(AppTasksScreen.Tasks) }
 
     NavigationSuiteScaffold(navigationSuiteItems = {
-        item(
-            selected = false,
-            onClick = { },
-            enabled = false,
-            icon = {
-                Icon(LucideIcons.AlignJustify, null)
-            },
-            alwaysShowLabel = false,
-            modifier = Modifier.padding(vertical = 12.dp),
-        )
+        // Only if expanded state
+        if (false) {
+            item(
+                selected = false,
+                onClick = { },
+                enabled = false,
+                icon = {
+                    Icon(LucideIcons.AlignJustify, null)
+                },
+                alwaysShowLabel = false,
+                modifier = Modifier.padding(vertical = 12.dp),
+            )
+        }
         AppTasksScreen.entries.forEach { destination ->
             item(
                 selected = selectedScreen.value == destination,
