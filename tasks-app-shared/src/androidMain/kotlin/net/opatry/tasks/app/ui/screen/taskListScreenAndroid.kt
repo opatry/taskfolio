@@ -79,7 +79,12 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
         detailPane = {
             AnimatedPane {
                 navigator.currentDestination?.content?.let { taskList ->
-                    TaskListDetail(viewModel, taskList, navigator::navigateBack)
+                    TaskListDetail(viewModel, taskList) { targetedTaskList ->
+                        when (targetedTaskList) {
+                            null -> navigator.navigateBack()
+                            else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList)
+                        }
+                    }
                 } ?: run {
                     NoTaskListSelectedEmptyState()
                 }

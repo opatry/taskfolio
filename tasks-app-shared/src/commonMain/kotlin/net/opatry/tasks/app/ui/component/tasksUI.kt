@@ -121,7 +121,7 @@ import org.jetbrains.compose.resources.stringResource
 fun TaskListDetail(
     viewModel: TaskListsViewModel,
     taskList: TaskListUIModel,
-    onBack: () -> Unit
+    onNavigateTo: (TaskListUIModel?) -> Unit
 ) {
     val taskLists by viewModel.taskLists.collectAsState(emptyList())
 
@@ -214,6 +214,9 @@ fun TaskListDetail(
                     taskLists,
                     taskList.tasks,
                     onToggleCompletionState = viewModel::toggleTaskCompletionState,
+                    onNewTask = {
+                        showNewTaskSheet = true
+                    },
                     onEditTask = {
                         taskOfInterest = it
                         showEditTaskSheet = true
@@ -339,7 +342,7 @@ fun TaskListDetail(
                 Button(onClick = {
                     showDeleteTaskListDialog = false
                     viewModel.deleteTaskList(taskList)
-                    onBack()
+                    onNavigateTo(null)
                 }) {
                     Text("Delete")
                 }
@@ -465,6 +468,7 @@ fun TaskListDetail(
                             } else if (showNewTaskSheet) {
                                 showNewTaskSheet = false
 
+                                onNavigateTo(targetList)
                                 viewModel.createTask(targetList, newTitle, newNotes, null /*TODO*/)
                             }
                         },
@@ -529,6 +533,7 @@ fun TasksColumn(
     taskLists: List<TaskListUIModel>,
     tasks: List<TaskUIModel>,
     onToggleCompletionState: (TaskUIModel) -> Unit,
+    onNewTask: () -> Unit,
     onEditTask: (TaskUIModel) -> Unit,
     onUpdateDueDate: (TaskUIModel) -> Unit,
     onNewSubTask: (TaskUIModel) -> Unit,
@@ -553,7 +558,7 @@ fun TasksColumn(
     }
 
     Column {
-        TextButton(onClick = {}) {
+        TextButton(onClick = onNewTask) {
             RowWithIcon("Add task", LucideIcons.CircleFadingPlus)
         }
 
@@ -568,7 +573,7 @@ fun TasksColumn(
                     stickyHeader {
                         Box(
                             Modifier
-                                .clip(MaterialTheme.shapes.medium)
+                                .clip(MaterialTheme.shapes.large)
                                 .fillMaxWidth()
                                 .clickable { showCompleted = !showCompleted }
                                 .background(MaterialTheme.colorScheme.background)
@@ -671,11 +676,7 @@ fun TaskRow(
         else -> LucideIcons.Circle to MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
     }
 
-    Row(
-        Modifier
-            .clip(MaterialTheme.shapes.medium)
-            .clickable(onClick = onEditTask)
-    ) {
+    Row(Modifier.clickable(onClick = onEditTask)) {
         IconButton(
             onClick = onToggleCompletionState,
             Modifier.padding(start = 24.dp * task.indent)
