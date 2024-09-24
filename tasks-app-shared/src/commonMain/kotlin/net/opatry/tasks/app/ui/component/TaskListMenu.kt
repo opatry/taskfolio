@@ -102,7 +102,7 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
 
         DropdownMenuItem(
             text = {
-                Text(text = "Delete all completed tasks")
+                Text(text = "Clear all completed tasks")
             },
             enabled = taskList.hasCompletedTasks,
             onClick = { onAction(TaskListMenuAction.ClearCompletedTasks) }

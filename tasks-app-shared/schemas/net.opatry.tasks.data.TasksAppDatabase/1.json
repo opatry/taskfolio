@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e7ec2542356f89db80dde58d3b57c3f8",
+    "identityHash": "618add68e5a6dfa371da64a102019161",
     "entities": [
       {
         "tableName": "task_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `update_date` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -31,6 +31,12 @@
             "columnName": "title",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "lastUpdateDate",
+            "columnName": "update_date",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -42,7 +48,7 @@
       },
       {
         "tableName": "task",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `notes` TEXT NOT NULL DEFAULT '', `is_completed` INTEGER NOT NULL, `position` TEXT NOT NULL, `parent_local_id` INTEGER, `remote_parent_id` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`local_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `remote_id` TEXT, `parent_list_local_id` INTEGER NOT NULL, `etag` TEXT NOT NULL DEFAULT '', `title` TEXT NOT NULL, `due_date` TEXT, `update_date` TEXT NOT NULL, `completion_date` TEXT, `notes` TEXT NOT NULL DEFAULT '', `is_completed` INTEGER NOT NULL, `position` TEXT NOT NULL, `parent_local_id` INTEGER, `remote_parent_id` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -73,6 +79,22 @@
             "columnName": "title",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "dueDate",
+            "columnName": "due_date",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastUpdateDate",
+            "columnName": "update_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completionDate",
+            "columnName": "completion_date",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "notes",
@@ -114,7 +136,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e7ec2542356f89db80dde58d3b57c3f8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '618add68e5a6dfa371da64a102019161')"
     ]
   }
 }

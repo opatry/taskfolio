@@ -82,9 +82,14 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
                     TaskListDetail(
                         taskLists,
                         taskList,
-                        onRenameTaskList = { _, _ -> },
-                        onClearTaskListCompletedTasks = {},
-                        onDeleteTaskList = {},
+                        onRenameTaskList = viewModel::renameTaskList,
+                        onClearTaskListCompletedTasks = viewModel::clearTaskListCompletedTasks,
+                        onDeleteTaskList = {
+                            if (navigator.currentDestination?.content?.id == it.id) {
+                                navigator.navigateBack()
+                            }
+                            viewModel.deleteTaskList(it)
+                        },
                     )
                 } ?: run {
                     NoTaskListSelectedEmptyState()

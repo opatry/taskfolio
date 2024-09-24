@@ -25,6 +25,7 @@ package net.opatry.tasks.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.datetime.Instant
 
 @Entity(tableName = "task")
 data class TaskEntity(
@@ -39,6 +40,12 @@ data class TaskEntity(
     val etag: String = "",
     @ColumnInfo(name = "title")
     val title: String,
+    @ColumnInfo(name = "due_date")
+    val dueDate: Instant? = null,
+    @ColumnInfo(name = "update_date")
+    val lastUpdateDate: Instant,
+    @ColumnInfo(name = "completion_date")
+    val completionDate: Instant? = null,
     @ColumnInfo(name = "notes", defaultValue = "")
     val notes: String = "",
     @ColumnInfo(name = "is_completed")

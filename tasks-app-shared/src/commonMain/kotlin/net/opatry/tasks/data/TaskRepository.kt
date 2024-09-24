@@ -24,6 +24,9 @@ package net.opatry.tasks.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
@@ -44,6 +47,7 @@ private fun TaskList.asTaskListEntity(localId: Long?): TaskListEntity {
         remoteId = id,
         etag = etag,
         title = title,
+        lastUpdateDate = updatedDate,
     )
 }
 
@@ -52,13 +56,16 @@ private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?): TaskEntity {
         id = localId ?: 0,
         remoteId = id,
         parentListLocalId = parentLocalId,
+        // TODO parentTaskLocalId = ,
+        parentTaskRemoteId = parent,
         etag = etag,
         title = title,
         notes = notes ?: "",
+        dueDate = dueDate,
+        lastUpdateDate = updatedDate,
+        completionDate = completedDate,
         isCompleted = isCompleted,
         position = position,
-        // TODO parentTaskLocalId = ,
-        parentTaskRemoteId = parent,
     )
 }
 
@@ -69,7 +76,7 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
     return TaskListDataModel(
         id = id,
         title = title,
-        lastUpdate = Clock.System.now(),
+        lastUpdate = lastUpdateDate,
         tasks = sortedTasks,
     )
 }
@@ -80,7 +87,9 @@ private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
         title = title,
         notes = notes,
         isCompleted = isCompleted,
-        dueDate = Clock.System.now(),
+        dueDate = dueDate,
+        lastUpdateDate = lastUpdateDate,
+        completionDate = completionDate,
         position = position,
         indent = indent,
     )
@@ -198,24 +207,85 @@ class TaskRepository(
     }
 
     suspend fun createTaskList(title: String) {
-        val taskListId = taskListDao.insert(TaskListEntity(title = title))
-        val taskListEntity = taskListDao.getById(taskListId)
-        if (taskListEntity != null) {
-            val taskList = withContext(Dispatchers.IO) {
+        val now = Clock.System.now()
+        val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
+        val taskList = withContext(Dispatchers.IO) {
+            try {
+                taskListsApi.insert(TaskList(title = title, updatedDate = now))
+            } catch (e: Exception) {
+                null
+            }
+        }
+        if (taskList != null) {
+            taskListDao.insert(taskList.asTaskListEntity(taskListId))
+        }
+    }
+
+    suspend fun deleteTaskList(id: Long) {
+        // TODO deal with deleted locally but not remotely yet (no internet)
+        val taskListEntity = taskListDao.getById(id) ?: return
+        taskListDao.deleteTaskList(id)
+        if (taskListEntity.remoteId != null) {
+            withContext(Dispatchers.IO) {
                 try {
-                    taskListsApi.insert(TaskList(title = title))
+                    taskListsApi.delete(taskListEntity.remoteId)
                 } catch (e: Exception) {
                     null
                 }
             }
-            if (taskList != null) {
-                taskListDao.insert(taskList.asTaskListEntity(taskListId))
+        }
+    }
+
+    suspend fun editTaskList(id: Long, newTitle: String) {
+        val now = Clock.System.now()
+        val taskListEntity = taskListDao.getById(id)?.copy(title = newTitle, lastUpdateDate = now) ?: return
+        taskListDao.insert(taskListEntity)
+        if (taskListEntity.remoteId != null) {
+            withContext(Dispatchers.IO) {
+                try {
+                    taskListsApi.update(
+                        taskListEntity.remoteId,
+                        TaskList(id = taskListEntity.remoteId, title = newTitle, updatedDate = now)
+                    )
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+    }
+
+    suspend fun clearTaskListCompletedTasks(id: Long) {
+        val taskList = taskListDao.getById(id) ?: return
+        // TODO local update date task list
+        val completedTasks = taskDao.getCompletedTasks(id)
+        taskDao.deleteTasks(completedTasks.map(TaskEntity::id))
+        if (taskList.remoteId != null) {
+            coroutineScope {
+                completedTasks.mapNotNull { task ->
+                    if (task.remoteId == null) return@mapNotNull null
+                    async(Dispatchers.IO) {
+                        try {
+                            // TODO deal with deleted locally but not remotely yet (no internet)
+                            tasksApi.delete(taskList.remoteId, task.remoteId)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                }.awaitAll()
             }
         }
     }
 
     suspend fun createTask(taskListId: Long, title: String, dueDate: Instant? = null) {
-        val taskId = taskDao.insert(TaskEntity(parentListLocalId = taskListId, title = title, position = ""/*TODO local position value?*/))
+        val now = Clock.System.now()
+        val taskId = taskDao.insert(
+            TaskEntity(
+                parentListLocalId = taskListId,
+                title = title,
+                lastUpdateDate = now,
+                position = ""/*TODO local position value?*/
+            )
+        )
         val taskListEntity = taskListDao.getById(taskListId)
         if (taskListEntity?.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
@@ -224,7 +294,8 @@ class TaskRepository(
                         taskListEntity.remoteId,
                         Task(
                             title = title,
-                            dueDate = dueDate
+                            dueDate = dueDate,
+                            updatedDate = now,
                         )
                     )
                 } catch (e: Exception) {

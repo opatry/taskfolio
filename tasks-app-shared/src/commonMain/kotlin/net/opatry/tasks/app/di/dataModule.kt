@@ -30,6 +30,7 @@ import org.koin.dsl.module
 
 private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
     .setDriver(BundledSQLiteDriver())
+    .fallbackToDestructiveMigration(dropAllTables = true)
     .setQueryCoroutineContext(Dispatchers.IO)
     .build()
 
