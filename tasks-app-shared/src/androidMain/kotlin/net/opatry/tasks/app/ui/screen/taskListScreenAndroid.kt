@@ -22,9 +22,6 @@
 
 package net.opatry.tasks.app.ui.screen
 
-import CheckCheck
-import CircleOff
-import LucideIcons
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.VerticalDivider
@@ -38,7 +35,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.component.EmptyState
+import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
+import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.TaskListDetail
 import net.opatry.tasks.app.ui.component.TaskListsColumn
 import net.opatry.tasks.app.ui.model.TaskListUIModel
@@ -60,11 +58,7 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
         listPane = {
             AnimatedPane {
                 if (taskLists.isEmpty()) {
-                    EmptyState(
-                        icon = LucideIcons.CheckCheck,
-                        title = "No task list",
-                        description = "Create a new task list to get started",
-                    )
+                    NoTaskListEmptyState()
                 } else {
                     Row {
                         TaskListsColumn(
@@ -93,11 +87,7 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
                         onDeleteTaskList = {},
                     )
                 } ?: run {
-                    EmptyState(
-                        icon = LucideIcons.CircleOff,
-                        title = "No task list selected",
-                        description = "Select a task list to see its tasks",
-                    )
+                    NoTaskListSelectedEmptyState()
                 }
             }
         }
