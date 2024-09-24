@@ -95,6 +95,19 @@ private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
     )
 }
 
+private fun TaskEntity.asTask(): Task {
+    return Task(
+        id = remoteId ?: "",
+        title = title,
+        notes = notes,
+        dueDate = dueDate,
+        updatedDate = lastUpdateDate,
+        status = if (isCompleted) Task.Status.Completed else Task.Status.NeedsAction,
+        completedDate = completionDate,
+        position = position,
+    )
+}
+
 fun sortTasks(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
     // Step 1: Create a map of tasks by their IDs for easy lookup
     val taskMap = tasks.associateBy { it.remoteId }.toMutableMap() // FIXME local data only?
@@ -236,17 +249,24 @@ class TaskRepository(
         }
     }
 
-    suspend fun editTaskList(taskListId: Long, newTitle: String) {
+    suspend fun renameTaskList(taskListId: Long, newTitle: String) {
         val now = Clock.System.now()
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
-            .copy(title = newTitle, lastUpdateDate = now)
+            .copy(
+                title = newTitle,
+                lastUpdateDate = now
+            )
         taskListDao.insert(taskListEntity)
         if (taskListEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
                     taskListsApi.update(
                         taskListEntity.remoteId,
-                        TaskList(id = taskListEntity.remoteId, title = newTitle, updatedDate = now)
+                        TaskList(
+                            id = taskListEntity.remoteId,
+                            title = taskListEntity.title,
+                            updatedDate = taskListEntity.lastUpdateDate
+                        )
                     )
                 } catch (e: Exception) {
                     null
@@ -294,7 +314,7 @@ class TaskRepository(
                     tasksApi.insert(
                         taskListEntity.remoteId,
                         Task(
-                            title = title,
+                            title = taskListEntity.title,
                             dueDate = dueDate,
                             updatedDate = now,
                         )
@@ -334,38 +354,76 @@ class TaskRepository(
         // TODO pending deletion
     }
 
-    suspend fun toggleTaskCompletionState(taskId: Long) {
-        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+    private suspend fun applyTaskUpdate(taskId: Long, updateLogic: suspend (TaskEntity, Instant) -> TaskEntity?) {
         val now = Clock.System.now()
-        val updatedTask = taskEntity.copy(
-            isCompleted = !taskEntity.isCompleted,
-            completionDate = if (taskEntity.isCompleted) null else now,
-            lastUpdateDate = now,
-        )
-        taskDao.insert(updatedTask)
+        val task = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val updatedTaskEntity = updateLogic(task, now) ?: return
+
+        taskDao.insert(updatedTaskEntity)
+
         // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = taskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
-        if (taskListRemoteId != null && taskEntity.remoteId != null) {
+        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
+            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
-                    val status = if (updatedTask.isCompleted) Task.Status.Completed else Task.Status.NeedsAction
                     tasksApi.update(
                         taskListRemoteId,
-                        taskEntity.remoteId,
-                        Task(
-                            id = taskEntity.remoteId,
-                            title = taskEntity.title,
-                            dueDate = taskEntity.dueDate,
-                            updatedDate = taskEntity.lastUpdateDate,
-                            status = status,
-                            completedDate = updatedTask.completionDate,
-                        )
+                        updatedTaskEntity.remoteId,
+                        updatedTaskEntity.asTask()
                     )
                 } catch (e: Exception) {
                     null
                 }
             }
+        }
+    }
+
+    suspend fun toggleTaskCompletionState(taskId: Long) {
+        applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            taskEntity.copy(
+                isCompleted = !taskEntity.isCompleted,
+                completionDate = if (taskEntity.isCompleted) null else updateTime,
+                lastUpdateDate = updateTime,
+            )
+        }
+    }
+
+    suspend fun updateTask(taskId: Long, title: String, notes: String, dueDate: Instant?) {
+        applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            taskEntity.copy(
+                title = title,
+                notes = notes,
+                dueDate = dueDate,
+                lastUpdateDate = updateTime,
+            )
+        }
+    }
+
+    suspend fun updateTaskTitle(taskId: Long, title: String) {
+        applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            taskEntity.copy(
+                title = title,
+                lastUpdateDate = updateTime,
+            )
+        }
+    }
+
+    suspend fun updateTaskNotes(taskId: Long, notes: String) {
+        applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            taskEntity.copy(
+                notes = notes,
+                lastUpdateDate = updateTime,
+            )
+        }
+    }
+
+    suspend fun updateTaskDueDate(taskId: Long, dueDate: Instant?) {
+        applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            taskEntity.copy(
+                dueDate = dueDate,
+                lastUpdateDate = updateTime,
+            )
         }
     }
 
