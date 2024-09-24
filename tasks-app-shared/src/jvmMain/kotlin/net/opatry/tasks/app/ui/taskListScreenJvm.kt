@@ -65,8 +65,8 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
 
         Box(Modifier.weight(.7f)) {
             currentTaskList?.let { taskList ->
-                TaskListDetail(viewModel, taskList) {
-                    currentTaskList = null
+                TaskListDetail(viewModel, taskList) { targetedTaskList ->
+                    currentTaskList = targetedTaskList
                 }
             } ?: run {
                 NoTaskListSelectedEmptyState()
