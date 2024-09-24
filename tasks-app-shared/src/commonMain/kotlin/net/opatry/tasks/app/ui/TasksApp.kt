@@ -46,7 +46,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -125,8 +124,6 @@ fun TasksApp(viewModel: TaskListsViewModel) {
         Column {
             when (selectedScreen.value) {
                 AppTasksScreen.Tasks -> {
-                    val taskLists by viewModel.taskLists.collectAsState(emptyList())
-
                     Card(Modifier.padding(16.dp), shape = MaterialTheme.shapes.extraLarge) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -143,7 +140,7 @@ fun TasksApp(viewModel: TaskListsViewModel) {
                         }
                     }
 
-                    TaskListsMasterDetail(taskLists)
+                    TaskListsMasterDetail(viewModel)
                 }
 
                 AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)
