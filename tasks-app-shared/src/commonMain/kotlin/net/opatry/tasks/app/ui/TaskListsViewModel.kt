@@ -91,6 +91,39 @@ class TaskListsViewModel(
         }
     }
 
+    fun deleteTaskList(taskList: TaskListUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.deleteTaskList(taskList.id)
+            } catch (e: Exception) {
+                println("Error while deleting task list (${taskList.id}): $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun renameTaskList(taskList: TaskListUIModel, newTitle: String) {
+        viewModelScope.launch {
+            try {
+                taskRepository.editTaskList(taskList.id, newTitle)
+            } catch (e: Exception) {
+                println("Error creating task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun clearTaskListCompletedTasks(taskList: TaskListUIModel) {
+        viewModelScope.launch {
+            try {
+                taskRepository.clearTaskListCompletedTasks(taskList.id)
+            } catch (e: Exception) {
+                println("Error creating task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
     // TODO when "delete task" (or list) is done, manage a "Undo" snackbar
     //  - either apply it remotely and on undo, do another request to restore through API
     //  - or "hide" locally, on undo "un-hide", on dismiss, apply remotely

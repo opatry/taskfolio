@@ -157,6 +157,7 @@ fun TaskListDetail(
             // FIXME tweak colors, elevation, etc.
             TopAppBar(
                 title = {
+                    // FIXME title not updated on rename action
                     Text(text = taskList.title, style = MaterialTheme.typography.headlineSmall)
                 },
                 actions = {
@@ -188,6 +189,7 @@ fun TaskListDetail(
             }
         }
     ) {
+        // FIXME tasks not updated on delete action
         Box(Modifier.padding(it)) {
             if (taskList.isEmpty) {
                 // TODO SVG undraw.co illustration `files/undraw_to_do_list_re_9nt7.svg`
@@ -255,7 +257,7 @@ fun TaskListDetail(
                         Button(
                             onClick = {
                                 showRenameTaskListDialog = false
-                                onRenameTaskList(taskList, newTitle)
+                                onRenameTaskList(taskList, newTitle.trim())
                             },
                             enabled = !hasError
                         ) {

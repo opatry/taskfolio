@@ -30,9 +30,21 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
+
+
+object Converters {
+    @TypeConverter
+    fun instantFromString(value: String?): Instant? = value?.let(Instant::parse)
+
+    @TypeConverter
+    fun instantToString(instant: Instant?): String? = instant?.toString()
+}
 
 @Database(
     entities = [
@@ -42,6 +54,7 @@ import net.opatry.tasks.data.entity.TaskListEntity
     version = 1
 )
 @ConstructedBy(TasksAppDatabaseConstructor::class)
+@TypeConverters(Converters::class)
 abstract class TasksAppDatabase : RoomDatabase() {
     abstract fun getTaskListDao(): TaskListDao
     abstract fun getTaskDao(): TaskDao
@@ -58,14 +71,15 @@ interface TaskListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: TaskListEntity): Long
 
+    // FIXME should be a pending deletion "flag" until sync is done
+    @Query("DELETE FROM task_list WHERE local_id = :id")
+    suspend fun deleteTaskList(id: Long)
+
     @Query("SELECT * FROM task_list WHERE local_id = :id")
     suspend fun getById(id: Long): TaskListEntity?
 
     @Query("SELECT * FROM task_list WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): TaskListEntity?
-
-    @Query("SELECT count(*) FROM task_list")
-    suspend fun count(): Int
 
     @Query("SELECT * FROM task_list")
     fun getAllAsFlow(): Flow<List<TaskListEntity>>
@@ -93,17 +107,22 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): TaskEntity?
 
-    @Query("SELECT count(*) FROM task")
-    suspend fun count(): Int
-
     @Query("SELECT * FROM task")
     fun getAllAsFlow(): Flow<List<TaskEntity>>
 
-    @Query("SELECT * FROM task WHERE parent_list_local_id = :parentId")
-    suspend fun getAllByParentId(parentId: Long): List<TaskEntity>
-
     @Query("SELECT * FROM task WHERE remote_id IS NULL")
     suspend fun getLocalOnlyTasks(): List<TaskEntity>
+
+    // FIXME should be a pending deletion "flag" until sync is done
+    @Query("DELETE FROM task WHERE local_id = :id")
+    suspend fun deleteTask(id: Long)
+
+    // FIXME should be a pending deletion "flag" until sync is done
+    @Query("DELETE FROM task WHERE local_id IN (:ids)")
+    suspend fun deleteTasks(ids: List<Long>)
+
+    @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND is_completed = true")
+    suspend fun getCompletedTasks(taskListLocalId: Long): List<TaskEntity>
 
     @Query("DELETE FROM task WHERE parent_list_local_id = :taskListId AND remote_id IS NOT NULL AND remote_id NOT IN (:validRemoteIds)")
     suspend fun deleteStaleTasks(taskListId: Long, validRemoteIds: List<String>)
