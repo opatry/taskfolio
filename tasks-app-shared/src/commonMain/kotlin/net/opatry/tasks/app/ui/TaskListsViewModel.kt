@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -141,10 +140,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun createTask(taskList: TaskListUIModel, title: String, dueDate: Instant? = null) {
+    fun createTask(taskList: TaskListUIModel, title: String, notes: String = "", dueDate: LocalDate? = null) {
         viewModelScope.launch {
             try {
-                taskRepository.createTask(taskList.id, title, dueDate)
+                taskRepository.createTask(taskList.id, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
                 println("Error while creating task: $e")
                 // TODO error handling
