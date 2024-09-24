@@ -24,7 +24,7 @@ package net.opatry.tasks.app.ui.tooling
 
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import net.opatry.app.ui.theme.TasksAppTheme
+import net.opatry.tasks.app.ui.theme.TasksAppTheme
 
 @Retention(AnnotationRetention.BINARY)
 @Target(

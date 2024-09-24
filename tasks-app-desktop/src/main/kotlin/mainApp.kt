@@ -61,6 +61,7 @@ import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksAppModule
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
+import net.opatry.tasks.app.ui.theme.TasksAppTheme
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.context.startKoin
@@ -137,25 +138,27 @@ fun main() {
                 }
             }
 
-            when (signInStatus) {
-                SignInStatus.Loading -> CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
-                SignInStatus.SignedIn -> {
-                    val viewModel = koinViewModel<TaskListsViewModel>()
-                    TasksApp(viewModel)
-                }
+            TasksAppTheme {
+                when (signInStatus) {
+                    SignInStatus.Loading -> CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
+                    SignInStatus.SignedIn -> {
+                        val viewModel = koinViewModel<TaskListsViewModel>()
+                        TasksApp(viewModel)
+                    }
 
-                SignInStatus.SignedOut -> {
-                    val t0 = Clock.System.now()
-                    AuthorizationScreen { token ->
-                        signInStatus = SignInStatus.SignedIn
-                        coroutineScope.launch {
-                            credentialsStorage.store(
-                                TokenCache(
-                                    token.accessToken,
-                                    token.refreshToken,
-                                    (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                    SignInStatus.SignedOut -> {
+                        val t0 = Clock.System.now()
+                        AuthorizationScreen { token ->
+                            signInStatus = SignInStatus.SignedIn
+                            coroutineScope.launch {
+                                credentialsStorage.store(
+                                    TokenCache(
+                                        token.accessToken,
+                                        token.refreshToken,
+                                        (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }
