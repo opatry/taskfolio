@@ -105,7 +105,7 @@ class TaskListsViewModel(
     fun renameTaskList(taskList: TaskListUIModel, newTitle: String) {
         viewModelScope.launch {
             try {
-                taskRepository.editTaskList(taskList.id, newTitle)
+                taskRepository.editTaskList(taskList.id, newTitle.trim())
             } catch (e: Exception) {
                 println("Error creating task: $e")
                 // TODO error handling
