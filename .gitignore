@@ -25,3 +25,4 @@ client_secret_*.apps.googleusercontent.com.json
 _ci/api-*.json
 _ci/*.keystore
 bundletool-*.jar
+.idea/appInsightsSettings.xml
