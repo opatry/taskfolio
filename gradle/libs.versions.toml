@@ -1,6 +1,6 @@
 [versions]
 tasksApp-name = "1.0.0"
-tasksApp-code = "4"
+tasksApp-code = "8"
 compileSdk = "34"
 minSdk = "24"
 targetSdk = "34"
