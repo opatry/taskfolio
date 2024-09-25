@@ -1,0 +1,4 @@
+TODO Application toy project to showcase Android development skills.
+This is not an application meant to be used on a daily basis.
+
+It synchronizes with Google Tasks.

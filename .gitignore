@@ -22,3 +22,6 @@ client_secret_*.apps.googleusercontent.com.json
 .idea/deploymentTargetSelector.xml
 .idea/migrations.xml
 .kotlin/errors/errors-*.log
+_ci/api-*.json
+_ci/*.keystore
+bundletool-*.jar
