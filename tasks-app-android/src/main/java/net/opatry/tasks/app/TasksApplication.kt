@@ -29,13 +29,12 @@ import net.opatry.tasks.app.di.networkModule
 import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksAppModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import org.koin.androix.startup.KoinStartup.onKoinStartup
 
 class TasksApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
 
-        startKoin {
+    init {
+        onKoinStartup {
             androidContext(this@TasksApplication)
             modules(
                 platformModule(),
