@@ -27,7 +27,6 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.CurlUserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
@@ -154,20 +153,15 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
         val redirectUrl: String,
         val clientId: String,
         val clientSecret: String,
+        val authUri: String,
+        val tokenUri: String,
     )
-
-    private companion object {
-        const val GOOGLE_ACCOUNTS_ROOT_URL = "https://accounts.google.com"
-    }
 
     private val httpClient: HttpClient by lazy {
         HttpClient(ClientEngineCIO) {
             CurlUserAgent()
             install(ContentNegotiation) {
                 json()
-            }
-            defaultRequest {
-                url(GOOGLE_ACCOUNTS_ROOT_URL)
             }
         }
     }
@@ -235,7 +229,7 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
                     }
                 }
                 server.environment.monitor.subscribe(ApplicationStarted) {
-                    requestUserAuthorization("$GOOGLE_ACCOUNTS_ROOT_URL/o/oauth2/auth$params")
+                    requestUserAuthorization("${config.authUri}$params")
                 }
                 server.start(wait = false)
                 awaitClose(server::stop)
@@ -244,7 +238,7 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
     }
 
     override suspend fun getToken(grant: GoogleAuthenticator.Grant): GoogleAuthenticator.OAuthToken {
-        val response = httpClient.post("https://oauth2.googleapis.com/token") {
+        val response = httpClient.post(config.tokenUri) {
             parameter("client_id", config.clientId)
             parameter("client_secret", config.clientSecret)
             parameter("grant_type", grant.type)

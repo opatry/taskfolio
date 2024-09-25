@@ -43,10 +43,13 @@ val authModule = module {
                 requireNotNull(Json.decodeFromStream<GoogleAuth>(inputStream).webCredentials)
             }
         }
+
         val config = HttpGoogleAuthenticator.ApplicationConfig(
             redirectUrl = googleAuthCredentials.redirectUris.first(),
             clientId = googleAuthCredentials.clientId,
             clientSecret = googleAuthCredentials.clientSecret,
+            authUri = googleAuthCredentials.authUri,
+            tokenUri = googleAuthCredentials.tokenUri,
         )
         HttpGoogleAuthenticator(config)
     }
