@@ -30,13 +30,16 @@ plugins {
 android {
     namespace = "net.opatry.tasks.app"
     compileSdk = 34
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "net.opatry.tasks.app"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = libs.versions.tasksApp.code.get().toInt()
+        versionName = libs.versions.tasksApp.name.get()
+
+        resourceConfigurations += listOf("en", "fr")
     }
 
     buildTypes {
@@ -52,6 +55,44 @@ android {
 
     kotlin {
         jvmToolchain(17)
+    }
+
+    signingConfigs {
+        create("dev") {
+            storeFile = file("dev.keystore")
+            storePassword = "devdev"
+            keyAlias = "dev"
+            keyPassword = "devdev"
+        }
+        create("prod") {
+            val keystoreFilePath = findProperty("playstore.keystore.file") as? String
+            storeFile = keystoreFilePath?.let(::file)
+            storePassword = findProperty("playstore.keystore.password") as? String
+            keyAlias = "tasksApp_android"
+            keyPassword = findProperty("playstore.keystore.key_password") as? String
+        }
+    }
+
+    buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("dev")
+        }
+        getByName("release") {
+            // we allow dev signing config in release build when not in CI to allow release builds on dev machine
+            val ciBuild = (findProperty("ci") as? String)?.toBoolean() ?: false
+            signingConfig = if (signingConfigs.getByName("prod").storeFile == null && !ciBuild) {
+                signingConfigs.getByName("dev")
+            } else {
+                signingConfigs.getByName("prod")
+            }
+
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+    }
+
+    lint {
+        checkDependencies = true
     }
 
     buildFeatures {
