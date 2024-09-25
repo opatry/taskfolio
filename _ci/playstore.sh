@@ -16,6 +16,7 @@ available_tracks=("internal" "alpha" "beta" "production")
 default_track="${available_tracks[0]}"
 
 build_type="release"
+flavor="store"
 
 check_track() {
   # shellcheck disable=SC2076
@@ -29,6 +30,18 @@ check_track() {
   fi
 }
 
+if ! command -v bundletools &> /dev/null; then
+  bundletool() {
+    bundletool_version="1.17.1"
+    bundletool_jar="bundletool-all-${bundletool_version}.jar"
+    if [ ! -f "${bundletool_jar}" ]; then
+      info "${YELLOW}bundletool${RESET} not available in the PATH, downloading it"
+      curl -L -o "${bundletool_jar}" https://github.com/google/bundletool/releases/download/${bundletool_version}/bundletool-all-${bundletool_version}.jar
+    fi
+    java -jar "${bundletool_jar}" "${@}"
+  }
+fi
+
 publish_aab() {
   local aab="${1:-}"
   [ -f "${aab}" ] || step_error "No App Bundle (AAB) found '${YELLOW}${aab}${RESET}'"
@@ -36,9 +49,9 @@ publish_aab() {
   local track="${2:-"${default_track}"}"
   check_track "${track}" "Invalid track '${YELLOW}${track}${RESET}'"
 
-  metadata_path="${origin}/../fastlane/metadata/android"
+  metadata_path="${origin}/../fastlane/metadata/${flavor}"
 
-  step "Dumping information from App Bundle (AAB)"
+  step "Dumping information from App Bundle (AAB) (using ${YELLOW}bundletool${RESET} version $(bundletool version))"
   manifest_file="${origin}/manifest.xml"
   bundletool dump manifest --bundle="${aab}" > "${manifest_file}"
 
@@ -47,6 +60,7 @@ publish_aab() {
   version_code=$(xmllint --xpath 'string(//manifest/@*[local-name()="versionCode"])' "${manifest_file}")
 
   rm "${manifest_file}"
+  step_done
 
   step "Publishing '${YELLOW}${aab##"${origin}/"}${RESET}' (${BLUE_BOLD}${app_package}${RESET} '${MAGENTA_BOLD}${version_name}${RESET}' #${GREEN_BOLD}${version_code}${RESET}) to '${MAGENTA}${track}${RESET}' track"
 
@@ -74,17 +88,21 @@ publish_aab() {
   fi
 
   bundle exec fastlane supply "${supply_args[@]}"
+
+  step_done
 }
 
 # assisted mode when called on dev machine with fzf installed
 if [ $# -eq 0 ] && [ -z "${CI:-}" ] && command -v fzf &> /dev/null; then
+  echo -e "🚀 Play Store publish\n"
+
   track=$(printf "%s\n" "${available_tracks[@]}" \
             | fzf --prompt "Choose the track to use" \
                   --height ~7 \
                   --layout=reverse-list \
                   || true)
   check_track "${track}"
-  
+
   upload_binary=$(ask_yn_choice "${MAGENTA_BOLD}Publish App Bundle (AAB) (including associated changelog)?${RESET}")
   upload_store_assets=$(ask_yn_choice "${MAGENTA_BOLD}Publish Store assets (descriptions, images & screenshots)?${RESET}")
 else
@@ -95,7 +113,7 @@ else
   upload_store_assets=${3:-false}
 fi
 
-aab="${origin}/../tasks-app-android/build/outputs/bundle/${build_type}/tasks-app-android-${build_type}.aab"
+aab="${origin}/../tasks-app-android/build/outputs/bundle/${flavor}${build_type^}/tasks-app-android-${flavor}-${build_type}.aab"
 
 if [ -z "${CI:-}" ] && [ "${upload_binary}" = true ]; then
   warn "Ensure you have updated your '${BLUE}${build_type}${RESET}' build and updated '${GREEN}tasksApp-code${RESET}'."
@@ -111,17 +129,5 @@ fi
 cd "${origin}/.."
 
 bundle exec fastlane run validate_play_store_json_key
-
-if ! command -v bundletool &> /dev/null; then
-  BUNDLETOOL_VERSION="1.17.1"
-  bundletool_jar="bundletool-all-${BUNDLETOOL_VERSION}.jar"
-  if [ ! -f "${bundletool_jar}" ]; then
-    info "${YELLOW}bundletool${RESET} not available in the PATH, downloading it"
-    curl -L -o "${bundletool_jar}" https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar
-  fi
-  alias bundletool='java -jar "${bundletool_jar}"'
-fi
-
-info "${YELLOW}bundletool${RESET} version $(bundletool version)"
 
 publish_aab "${aab}" "${track}"
