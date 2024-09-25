@@ -36,7 +36,8 @@ jobs:
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
       run: |
             set -eux
-            keystore_file=$(_ci/decrypt_file.sh _ci/tasksApp.keystore.gpg)
+            keystore_file="${PWD}/_ci/tasksApp.keystore"
+            ./_ci/decrypt_file.sh "${PWD}/_ci/tasksApp.keystore.gpg" "${keystore_file}"
             ./gradlew --no-daemon :tasks-app-android:assembleRelease \
               -Pci=true \
               -Pplaystore.keystore.file="${keystore_file}" \
