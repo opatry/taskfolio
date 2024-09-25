@@ -25,6 +25,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -124,6 +126,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.androidx.appcompat)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 
     implementation(project(":google:oauth"))
     implementation(project(":google:tasks"))
