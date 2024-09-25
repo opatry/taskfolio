@@ -1,4 +1,9 @@
 [versions]
+tasksApp-name = "1.0.0"
+tasksApp-code = "3"
+compileSdk = "34"
+minSdk = "24"
+targetSdk = "34"
 agp = "8.6.1"
 kotlin = "2.0.20"
 ksp = "2.0.20-1.0.24"
