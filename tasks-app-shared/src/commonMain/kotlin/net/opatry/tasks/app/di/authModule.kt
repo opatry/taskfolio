@@ -39,7 +39,8 @@ val authModule = module {
         val credentialsFilename = "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json"
         val googleAuthCredentials = runBlocking {
             Res.readBytes("files/$credentialsFilename").inputStream().use { inputStream ->
-                Json.decodeFromStream<GoogleAuth>(inputStream).credentials
+                // expects a `web` credentials, if `installed` is needed, inject another way
+                requireNotNull(Json.decodeFromStream<GoogleAuth>(inputStream).webCredentials)
             }
         }
         val config = HttpGoogleAuthenticator.ApplicationConfig(
