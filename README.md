@@ -15,6 +15,19 @@ A basic TODO list application based on [Google Tasks REST API](https://developer
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [Coil](https://coil-kt.github.io/coil/)
 
+## Local development
+
+Decrypt `*.gpg` files needed for development:
+
+```bash
+export PLAYSTORE_SECRET_PASSPHRASE=...
+./_ci/decrypt_file.sh _ci/tasksApp.keystore.gpg
+./_ci/decrypt_file.sh tasks-app-android/google-services.json.gpg
+for f in tasks-app-shared/src/commonMain/composeResources/files/client_secret_*.gpg; do
+  ./_ci/decrypt_file.sh "${f}"
+done
+```
+
 ## License
 
 ```
