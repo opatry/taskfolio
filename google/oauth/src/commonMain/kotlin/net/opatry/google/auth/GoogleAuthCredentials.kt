@@ -31,23 +31,47 @@ import kotlinx.serialization.Serializable
  */
 data class GoogleAuth(
     @SerialName("web")
-    val credentials: Credentials
+    val webCredentials: Credentials.Web? = null,
+    @SerialName("installed")
+    val installedCredentials: Credentials.Installed? = null,
 ) {
-    @Serializable
-    data class Credentials(
-        @SerialName("client_id")
-        val clientId: String,
-        @SerialName("project_id")
-        val projectId: String,
-        @SerialName("auth_uri")
-        val authUri: String,
-        @SerialName("token_uri")
-        val tokenUri: String,
-        @SerialName("auth_provider_x509_cert_url")
-        val authProviderX509CertUrl: String,
-        @SerialName("client_secret")
-        val clientSecret: String,
-        @SerialName("redirect_uris")
-        val redirectUris: List<String>,
-    )
+    sealed class Credentials {
+        abstract val clientId: String
+        abstract val projectId: String
+        abstract val authUri: String
+        abstract val tokenUri: String
+        abstract val authProviderX509CertUrl: String
+
+        @Serializable
+        data class Web(
+            @SerialName("client_id")
+            override val clientId: String,
+            @SerialName("project_id")
+            override val projectId: String,
+            @SerialName("auth_uri")
+            override val authUri: String,
+            @SerialName("token_uri")
+            override val tokenUri: String,
+            @SerialName("auth_provider_x509_cert_url")
+            override val authProviderX509CertUrl: String,
+            @SerialName("client_secret")
+            val clientSecret: String,
+            @SerialName("redirect_uris")
+            val redirectUris: List<String>,
+        ) : Credentials()
+
+        @Serializable
+        data class Installed(
+            @SerialName("client_id")
+            override val clientId: String,
+            @SerialName("project_id")
+            override val projectId: String,
+            @SerialName("auth_uri")
+            override val authUri: String,
+            @SerialName("token_uri")
+            override val tokenUri: String,
+            @SerialName("auth_provider_x509_cert_url")
+            override val authProviderX509CertUrl: String,
+        ) : Credentials()
+    }
 }
