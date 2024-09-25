@@ -24,13 +24,16 @@ jobs:
       with:
         java-version: '21'
         distribution: 'adopt'
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        add-job-summary-as-pr-comment: on-failure
 
-      #    - name: Build
-      # FIXME build stuck at some point on CI, need investigation
-      #      run: ./gradlew --no-daemon :tasks-app-android:assembleDebug :tasks-app-desktop:assemble
+    - name: Build
+      run: ./gradlew --no-daemon :tasks-app-android:assembleDebug :tasks-app-desktop:assemble
 
-      #    - name: Test
-      #      run: ./gradlew --no-daemon test
+    - name: Test
+      run: ./gradlew --no-daemon test
 
     - name: Publish Test Reports
       uses: mikepenz/action-junit-report@v4
