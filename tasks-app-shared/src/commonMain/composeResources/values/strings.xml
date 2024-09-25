@@ -28,6 +28,7 @@
     <string name="navigation_search">Search</string>
     <string name="navigation_settings">Settings</string>
 
+    <string name="onboarding_screen_authorize_explanation">You need to give the authorization to access your Google Tasks.</string>
     <string name="onboarding_screen_authorize_cta">Authorize</string>
 
     <string name="task_lists_screen_empty_state_title">No task lists</string>

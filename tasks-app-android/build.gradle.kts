@@ -156,6 +156,4 @@ dependencies {
     implementation(project(":google:oauth"))
     implementation(project(":google:tasks"))
     implementation(project(":tasks-app-shared"))
-
-    implementation(project(":lucide-icons"))
 }
