@@ -49,7 +49,6 @@ kotlin {
             implementation(libs.androidx.compose.m3.adaptive)
             implementation(libs.androidx.compose.m3.adaptive.layout)
             implementation(libs.androidx.compose.m3.adaptive.navigation)
-            implementation(libs.koin.androidx.startup)
         }
 
         commonMain.dependencies {
