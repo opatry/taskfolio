@@ -361,6 +361,7 @@ fun TaskListDetail(
                 showNewTaskSheet = false
             }
         ) {
+            val sheetTitle = if (showEditTaskSheet) "Edit task" else "New task"
             var newTitle by remember { mutableStateOf(task?.title ?: "") }
             val titleHasError by remember {
                 derivedStateOf {
@@ -373,7 +374,7 @@ fun TaskListDetail(
 
             // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
             Column(Modifier.padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Edit task", style = MaterialTheme.typography.titleMedium)
+                Text(sheetTitle, style = MaterialTheme.typography.titleLarge)
 
                 OutlinedTextField(
                     newTitle,
