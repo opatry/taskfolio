@@ -38,4 +38,8 @@ data class UserInfo(
     val familyName: String = "",
     @SerialName("picture")
     val picture: String? = null,
+    @SerialName("email")
+    val email: String? = null,
+    @SerialName("verified_email")
+    val isEmailVerified: Boolean? = null,
 )
