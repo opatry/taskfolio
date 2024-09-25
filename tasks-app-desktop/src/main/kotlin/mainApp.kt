@@ -64,9 +64,9 @@ import net.opatry.tasks.app.di.tasksAppModule
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.theme.TasksAppTheme
+import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.context.startKoin
 import java.awt.Dimension
 import java.awt.Toolkit
 import javax.swing.UIManager
@@ -79,17 +79,6 @@ enum class SignInStatus {
 }
 
 fun main() {
-    // TODO use KoinApplication
-    startKoin {
-        modules(
-            platformModule(),
-            dataModule,
-            authModule,
-            networkModule,
-            tasksAppModule,
-        )
-    }
-
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
     application {
@@ -129,43 +118,53 @@ fun main() {
                 }
             }
 
-            val coroutineScope = rememberCoroutineScope()
-            var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
-            val credentialsStorage = koinInject<CredentialsStorage>()
-            LaunchedEffect(Unit) {
-                signInStatus = if (credentialsStorage.load() != null) {
-                    SignInStatus.SignedIn
-                } else {
-                    SignInStatus.SignedOut
+            KoinApplication(application = {
+                modules(
+                    platformModule(),
+                    dataModule,
+                    authModule,
+                    networkModule,
+                    tasksAppModule,
+                )
+            }) {
+                val coroutineScope = rememberCoroutineScope()
+                var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
+                val credentialsStorage = koinInject<CredentialsStorage>()
+                LaunchedEffect(Unit) {
+                    signInStatus = if (credentialsStorage.load() != null) {
+                        SignInStatus.SignedIn
+                    } else {
+                        SignInStatus.SignedOut
+                    }
                 }
-            }
 
-            TasksAppTheme {
-                Surface {
-                    when (signInStatus) {
-                        SignInStatus.Loading -> {
-                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
+                TasksAppTheme {
+                    Surface {
+                        when (signInStatus) {
+                            SignInStatus.Loading -> {
+                                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                    CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
+                                }
                             }
-                        }
 
-                        SignInStatus.SignedIn -> {
-                            val viewModel = koinViewModel<TaskListsViewModel>()
-                            TasksApp(viewModel)
-                        }
+                            SignInStatus.SignedIn -> {
+                                val viewModel = koinViewModel<TaskListsViewModel>()
+                                TasksApp(viewModel)
+                            }
 
-                        SignInStatus.SignedOut -> {
-                            val t0 = Clock.System.now()
-                            AuthorizationScreen { token ->
-                                signInStatus = SignInStatus.SignedIn
-                                coroutineScope.launch {
-                                    credentialsStorage.store(
-                                        TokenCache(
-                                            token.accessToken,
-                                            token.refreshToken,
-                                            (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                            SignInStatus.SignedOut -> {
+                                val t0 = Clock.System.now()
+                                AuthorizationScreen { token ->
+                                    signInStatus = SignInStatus.SignedIn
+                                    coroutineScope.launch {
+                                        credentialsStorage.store(
+                                            TokenCache(
+                                                token.accessToken,
+                                                token.refreshToken,
+                                                (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             }
                         }
