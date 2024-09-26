@@ -76,12 +76,18 @@ fun ProfileIcon(httpClient: HttpClient?) {
 
     if (httpClient != null) {
         LaunchedEffect(Unit) {
-            val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
+            try {
+                val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
 
-            profileState = if (response.status.isSuccess()) {
-                ProfileState.Success(response.body())
-            } else {
-                ProfileState.Error(response.bodyAsText())
+                profileState = if (response.status.isSuccess()) {
+                    ProfileState.Success(response.body())
+                } else {
+                    ProfileState.Error(response.bodyAsText())
+                }
+            } catch (e: Exception) {
+                // TODO find a way to retry after a delay (on focus?)
+                // most likely no network
+                profileState = ProfileState.Error(e.message ?: "Unknown error (${e.javaClass.simpleName})")
             }
         }
     }
