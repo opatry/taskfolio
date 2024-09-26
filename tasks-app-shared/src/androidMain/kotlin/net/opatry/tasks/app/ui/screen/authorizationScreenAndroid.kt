@@ -125,7 +125,13 @@ actual fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Un
                             authenticator,
                             null,
                             onAuth = { result ->
-                                startForResult.launch(IntentSenderRequest.Builder(result.pendingIntent!!).build())
+                                val pendingIntent = result.pendingIntent
+                                if (pendingIntent != null) {
+                                    startForResult.launch(IntentSenderRequest.Builder(pendingIntent).build())
+                                } else {
+                                    error = "No pending intent in auth result"
+                                    ongoingAuth = false
+                                }
                             },
                             onSuccess = onSuccess,
                             onError = { e ->
