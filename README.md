@@ -4,6 +4,8 @@
 
 A basic TODO list application based on [Google Tasks REST API](https://developers.google.com/tasks/reference/rest) to showcase [KMP](https://kotlinlang.org/docs/multiplatform.html) app capabilities.
 
+[![Tasks app](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
+
 ## Tech stack
 
 - [Material Design Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
