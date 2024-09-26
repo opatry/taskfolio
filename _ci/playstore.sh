@@ -116,11 +116,10 @@ fi
 aab="${origin}/../tasks-app-android/build/outputs/bundle/${flavor}${build_type^}/tasks-app-android-${flavor}-${build_type}.aab"
 
 if [ -z "${CI:-}" ] && [ "${upload_binary}" = true ]; then
-  warn "Ensure you have updated your '${BLUE}${build_type}${RESET}' build and updated '${GREEN}tasksApp-code${RESET}'."
-  grep -H --color=auto 'tasksApp-code' "${origin}/../gradle/libs.versions.toml"
+  warn "Ensure you have properly build an up to date version of '${MAGENTA}${flavor}${RESET}' '${BLUE}${build_type}${RESET}' App Bundle (AAB)."
   if [ -f "${aab}" ]; then
-    echo "${aab} last modification date"
-    echo -e "${GREEN}$(date -r "${aab}")${RESET}\n\n"
+    echo -e "\n${aab} last modification date"
+    echo -e "${GREEN}$(date -r "${aab}")${RESET}\n"
   fi
 fi
 
