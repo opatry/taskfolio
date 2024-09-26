@@ -29,44 +29,29 @@ import LucideIcons
 import RefreshCw
 import Search
 import Settings
-import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.isSuccess
-import net.opatry.google.profile.model.UserInfo
 import net.opatry.tasks.app.di.HttpClientName
 import net.opatry.tasks.app.ui.component.MissingScreen
+import net.opatry.tasks.app.ui.component.ProfileIcon
 import net.opatry.tasks.app.ui.screen.TaskListsMasterDetail
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.app_name
@@ -151,57 +136,6 @@ fun TasksApp(viewModel: TaskListsViewModel) {
                 AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)
                 AppTasksScreen.Search -> MissingScreen(stringResource(AppTasksScreen.Search.labelRes), LucideIcons.Search)
                 AppTasksScreen.Settings -> MissingScreen(stringResource(AppTasksScreen.Settings.labelRes), LucideIcons.Settings)
-            }
-        }
-    }
-}
-
-@Composable
-fun ProfileIcon(httpClient: HttpClient?) {
-    val coroutineScope = rememberCoroutineScope()
-    var profile by remember { mutableStateOf<UserInfo?>(null) }
-//    val avatarUrl = profile?.photos?.firstOrNull {
-//        it.isDefault || it.metadata?.isPrimary == true
-//    }?.url
-    val avatarUrl by remember {
-        derivedStateOf {
-            profile?.picture
-        }
-    }
-
-    if (httpClient != null) {
-        LaunchedEffect(Unit) {
-            // TODO use dedicated http client without hardcoded URL host
-//            val personFields =
-//                listOf(FieldMask.Names, FieldMask.EmailAddresses, FieldMask.Photos).joinToString(",") { it.toString() }
-//            val queryParams = mapOf(
-//                "personFields" to personFields
-//            ).entries.joinToString(prefix = "?", separator = "&") {
-//                "${it.key}=${it.value}"
-//            }
-//            val response = httpClient.get("https://people.googleapis.com/v1/people/me${queryParams}")
-            val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
-
-            if (response.status.isSuccess()) {
-                profile = response.body()
-            } else {
-                // TODO snackbar or error icon
-                println(response.bodyAsText())
-//                throw ClientRequestException(response, response.bodyAsText())
-            }
-        }
-    }
-
-    IconButton(onClick = { }, enabled = false) {
-        // TODO Depending on UserState type, display progress or error or avatar or fallback
-
-        Crossfade(targetState = avatarUrl != null, label = "avatar_crossfade") { hasAvatar ->
-            Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
-                if (hasAvatar) {
-                    AsyncImage(avatarUrl, null, Modifier.clip(CircleShape))
-                } else {
-                    CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
-                }
             }
         }
     }
