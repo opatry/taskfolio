@@ -31,15 +31,18 @@ import net.opatry.tasks.app.di.tasksAppModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androix.startup.KoinStartup.onKoinStartup
 
+private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
+
 class TasksApplication : Application() {
 
     init {
+        @Suppress("OPT_IN_USAGE")
         onKoinStartup {
             androidContext(this@TasksApplication)
             modules(
                 platformModule(),
                 dataModule,
-                authModule,
+                authModule(GCP_CLIENT_ID),
                 networkModule,
                 tasksAppModule,
             )

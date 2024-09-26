@@ -25,6 +25,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -57,6 +59,21 @@ android {
         jvmToolchain(17)
     }
 
+    flavorDimensions += "target"
+    productFlavors {
+        create("dev") {
+            isDefault = true
+            applicationIdSuffix = ".dev"
+            dimension = "target"
+
+            manifestPlaceholders["crashlyticsEnabled"] = false
+        }
+
+        create("store") {
+            dimension = "target"
+        }
+    }
+
     signingConfigs {
         create("dev") {
             storeFile = file("dev.keystore")
@@ -64,7 +81,7 @@ android {
             keyAlias = "dev"
             keyPassword = "devdev"
         }
-        create("prod") {
+        create("store") {
             val keystoreFilePath = findProperty("playstore.keystore.file") as? String
             storeFile = keystoreFilePath?.let(::file)
             storePassword = findProperty("playstore.keystore.password") as? String
@@ -75,15 +92,19 @@ android {
 
     buildTypes {
         getByName("debug") {
+            manifestPlaceholders["crashlyticsEnabled"] = false
+
             signingConfig = signingConfigs.getByName("dev")
         }
         getByName("release") {
+            manifestPlaceholders["crashlyticsEnabled"] = true
+
             // we allow dev signing config in release build when not in CI to allow release builds on dev machine
             val ciBuild = (findProperty("ci") as? String)?.toBoolean() ?: false
-            signingConfig = if (signingConfigs.getByName("prod").storeFile == null && !ciBuild) {
+            signingConfig = if (signingConfigs.getByName("store").storeFile == null && !ciBuild) {
                 signingConfigs.getByName("dev")
             } else {
-                signingConfigs.getByName("prod")
+                signingConfigs.getByName("store")
             }
 
             isMinifyEnabled = false
@@ -124,6 +145,13 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.androidx.appcompat)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+
+    implementation(libs.kotlinx.serialization)
+
+    implementation(libs.play.services.auth)
 
     implementation(project(":google:oauth"))
     implementation(project(":google:tasks"))
