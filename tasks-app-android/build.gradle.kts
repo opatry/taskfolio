@@ -149,7 +149,13 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
 
+    implementation(libs.kotlinx.serialization)
+
+    implementation(libs.play.services.auth)
+
     implementation(project(":google:oauth"))
     implementation(project(":google:tasks"))
     implementation(project(":tasks-app-shared"))
+
+    implementation(project(":lucide-icons"))
 }
