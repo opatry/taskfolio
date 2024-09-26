@@ -22,35 +22,7 @@
 
 package net.opatry.tasks.app.di
 
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import net.opatry.google.auth.GoogleAuth
-import net.opatry.google.auth.GoogleAuthenticator
-import net.opatry.google.auth.HttpGoogleAuthenticator
-import net.opatry.tasks.resources.Res
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.koin.dsl.module
+import org.koin.core.module.Module
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalSerializationApi::class)
-val authModule = module {
-    single<GoogleAuthenticator> {
-        val credentialsFilename = "client_secret_1018227543555-k121h4da66i87lpione39a7et0lkifqi.apps.googleusercontent.com.json"
-        val googleAuthCredentials = runBlocking {
-            Res.readBytes("files/$credentialsFilename").inputStream().use { inputStream ->
-                // expects a `web` credentials, if `installed` is needed, inject another way
-                requireNotNull(Json.decodeFromStream<GoogleAuth>(inputStream).webCredentials)
-            }
-        }
 
-        val config = HttpGoogleAuthenticator.ApplicationConfig(
-            redirectUrl = googleAuthCredentials.redirectUris.first(),
-            clientId = googleAuthCredentials.clientId,
-            clientSecret = googleAuthCredentials.clientSecret,
-            authUri = googleAuthCredentials.authUri,
-            tokenUri = googleAuthCredentials.tokenUri,
-        )
-        HttpGoogleAuthenticator(config)
-    }
-}
+expect fun authModule(gcpClientId: String): Module

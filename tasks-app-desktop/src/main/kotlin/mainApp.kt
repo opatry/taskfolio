@@ -78,6 +78,8 @@ enum class SignInStatus {
     SignedOut,
 }
 
+private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
+
 fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
@@ -122,7 +124,7 @@ fun main() {
                 modules(
                     platformModule(),
                     dataModule,
-                    authModule,
+                    authModule(GCP_CLIENT_ID),
                     networkModule,
                     tasksAppModule,
                 )
@@ -199,11 +201,13 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
                     ongoingAuth = true
                     coroutineScope.launch {
                         val scope = listOf(
-                            GoogleAuthenticator.Permission.Profile,
-                            GoogleAuthenticator.Permission(TasksScopes.Tasks),
+                            GoogleAuthenticator.Scope.Profile,
+                            GoogleAuthenticator.Scope(TasksScopes.Tasks),
                         )
                         try {
-                            val authCode = authenticator.authorize(scope, true, uriHandler::openUri).let(GoogleAuthenticator.Grant::AuthorizationCode)
+                            val authCode = authenticator.authorize(scope, true) {
+                                uriHandler.openUri(it as String)
+                            }.let(GoogleAuthenticator.Grant::AuthorizationCode)
                             val oauthToken = authenticator.getToken(authCode)
                             onSuccess(oauthToken)
                         } catch (e: Exception) {

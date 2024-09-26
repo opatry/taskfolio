@@ -26,3 +26,4 @@ _ci/api-*.json
 _ci/*.keystore
 bundletool-*.jar
 .idea/appInsightsSettings.xml
+tasks-app-android/google-services.json

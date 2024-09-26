@@ -22,8 +22,12 @@
 
 package net.opatry.tasks.app
 
+import android.app.Activity
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
@@ -46,8 +50,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.auth.api.identity.AuthorizationResult
+import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
@@ -60,6 +66,7 @@ import net.opatry.tasks.app.ui.theme.TasksAppTheme
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration.Companion.seconds
+
 
 enum class SignInStatus {
     Loading,
@@ -121,11 +128,40 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
-    val uriHandler = LocalUriHandler.current
     val coroutineScope = rememberCoroutineScope()
+
+    val context = LocalContext.current
+
     val authenticator = koinInject<GoogleAuthenticator>()
     var ongoingAuth by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+
+    val startForResult = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val authResult = Identity.getAuthorizationClient(context).getAuthorizationResultFromIntent(result.data)
+            val authCode = authResult.serverAuthCode
+            if (authCode != null) {
+                coroutineScope.launch {
+                    runAuthFlow(
+                        authenticator,
+                        authCode,
+                        onAuth = {
+                            error = "Unexpectedly requesting auth flow again"
+                            ongoingAuth = false
+                        },
+                        onSuccess = onSuccess,
+                        onError = { e ->
+                            error = e.message
+                            ongoingAuth = false
+                        }
+                    )
+                }
+            } else {
+                error = "No auth code in result"
+                ongoingAuth = false
+            }
+        }
+    }
 
     Column(
         Modifier.fillMaxSize(),
@@ -142,19 +178,18 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
                 onClick = {
                     ongoingAuth = true
                     coroutineScope.launch {
-                        val scope = listOf(
-                            GoogleAuthenticator.Permission.Profile,
-                            GoogleAuthenticator.Permission(TasksScopes.Tasks),
+                        runAuthFlow(
+                            authenticator,
+                            null,
+                            onAuth = { result ->
+                                startForResult.launch(IntentSenderRequest.Builder(result.pendingIntent!!).build())
+                            },
+                            onSuccess = onSuccess,
+                            onError = { e ->
+                                error = e.message
+                                ongoingAuth = false
+                            }
                         )
-                        try {
-                            val authCode = authenticator.authorize(scope, true, uriHandler::openUri)
-                                .let(GoogleAuthenticator.Grant::AuthorizationCode)
-                            val oauthToken = authenticator.getToken(authCode)
-                            onSuccess(oauthToken)
-                        } catch (e: Exception) {
-                            error = e.message
-                            ongoingAuth = false
-                        }
                     }
                 },
                 enabled = !ongoingAuth
@@ -167,5 +202,32 @@ fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
         AnimatedContent(error, label = "authorize_error_message") {
             Text(it ?: "")
         }
+    }
+}
+
+suspend fun runAuthFlow(
+    authenticator: GoogleAuthenticator,
+    providedAuthCode: String?,
+    onAuth: (AuthorizationResult) -> Unit,
+    onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit,
+    onError: (Exception) -> Unit,
+) {
+    val scope = listOf(
+        GoogleAuthenticator.Scope.Profile,
+        GoogleAuthenticator.Scope(TasksScopes.Tasks),
+    )
+
+    try {
+        val authCode = providedAuthCode ?: authenticator.authorize(scope, true) {
+            val result = it as AuthorizationResult
+            onAuth(result)
+        }
+        if (authCode.isNotEmpty()) {
+            val grant = GoogleAuthenticator.Grant.AuthorizationCode(authCode)
+            val oauthToken = authenticator.getToken(grant)
+            onSuccess(oauthToken)
+        }
+    } catch (e: Exception) {
+        onError(e)
     }
 }
