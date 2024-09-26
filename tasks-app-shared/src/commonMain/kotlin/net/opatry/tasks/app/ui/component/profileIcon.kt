@@ -22,24 +22,35 @@
 
 package net.opatry.tasks.app.ui.component
 
+import CircleUserRound
+import LucideIcons
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RichTooltip
+import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.ktor.client.HttpClient
@@ -49,52 +60,75 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import net.opatry.google.profile.model.UserInfo
 
+// TODO would be nice to rely on a local cache for the profile info
+//  - profile info
+//  - avatar image bitmap on disk (can Coil handle that?)
+sealed class ProfileState {
+    data object Loading : ProfileState()
+    data class Error(val message: String) : ProfileState()
+    data class Success(val profile: UserInfo) : ProfileState()
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileIcon(httpClient: HttpClient?) {
-    val coroutineScope = rememberCoroutineScope()
-    var profile by remember { mutableStateOf<UserInfo?>(null) }
-//    val avatarUrl = profile?.photos?.firstOrNull {
-//        it.isDefault || it.metadata?.isPrimary == true
-//    }?.url
-    val avatarUrl by remember {
-        derivedStateOf {
-            profile?.picture
-        }
-    }
+    var profileState by remember { mutableStateOf<ProfileState>(ProfileState.Loading) }
 
     if (httpClient != null) {
         LaunchedEffect(Unit) {
-            // TODO use dedicated http client without hardcoded URL host
-//            val personFields =
-//                listOf(FieldMask.Names, FieldMask.EmailAddresses, FieldMask.Photos).joinToString(",") { it.toString() }
-//            val queryParams = mapOf(
-//                "personFields" to personFields
-//            ).entries.joinToString(prefix = "?", separator = "&") {
-//                "${it.key}=${it.value}"
-//            }
-//            val response = httpClient.get("https://people.googleapis.com/v1/people/me${queryParams}")
             val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
 
-            if (response.status.isSuccess()) {
-                profile = response.body()
+            profileState = if (response.status.isSuccess()) {
+                ProfileState.Success(response.body())
             } else {
-                // TODO snackbar or error icon
-                println(response.bodyAsText())
-//                throw ClientRequestException(response, response.bodyAsText())
+                ProfileState.Error(response.bodyAsText())
             }
         }
     }
 
-    IconButton(onClick = { }, enabled = false) {
-        // TODO Depending on UserState type, display progress or error or avatar or fallback
+    Crossfade(targetState = profileState, label = "avatar_crossfade") { state ->
+        Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+            when (state) {
+                is ProfileState.Loading -> CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
+                is ProfileState.Error -> {
+                    TooltipBox(
+                        positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
+                        tooltip = {
+                            RichTooltip(title = { Text("Profile fetch error") }) {
+                                Text(state.message, fontFamily = FontFamily.Monospace)
+                            }
+                        },
+                        state = rememberTooltipState()
+                    ) {
+                        BadgedBox(badge = { Badge { Text("!") } }) {
+                            Icon(LucideIcons.CircleUserRound, null)
+                        }
+                    }
+                }
 
-        Crossfade(targetState = avatarUrl != null, label = "avatar_crossfade") { hasAvatar ->
-            Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
-                if (hasAvatar) {
-                    AsyncImage(avatarUrl, null, Modifier.clip(CircleShape))
-                } else {
-                    CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
+                is ProfileState.Success -> {
+                    TooltipBox(
+                        positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
+                        tooltip = {
+                            RichTooltip(title = { Text(state.profile.name) }) {
+                                Text(state.profile.email ?: "No email information", fontFamily = FontFamily.Monospace)
+                            }
+                        },
+                        state = rememberTooltipState()
+                    ) {
+                        val avatarUrl = state.profile.picture
+                        if (avatarUrl != null) {
+                            AsyncImage(
+                                state.profile.picture,
+                                null,
+                                Modifier
+                                    .clip(CircleShape)
+                                    .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                            )
+                        } else {
+                            Icon(LucideIcons.CircleUserRound, null)
+                        }
+                    }
                 }
             }
         }
