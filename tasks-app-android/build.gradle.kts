@@ -29,6 +29,8 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
 }
 
+val versionCodeValue = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
+
 android {
     namespace = "net.opatry.tasks.app"
     compileSdk = 34
@@ -38,7 +40,7 @@ android {
         applicationId = "net.opatry.tasks.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = libs.versions.tasksApp.code.get().toInt()
+        versionCode = versionCodeValue
         versionName = libs.versions.tasksApp.name.get()
 
         resourceConfigurations += listOf("en", "fr")

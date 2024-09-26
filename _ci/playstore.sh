@@ -35,8 +35,7 @@ if ! command -v bundletools &> /dev/null; then
     bundletool_version="1.17.1"
     bundletool_jar="bundletool-all-${bundletool_version}.jar"
     if [ ! -f "${bundletool_jar}" ]; then
-      info "${YELLOW}bundletool${RESET} not available in the PATH, downloading it"
-      curl -L -o "${bundletool_jar}" https://github.com/google/bundletool/releases/download/${bundletool_version}/bundletool-all-${bundletool_version}.jar
+      curl -s -L -o "${bundletool_jar}" https://github.com/google/bundletool/releases/download/${bundletool_version}/bundletool-all-${bundletool_version}.jar
     fi
     java -jar "${bundletool_jar}" "${@}"
   }
@@ -116,11 +115,10 @@ fi
 aab="${origin}/../tasks-app-android/build/outputs/bundle/${flavor}${build_type^}/tasks-app-android-${flavor}-${build_type}.aab"
 
 if [ -z "${CI:-}" ] && [ "${upload_binary}" = true ]; then
-  warn "Ensure you have updated your '${BLUE}${build_type}${RESET}' build and updated '${GREEN}tasksApp-code${RESET}'."
-  grep -H --color=auto 'tasksApp-code' "${origin}/../gradle/libs.versions.toml"
+  warn "Ensure you have properly build an up to date version of '${MAGENTA}${flavor}${RESET}' '${BLUE}${build_type}${RESET}' App Bundle (AAB)."
   if [ -f "${aab}" ]; then
-    echo "${aab} last modification date"
-    echo -e "${GREEN}$(date -r "${aab}")${RESET}\n\n"
+    echo -e "\n${aab} last modification date"
+    echo -e "${GREEN}$(date -r "${aab}")${RESET}\n"
   fi
 fi
 
