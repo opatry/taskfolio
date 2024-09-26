@@ -19,17 +19,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+
+    - name: ☕ Setup JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'adopt'
-    - name: Setup Gradle
+
+    - name: 🐘 Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
         add-job-summary-as-pr-comment: on-failure
 
-    - name: Build Android App
+    - name: 🔨 Build Android App 📱
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -43,13 +45,13 @@ jobs:
               -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
               -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
 
-    - name: Build Desktop App
+    - name: 🔨 Build Desktop App 🖥️
       run: ./gradlew --no-daemon :tasks-app-desktop:assemble
 
-    - name: Test
+    - name: ✅ Test
       run: ./gradlew --no-daemon test
 
-    - name: Publish Test Reports
+    - name: 🗒️ Publish Test Reports
       uses: mikepenz/action-junit-report@v4
       if: success() || failure()
       with:
