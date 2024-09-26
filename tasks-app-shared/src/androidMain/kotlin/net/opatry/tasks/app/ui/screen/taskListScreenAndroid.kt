@@ -39,14 +39,16 @@ import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
 import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.TaskListDetail
 import net.opatry.tasks.app.ui.component.TaskListsColumn
-import net.opatry.tasks.app.ui.model.TaskListUIModel
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
     val taskLists by viewModel.taskLists.collectAsState(emptyList())
 
-    val navigator = rememberListDetailPaneScaffoldNavigator<TaskListUIModel>()
+    // need to store a saveable (Serializable/Parcelable) object
+    // rememberListDetailPaneScaffoldNavigator, under the hood uses rememberSaveable with it
+    // we use the TaskListUIModel.id as the key to save the state of the navigator
+    val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
 
     BackHandler(navigator.canNavigateBack()) {
         navigator.navigateBack()
@@ -63,9 +65,9 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
                     Row {
                         TaskListsColumn(
                             taskLists,
-                            selectedItem = navigator.currentDestination?.content,
+                            selectedItem = taskLists.find { it.id == navigator.currentDestination?.content },
                             onItemClick = { taskList ->
-                                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList)
+                                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id)
                             }
                         )
 
@@ -78,11 +80,11 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
         },
         detailPane = {
             AnimatedPane {
-                navigator.currentDestination?.content?.let { taskList ->
+                taskLists.find { it.id == navigator.currentDestination?.content }?.let { taskList ->
                     TaskListDetail(viewModel, taskList) { targetedTaskList ->
                         when (targetedTaskList) {
                             null -> navigator.navigateBack()
-                            else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList)
+                            else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id)
                         }
                     }
                 } ?: run {
