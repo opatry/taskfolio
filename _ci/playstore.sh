@@ -35,8 +35,7 @@ if ! command -v bundletools &> /dev/null; then
     bundletool_version="1.17.1"
     bundletool_jar="bundletool-all-${bundletool_version}.jar"
     if [ ! -f "${bundletool_jar}" ]; then
-      info "${YELLOW}bundletool${RESET} not available in the PATH, downloading it"
-      curl -L -o "${bundletool_jar}" https://github.com/google/bundletool/releases/download/${bundletool_version}/bundletool-all-${bundletool_version}.jar
+      curl -s -L -o "${bundletool_jar}" https://github.com/google/bundletool/releases/download/${bundletool_version}/bundletool-all-${bundletool_version}.jar
     fi
     java -jar "${bundletool_jar}" "${@}"
   }
