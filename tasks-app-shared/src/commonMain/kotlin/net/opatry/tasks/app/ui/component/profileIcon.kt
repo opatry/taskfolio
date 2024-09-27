@@ -30,6 +30,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -113,15 +114,13 @@ fun ProfileIcon(viewModel: UserViewModel) {
                                             fontFamily = FontFamily.Monospace
                                         )
 
+                                        Spacer(Modifier.size(8.dp))
                                         Button(
                                             onClick = {
                                                 viewModel.signOut()
                                                 showUserMenu = false
                                             },
-                                            enabled = false,
-                                            modifier = Modifier
-                                                .padding(top = 8.dp)
-                                                .align(Alignment.CenterHorizontally)
+                                            modifier = Modifier.align(Alignment.CenterHorizontally)
                                         ) {
                                             // TODO confirmation dialog?
                                             Text("Sign out")
@@ -129,20 +128,19 @@ fun ProfileIcon(viewModel: UserViewModel) {
                                     }
 
                                     UserState.Unsigned -> {
-                                        Text("Sign in to sync with your Google Tasks")
+                                        Text(
+                                            "Sign in and authorize access to your Google Tasks to enable sync.",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
 
-                                        Button(
-                                            onClick = {
-                                                // TODO authorization flow
+                                        Spacer(Modifier.size(8.dp))
+                                        AuthorizeGoogleTasksButton(
+                                            Modifier.align(Alignment.CenterHorizontally),
+                                            onSuccess = { token ->
+                                                viewModel.signIn(token)
                                                 showUserMenu = false
-                                            },
-                                            enabled = false,
-                                            modifier = Modifier
-                                                .padding(top = 8.dp)
-                                                .align(Alignment.CenterHorizontally)
-                                        ) {
-                                            Text("Sign in")
-                                        }
+                                            }
+                                        )
                                     }
 
                                     else -> Unit

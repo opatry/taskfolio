@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.onboarding_screen_authorize_explanation
 import net.opatry.tasks.resources.onboarding_screen_skip
@@ -76,10 +77,7 @@ fun AuthorizationScreen(
             Icon(LucideIcons.ShieldCheck, null, Modifier.size(96.dp), tint = MaterialTheme.colorScheme.primary)
             Text(stringResource(Res.string.onboarding_screen_authorize_explanation), textAlign = TextAlign.Center)
 
-            AuthorizationScreenContent(onSuccess)
+            AuthorizeGoogleTasksButton(onSuccess = onSuccess)
         }
     }
 }
-
-@Composable
-expect fun AuthorizationScreenContent(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit)

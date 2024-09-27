@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.screen
+package net.opatry.tasks.app.ui.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
@@ -50,14 +50,17 @@ import org.koin.compose.koinInject
 
 
 @Composable
-actual fun AuthorizationScreenContent(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
+actual fun AuthorizeGoogleTasksButton(
+    modifier: Modifier,
+    onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit
+) {
     val uriHandler = LocalUriHandler.current
     val coroutineScope = rememberCoroutineScope()
     val authenticator = koinInject<GoogleAuthenticator>()
     var ongoingAuth by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
 
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         if (ongoingAuth) {
             CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
         } else {
