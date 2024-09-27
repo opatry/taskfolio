@@ -20,33 +20,15 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks
+package net.opatry.tasks.app.ui.component
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import net.opatry.google.auth.GoogleAuthenticator
 
 
-@Serializable
-data class TokenCache(
-
-    @SerialName("access_token")
-    val accessToken: String? = null,
-
-    @SerialName("refresh_token")
-    val refreshToken: String? = null,
-
-    @SerialName("expiration_time_millis")
-    val expirationTimeMillis: Long = 0,
+@Composable
+expect fun AuthorizeGoogleTasksButton(
+    modifier: Modifier = Modifier,
+    onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit
 )
-
-
-interface CredentialsStorage {
-    suspend fun load(): TokenCache?
-    suspend fun store(tokenCache: TokenCache)
-}
-
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-/**
- * ⚠️ Convenience implementation for development, totally unsecure way to store OAuth credentials.
- */
-expect class FileCredentialsStorage(filepath: String) : CredentialsStorage

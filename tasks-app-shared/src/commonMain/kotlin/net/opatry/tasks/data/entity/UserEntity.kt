@@ -20,33 +20,26 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks
+package net.opatry.tasks.data.entity
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 
-@Serializable
-data class TokenCache(
-
-    @SerialName("access_token")
-    val accessToken: String? = null,
-
-    @SerialName("refresh_token")
-    val refreshToken: String? = null,
-
-    @SerialName("expiration_time_millis")
-    val expirationTimeMillis: Long = 0,
+@Entity(tableName = "user")
+data class UserEntity(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Long = 0,
+    @ColumnInfo(name = "remote_id") // TODO must be unique
+    val remoteId: String? = null,
+    @ColumnInfo(name = "name")
+    val name: String,
+    @ColumnInfo(name = "email")
+    val email: String? = null,
+    @ColumnInfo(name = "avatar_url")
+    val avatarUrl: String? = null,
+    @ColumnInfo(name = "is_signed_in")
+    val isSignedIn: Boolean = false,
 )
-
-
-interface CredentialsStorage {
-    suspend fun load(): TokenCache?
-    suspend fun store(tokenCache: TokenCache)
-}
-
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-/**
- * ⚠️ Convenience implementation for development, totally unsecure way to store OAuth credentials.
- */
-expect class FileCredentialsStorage(filepath: String) : CredentialsStorage

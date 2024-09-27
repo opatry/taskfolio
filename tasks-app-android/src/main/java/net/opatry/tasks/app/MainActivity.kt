@@ -31,26 +31,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import net.opatry.tasks.CredentialsStorage
-import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
+import net.opatry.tasks.app.ui.UserState
+import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
-import net.opatry.tasks.app.ui.screen.SignInStatus
 import net.opatry.tasks.app.ui.theme.TasksAppTheme
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Duration.Companion.seconds
 
 
 class MainActivity : AppCompatActivity() {
@@ -58,46 +50,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val coroutineScope = rememberCoroutineScope()
-            var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
-            val credentialsStorage = koinInject<CredentialsStorage>()
-            LaunchedEffect(Unit) {
-                signInStatus = if (credentialsStorage.load() != null) {
-                    SignInStatus.SignedIn
-                } else {
-                    SignInStatus.SignedOut
+            val userViewModel = koinViewModel<UserViewModel>()
+            val userState by userViewModel.state.collectAsState(null)
+
+            if (userState == null) {
+                LaunchedEffect(userState) {
+                    userViewModel.refreshUserState()
                 }
             }
 
             TasksAppTheme {
                 Surface {
-                    when (signInStatus) {
-                        SignInStatus.Loading -> {
-                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
-                            }
+                    when (userState) {
+                        null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
                         }
 
-                        SignInStatus.SignedIn -> {
-                            val viewModel = koinViewModel<TaskListsViewModel>()
-                            TasksApp(viewModel)
+                        is UserState.Unsigned,
+                        is UserState.SignedIn -> {
+                            val tasksViewModel = koinViewModel<TaskListsViewModel>()
+                            TasksApp(userViewModel, tasksViewModel)
                         }
 
-                        SignInStatus.SignedOut -> {
-                            val t0 = Clock.System.now()
-                            AuthorizationScreen { token ->
-                                signInStatus = SignInStatus.SignedIn
-                                coroutineScope.launch {
-                                    credentialsStorage.store(
-                                        TokenCache(
-                                            token.accessToken,
-                                            token.refreshToken,
-                                            (t0 + token.expiresIn.seconds).toEpochMilliseconds()
-                                        )
-                                    )
-                                }
-                            }
-                        }
+                        is UserState.Newcomer -> AuthorizationScreen(
+                            onSkip = userViewModel::skipSignIn,
+                            onSuccess = userViewModel::signIn,
+                        )
                     }
                 }
             }

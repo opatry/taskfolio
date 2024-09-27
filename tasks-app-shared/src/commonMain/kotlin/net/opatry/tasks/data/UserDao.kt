@@ -20,33 +20,39 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks
+package net.opatry.tasks.data
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-
-@Serializable
-data class TokenCache(
-
-    @SerialName("access_token")
-    val accessToken: String? = null,
-
-    @SerialName("refresh_token")
-    val refreshToken: String? = null,
-
-    @SerialName("expiration_time_millis")
-    val expirationTimeMillis: Long = 0,
-)
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import net.opatry.tasks.data.entity.UserEntity
 
 
-interface CredentialsStorage {
-    suspend fun load(): TokenCache?
-    suspend fun store(tokenCache: TokenCache)
+@Dao
+interface UserDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(user: UserEntity): Long
+
+    @Query("SELECT * FROM user WHERE remote_id = :remoteId")
+    suspend fun getByRemoteId(remoteId: String): UserEntity?
+
+    @Query("SELECT * FROM user WHERE id = :id")
+    suspend fun getById(id: Long): UserEntity?
+
+    @Query("SELECT * FROM user WHERE is_signed_in = true OR remote_id IS NULL LIMIT 1")
+    suspend fun getCurrentUser(): UserEntity?
+
+    @Query("UPDATE user SET is_signed_in = false")
+    suspend fun clearAllSignedInStatus()
+
+    @Query("UPDATE user SET is_signed_in = false WHERE id = :id")
+    suspend fun clearSignedInStatus(id: Long)
+
+    @Transaction
+    suspend fun setSignedInUser(userEntity: UserEntity) {
+        clearAllSignedInStatus()
+        insert(userEntity.copy(isSignedIn = true))
+    }
 }
-
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-/**
- * ⚠️ Convenience implementation for development, totally unsecure way to store OAuth credentials.
- */
-expect class FileCredentialsStorage(filepath: String) : CredentialsStorage

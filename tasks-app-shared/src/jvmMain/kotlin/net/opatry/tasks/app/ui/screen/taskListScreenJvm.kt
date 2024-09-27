@@ -39,6 +39,9 @@ import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.TaskListDetail
 import net.opatry.tasks.app.ui.component.TaskListsColumn
 import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.default_task_list_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
@@ -48,7 +51,11 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
 
     Row(Modifier.fillMaxWidth()) {
         if (taskLists.isEmpty()) {
-            NoTaskListEmptyState()
+            // TODO dialog to ask for the new task list name
+            val newTaskListName = stringResource(Res.string.default_task_list_title)
+            NoTaskListEmptyState {
+                viewModel.createTaskList(newTaskListName)
+            }
         } else {
             Box(Modifier.weight(.3f)) {
                 TaskListsColumn(

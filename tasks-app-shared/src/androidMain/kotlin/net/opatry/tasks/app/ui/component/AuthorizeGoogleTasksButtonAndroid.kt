@@ -20,26 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.screen
+package net.opatry.tasks.app.ui.component
 
-import LucideIcons
-import ShieldCheck
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.android.gms.auth.api.identity.Identity
@@ -59,13 +51,15 @@ import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.TasksScopes
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.onboarding_screen_authorize_cta
-import net.opatry.tasks.resources.onboarding_screen_authorize_explanation
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 
 @Composable
-actual fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit) {
+actual fun AuthorizeGoogleTasksButton(
+    modifier: Modifier,
+    onSuccess: (GoogleAuthenticator.OAuthToken
+) -> Unit) {
     val coroutineScope = rememberCoroutineScope()
 
     val context = LocalContext.current
@@ -101,54 +95,43 @@ actual fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Un
         }
     }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
-    ) {
-        Icon(LucideIcons.ShieldCheck, null, Modifier.size(96.dp), tint = MaterialTheme.colorScheme.primary)
-        Text(stringResource(Res.string.onboarding_screen_authorize_explanation), textAlign = TextAlign.Center)
-
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (ongoingAuth) {
-                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
-            } else {
-                Spacer(Modifier.size(24.dp))
-            }
-            Button(
-                onClick = {
-                    ongoingAuth = true
-                    coroutineScope.launch {
-                        runAuthFlow(
-                            authenticator,
-                            null,
-                            onAuth = { result ->
-                                val pendingIntent = result.pendingIntent
-                                if (pendingIntent != null) {
-                                    startForResult.launch(IntentSenderRequest.Builder(pendingIntent).build())
-                                } else {
-                                    error = "No pending intent in auth result"
-                                    ongoingAuth = false
-                                }
-                            },
-                            onSuccess = onSuccess,
-                            onError = { e ->
-                                error = e.message
+    Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (ongoingAuth) {
+            CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
+        } else {
+            Spacer(Modifier.size(24.dp))
+        }
+        Button(
+            onClick = {
+                ongoingAuth = true
+                coroutineScope.launch {
+                    runAuthFlow(
+                        authenticator,
+                        null,
+                        onAuth = { result ->
+                            val pendingIntent = result.pendingIntent
+                            if (pendingIntent != null) {
+                                startForResult.launch(IntentSenderRequest.Builder(pendingIntent).build())
+                            } else {
+                                error = "No pending intent in auth result"
                                 ongoingAuth = false
                             }
-                        )
-                    }
-                },
-                enabled = !ongoingAuth
-            ) {
-                Text(stringResource(Res.string.onboarding_screen_authorize_cta))
-            }
+                        },
+                        onSuccess = onSuccess,
+                        onError = { e ->
+                            error = e.message
+                            ongoingAuth = false
+                        }
+                    )
+                }
+            },
+            enabled = !ongoingAuth
+        ) {
+            Text(stringResource(Res.string.onboarding_screen_authorize_cta))
         }
-        AnimatedContent(error, label = "authorize_error_message") {
-            Text(it ?: "")
-        }
+    }
+    AnimatedContent(error, label = "authorize_error_message") {
+        Text(it ?: "")
     }
 }
 

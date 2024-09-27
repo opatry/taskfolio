@@ -24,7 +24,9 @@ package net.opatry.tasks.app.ui.component
 
 import AppWindow
 import LucideIcons
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
@@ -32,6 +34,7 @@ fun MissingScreen(screenName: String, screenIcon: ImageVector? = null) {
     EmptyState(
         icon = screenIcon ?: LucideIcons.AppWindow,
         title = "Missing screen '$screenName'",
-        description = "This screen is not implemented yet"
+        description = "This screen is not implemented yet",
+        modifier = Modifier.fillMaxSize(),
     )
 }

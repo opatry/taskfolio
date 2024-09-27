@@ -22,14 +22,62 @@
 
 package net.opatry.tasks.app.ui.screen
 
+import LucideIcons
+import ShieldCheck
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.onboarding_screen_authorize_explanation
+import net.opatry.tasks.resources.onboarding_screen_skip
+import org.jetbrains.compose.resources.stringResource
 
-enum class SignInStatus {
-    Loading,
-    SignedIn,
-    SignedOut,
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-expect fun AuthorizationScreen(onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit)
+fun AuthorizationScreen(
+    onSkip: () -> Unit,
+    onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                actions = {
+                    TextButton(onClick = onSkip) {
+                        Text(stringResource(Res.string.onboarding_screen_skip))
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
+        ) {
+            Icon(LucideIcons.ShieldCheck, null, Modifier.size(96.dp), tint = MaterialTheme.colorScheme.primary)
+            Text(stringResource(Res.string.onboarding_screen_authorize_explanation), textAlign = TextAlign.Center)
+
+            AuthorizeGoogleTasksButton(onSuccess = onSuccess)
+        }
+    }
+}
