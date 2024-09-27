@@ -110,15 +110,15 @@ private fun TaskEntity.asTask(): Task {
 
 fun sortTasks(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
     // Step 1: Create a map of tasks by their IDs for easy lookup
-    val taskMap = tasks.associateBy { it.remoteId }.toMutableMap() // FIXME local data only?
+    val taskMap = tasks.associateBy { it.remoteId ?: it.id.toString() }.toMutableMap() // FIXME local data only?
 
     // Step 2: Build a tree structure with parent-child relationships
     val tree = mutableMapOf<String, MutableList<TaskEntity>>()
     tasks.forEach { task ->
-        val parentId = task.parentTaskRemoteId // FIXME local data only?
+        val parentId = task.parentTaskRemoteId ?: task.parentTaskLocalId?.toString() // FIXME local data only?
         if (parentId == null) {
             // Tasks with no parent go directly into the root of the tree
-            tree.getOrPut(task.remoteId ?: "") { mutableListOf() } // FIXME local data only?
+            tree.getOrPut(task.remoteId ?: task.id.toString()) { mutableListOf() } // FIXME local data only?
         } else {
             // Add child task under its parent's list of children
             tree.getOrPut(parentId) { mutableListOf() }.add(task)
