@@ -171,9 +171,15 @@ class TaskRepository(
             try {
                 taskListsApi.listAll()
             } catch (e: Exception) {
-                emptyList()
+                null
             }
         }
+
+        if (remoteTaskLists == null) {
+            // most likely not internet, can't fetch data, nothing to sync
+            return
+        }
+
         remoteTaskLists.onEach { remoteTaskList ->
             // FIXME suboptimal
             //  - check stale ones in DB and remove them if not only local
