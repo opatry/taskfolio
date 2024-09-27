@@ -47,13 +47,6 @@ import net.opatry.tasks.resources.onboarding_screen_authorize_explanation
 import net.opatry.tasks.resources.onboarding_screen_skip
 import org.jetbrains.compose.resources.stringResource
 
-enum class SignInStatus {
-    Loading,
-    SignedIn,
-    SignedOut,
-    Skipped,
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthorizationScreen(

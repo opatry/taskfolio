@@ -20,34 +20,39 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.data
 
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import kotlinx.coroutines.Dispatchers
-import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.dsl.module
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import net.opatry.tasks.data.entity.UserEntity
 
-private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
-    .setDriver(BundledSQLiteDriver())
-    .fallbackToDestructiveMigration(dropAllTables = true)
-    .setQueryCoroutineContext(Dispatchers.IO)
-    .build()
 
-val dataModule = module {
-    single {
-        getRoomDatabase(get())
-    }
+@Dao
+interface UserDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(user: UserEntity): Long
 
-    factory {
-        get<TasksAppDatabase>().getTaskListDao()
-    }
+    @Query("SELECT * FROM user WHERE remote_id = :remoteId")
+    suspend fun getByRemoteId(remoteId: String): UserEntity?
 
-    factory {
-        get<TasksAppDatabase>().getTaskDao()
-    }
+    @Query("SELECT * FROM user WHERE id = :id")
+    suspend fun getById(id: Long): UserEntity?
 
-    factory {
-        get<TasksAppDatabase>().getUserDao()
+    @Query("SELECT * FROM user WHERE is_signed_in = true OR remote_id IS NULL LIMIT 1")
+    suspend fun getCurrentUser(): UserEntity?
+
+    @Query("UPDATE user SET is_signed_in = false")
+    suspend fun clearAllSignedInStatus()
+
+    @Query("UPDATE user SET is_signed_in = false WHERE id = :id")
+    suspend fun clearSignedInStatus(id: Long)
+
+    @Transaction
+    suspend fun setSignedInUser(userEntity: UserEntity) {
+        clearAllSignedInStatus()
+        insert(userEntity.copy(isSignedIn = true))
     }
 }

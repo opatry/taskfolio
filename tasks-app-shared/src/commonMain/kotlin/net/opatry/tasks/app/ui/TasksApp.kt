@@ -40,6 +40,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,11 +50,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import io.ktor.client.HttpClient
-import net.opatry.tasks.app.di.HttpClientName
 import net.opatry.tasks.app.ui.component.MissingScreen
 import net.opatry.tasks.app.ui.component.ProfileIcon
-import net.opatry.tasks.app.ui.screen.SignInStatus
 import net.opatry.tasks.app.ui.screen.TaskListsMasterDetail
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.app_name
@@ -62,8 +61,6 @@ import net.opatry.tasks.resources.navigation_settings
 import net.opatry.tasks.resources.navigation_tasks
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
-import org.koin.core.qualifier.named
 
 enum class AppTasksScreen(
     val labelRes: StringResource,
@@ -77,13 +74,14 @@ enum class AppTasksScreen(
 }
 
 @Composable
-fun TasksApp(signInStatus: SignInStatus, viewModel: TaskListsViewModel) {
-    val httpClient = when (signInStatus) {
-        SignInStatus.SignedIn -> koinInject<HttpClient>(named(HttpClientName.Tasks))
-        else -> null
-    }
-
+fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
     var selectedScreen by remember { mutableStateOf(AppTasksScreen.Tasks) }
+    val userState by userViewModel.state.collectAsState(null)
+    val isSigned by remember(userState) {
+        derivedStateOf {
+            userState is UserState.SignedIn
+        }
+    }
 
     NavigationSuiteScaffold(navigationSuiteItems = {
         // Only if expanded state
@@ -127,20 +125,16 @@ fun TasksApp(signInStatus: SignInStatus, viewModel: TaskListsViewModel) {
                                     .padding(horizontal = 16.dp),
                                 style = MaterialTheme.typography.titleMedium
                             )
-                            if (signInStatus == SignInStatus.SignedIn) {
-                                IconButton(onClick = viewModel::fetch) {
+                            if (isSigned) {
+                                IconButton(onClick = tasksViewModel::fetch) {
                                     Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
                                 }
                             }
-                            // FIXME make it an icon button for homogeneous padding (hacky)
-                            //  but will be a button at the end of the day, so fine
-                            IconButton(onClick = {}, enabled = false) {
-                                ProfileIcon(httpClient)
-                            }
+                            ProfileIcon(userViewModel)
                         }
                     }
 
-                    TaskListsMasterDetail(viewModel)
+                    TaskListsMasterDetail(tasksViewModel)
                 }
 
                 AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)

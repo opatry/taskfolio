@@ -24,25 +24,26 @@ package net.opatry.tasks.app.ui.component
 
 import CircleUserRound
 import LucideIcons
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RichTooltip
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,88 +53,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import coil3.compose.AsyncImage
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.isSuccess
-import net.opatry.google.profile.model.UserInfo
+import net.opatry.tasks.app.ui.UserState
+import net.opatry.tasks.app.ui.UserViewModel
 
-// TODO would be nice to rely on a local cache for the profile info
-//  - profile info
-//  - avatar image bitmap on disk (can Coil handle that?)
-sealed class ProfileState {
-    data object Loading : ProfileState()
-    data class Error(val message: String) : ProfileState()
-    data class Success(val profile: UserInfo) : ProfileState()
-    data object Unsigned : ProfileState()
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileIcon(httpClient: HttpClient?) {
-    var profileState by remember {
-        mutableStateOf(
-            ProfileState.Loading.takeIf { httpClient != null } ?: ProfileState.Unsigned
-        )
-    }
+fun ProfileIcon(viewModel: UserViewModel) {
+    val userState by viewModel.state.collectAsState(null)
 
-    if (httpClient != null) {
-        LaunchedEffect(Unit) {
-            try {
-                val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
+    var showUserMenu by remember { mutableStateOf(false) }
 
-                profileState = if (response.status.isSuccess()) {
-                    ProfileState.Success(response.body())
-                } else {
-                    ProfileState.Error(response.bodyAsText())
-                }
-            } catch (e: Exception) {
-                // TODO find a way to retry after a delay (on focus?)
-                // most likely no network
-                profileState = ProfileState.Error(e.message ?: "Unknown error (${e.javaClass.simpleName})")
-            }
-        }
-    }
+    IconButton(
+        onClick = { showUserMenu = true },
+        enabled = !showUserMenu && userState != null
+    ) {
+        Crossfade(targetState = userState, label = "avatar_crossfade") { state ->
+            Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+                when (state) {
+                    null -> CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
+                    is UserState.Newcomer,
+                    is UserState.Unsigned -> Icon(LucideIcons.CircleUserRound, null)
 
-    Crossfade(targetState = profileState, label = "avatar_crossfade") { state ->
-        Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
-            when (state) {
-                is ProfileState.Loading -> CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
-                // TODO button to allow sign-in
-                is ProfileState.Unsigned -> Icon(LucideIcons.CircleUserRound, null)
-                is ProfileState.Error -> {
-                    TooltipBox(
-                        positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
-                        tooltip = {
-                            RichTooltip(title = { Text("Profile fetch error") }) {
-                                Text(state.message, fontFamily = FontFamily.Monospace)
-                            }
-                        },
-                        state = rememberTooltipState()
-                    ) {
-                        BadgedBox(badge = { Badge { Text("!") } }) {
-                            Icon(LucideIcons.CircleUserRound, null)
-                        }
-                    }
-                }
-
-                // TODO button to allow sign-out
-                is ProfileState.Success -> {
-                    TooltipBox(
-                        positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
-                        tooltip = {
-                            RichTooltip(title = { Text(state.profile.name) }) {
-                                Text(state.profile.email ?: "No email information", fontFamily = FontFamily.Monospace)
-                            }
-                        },
-                        state = rememberTooltipState()
-                    ) {
-                        val avatarUrl = state.profile.picture
-                        if (avatarUrl != null) {
+                    is UserState.SignedIn -> {
+                        if (state.avatarUrl != null) {
                             AsyncImage(
-                                state.profile.picture,
+                                state.avatarUrl,
                                 null,
                                 Modifier
                                     .clip(CircleShape)
@@ -141,6 +86,68 @@ fun ProfileIcon(httpClient: HttpClient?) {
                             )
                         } else {
                             Icon(LucideIcons.CircleUserRound, null)
+                        }
+                    }
+                }
+
+                AnimatedVisibility(showUserMenu) {
+                    // FIXME sticks to window right edge, how to offset it on the left?
+                    //  negative offset doesn't work, alignment doesn't help either
+                    Popup(onDismissRequest = { showUserMenu = false }) {
+                        Surface(
+                            shape = MaterialTheme.shapes.medium,
+                            shadowElevation = 4.dp
+                        ) {
+                            Column(
+                                Modifier
+                                    .widthIn(200.dp, 300.dp)
+                                    .padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                when (state) {
+                                    is UserState.SignedIn -> {
+                                        Text(state.name, style = MaterialTheme.typography.titleMedium)
+                                        Text(
+                                            state.email ?: "No email information",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+
+                                        Button(
+                                            onClick = {
+                                                viewModel.signOut()
+                                                showUserMenu = false
+                                            },
+                                            enabled = false,
+                                            modifier = Modifier
+                                                .padding(top = 8.dp)
+                                                .align(Alignment.CenterHorizontally)
+                                        ) {
+                                            // TODO confirmation dialog?
+                                            Text("Sign out")
+                                        }
+                                    }
+
+                                    UserState.Unsigned -> {
+                                        Text("Sign in to sync with your Google Tasks")
+
+                                        Button(
+                                            onClick = {
+                                                // TODO authorization flow
+                                                showUserMenu = false
+                                            },
+                                            enabled = false,
+                                            modifier = Modifier
+                                                .padding(top = 8.dp)
+                                                .align(Alignment.CenterHorizontally)
+                                        ) {
+                                            Text("Sign in")
+                                        }
+                                    }
+
+                                    else -> Unit
+                                }
+                            }
                         }
                     }
                 }
