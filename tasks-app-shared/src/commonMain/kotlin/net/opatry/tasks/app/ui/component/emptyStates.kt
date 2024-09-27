@@ -25,7 +25,16 @@ package net.opatry.tasks.app.ui.component
 import CheckCheck
 import CircleOff
 import LucideIcons
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun NoTaskListSelectedEmptyState() {
@@ -33,13 +42,24 @@ fun NoTaskListSelectedEmptyState() {
         icon = LucideIcons.CircleOff,
         title = "No task list selected",
         description = "Select a task list to see its tasks",
+        modifier = Modifier.fillMaxSize()
     )
 }
 @Composable
-fun NoTaskListEmptyState() {
-    EmptyState(
-        icon = LucideIcons.CheckCheck,
-        title = "No task list",
-        description = "Create a new task list to get started",
-    )
+fun NoTaskListEmptyState(onNewTaskListClick: () -> Unit) {
+    Column(
+        Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        EmptyState(
+            icon = LucideIcons.CheckCheck,
+            title = "No task list",
+            description = "Create a new task list to get started",
+            modifier = Modifier.fillMaxWidth(1f)
+        )
+        Button(onClick = onNewTaskListClick) {
+            Text("New task list")
+        }
+    }
 }

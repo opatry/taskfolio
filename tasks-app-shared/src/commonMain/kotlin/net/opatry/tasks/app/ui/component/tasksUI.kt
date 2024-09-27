@@ -45,6 +45,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -208,6 +209,7 @@ fun TaskListDetail(
                     icon = LucideIcons.CircleOff,
                     title = stringResource(Res.string.task_lists_screen_empty_list_title),
                     description = stringResource(Res.string.task_lists_screen_empty_list_desc),
+                    modifier = Modifier.fillMaxSize(),
                 )
             } else {
                 TasksColumn(

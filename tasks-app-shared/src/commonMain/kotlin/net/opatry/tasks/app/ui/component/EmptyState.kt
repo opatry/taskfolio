@@ -45,10 +45,11 @@ import net.opatry.tasks.app.ui.tooling.TasksAppThemedPreview
 fun EmptyState(
     icon: ImageVector,
     title: String,
+    modifier: Modifier = Modifier,
     description: String? = null,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
     ) {
@@ -73,6 +74,7 @@ private fun EmptyStatePreview() {
             icon = LucideIcons.CircleOff,
             title = "No task",
             description = "Create a new task to get started",
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
@@ -84,6 +86,7 @@ private fun EmptyStateNoDescriptionPreview() {
         EmptyState(
             icon = LucideIcons.CalendarOff,
             title = "No scheduled task",
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
