@@ -26,7 +26,6 @@ import AlignJustify
 import Calendar
 import ListTodo
 import LucideIcons
-import RefreshCw
 import Search
 import Settings
 import androidx.compose.foundation.layout.Column
@@ -35,11 +34,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -49,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.component.MissingScreen
 import net.opatry.tasks.app.ui.component.ProfileIcon
@@ -81,6 +81,11 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
         derivedStateOf {
             userState is UserState.SignedIn
         }
+    }
+
+    val isFocused = LocalWindowInfo.current.isWindowFocused
+    LaunchedEffect(isFocused, isSigned) {
+        tasksViewModel.enableAutoRefresh(isFocused && isSigned)
     }
 
     NavigationSuiteScaffold(navigationSuiteItems = {
@@ -125,11 +130,6 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
                                     .padding(horizontal = 16.dp),
                                 style = MaterialTheme.typography.titleMedium
                             )
-                            if (isSigned) {
-                                IconButton(onClick = tasksViewModel::fetch) {
-                                    Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
-                                }
-                            }
                             ProfileIcon(userViewModel)
                         }
                     }

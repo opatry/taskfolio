@@ -27,7 +27,6 @@ import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.data.TaskRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -35,7 +34,9 @@ import org.koin.dsl.module
 val tasksAppModule = module {
     singleOf(::TaskRepository)
 
-    viewModelOf(::TaskListsViewModel)
+    viewModel {
+        TaskListsViewModel(get())
+    }
 
     viewModel {
         UserViewModel(get(), get(), get(named(HttpClientName.Tasks)))

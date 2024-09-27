@@ -24,12 +24,15 @@ package net.opatry.tasks.app.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -39,6 +42,8 @@ import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
     // TODO children
@@ -64,35 +69,31 @@ private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
 }
 
 class TaskListsViewModel(
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val autoRefreshPeriod: Duration = 10.seconds
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     val taskLists: Flow<List<TaskListUIModel>> = taskRepository.getTaskLists().mapLatest { allLists ->
         allLists.map(TaskListDataModel::asTaskListUIModel)
     }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    init {
-        // cold flow?
-        viewModelScope.launch {
-            try {
-                taskRepository.sync()
-            } catch (e: Exception) {
-                // most likely no network
+    private var autoRefreshIsEnabled: Boolean = false
+
+    fun enableAutoRefresh(enabled: Boolean) {
+        viewModelScope.launch(Dispatchers.Main) {
+            autoRefreshIsEnabled = enabled
+            withContext(Dispatchers.Default) {
+                while (autoRefreshIsEnabled) {
+                    try {
+                        taskRepository.sync()
+                    } catch (e: Exception) {
+                        // most likely no network
+                    }
+                    if (autoRefreshIsEnabled) {
+                        delay(autoRefreshPeriod)
+                    }
+                }
             }
-        }
-    }
-
-    fun fetch() {
-        viewModelScope.launch {
-            refresh()
-        }
-    }
-
-    private suspend fun refresh() {
-        try {
-            taskRepository.sync()
-        } catch (e: Exception) {
-            // most likely no network
         }
     }
 
