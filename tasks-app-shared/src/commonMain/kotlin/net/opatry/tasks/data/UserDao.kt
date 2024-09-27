@@ -41,7 +41,15 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE id = :id")
     suspend fun getById(id: Long): UserEntity?
 
-    @Query("SELECT * FROM user WHERE is_signed_in = true OR remote_id IS NULL LIMIT 1")
+    @Query(
+        """
+        SELECT * FROM user WHERE is_signed_in = true
+        UNION ALL
+        SELECT * FROM user WHERE remote_id IS NULL
+            AND NOT EXISTS (SELECT 1 FROM user WHERE is_signed_in = true)
+        LIMIT 1
+        """
+    )
     suspend fun getCurrentUser(): UserEntity?
 
     @Query("UPDATE user SET is_signed_in = false")
