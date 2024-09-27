@@ -38,7 +38,6 @@ import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
 import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.TaskListDetail
 import net.opatry.tasks.app.ui.component.TaskListsColumn
-import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.default_task_list_title
 import org.jetbrains.compose.resources.stringResource
@@ -47,7 +46,9 @@ import org.jetbrains.compose.resources.stringResource
 actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
     val taskLists by viewModel.taskLists.collectAsState(emptyList())
 
-    var currentTaskList by remember { mutableStateOf<TaskListUIModel?>(null) }
+    // Store the list id, and not the list object to prevent keeping
+    // a stale object when data changes.
+    var currentTaskListId by remember { mutableStateOf<Long?>(null) }
 
     Row(Modifier.fillMaxWidth()) {
         if (taskLists.isEmpty()) {
@@ -60,9 +61,9 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
             Box(Modifier.weight(.3f)) {
                 TaskListsColumn(
                     taskLists,
-                    selectedItem = currentTaskList,
+                    selectedItem = taskLists.find { it.id == currentTaskListId },
                     onItemClick = { taskList ->
-                        currentTaskList = taskList
+                        currentTaskListId = taskList.id
                     }
                 )
             }
@@ -71,9 +72,9 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
         }
 
         Box(Modifier.weight(.7f)) {
-            currentTaskList?.let { taskList ->
+            taskLists.find { it.id == currentTaskListId }?.let { taskList ->
                 TaskListDetail(viewModel, taskList) { targetedTaskList ->
-                    currentTaskList = targetedTaskList
+                    currentTaskListId = targetedTaskList?.id
                 }
             } ?: run {
                 NoTaskListSelectedEmptyState()
