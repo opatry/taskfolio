@@ -126,7 +126,11 @@ fun TasksApp(viewModel: TaskListsViewModel) {
                             IconButton(onClick = viewModel::fetch) {
                                 Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
                             }
-                            ProfileIcon(httpClient)
+                            // FIXME make it an icon button for homogeneous padding (hacky)
+                            //  but will be a button at the end of the day, so fine
+                            IconButton(onClick = {}, enabled = false) {
+                                ProfileIcon(httpClient)
+                            }
                         }
                     }
 
