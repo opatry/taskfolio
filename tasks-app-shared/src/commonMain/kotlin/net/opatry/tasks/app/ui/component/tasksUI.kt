@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.component
 
 import CalendarDays
+import CheckCheck
 import ChevronDown
 import ChevronRight
 import Circle
@@ -218,7 +219,7 @@ fun TaskListDetail(
             } else {
                 TasksColumn(
                     taskLists,
-                    taskList.tasks,
+                    taskList,
                     onToggleCompletionState = viewModel::toggleTaskCompletionState,
                     onEditTask = {
                         taskOfInterest = it
@@ -537,7 +538,7 @@ fun TaskListDetail(
 @Composable
 fun TasksColumn(
     taskLists: List<TaskListUIModel>,
-    tasks: List<TaskUIModel>,
+    taskList: TaskListUIModel,
     onToggleCompletionState: (TaskUIModel) -> Unit,
     onEditTask: (TaskUIModel) -> Unit,
     onUpdateDueDate: (TaskUIModel) -> Unit,
@@ -549,7 +550,8 @@ fun TasksColumn(
     onMoveToNewList: (TaskUIModel) -> Unit,
     onDeleteTask: (TaskUIModel) -> Unit,
 ) {
-    var showCompleted by remember(tasks) { mutableStateOf(false) }
+    var showCompleted by remember(taskList.id) { mutableStateOf(false) }
+    val tasks = taskList.tasks
 
     // TODO depending on sorting (manual vs date), sections could be different
     //  manual: no section title for not completed tasks, expandable "completed" section
@@ -557,6 +559,7 @@ fun TasksColumn(
 
     // FIXME remember computation & derived states
     val groupedTasks = tasks.sortedBy { it.isCompleted }.groupBy { it.isCompleted }.toMutableMap()
+    val todoCount = groupedTasks[false]?.size ?: 0
     val completedCount = groupedTasks[true]?.size ?: 0
     if (!showCompleted) {
         groupedTasks[true] = emptyList()
@@ -566,6 +569,16 @@ fun TasksColumn(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        if (completedCount > 0 && todoCount == 0) {
+            item {
+                EmptyState(
+                    icon = LucideIcons.CheckCheck,
+                    title = "All tasks complete",
+                    description = "Nice work!",
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
+                )
+            }
+        }
         groupedTasks.forEach { (completed, tasks) ->
             if (completed && completedCount > 0) {
                 stickyHeader {
