@@ -200,7 +200,13 @@ fun TaskListDetail(
             }
         }
     ) { innerPadding ->
-        Box(Modifier.padding(innerPadding)) {
+        Column(Modifier.padding(innerPadding)) {
+            TextButton(onClick = { showNewTaskSheet = true }) {
+                RowWithIcon("Add task", LucideIcons.CircleFadingPlus)
+            }
+
+            HorizontalDivider()
+
             if (taskList.isEmpty) {
                 // TODO SVG undraw.co illustration `files/undraw_to_do_list_re_9nt7.svg`
                 EmptyState(
@@ -214,9 +220,6 @@ fun TaskListDetail(
                     taskLists,
                     taskList.tasks,
                     onToggleCompletionState = viewModel::toggleTaskCompletionState,
-                    onNewTask = {
-                        showNewTaskSheet = true
-                    },
                     onEditTask = {
                         taskOfInterest = it
                         showEditTaskSheet = true
@@ -536,7 +539,6 @@ fun TasksColumn(
     taskLists: List<TaskListUIModel>,
     tasks: List<TaskUIModel>,
     onToggleCompletionState: (TaskUIModel) -> Unit,
-    onNewTask: () -> Unit,
     onEditTask: (TaskUIModel) -> Unit,
     onUpdateDueDate: (TaskUIModel) -> Unit,
     onNewSubTask: (TaskUIModel) -> Unit,
@@ -560,61 +562,53 @@ fun TasksColumn(
         groupedTasks[true] = emptyList()
     }
 
-    Column {
-        TextButton(onClick = onNewTask) {
-            RowWithIcon("Add task", LucideIcons.CircleFadingPlus)
-        }
-
-        HorizontalDivider()
-
-        LazyColumn(
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            groupedTasks.forEach { (completed, tasks) ->
-                if (completed && completedCount > 0) {
-                    stickyHeader {
-                        Box(
-                            Modifier
-                                .clip(MaterialTheme.shapes.large)
-                                .fillMaxWidth()
-                                .clickable { showCompleted = !showCompleted }
-                                .background(MaterialTheme.colorScheme.background)
-                                .padding(horizontal = 12.dp, vertical = 8.dp)
-                        ) {
-                            RowWithIcon(
-                                icon = {
-                                    if (showCompleted) {
-                                        Icon(LucideIcons.ChevronDown, null)
-                                    } else {
-                                        Icon(LucideIcons.ChevronRight, null)
-                                    }
+    LazyColumn(
+        contentPadding = PaddingValues(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        groupedTasks.forEach { (completed, tasks) ->
+            if (completed && completedCount > 0) {
+                stickyHeader {
+                    Box(
+                        Modifier
+                            .clip(MaterialTheme.shapes.large)
+                            .fillMaxWidth()
+                            .clickable { showCompleted = !showCompleted }
+                            .background(MaterialTheme.colorScheme.background)
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                    ) {
+                        RowWithIcon(
+                            icon = {
+                                if (showCompleted) {
+                                    Icon(LucideIcons.ChevronDown, null)
+                                } else {
+                                    Icon(LucideIcons.ChevronRight, null)
                                 }
-                            ) {
-                                Text(
-                                    "Completed (${completedCount})",
-                                    style = MaterialTheme.typography.titleSmall
-                                )
                             }
+                        ) {
+                            Text(
+                                "Completed (${completedCount})",
+                                style = MaterialTheme.typography.titleSmall
+                            )
                         }
                     }
                 }
-                items(tasks) { task ->
-                    TaskRow(
-                        taskLists,
-                        task,
-                        onToggleCompletionState = { onToggleCompletionState(task) },
-                        onEditTask = { onEditTask(task) },
-                        onUpdateDueDate = { onUpdateDueDate(task) },
-                        onNewSubTask = { onNewSubTask(task) },
-                        onUnindent = { onUnindent(task) },
-                        onIndent = { onIndent(task) },
-                        onMoveToTop = { onMoveToTop(task) },
-                        onMoveToList = { onMoveToList(task, it) },
-                        onMoveToNewList = { onMoveToNewList(task) },
-                        onDeleteTask = { onDeleteTask(task) },
-                    )
-                }
+            }
+            items(tasks) { task ->
+                TaskRow(
+                    taskLists,
+                    task,
+                    onToggleCompletionState = { onToggleCompletionState(task) },
+                    onEditTask = { onEditTask(task) },
+                    onUpdateDueDate = { onUpdateDueDate(task) },
+                    onNewSubTask = { onNewSubTask(task) },
+                    onUnindent = { onUnindent(task) },
+                    onIndent = { onIndent(task) },
+                    onMoveToTop = { onMoveToTop(task) },
+                    onMoveToList = { onMoveToList(task, it) },
+                    onMoveToNewList = { onMoveToNewList(task) },
+                    onDeleteTask = { onDeleteTask(task) },
+                )
             }
         }
     }
