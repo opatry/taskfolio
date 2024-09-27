@@ -62,10 +62,11 @@ class MainActivity : AppCompatActivity() {
             var signInStatus by remember { mutableStateOf(SignInStatus.Loading) }
             val credentialsStorage = koinInject<CredentialsStorage>()
             LaunchedEffect(Unit) {
-                signInStatus = if (credentialsStorage.load() != null) {
-                    SignInStatus.SignedIn
-                } else {
-                    SignInStatus.SignedOut
+                val credentials = credentialsStorage.load()
+                signInStatus = when {
+                    credentials == null -> SignInStatus.SignedOut
+                    credentials.accessToken.isNullOrBlank() -> SignInStatus.Skipped
+                    else -> SignInStatus.SignedIn
                 }
             }
 
@@ -78,25 +79,34 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
+                        SignInStatus.Skipped,
                         SignInStatus.SignedIn -> {
                             val viewModel = koinViewModel<TaskListsViewModel>()
-                            TasksApp(viewModel)
+                            TasksApp(signInStatus, viewModel)
                         }
 
                         SignInStatus.SignedOut -> {
                             val t0 = Clock.System.now()
-                            AuthorizationScreen { token ->
-                                signInStatus = SignInStatus.SignedIn
-                                coroutineScope.launch {
-                                    credentialsStorage.store(
-                                        TokenCache(
-                                            token.accessToken,
-                                            token.refreshToken,
-                                            (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                            AuthorizationScreen(
+                                onSkip = {
+                                    signInStatus = SignInStatus.Skipped
+                                    coroutineScope.launch {
+                                        credentialsStorage.store(TokenCache())
+                                    }
+                                },
+                                onSuccess = { token ->
+                                    signInStatus = SignInStatus.SignedIn
+                                    coroutineScope.launch {
+                                        credentialsStorage.store(
+                                            TokenCache(
+                                                token.accessToken,
+                                                token.refreshToken,
+                                                (t0 + token.expiresIn.seconds).toEpochMilliseconds()
+                                            )
                                         )
-                                    )
+                                    }
                                 }
-                            }
+                            )
                         }
                     }
                 }

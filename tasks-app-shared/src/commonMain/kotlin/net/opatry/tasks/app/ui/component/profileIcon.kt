@@ -67,12 +67,17 @@ sealed class ProfileState {
     data object Loading : ProfileState()
     data class Error(val message: String) : ProfileState()
     data class Success(val profile: UserInfo) : ProfileState()
+    data object Unsigned : ProfileState()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileIcon(httpClient: HttpClient?) {
-    var profileState by remember { mutableStateOf<ProfileState>(ProfileState.Loading) }
+    var profileState by remember {
+        mutableStateOf(
+            ProfileState.Loading.takeIf { httpClient != null } ?: ProfileState.Unsigned
+        )
+    }
 
     if (httpClient != null) {
         LaunchedEffect(Unit) {
@@ -96,6 +101,8 @@ fun ProfileIcon(httpClient: HttpClient?) {
         Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
             when (state) {
                 is ProfileState.Loading -> CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
+                // TODO button to allow sign-in
+                is ProfileState.Unsigned -> Icon(LucideIcons.CircleUserRound, null)
                 is ProfileState.Error -> {
                     TooltipBox(
                         positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),
@@ -112,6 +119,7 @@ fun ProfileIcon(httpClient: HttpClient?) {
                     }
                 }
 
+                // TODO button to allow sign-out
                 is ProfileState.Success -> {
                     TooltipBox(
                         positionProvider = TooltipDefaults.rememberRichTooltipPositionProvider(),

@@ -36,7 +36,7 @@ data class TokenCache(
     val refreshToken: String? = null,
 
     @SerialName("expiration_time_millis")
-    val expirationTimeMillis: Long,
+    val expirationTimeMillis: Long = 0,
 )
 
 

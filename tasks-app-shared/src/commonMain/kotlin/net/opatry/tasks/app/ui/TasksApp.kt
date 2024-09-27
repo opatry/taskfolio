@@ -52,6 +52,7 @@ import io.ktor.client.HttpClient
 import net.opatry.tasks.app.di.HttpClientName
 import net.opatry.tasks.app.ui.component.MissingScreen
 import net.opatry.tasks.app.ui.component.ProfileIcon
+import net.opatry.tasks.app.ui.screen.SignInStatus
 import net.opatry.tasks.app.ui.screen.TaskListsMasterDetail
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.app_name
@@ -76,8 +77,11 @@ enum class AppTasksScreen(
 }
 
 @Composable
-fun TasksApp(viewModel: TaskListsViewModel) {
-    val httpClient = koinInject<HttpClient>(named(HttpClientName.Tasks))
+fun TasksApp(signInStatus: SignInStatus, viewModel: TaskListsViewModel) {
+    val httpClient = when (signInStatus) {
+        SignInStatus.SignedIn -> koinInject<HttpClient>(named(HttpClientName.Tasks))
+        else -> null
+    }
 
     var selectedScreen by remember { mutableStateOf(AppTasksScreen.Tasks) }
 
@@ -123,8 +127,10 @@ fun TasksApp(viewModel: TaskListsViewModel) {
                                     .padding(horizontal = 16.dp),
                                 style = MaterialTheme.typography.titleMedium
                             )
-                            IconButton(onClick = viewModel::fetch) {
-                                Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
+                            if (signInStatus == SignInStatus.SignedIn) {
+                                IconButton(onClick = viewModel::fetch) {
+                                    Icon(LucideIcons.RefreshCw, null) // TODO stringRes("refresh")
+                                }
                             }
                             // FIXME make it an icon button for homogeneous padding (hacky)
                             //  but will be a button at the end of the day, so fine
