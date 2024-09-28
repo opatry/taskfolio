@@ -6,6 +6,8 @@ ktor = "2.3.12"
 compose-plugin = "1.7.0-dev1840"
 room = "2.7.0-alpha08"
 sqlite = "2.5.0-alpha08"
+koin = "4.0.0"
+coil = "3.0.0-alpha10"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -30,6 +32,17 @@ androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.r
 
 jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.0" }
 
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-core-viewmodel = { module = "io.insert-koin:koin-core-viewmodel" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-androidx-startup = { module = "io.insert-koin:koin-androidx-startup" }
+koin-compose = { module = "io.insert-koin:koin-compose" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
+
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
 ktor-client = [
@@ -40,6 +53,8 @@ ktor-client = [
     "ktor-client-logging",
     "ktor-serialization-kotlinx-json",
 ]
+
+coil = ["coil-compose", "coil-network"]
 
 [plugins]
 jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

@@ -22,8 +22,8 @@
 
 package net.opatry.tasks.app.ui
 
+import AlignJustify
 import Calendar
-import Check
 import ListTodo
 import LucideIcons
 import Search
@@ -51,6 +51,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.component.MissingScreen
+import net.opatry.tasks.app.ui.component.ProfileIcon
+import net.opatry.tasks.app.ui.screen.TaskListsMasterDetail
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.app_name
 import net.opatry.tasks.resources.navigation_calendar
@@ -87,6 +89,19 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
     }
 
     NavigationSuiteScaffold(navigationSuiteItems = {
+        // Only if expanded state
+        if (false) {
+            item(
+                selected = false,
+                onClick = { },
+                enabled = false,
+                icon = {
+                    Icon(LucideIcons.AlignJustify, null)
+                },
+                alwaysShowLabel = false,
+                modifier = Modifier.padding(vertical = 12.dp),
+            )
+        }
         AppTasksScreen.entries.forEach { screen ->
             item(
                 selected = selectedScreen == screen,
@@ -115,10 +130,11 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
                                     .padding(horizontal = 16.dp),
                                 style = MaterialTheme.typography.titleMedium
                             )
+                            ProfileIcon(userViewModel)
                         }
                     }
 
-                    MissingScreen("Task list master detail", LucideIcons.Check)
+                    TaskListsMasterDetail(tasksViewModel)
                 }
 
                 AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)

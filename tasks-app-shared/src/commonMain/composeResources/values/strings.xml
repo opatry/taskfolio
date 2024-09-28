@@ -27,4 +27,18 @@
     <string name="navigation_calendar">Calendar</string>
     <string name="navigation_search">Search</string>
     <string name="navigation_settings">Settings</string>
+
+    <string name="onboarding_screen_authorize_explanation">You need to give the authorization to access your Google Tasks.</string>
+    <string name="onboarding_screen_skip">Skip</string>
+    <string name="onboarding_screen_authorize_cta">Authorize</string>
+
+    <string name="default_task_list_title">My tasks</string>
+    <string name="task_lists_screen_empty_state_title">No task lists</string>
+    <string name="task_lists_screen_empty_list_title">No tasks yet</string>
+    <string name="task_lists_screen_empty_list_desc">Start planning to keep track of your pending tasks.</string>
+    <string name="task_lists_screen_add_task">Add task</string>
+
+    <string name="search_screen_tbd">Search</string>
+
+    <string name="settings_screen_tbd">Settings</string>
 </resources>
