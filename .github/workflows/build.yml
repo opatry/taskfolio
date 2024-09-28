@@ -32,7 +32,11 @@ jobs:
         add-job-summary-as-pr-comment: on-failure
 
     - name: 🔨 Build Android App 📱
-      run: ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: |
+            ./_ci/decrypt_secrets.sh
+            ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease
 
     - name: 🔨 Build Desktop App 🖥️
       run: ./gradlew --no-daemon :tasks-app-desktop:assemble

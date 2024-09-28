@@ -25,6 +25,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 val versionCodeValue = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
@@ -133,6 +135,9 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     implementation(libs.kotlinx.serialization)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 
     implementation(project(":google:tasks"))
     implementation(project(":tasks-app-shared"))

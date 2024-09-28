@@ -58,6 +58,9 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.2" }
 
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.3.0" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
 ktor-client = [
@@ -82,3 +85,5 @@ jetbrains-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose"
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.2" }

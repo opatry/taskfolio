@@ -16,6 +16,24 @@ A basic TODO list application based on [Google Tasks REST API](https://developer
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [Coil](https://coil-kt.github.io/coil/)
 
+## Local development
+
+<details>
+<summary>See details…</summary>
+Decrypt `*.gpg` files needed for development, and copy decrypted versions in proper places.
+
+```bash
+PLAYSTORE_SECRET_PASSPHRASE=MY_SECRET ./_ci/decrypt_secrets.sh
+```
+
+### Updating `google-services.json`
+
+The production `google-services.json` file is ignored by SCM to avoid exposing API keys in public repository.
+To update it, download the new version, encrypt it using `gpg --symmetric --cipher-algo AES256 google-services.json` 
+and store this in `_ci/google-services.json.gpg`.
+The `decrypt_secrets.sh` will take it into account.
+</details>
+
 ## License
 
 ```
