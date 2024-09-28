@@ -30,3 +30,5 @@ tasks-app-android/google-services.json
 client_secret_*.apps.googleusercontent.com.json
 
 _ci/*.keystore
+_ci/api-*.json
+bundletool-*.jar
