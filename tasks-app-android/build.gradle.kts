@@ -33,7 +33,6 @@ val versionCodeValue = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
 
 android {
     namespace = "net.opatry.tasks.app"
-    compileSdk = 34
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

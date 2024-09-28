@@ -81,6 +81,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
+            implementation(project(":tasks-core"))
+
             implementation(project(":lucide-icons"))
         }
     }
@@ -99,9 +101,9 @@ dependencies {
 
 android {
     namespace = "net.opatry.tasks"
-    compileSdk = 34
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = 24
+        minSdk = libs.versions.minSdk.get().toInt()
     }
 }

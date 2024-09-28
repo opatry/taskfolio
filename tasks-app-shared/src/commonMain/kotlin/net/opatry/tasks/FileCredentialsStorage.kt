@@ -22,28 +22,6 @@
 
 package net.opatry.tasks
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-
-@Serializable
-data class TokenCache(
-
-    @SerialName("access_token")
-    val accessToken: String? = null,
-
-    @SerialName("refresh_token")
-    val refreshToken: String? = null,
-
-    @SerialName("expiration_time_millis")
-    val expirationTimeMillis: Long = 0,
-)
-
-
-interface CredentialsStorage {
-    suspend fun load(): TokenCache?
-    suspend fun store(tokenCache: TokenCache)
-}
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 /**

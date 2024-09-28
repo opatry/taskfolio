@@ -20,13 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.data
+package net.opatry.tasks
 
-import net.opatry.google.tasks.TaskListsApi
-import net.opatry.google.tasks.TasksApi
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-class TaskRemoteDataSource(
-    private val taskListsApi: TaskListsApi,
-    private val tasksApi: TasksApi,
-) {
+
+@Serializable
+data class TokenCache(
+
+    @SerialName("access_token")
+    val accessToken: String? = null,
+
+    @SerialName("refresh_token")
+    val refreshToken: String? = null,
+
+    @SerialName("expiration_time_millis")
+    val expirationTimeMillis: Long = 0,
+)
+
+
+interface CredentialsStorage {
+    suspend fun load(): TokenCache?
+    suspend fun store(tokenCache: TokenCache)
 }

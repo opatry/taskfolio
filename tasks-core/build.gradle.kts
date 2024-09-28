@@ -20,37 +20,29 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
+
+plugins {
+    alias(libs.plugins.jetbrains.kotlin.multiplatform)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.androidx.room)
+}
+
+kotlin {
+    jvm()
+
+    jvmToolchain(17)
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+
+            api(libs.kotlinx.datetime)
+            implementation(libs.bundles.ktor.client)
+            implementation(libs.bundles.ktor.server)
+            implementation(project(":google:oauth"))
+            implementation(project(":google:tasks"))
+
+            implementation(libs.androidx.room.runtime)
         }
-        mavenCentral()
-        gradlePluginPortal()
     }
 }
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
-
-rootProject.name = "google-tasks-kmp"
-
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")
-include(":tasks-app-desktop")
-include(":tasks-app-android")
