@@ -20,20 +20,26 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.google.profile.model
 
-rootProject.name = "google-tasks-kmp"
 
-include(":google:oauth")
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserInfo(
+    @SerialName("id")
+    val id: String,
+    @SerialName("name")
+    val name: String = "",
+    @SerialName("given_name")
+    val givenName: String = "",
+    @SerialName("family_name")
+    val familyName: String = "",
+    @SerialName("picture")
+    val picture: String? = null,
+    @SerialName("email")
+    val email: String? = null,
+    @SerialName("verified_email")
+    val isEmailVerified: Boolean? = null,
+)
