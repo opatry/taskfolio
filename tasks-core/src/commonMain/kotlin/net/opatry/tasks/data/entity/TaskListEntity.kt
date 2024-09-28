@@ -20,34 +20,26 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.tasks.data.entity
 
-rootProject.name = "google-tasks-kmp"
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.datetime.Instant
 
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
+
+@Entity(tableName = "task_list")
+data class TaskListEntity(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "local_id")
+    val id: Long = 0,
+    @ColumnInfo(name = "remote_id") // TODO should be unique when not null
+    val remoteId: String? = null,
+    @ColumnInfo(name = "etag", defaultValue = "")
+    val etag: String = "",
+    @ColumnInfo(name = "title")
+    val title: String,
+    @ColumnInfo(name = "update_date")
+    val lastUpdateDate: Instant,
+)
+
