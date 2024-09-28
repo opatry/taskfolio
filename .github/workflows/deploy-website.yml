@@ -1,0 +1,37 @@
+name: 🌎 Deploy Website
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: actions/checkout@v4
+
+      - name: 🐙 Setup Github Pages
+        uses: actions/configure-pages@v5
+
+      - name: 🧪 Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: website
+          destination: _site
+
+      - name: 🚀 Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
