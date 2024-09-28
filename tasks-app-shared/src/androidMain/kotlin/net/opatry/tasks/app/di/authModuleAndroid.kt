@@ -22,8 +22,34 @@
 
 package net.opatry.tasks.app.di
 
+import android.content.Context
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import net.opatry.google.auth.GoogleAuth
+import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.google.auth.HttpGoogleAuthenticator.ApplicationConfig
+import net.opatry.tasks.app.auth.PlayServicesGoogleAuthenticator
 import org.koin.dsl.module
 
 
+@OptIn(ExperimentalSerializationApi::class)
 actual fun authModule(gcpClientId: String) = module {
+    single<GoogleAuthenticator> {
+        val credentialsFilename = "client_secret_${gcpClientId}.json"
+        val context = get<Context>()
+        val credentials = context.assets.open(credentialsFilename).use { inputStream ->
+            // expects a `web` credentials, if `installed` is needed, inject another way
+            requireNotNull(Json.decodeFromStream<GoogleAuth>(inputStream).webCredentials)
+        }
+
+        val config = ApplicationConfig(
+            redirectUrl = credentials.redirectUris.first(),
+            clientId = credentials.clientId,
+            clientSecret = credentials.clientSecret,
+            authUri = credentials.authUri,
+            tokenUri = credentials.tokenUri,
+        )
+        PlayServicesGoogleAuthenticator(get(), config)
+    }
 }

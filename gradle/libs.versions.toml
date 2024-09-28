@@ -61,6 +61,8 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.3.0" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.2.0" }
+
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
 ktor-client = [

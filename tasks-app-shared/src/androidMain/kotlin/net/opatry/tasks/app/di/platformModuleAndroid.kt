@@ -22,8 +22,27 @@
 
 package net.opatry.tasks.app.di
 
+import android.content.Context
+import androidx.room.Room
+import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.FileCredentialsStorage
+import net.opatry.tasks.data.TasksAppDatabase
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import java.io.File
 
 actual fun platformModule(): Module = module {
+    single {
+        val context = get<Context>()
+        val appContext = context.applicationContext
+        val dbFile = appContext.getDatabasePath("tasks.db")
+        Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
+    }
+
+    single<CredentialsStorage> {
+        // TODO store in database
+        val context = get<Context>()
+        val credentialsFile = File(context.cacheDir, "google_auth_token_cache.json")
+        FileCredentialsStorage(credentialsFile.absolutePath)
+    }
 }

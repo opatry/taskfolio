@@ -139,6 +139,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
 
+    implementation(libs.play.services.auth)
+
+    implementation(project(":google:oauth"))
     implementation(project(":google:tasks"))
     implementation(project(":tasks-app-shared"))
 }

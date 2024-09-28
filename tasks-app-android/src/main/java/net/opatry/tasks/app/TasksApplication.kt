@@ -23,12 +23,15 @@
 package net.opatry.tasks.app
 
 import android.app.Application
+import net.opatry.tasks.app.di.authModule
 import net.opatry.tasks.app.di.dataModule
+import net.opatry.tasks.app.di.networkModule
 import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksAppModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androix.startup.KoinStartup.onKoinStartup
 
+private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
 
 class TasksApplication : Application() {
 
@@ -39,6 +42,8 @@ class TasksApplication : Application() {
             modules(
                 platformModule(),
                 dataModule,
+                authModule(GCP_CLIENT_ID),
+                networkModule,
                 tasksAppModule,
             )
         }
