@@ -20,15 +20,16 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-    alias(libs.plugins.jetbrains.kotlin.compose.compiler) apply false
-    alias(libs.plugins.jetbrains.compose) apply false
-    alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
+package net.opatry.tasks.app.ui.component
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import net.opatry.google.auth.GoogleAuthenticator
+
+
+@Composable
+actual fun AuthorizeGoogleTasksButton(
+    modifier: Modifier,
+    onSuccess: (GoogleAuthenticator.OAuthToken
+) -> Unit) {
 }

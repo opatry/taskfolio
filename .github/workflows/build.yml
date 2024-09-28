@@ -31,6 +31,9 @@ jobs:
       with:
         add-job-summary-as-pr-comment: on-failure
 
+    - name: 🔨 Build Android App 📱
+      run: ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease
+
     - name: 🔨 Build Desktop App 🖥️
       run: ./gradlew --no-daemon :tasks-app-desktop:assemble
 
