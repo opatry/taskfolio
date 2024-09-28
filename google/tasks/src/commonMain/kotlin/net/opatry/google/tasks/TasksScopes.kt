@@ -20,21 +20,9 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.google.tasks
 
-rootProject.name = "google-tasks-kmp"
-
-include(":google:oauth")
-include(":google:tasks")
+object TasksScopes {
+    const val Tasks = "https://www.googleapis.com/auth/tasks"
+    const val TasksReadOnly = "https://www.googleapis.com/auth/tasks.readonly"
+}

@@ -20,21 +20,22 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
+plugins {
+    alias(libs.plugins.jetbrains.kotlin.multiplatform)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
-rootProject.name = "google-tasks-kmp"
+kotlin {
+    jvm()
 
-include(":google:oauth")
-include(":google:tasks")
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.bundles.ktor.client)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+    }
+}

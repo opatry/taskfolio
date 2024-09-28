@@ -20,21 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.google.tasks.model
 
-rootProject.name = "google-tasks-kmp"
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-include(":google:oauth")
-include(":google:tasks")
+@Serializable
+/**
+ * Information about the source of the [task assignment](https://developers.google.com/tasks/reference/rest/v1/tasks#assignmentinfo) (Document, Chat Space).
+ */
+data class AssignmentInfo(
+    @SerialName("linkToTask")
+    val linkToTask: String,
+    @SerialName("surfaceType")
+    val surfaceType: ContextType,
+
+    // TODO Union field
+    @SerialName("driveResourceInfo")
+    val driveResourceInfo: SurfaceInfo.DriveResourceInfo? = null,
+    @SerialName("spaceInfo")
+    val spaceInfo: SurfaceInfo.SpaceInfo? = null,
+)
+

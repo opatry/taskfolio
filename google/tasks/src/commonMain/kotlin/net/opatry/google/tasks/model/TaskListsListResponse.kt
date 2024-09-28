@@ -20,21 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.google.tasks.model
 
-rootProject.name = "google-tasks-kmp"
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-include(":google:oauth")
-include(":google:tasks")
+@Serializable
+/**
+ * https://developers.google.com/tasks/reference/rest/v1/tasklists/list#response-body
+ *
+ * @property kind Type of the resource. This is always [ResourceType.TaskLists].
+ * @property etag ETag of the resource.
+ * @property nextPageToken Token that can be used to request the next page of this result.
+ * @property items Collection of task lists.
+ */
+data class TaskListsListResponse(
+    @SerialName("kind")
+    val kind: ResourceType = ResourceType.TaskLists,
+    @SerialName("etag")
+    val etag: String,
+    @SerialName("nextPageToken")
+    val nextPageToken: String? = null,
+    @SerialName("items")
+    val items: List<TaskList>,
+)

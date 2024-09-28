@@ -20,21 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.google.tasks.model
 
-rootProject.name = "google-tasks-kmp"
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-include(":google:oauth")
-include(":google:tasks")
+@Serializable
+enum class ResourceType {
+    @SerialName("tasks#taskList")
+    TaskList,
+    @SerialName("tasks#taskLists")
+    TaskLists,
+    @SerialName("tasks#task")
+    Task,
+    @SerialName("tasks#tasks")
+    Tasks,
+}
