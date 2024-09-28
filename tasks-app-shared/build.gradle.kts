@@ -24,6 +24,14 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.jetbrains.kotlin.compose.compiler)
+    alias(libs.plugins.jetbrains.compose)
+}
+
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "net.opatry.tasks.resources"
+    generateResClass = auto
 }
 
 kotlin {
@@ -40,6 +48,13 @@ kotlin {
             implementation(libs.bundles.ktor.server)
             implementation(project(":google:oauth"))
             implementation(project(":google:tasks"))
+
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            api(compose.components.resources)
+            implementation(compose.material3AdaptiveNavigationSuite)
 
             implementation(libs.jetbrains.lifecycle.viewmodel.compose)
 
