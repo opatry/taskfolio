@@ -46,6 +46,9 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.compose.m3.adaptive)
+            implementation(libs.androidx.compose.m3.adaptive.layout)
+            implementation(libs.androidx.compose.m3.adaptive.navigation)
         }
 
         commonMain.dependencies {

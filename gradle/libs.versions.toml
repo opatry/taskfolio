@@ -48,6 +48,10 @@ koin-androidx-startup = { module = "io.insert-koin:koin-androidx-startup" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 
+androidx-compose-m3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version = "1.0.0" }
+androidx-compose-m3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version = "1.0.0" }
+androidx-compose-m3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version = "1.0.0" }
+
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
 

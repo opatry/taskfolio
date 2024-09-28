@@ -22,9 +22,82 @@
 
 package net.opatry.tasks.app.ui.screen
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
+import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
+import net.opatry.tasks.app.ui.component.TaskListDetail
+import net.opatry.tasks.app.ui.component.TaskListsColumn
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.default_task_list_title
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
+    val taskLists by viewModel.taskLists.collectAsState(emptyList())
+
+    // need to store a saveable (Serializable/Parcelable) object
+    // rememberListDetailPaneScaffoldNavigator, under the hood uses rememberSaveable with it
+    // we use the TaskListUIModel.id as the key to save the state of the navigator
+    val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
+
+    BackHandler(navigator.canNavigateBack()) {
+        navigator.navigateBack()
+    }
+
+    ListDetailPaneScaffold(
+        directive = navigator.scaffoldDirective,
+        value = navigator.scaffoldValue,
+        listPane = {
+            AnimatedPane {
+                if (taskLists.isEmpty()) {
+                    // TODO dialog to ask for the new task list name
+                    val newTaskListName = stringResource(Res.string.default_task_list_title)
+                    NoTaskListEmptyState {
+                        viewModel.createTaskList(newTaskListName)
+                    }
+                } else {
+                    Row {
+                        TaskListsColumn(
+                            taskLists,
+                            selectedItem = taskLists.find { it.id == navigator.currentDestination?.content },
+                            onItemClick = { taskList ->
+                                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id)
+                            }
+                        )
+
+                        if (navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded) {
+                            VerticalDivider()
+                        }
+                    }
+                }
+            }
+        },
+        detailPane = {
+            AnimatedPane {
+                taskLists.find { it.id == navigator.currentDestination?.content }?.let { taskList ->
+                    TaskListDetail(viewModel, taskList) { targetedTaskList ->
+                        when (targetedTaskList) {
+                            null -> navigator.navigateBack()
+                            else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id)
+                        }
+                    }
+                } ?: run {
+                    NoTaskListSelectedEmptyState()
+                }
+            }
+        }
+    )
 }
