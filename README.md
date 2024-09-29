@@ -2,7 +2,10 @@
 
 # Taskfolio
 
-A basic TODO list application based on [Google Tasks REST API](https://developers.google.com/tasks/reference/rest) to showcase [KMP](https://kotlinlang.org/docs/multiplatform.html) app capabilities.
+[**Taskfolio**](https://opatry.github.io/taskfolio) is an Android task management app built using [Google Tasks API](https://developers.google.com/tasks/reference/rest). Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
+
+| ![](assets/screens/task_lists_light.png) | ![](assets/screens/groceries_light.png) | ![](assets/screens/home_dark.png)  |
+| --------------------------------------- |--------------------------------------- | ---------------------------------- |
 
 [![Tasks app](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
 
