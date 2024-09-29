@@ -76,6 +76,11 @@ android {
             manifestPlaceholders["crashlyticsEnabled"] = false
         }
 
+        create("demo") {
+            initWith(getByName("dev"))
+            applicationIdSuffix = ".demo"
+        }
+
         create("store") {
             dimension = "target"
         }

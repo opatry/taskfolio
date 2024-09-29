@@ -1,0 +1,23 @@
+{
+  "project_info": {
+    "project_number": "44853535682",
+    "project_id": "tasks-app-c632e",
+    "storage_bucket": "tasks-app-c632e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44853535682:android:912604c7085bbeb11e2c5b",
+        "android_client_info": {
+          "package_name": "net.opatry.tasks.app.demo"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ]
+    }
+  ],
+  "configuration_version": "1"
+}
