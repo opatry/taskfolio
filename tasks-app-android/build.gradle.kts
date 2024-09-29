@@ -168,6 +168,8 @@ dependencies {
 
     implementation(projects.google.oauth)
     implementation(projects.google.tasks)
+    // FIXME could be only for `demoImplementation` if init code was isolated in proper source set
+    implementation(projects.tasksCore)
     implementation(projects.tasksAppShared)
 
     testImplementation(kotlin("test"))

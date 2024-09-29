@@ -22,4 +22,30 @@
 
 <resources>
     <string name="app_name">Taskfolio</string>
+
+    <!-- FIXME to be moved in either demo.db (localized) or src/demo/values/strings.xml -->
+    <string name="demo_task_list_default">👩‍💼 My Tasks</string>
+    <string name="demo_task_list_default_task1">Plan weekend getaway 🏖️</string>
+    <string name="demo_task_list_default_task1_notes">"• Find accommodations\n• Check weather"️</string>
+    <string name="demo_task_list_default_task2">Finish reading book 📖️</string>
+    <string name="demo_task_list_default_task3">Organize desk 📁️</string>
+    <string name="demo_task_list_default_task3_notes">"• Sort out papers\n• Set up new monitor"</string>
+    <string name="demo_task_list_groceries">🛒 Groceries</string>
+    <string name="demo_task_list_groceries_task1">Milk 🥛</string>
+    <string name="demo_task_list_groceries_task2">Cheese 🧀</string>
+    <string name="demo_task_list_groceries_task3">Carrots 🥕</string>
+    <string name="demo_task_list_groceries_task4">Bread 🥖</string>
+    <string name="demo_task_list_groceries_task4_notes">Whole wheat</string>
+    <string name="demo_task_list_home">🏡 Home</string>
+    <string name="demo_task_list_home_task1">Fix leaking faucet 🚰</string>
+    <string name="demo_task_list_home_task2">Mow the lawn 🌱</string>
+    <string name="demo_task_list_home_task3">Garage appointment 🛠️ 🚗</string>
+    <string name="demo_task_list_home_task3_notes">"• Oil change\n• Check brakes…\n• Tire rotation"</string>
+    <string name="demo_task_list_work">💼 Work</string>
+    <string name="demo_task_list_work_task1">📑 Finish Acme report</string>
+    <string name="demo_task_list_work_task1_notes">Include last quarter’s stats</string>
+    <string name="demo_task_list_work_task2">Attend team meeting</string>
+    <string name="demo_task_list_work_task2_notes">Discuss project timelines</string>
+    <string name="demo_task_list_work_task3">Review project proposals</string>
+    <string name="demo_task_list_work_task3_notes">Focus on budget analysis</string>
 </resources>
