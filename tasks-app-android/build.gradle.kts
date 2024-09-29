@@ -170,6 +170,10 @@ dependencies {
     implementation(projects.google.tasks)
     implementation(projects.tasksAppShared)
 
+    "demoImplementation"(projects.tasksCore) {
+        because("needed for prefilled content for screenshot generation")
+    }
+
     testImplementation(kotlin("test"))
     testImplementation(libs.koin.test)
     testImplementation(libs.ktor.client.core) {

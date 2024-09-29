@@ -34,6 +34,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androix.startup.KoinStartup
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.koinConfiguration
+import net.opatry.tasks.app.init.FlavorCustomInit.init as flavorInit
 
 private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
 
@@ -51,5 +52,11 @@ class TasksApplication : Application(), KoinStartup {
             networkModule,
             tasksAppModule,
         )
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        flavorInit()
     }
 }
