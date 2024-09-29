@@ -111,8 +111,8 @@ import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
-import net.opatry.tasks.app.ui.tooling.TasksAppPreview
-import net.opatry.tasks.app.ui.tooling.TasksAppThemedPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
@@ -778,10 +778,10 @@ private fun TaskRowScaffold(
     )
 }
 
-@TasksAppPreview
+@TaskfolioPreview
 @Composable
 private fun TaskRowDatesPreview() {
-    TasksAppThemedPreview {
+    TaskfolioThemedPreview {
         Column {
             TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(180, DateTimeUnit.DAY))
             TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(3, DateTimeUnit.DAY))
@@ -794,10 +794,10 @@ private fun TaskRowDatesPreview() {
     }
 }
 
-@TasksAppPreview
+@TaskfolioPreview
 @Composable
 private fun TaskRowValuesPreview() {
-    TasksAppThemedPreview {
+    TaskfolioThemedPreview {
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TaskRowScaffold(dueDate = null)
             TaskRowScaffold(notes = "This is some details")

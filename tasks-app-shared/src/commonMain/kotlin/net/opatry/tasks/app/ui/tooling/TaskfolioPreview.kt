@@ -24,7 +24,7 @@ package net.opatry.tasks.app.ui.tooling
 
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import net.opatry.tasks.app.ui.theme.TasksAppTheme
+import net.opatry.tasks.app.ui.theme.TasksfolioTheme
 
 @Retention(AnnotationRetention.BINARY)
 @Target(
@@ -45,11 +45,11 @@ import net.opatry.tasks.app.ui.theme.TasksAppTheme
 //    showBackground = true,
 //    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
 //    device = Devices.NEXUS_6)
-annotation class TasksAppPreview
+annotation class TaskfolioPreview
 
 @Composable
-fun TasksAppThemedPreview(content: @Composable () -> Unit) {
-    TasksAppTheme {
+fun TaskfolioThemedPreview(content: @Composable () -> Unit) {
+    TasksfolioTheme {
         Surface {
             content()
         }

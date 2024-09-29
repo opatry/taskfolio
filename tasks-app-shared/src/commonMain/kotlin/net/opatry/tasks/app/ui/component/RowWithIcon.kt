@@ -37,8 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import net.opatry.tasks.app.ui.tooling.TasksAppPreview
-import net.opatry.tasks.app.ui.tooling.TasksAppThemedPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 
 @Composable
@@ -65,10 +65,10 @@ fun RowWithIcon(icon: (@Composable () -> Unit)? = null, spacerSize: Dp = 24.dp, 
 }
 
 
-@TasksAppPreview
+@TaskfolioPreview
 @Composable
 private fun RowWithIconPreview() {
-    TasksAppThemedPreview {
+    TaskfolioThemedPreview {
         Column {
             RowWithIcon("Edit", LucideIcons.Pen)
             RowWithIcon("Hide")

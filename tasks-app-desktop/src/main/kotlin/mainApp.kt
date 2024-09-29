@@ -50,7 +50,7 @@ import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
-import net.opatry.tasks.app.ui.theme.TasksAppTheme
+import net.opatry.tasks.app.ui.theme.TasksfolioTheme
 import org.koin.compose.KoinApplication
 import org.koin.compose.viewmodel.koinViewModel
 import java.awt.Dimension
@@ -77,7 +77,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             state = windowState,
-            title = "Tasks App",
+            title = "Taskfolio",
         ) {
             if (window.minimumSize != minSize) window.minimumSize = minSize
 
@@ -117,7 +117,7 @@ fun main() {
                     }
                 }
 
-                TasksAppTheme {
+                TasksfolioTheme {
                     Surface {
                         when (userState) {
                             null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
