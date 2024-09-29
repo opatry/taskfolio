@@ -40,7 +40,7 @@ actual fun platformModule(target: String): Module = module {
         val context = get<Context>()
         val appContext = context.applicationContext
         val dbFile = appContext.getDatabasePath("tasks${dbNameSuffix}.db")
-        if (target == "test" && dbFile.exists()) {
+        if (target in arrayOf("test", "demo") && dbFile.exists()) {
             dbFile.delete()
         }
         Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
