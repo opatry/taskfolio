@@ -1,1 +1,1 @@
-Sitemap: https://opatry.github.io/task-craftr/sitemap.xml
+Sitemap: https://opatry.github.io/taskfolio/sitemap.xml
