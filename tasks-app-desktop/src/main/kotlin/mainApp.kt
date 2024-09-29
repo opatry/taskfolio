@@ -103,7 +103,7 @@ fun main() {
 
             KoinApplication(application = {
                 modules(
-                    platformModule(),
+                    platformModule("desktop"),
                     dataModule,
                     authModule(GCP_CLIENT_ID),
                     networkModule,

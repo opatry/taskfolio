@@ -40,7 +40,7 @@ class TasksApplication : Application() {
         onKoinStartup {
             androidContext(this@TasksApplication)
             modules(
-                platformModule(),
+                platformModule(BuildConfig.FLAVOR),
                 dataModule,
                 authModule(GCP_CLIENT_ID),
                 networkModule,
