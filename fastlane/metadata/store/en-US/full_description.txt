@@ -1,4 +1,15 @@
-TODO Application toy project to showcase Android development skills.
-This is not an application meant to be used on a daily basis.
+<b>Taskfolio</b> is a simple and intuitive task management app designed to seamlessly sync with Google Tasks while offering full offline-first capabilities.
+This app was built to showcase my expertise in modern Android development, using the latest tools and best practices.
 
-It synchronizes with Google Tasks.
+Key Features:
+
+•	Offline-first: Manage tasks even when you’re not connected, with automatic syncing when back online.
+•	Google Tasks integration: Sync your tasks effortlessly with your Google account.
+•	Clean, intuitive UI: Built with Jetpack Compose and Material Design 3 for a smooth user experience.
+
+<b>Taskfolio</b> is not just another task manager, it’s a showcase of my Android development skills.
+Whether it’s robust architecture using MVVM, secure API integration, or a seamless user experience, this app demonstrates how I approach building efficient,
+well-architected Android applications.
+
+If you’re interested in learning more about how this project was built or in seeing the full codebase,
+visit the project’s <a href="https://github.com/opatry/taskfolio">GitHub repository</a>!
