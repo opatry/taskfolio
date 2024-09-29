@@ -170,6 +170,10 @@ dependencies {
     implementation(projects.google.tasks)
     implementation(projects.tasksAppShared)
 
+    "demoImplementation"(projects.tasksCore) {
+        because("needed for prefilled content for screenshot generation")
+    }
+
     debugImplementation(libs.androidx.ui.test.manifest)
 
     androidTestImplementation(libs.androidx.ui.test.junit4)
