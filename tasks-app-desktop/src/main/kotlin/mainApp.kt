@@ -137,7 +137,7 @@ fun main() {
                 modules(
                     utilModule,
                     loggingModule,
-                    platformModule(),
+                    platformModule("desktop"),
                     dataModule,
                     authModule(GCP_CLIENT_ID),
                     networkModule,

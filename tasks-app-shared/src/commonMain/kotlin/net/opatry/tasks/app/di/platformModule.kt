@@ -24,4 +24,4 @@ package net.opatry.tasks.app.di
 
 import org.koin.core.module.Module
 
-expect fun platformModule(): Module
+expect fun platformModule(flavor: String): Module

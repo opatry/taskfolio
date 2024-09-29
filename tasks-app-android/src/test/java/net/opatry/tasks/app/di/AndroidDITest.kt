@@ -53,7 +53,7 @@ class AndroidDITest {
             includes(
                 utilModule,
                 loggingModule,
-                platformModule(),
+                platformModule("flavor"),
                 dataModule,
                 authModule("some_id"),
                 networkModule,
@@ -77,7 +77,7 @@ class AndroidDITest {
 
     @Test
     fun `verify platform module`() {
-        platformModule().verify()
+        platformModule("flavor").verify()
     }
 
     @Test

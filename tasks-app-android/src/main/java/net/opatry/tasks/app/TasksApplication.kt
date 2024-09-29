@@ -45,7 +45,7 @@ class TasksApplication : Application(), KoinStartup {
         modules(
             utilModule,
             loggingModule,
-            platformModule(),
+            platformModule(BuildConfig.FLAVOR),
             dataModule,
             authModule(GCP_CLIENT_ID),
             networkModule,
