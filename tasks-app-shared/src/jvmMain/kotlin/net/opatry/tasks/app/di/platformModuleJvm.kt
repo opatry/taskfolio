@@ -20,35 +20,31 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
+package net.opatry.tasks.app.di
+
+import androidx.room.Room
+import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.FileCredentialsStorage
+import net.opatry.tasks.data.TasksAppDatabase
+import org.koin.core.module.Module
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import java.io.File
+
+actual fun platformModule(): Module = module {
+    single(named("app_root_dir")) {
+        val userHome = File(System.getProperty("user.home"))
+        File(userHome, ".tasksApp")
+    }
+
+    single {
+        val dbFile = File(get<File>(named("app_root_dir")), "tasks.db")
+        Room.databaseBuilder<TasksAppDatabase>(dbFile.absolutePath)
+    }
+
+    single<CredentialsStorage> {
+        // TODO store in database
+        val credentialsFile = File(get<File>(named("app_root_dir")), "google_auth_token_cache.json")
+        FileCredentialsStorage(credentialsFile.absolutePath)
     }
 }
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
-
-rootProject.name = "google-tasks-kmp"
-
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")

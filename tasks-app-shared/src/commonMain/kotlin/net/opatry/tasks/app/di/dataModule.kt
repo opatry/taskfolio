@@ -20,35 +20,34 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
+package net.opatry.tasks.app.di
+
+import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.coroutines.Dispatchers
+import net.opatry.tasks.data.TasksAppDatabase
+import org.koin.dsl.module
+
+private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
+    .setDriver(BundledSQLiteDriver())
+    .fallbackToDestructiveMigration(dropAllTables = true)
+    .setQueryCoroutineContext(Dispatchers.IO)
+    .build()
+
+val dataModule = module {
+    single {
+        getRoomDatabase(get())
+    }
+
+    factory {
+        get<TasksAppDatabase>().getTaskListDao()
+    }
+
+    factory {
+        get<TasksAppDatabase>().getTaskDao()
+    }
+
+    factory {
+        get<TasksAppDatabase>().getUserDao()
     }
 }
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
-
-rootProject.name = "google-tasks-kmp"
-
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")

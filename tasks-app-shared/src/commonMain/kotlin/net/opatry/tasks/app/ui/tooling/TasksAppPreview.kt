@@ -20,35 +20,38 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
+package net.opatry.tasks.app.ui.tooling
+
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import net.opatry.tasks.app.ui.theme.TasksAppTheme
+
+@Retention(AnnotationRetention.BINARY)
+@Target(
+    AnnotationTarget.ANNOTATION_CLASS,
+    AnnotationTarget.FUNCTION
+)
+//@Preview(
+//    name = "Light",
+//    widthDp = 400,
+//    heightDp = 600,
+//    showBackground = true,
+//    uiMode = UI_MODE_NIGHT_NO or UI_MODE_TYPE_NORMAL,
+//    device = Devices.NEXUS_6)
+//@Preview(
+//    name = "Night",
+//    widthDp = 400,
+//    heightDp = 600,
+//    showBackground = true,
+//    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
+//    device = Devices.NEXUS_6)
+annotation class TasksAppPreview
+
+@Composable
+fun TasksAppThemedPreview(content: @Composable () -> Unit) {
+    TasksAppTheme {
+        Surface {
+            content()
         }
-        mavenCentral()
-        gradlePluginPortal()
     }
 }
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
-
-rootProject.name = "google-tasks-kmp"
-
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")

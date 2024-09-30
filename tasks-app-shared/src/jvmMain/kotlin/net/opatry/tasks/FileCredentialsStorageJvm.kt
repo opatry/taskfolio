@@ -20,35 +20,34 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
+package net.opatry.tasks
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
+
+
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual class FileCredentialsStorage actual constructor(filepath: String) : CredentialsStorage {
+    private val file: File = File(filepath)
+
+    override suspend fun load(): TokenCache? {
+        return withContext(Dispatchers.IO) {
+            if (file.isFile) {
+                file.readText().let(Json::decodeFromString)
+            } else {
+                null
             }
         }
-        mavenCentral()
-        gradlePluginPortal()
+    }
+
+    override suspend fun store(tokenCache: TokenCache) {
+        val json = Json { prettyPrint = true }
+        withContext(Dispatchers.IO) {
+            file.parentFile?.mkdirs()
+            file.writeText(json.encodeToString(tokenCache))
+        }
     }
 }
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
-
-rootProject.name = "google-tasks-kmp"
-
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")

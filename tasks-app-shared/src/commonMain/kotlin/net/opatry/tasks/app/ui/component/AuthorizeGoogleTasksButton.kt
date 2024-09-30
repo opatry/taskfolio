@@ -20,35 +20,15 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.tasks.app.ui.component
 
-rootProject.name = "google-tasks-kmp"
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import net.opatry.google.auth.GoogleAuthenticator
 
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
-include(":tasks-app-shared")
+
+@Composable
+expect fun AuthorizeGoogleTasksButton(
+    modifier: Modifier = Modifier,
+    onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit
+)
