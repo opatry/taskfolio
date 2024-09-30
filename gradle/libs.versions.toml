@@ -61,6 +61,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.4.0" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+android-app-update = { module = "com.google.android.play:app-update-ktx", version = "2.1.0" }
 
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.2.0" }
 
