@@ -31,24 +31,36 @@ jobs:
       with:
         add-job-summary-as-pr-comment: on-failure
 
+    - name: 🔓 Decrypt secrets
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: ./_ci/decrypt_secrets.sh
+
+    - name: 🔨 Build Desktop App 🖥️
+      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
+
     - name: 🔨 Build Android App 📱
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
       run: |
-            ./_ci/decrypt_secrets.sh
             ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
               -Pci=true \
               -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
               -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
               -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
 
-    - name: 🔨 Build Desktop App 🖥️
-      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
-
+    # `test` to trigger as much Jvm tests as possible
+    # `:tasks-app-android:testStoreReleaseUnitTest` to restrict to only specific flavor(store)+variant(release) for `:tasks-app-android` module.
+    # `-x :tasks-app-android:test` to remove all tests from `:tasks-app-android` module not being covered by `:tasks-app-android:testStoreReleaseUnitTest`.
+    # `-x testDebugUnitTest` to avoid triggering tests both in debug & release build.
+    # `-x :tasks-app-android:build` to avoid triggering useless build tasks (typically for unused flavors).
+    #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
     - name: ✅ Test
-      run: ./gradlew --no-daemon test
+      run: |
+            ./gradlew --no-daemon test :tasks-app-android:testStoreReleaseUnitTest \
+            -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
 
     - name: 🗒️ Publish Test Reports
       uses: mikepenz/action-junit-report@v4
