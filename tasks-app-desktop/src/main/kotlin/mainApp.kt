@@ -20,10 +20,6 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -49,6 +44,7 @@ import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
 import net.opatry.tasks.app.ui.theme.TasksfolioTheme
 import org.koin.compose.KoinApplication
@@ -120,9 +116,7 @@ fun main() {
                 TasksfolioTheme {
                     Surface {
                         when (userState) {
-                            null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
-                            }
+                            null -> LoadingPane()
 
                             is UserState.Unsigned,
                             is UserState.SignedIn -> {

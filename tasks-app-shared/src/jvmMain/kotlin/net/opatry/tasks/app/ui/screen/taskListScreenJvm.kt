@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
 import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.TaskListDetail
@@ -47,40 +48,48 @@ actual fun TaskListsMasterDetail(
     viewModel: TaskListsViewModel,
     onNewTaskList: (String) -> Unit
 ) {
-    val taskLists by viewModel.taskLists.collectAsState(emptyList())
+    val taskLists by viewModel.taskLists.collectAsState(null)
 
     // Store the list id, and not the list object to prevent keeping
     // a stale object when data changes.
     var currentTaskListId by remember { mutableStateOf<Long?>(null) }
 
     Row(Modifier.fillMaxWidth()) {
-        if (taskLists.isEmpty()) {
-            val newTaskListName = stringResource(Res.string.default_task_list_title)
-            NoTaskListEmptyState {
-                onNewTaskList(newTaskListName)
-            }
-        } else {
-            Box(Modifier.weight(.3f)) {
-                TaskListsColumn(
-                    taskLists,
-                    selectedItem = taskLists.find { it.id == currentTaskListId },
-                    onNewTaskList = { onNewTaskList("") },
-                    onItemClick = { taskList ->
-                        currentTaskListId = taskList.id
-                    }
-                )
+        val list = taskLists
+        when {
+            list == null -> LoadingPane()
+
+            list.isEmpty() -> {
+                val newTaskListName = stringResource(Res.string.default_task_list_title)
+                NoTaskListEmptyState {
+                    onNewTaskList(newTaskListName)
+                }
             }
 
-            VerticalDivider()
+            else -> {
+                Box(Modifier.weight(.3f)) {
+                    TaskListsColumn(
+                        list,
+                        selectedItem = list.find { it.id == currentTaskListId },
+                        onNewTaskList = { onNewTaskList("") },
+                        onItemClick = { taskList ->
+                            currentTaskListId = taskList.id
+                        }
+                    )
+                }
+
+                VerticalDivider()
+            }
         }
 
         Box(Modifier.weight(.7f)) {
-            taskLists.find { it.id == currentTaskListId }?.let { taskList ->
-                TaskListDetail(viewModel, taskList) { targetedTaskList ->
+            val selectedList = list?.find { it.id == currentTaskListId }
+            when {
+                list == null -> LoadingPane()
+                selectedList == null -> NoTaskListSelectedEmptyState()
+                else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
                     currentTaskListId = targetedTaskList?.id
                 }
-            } ?: run {
-                NoTaskListSelectedEmptyState()
             }
         }
     }

@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
 import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.TaskListDetail
@@ -49,7 +50,7 @@ actual fun TaskListsMasterDetail(
     viewModel: TaskListsViewModel,
     onNewTaskList: (String) -> Unit
 ) {
-    val taskLists by viewModel.taskLists.collectAsState(emptyList())
+    val taskLists by viewModel.taskLists.collectAsState(null)
 
     // need to store a saveable (Serializable/Parcelable) object
     // rememberListDetailPaneScaffoldNavigator, under the hood uses rememberSaveable with it
@@ -64,17 +65,22 @@ actual fun TaskListsMasterDetail(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
         listPane = {
+            val list = taskLists
             AnimatedPane {
-                if (taskLists.isEmpty()) {
-                    val newTaskListName = stringResource(Res.string.default_task_list_title)
-                    NoTaskListEmptyState {
-                        onNewTaskList(newTaskListName)
+                when {
+                    list == null -> LoadingPane()
+
+                    list.isEmpty() -> {
+                        val newTaskListName = stringResource(Res.string.default_task_list_title)
+                        NoTaskListEmptyState {
+                            onNewTaskList(newTaskListName)
+                        }
                     }
-                } else {
-                    Row {
+
+                    else -> Row {
                         TaskListsColumn(
-                            taskLists,
-                            selectedItem = taskLists.find { it.id == navigator.currentDestination?.content },
+                            list,
+                            selectedItem = list.find { it.id == navigator.currentDestination?.content },
                             onNewTaskList = { onNewTaskList("") },
                             onItemClick = { taskList ->
                                 navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id)
@@ -90,15 +96,17 @@ actual fun TaskListsMasterDetail(
         },
         detailPane = {
             AnimatedPane {
-                taskLists.find { it.id == navigator.currentDestination?.content }?.let { taskList ->
-                    TaskListDetail(viewModel, taskList) { targetedTaskList ->
+                val list = taskLists
+                val selectedList = list?.find { it.id == navigator.currentDestination?.content }
+                when {
+                    list == null -> LoadingPane()
+                    selectedList == null -> NoTaskListSelectedEmptyState()
+                    else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
                         when (targetedTaskList) {
                             null -> navigator.navigateBack()
                             else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id)
                         }
                     }
-                } ?: run {
-                    NoTaskListSelectedEmptyState()
                 }
             }
         }
