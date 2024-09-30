@@ -20,34 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.tasks
 
-rootProject.name = "google-tasks-kmp"
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
+
+@Serializable
+data class TokenCache(
+
+    @SerialName("access_token")
+    val accessToken: String? = null,
+
+    @SerialName("refresh_token")
+    val refreshToken: String? = null,
+
+    @SerialName("expiration_time_millis")
+    val expirationTimeMillis: Long = 0,
+)
+
+
+interface CredentialsStorage {
+    suspend fun load(): TokenCache?
+    suspend fun store(tokenCache: TokenCache)
+}

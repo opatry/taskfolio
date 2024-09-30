@@ -20,34 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.tasks.data.model
 
-rootProject.name = "google-tasks-kmp"
+import kotlinx.datetime.Instant
 
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
+
+data class TaskDataModel(
+    val id: Long,
+    val title: String,
+    val notes: String = "",
+    val isCompleted: Boolean = false,
+    val dueDate: Instant? = null,
+    val lastUpdateDate: Instant,
+    val completionDate: Instant? = null,
+    val position: String,
+    val indent: Int,
+)

@@ -20,34 +20,26 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google {
-            content {
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
-                includeGroupAndSubgroups("androidx")
-            }
-        }
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-}
+package net.opatry.tasks.data.entity
 
-rootProject.name = "google-tasks-kmp"
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-include(":google:oauth")
-include(":google:tasks")
-include(":lucide-icons")
-include(":tasks-core")
+
+@Entity(tableName = "user")
+data class UserEntity(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Long = 0,
+    @ColumnInfo(name = "remote_id") // TODO must be unique
+    val remoteId: String? = null,
+    @ColumnInfo(name = "name")
+    val name: String,
+    @ColumnInfo(name = "email")
+    val email: String? = null,
+    @ColumnInfo(name = "avatar_url")
+    val avatarUrl: String? = null,
+    @ColumnInfo(name = "is_signed_in")
+    val isSignedIn: Boolean = false,
+)
