@@ -79,6 +79,7 @@ about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.re
 androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version = "2.3.0" }
 
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
