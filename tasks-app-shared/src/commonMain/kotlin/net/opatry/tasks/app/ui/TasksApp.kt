@@ -50,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.MissingScreen
 import net.opatry.tasks.app.ui.component.ProfileIcon
 import net.opatry.tasks.app.ui.screen.TaskListsMasterDetail
@@ -87,6 +88,9 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
     LaunchedEffect(isFocused, isSigned) {
         tasksViewModel.enableAutoRefresh(isFocused && isSigned)
     }
+
+    var newTaskListDefaultTitle by remember { mutableStateOf("") }
+    var showNewTaskListDialog by remember { mutableStateOf(false) }
 
     NavigationSuiteScaffold(navigationSuiteItems = {
         // Only if expanded state
@@ -134,7 +138,24 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
                         }
                     }
 
-                    TaskListsMasterDetail(tasksViewModel)
+                    TaskListsMasterDetail(tasksViewModel) { title ->
+                        newTaskListDefaultTitle = title
+                        showNewTaskListDialog = true
+                    }
+
+                    if (showNewTaskListDialog) {
+                        EditTextDialog(
+                            onDismissRequest = { showNewTaskListDialog = false },
+                            validateLabel = "Create",
+                            onValidate = { title ->
+                                showNewTaskListDialog = false
+                                tasksViewModel.createTaskList(title)
+                            },
+                            dialogTitle = "New task list",
+                            initialText = newTaskListDefaultTitle,
+                            allowBlank = false
+                        )
+                    }
                 }
 
                 AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)

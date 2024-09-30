@@ -45,7 +45,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
+actual fun TaskListsMasterDetail(
+    viewModel: TaskListsViewModel,
+    onNewTaskList: (String) -> Unit
+) {
     val taskLists by viewModel.taskLists.collectAsState(emptyList())
 
     // need to store a saveable (Serializable/Parcelable) object
@@ -63,16 +66,16 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
         listPane = {
             AnimatedPane {
                 if (taskLists.isEmpty()) {
-                    // TODO dialog to ask for the new task list name
                     val newTaskListName = stringResource(Res.string.default_task_list_title)
                     NoTaskListEmptyState {
-                        viewModel.createTaskList(newTaskListName)
+                        onNewTaskList(newTaskListName)
                     }
                 } else {
                     Row {
                         TaskListsColumn(
                             taskLists,
                             selectedItem = taskLists.find { it.id == navigator.currentDestination?.content },
+                            onNewTaskList = { onNewTaskList("") },
                             onItemClick = { taskList ->
                                 navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id)
                             }

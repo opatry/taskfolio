@@ -22,18 +22,28 @@
 
 package net.opatry.tasks.app.ui.component
 
+import CircleFadingPlus
+import LucideIcons
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,16 +54,39 @@ import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskListsColumn(
     taskLists: List<TaskListUIModel>,
     selectedItem: TaskListUIModel? = null,
+    onNewTaskList: () -> Unit,
     onItemClick: (TaskListUIModel) -> Unit
 ) {
-    LazyColumn(contentPadding = PaddingValues(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    val listState = rememberLazyListState()
+    LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        stickyHeader {
+            Box(
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) {
+                // TODO could be a "in-place" replace with a text field (no border)
+                TextButton(
+                    onClick = onNewTaskList,
+                ) {
+                    RowWithIcon("Add task list…", LucideIcons.CircleFadingPlus)
+                }
+            }
+
+            AnimatedVisibility(listState.firstVisibleItemScrollOffset > 0) {
+                HorizontalDivider()
+            }
+        }
         items(taskLists) { taskList ->
             TaskListRow(
                 taskList,
+                Modifier.padding(horizontal = 8.dp),
                 isSelected = taskList.id == selectedItem?.id,
                 onClick = { onItemClick(taskList) }
             )
@@ -64,6 +97,7 @@ fun TaskListsColumn(
 @Composable
 fun TaskListRow(
     taskList: TaskListUIModel,
+    modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onClick: () -> Unit
 ) {
@@ -72,7 +106,7 @@ fun TaskListRow(
         else -> Color.Transparent
     }
 
-    Card(colors = CardDefaults.outlinedCardColors(), onClick = onClick) {
+    Card(onClick = onClick, modifier = modifier, colors = CardDefaults.outlinedCardColors()) {
         ListItem(
             headlineContent = {
                 Text(taskList.title, overflow = TextOverflow.Ellipsis, maxLines = 1)
@@ -96,8 +130,8 @@ private fun TaskListRowScaffold(
             "TODO DATE",
             tasks = emptyList(),
         ),
-        isSelected,
-        {}
+        isSelected = isSelected,
+        onClick = {}
     )
 }
 

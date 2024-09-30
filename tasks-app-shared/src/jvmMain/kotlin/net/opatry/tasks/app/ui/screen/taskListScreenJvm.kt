@@ -43,7 +43,10 @@ import net.opatry.tasks.resources.default_task_list_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
+actual fun TaskListsMasterDetail(
+    viewModel: TaskListsViewModel,
+    onNewTaskList: (String) -> Unit
+) {
     val taskLists by viewModel.taskLists.collectAsState(emptyList())
 
     // Store the list id, and not the list object to prevent keeping
@@ -52,16 +55,16 @@ actual fun TaskListsMasterDetail(viewModel: TaskListsViewModel) {
 
     Row(Modifier.fillMaxWidth()) {
         if (taskLists.isEmpty()) {
-            // TODO dialog to ask for the new task list name
             val newTaskListName = stringResource(Res.string.default_task_list_title)
             NoTaskListEmptyState {
-                viewModel.createTaskList(newTaskListName)
+                onNewTaskList(newTaskListName)
             }
         } else {
             Box(Modifier.weight(.3f)) {
                 TaskListsColumn(
                     taskLists,
                     selectedItem = taskLists.find { it.id == currentTaskListId },
+                    onNewTaskList = { onNewTaskList("") },
                     onItemClick = { taskList ->
                         currentTaskListId = taskList.id
                     }
