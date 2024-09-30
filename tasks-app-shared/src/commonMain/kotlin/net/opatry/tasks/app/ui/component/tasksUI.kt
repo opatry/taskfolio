@@ -52,7 +52,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -74,7 +73,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -95,8 +93,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -252,55 +248,17 @@ fun TaskListDetail(
     }
 
     if (showRenameTaskListDialog) {
-        Dialog(
+        EditTextDialog(
             onDismissRequest = { showRenameTaskListDialog = false },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-        ) {
-            var newTitle by remember { mutableStateOf(taskList.title) }
-            val hasError by remember {
-                derivedStateOf {
-                    newTitle.isBlank()
-                }
-            }
-
-            Surface(
-                shape = MaterialTheme.shapes.large,
-                tonalElevation = AlertDialogDefaults.TonalElevation
-            ) {
-                Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text("Rename list", style = MaterialTheme.typography.titleLarge)
-                    OutlinedTextField(
-                        newTitle,
-                        onValueChange = { newTitle = it },
-                        maxLines = 1,
-                        supportingText = {
-                            AnimatedVisibility(visible = hasError) {
-                                Text("Title cannot be empty")
-                            }
-                        },
-                        isError = hasError,
-                    )
-                    Row(
-                        Modifier.align(Alignment.End),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        TextButton(onClick = { showRenameTaskListDialog = false }) {
-                            Text("Cancel")
-                        }
-                        Button(
-                            onClick = {
-                                showRenameTaskListDialog = false
-                                viewModel.renameTaskList(taskList, newTitle)
-                            },
-                            enabled = !hasError
-                        ) {
-                            Text("Rename")
-                        }
-                    }
-                }
-            }
-        }
+            onValidate = { newTitle ->
+                showRenameTaskListDialog = false
+                viewModel.renameTaskList(taskList, newTitle)
+            },
+            validateLabel = "Rename",
+            dialogTitle = "Rename list",
+            initialText = taskList.title,
+            allowBlank = false,
+        )
     }
 
     if (showClearTaskListCompletedTasksDialog) {
