@@ -11,19 +11,26 @@
 
 [![Taskfolio on Play Store](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
 
-## Tech stack
+## 🛠️ Tech stack
 
 - [Kotlin](https://kotlinlang.org/), [Multiplatform (KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
+  - iOS & Web are not planned any time soon (contribution are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Kotlin multiplatform](https://kotlinlang.org/docs/multiplatform.html) (aka KMP)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
-- [Room](https://developer.android.com/training/data-storage/room)
+- [Room](https://developer.android.com/training/data-storage/room) (local persistance)
 - [Koin](https://insert-koin.io/) for dependency injection
 - [Material Design Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- Kinda follows [Google architecture guidelines](https://developer.android.com/topic/architecture)
 - [Coil](https://coil-kt.github.io/coil/)
+- [GitHub Actions](https://docs.github.com/en/actions) for CI
+  - build Android & Desktop apps
+  - run tests
+  - publish app on Play Store
+  - publish companion website on [Github pages](https://pages.github.com/)
 
-## Project breakdown
+## 🗺️ Project breakdown
 
 - `:google`
   - [`:oauth`](google/oauth/) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
@@ -53,7 +60,7 @@
   - The [static site](https://opatry.github.io/taskfolio/) presenting the project
   - Made with [Jekyll](https://jekyllrb.com/) and served by [Github pages](https://pages.github.com/)
 
-## Local development
+## 🧑‍💻 Local development
 
 <details>
 <summary>See details…</summary>
@@ -71,7 +78,7 @@ and store this in `_ci/google-services.json.gpg`.
 The `decrypt_secrets.sh` will take it into account.
 </details>
 
-## License
+## ⚖️ License
 
 ```
 The MIT License (MIT)
