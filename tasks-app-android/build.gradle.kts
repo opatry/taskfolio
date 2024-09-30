@@ -48,6 +48,8 @@ android {
         versionName = libs.versions.tasksApp.name.get()
 
         resourceConfigurations += listOf("en", "fr")
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     androidResources {
@@ -171,6 +173,8 @@ dependencies {
     testImplementation(projects.tasksCore) {
         because("needed for Koin DI tests injectedParameters")
     }
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 aboutLibraries {

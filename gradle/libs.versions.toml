@@ -9,6 +9,7 @@ ksp = "2.1.0-1.0.28"
 coroutines = "1.9.0"
 ktor = "3.0.1"
 compose-plugin = "1.7.1"
+compose = "1.7.5"
 compose-m3-adaptive = "1.0.1"
 room = "2.7.0-alpha11"
 sqlite = "2.5.0-alpha11"
@@ -76,6 +77,8 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "about-libraries" }
 
 androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
