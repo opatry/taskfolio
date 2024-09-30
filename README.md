@@ -4,24 +4,94 @@
 
 [**Taskfolio**](https://opatry.github.io/taskfolio) is an Android task management app built using [Google Tasks API](https://developers.google.com/tasks/reference/rest). Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
 
+> I set out to revisit the classical TODO app, ‘local-first’ syncing with Google Tasks—aiming for an <abbr title="Minimum Viable Experience">MVE</abbr> in 2 weeks, focusing on the 80/20 rule to nail the essentials.
+
 | ![](assets/screens/task_lists_light.png) | ![](assets/screens/groceries_light.png) | ![](assets/screens/home_dark.png)  |
 | --------------------------------------- |--------------------------------------- | ---------------------------------- |
 
 [![Taskfolio on Play Store](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
 
-## Tech stack
+## 🎯 Project intentions
+
+- [x] Showcase my expertise in Android application development
+- [x] Demonstrate UI development using Jetpack Compose with Material Design 3.
+- [x] Include local-first capabilities for local data storage using Room.
+- [x] OAuth 2.0 authentication.
+- [x] Provide sync capabilities with Google Tasks for seamless task management.
+- [x] Illustrate my ability to set up CI/CD pipelines and publish apps to the Play Store.
+
+## ❌ Out of scope
+
+This project is not intended as a comprehensive task manager for public use.
+I do not aim to implement advanced features beyond what is supported by the Google Tasks REST API.
+- no starred task
+- no task priority
+- only due date, no custom time support
+- no task recurrence
+- limited hierarchy (2 levels)
+
+## 🚧 Known Limitations
+
+- Authentication flow isn't 100% reliable yet.
+- Local-first support with Google Tasks sync is limited, in particular sorting & conflict management is barely implemented.
+- Task deletion undo is not implemented
+- Very limited move capabilities
+  - can't move task from one list to another
+  - can't indent/unindent
+  - can't create sub-task
+  - no drag'n'drop
+- Task list ordering isn't supported (there is no API for that in the Google Tasks API)
+
+## 🛠️ Tech stack
 
 - [Kotlin](https://kotlinlang.org/), [Multiplatform (KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
+  - iOS & Web are not planned any time soon (contribution are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Kotlin multiplatform](https://kotlinlang.org/docs/multiplatform.html) (aka KMP)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
-- [Room](https://developer.android.com/training/data-storage/room)
+- [Room](https://developer.android.com/training/data-storage/room) (local persistance)
 - [Koin](https://insert-koin.io/) for dependency injection
 - [Material Design Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- Kinda follows [Google architecture guidelines](https://developer.android.com/topic/architecture)
 - [Coil](https://coil-kt.github.io/coil/)
+- [GitHub Actions](https://docs.github.com/en/actions) for CI
+  - build Android & Desktop apps
+  - run tests
+  - publish app on Play Store
+  - publish companion website on [Github pages](https://pages.github.com/)
 
-## Local development
+## 🗺️ Project breakdown
+
+- `:google`
+  - [`:oauth`](google/oauth/) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
+    - [Google OAuth2](https://developers.google.com/identity/protocols/oauth2) authentication with Kotlin & Ktor
+    - KMP
+  - [`:tasks`](google/tasks) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
+    - [Google Tasks REST API](https://developers.google.com/tasks/reference/rest) bindings for Kotlin using Ktor HTTP client 
+    - KMP
+- [`:lucide-icons`](lucide-icons) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
+  - [Lucide Icons](https://lucide.dev/icons/) for Compose
+  - Made from [Compose Icons](https://composeicons.com/icon-libraries/lucide) (not using the direct Gradle dependency to tweak stroke width)
+  - Only integrates what seem relevant for the app needs
+  - KMP
+- [`:tasks-core`](tasks-core) <span style="color: #CCFF00;">■■■■■■</span>□□□□ 60%	
+  - Taskfolio business logic
+  - Local first with Room database, sync with Google Tasks 
+  - KMP
+- [`:tasks-app-shared`](tasks-app-shared) <span style="color: #99FF00;">■■■■■■■</span>□□□ 70%	
+  - All screens & UI components integrating the `:tasks-core` business logic
+    in Compose
+  - KMP
+- [`:tasks-app-desktop`](tasks-app-desktop) <span style="color: #33FF00;">■■■■■■■■■</span>□ 90%
+  - The Desktop application (thin layer fully reusing `:tasks-app-shared`)
+- [`:tasks-app-android`](tasks-app-android) <span style="color: #66FF00;">■■■■■■■■</span>□□ 80%
+  - The Android application (thin layer fully reusing `:tasks-app-shared`)
+- [`website/`](website) <span style="color: #FF6600;">■■</span>□□□□□□□□ 20%
+  - The [static site](https://opatry.github.io/taskfolio/) presenting the project
+  - Made with [Jekyll](https://jekyllrb.com/) and served by [Github pages](https://pages.github.com/)
+
+## 🧑‍💻 Local development
 
 <details>
 <summary>See details…</summary>
@@ -39,7 +109,7 @@ and store this in `_ci/google-services.json.gpg`.
 The `decrypt_secrets.sh` will take it into account.
 </details>
 
-## License
+## ⚖️ License
 
 ```
 The MIT License (MIT)
