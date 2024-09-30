@@ -178,6 +178,7 @@ dependencies {
 
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.uiautomator)
 }
 
 aboutLibraries {
