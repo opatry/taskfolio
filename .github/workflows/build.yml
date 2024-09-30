@@ -31,6 +31,9 @@ jobs:
       with:
         add-job-summary-as-pr-comment: on-failure
 
+    - name: 🔨 Build Desktop App 🖥️
+      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
+
     - name: 🔨 Build Android App 📱
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
@@ -43,9 +46,6 @@ jobs:
               -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
               -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
               -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
-
-    - name: 🔨 Build Desktop App 🖥️
-      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
 
     - name: ✅ Test
       run: ./gradlew --no-daemon test
