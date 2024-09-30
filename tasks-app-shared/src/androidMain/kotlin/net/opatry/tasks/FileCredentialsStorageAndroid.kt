@@ -20,17 +20,34 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-    alias(libs.plugins.jetbrains.kotlin.compose.compiler) apply false
-    alias(libs.plugins.jetbrains.compose) apply false
-    alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.google.services) apply false
-    alias(libs.plugins.firebase.crashlytics) apply false
+package net.opatry.tasks
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
+
+
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual class FileCredentialsStorage actual constructor(filepath: String) : CredentialsStorage {
+    private val file: File = File(filepath)
+
+    override suspend fun load(): TokenCache? {
+        return withContext(Dispatchers.IO) {
+            if (file.isFile) {
+                file.readText().let(Json::decodeFromString)
+            } else {
+                null
+            }
+        }
+    }
+
+    override suspend fun store(tokenCache: TokenCache) {
+        val json = Json { prettyPrint = true }
+        withContext(Dispatchers.IO) {
+            file.parentFile?.mkdirs()
+            file.writeText(json.encodeToString(tokenCache))
+        }
+    }
 }

@@ -28,6 +28,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.android.library)
 }
 
 compose.resources {
@@ -38,10 +39,20 @@ compose.resources {
 
 kotlin {
     jvm()
+    androidTarget()
 
     jvmToolchain(17)
 
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.compose.m3.adaptive)
+            implementation(libs.androidx.compose.m3.adaptive.layout)
+            implementation(libs.androidx.compose.m3.adaptive.navigation)
+
+            implementation(libs.play.services.auth)
+        }
+
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
 
@@ -86,4 +97,13 @@ dependencies {
     // FIXME deprecated, rely on add("kspJvm", project(...)) and counterparts (to be clarified)
     //  see https://kotlinlang.org/docs/ksp-multiplatform.html
     ksp(libs.androidx.room.compiler)
+}
+
+android {
+    namespace = "net.opatry.tasks"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+    }
 }

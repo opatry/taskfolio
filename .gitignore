@@ -23,3 +23,8 @@ local.properties
 
 .kotlin/errors/errors-*.log
 .kotlin/sessions/
+
+tasks-app-android/google-services.json
+
+*token_cache.*
+client_secret_*.apps.googleusercontent.com.json

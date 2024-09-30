@@ -1,4 +1,9 @@
 [versions]
+tasksApp-name = "0.1.0"
+compileSdk = "34"
+minSdk = "24"
+targetSdk = "34"
+agp = "8.6.1"
 kotlin = "2.0.20"
 ksp = "2.0.20-1.0.24"
 coroutines = "1.9.0"
@@ -12,8 +17,10 @@ coil = "3.0.0-alpha10"
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.1" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.2" }
 
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
@@ -41,8 +48,20 @@ koin-androidx-startup = { module = "io.insert-koin:koin-androidx-startup" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 
+androidx-compose-m3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version = "1.0.0" }
+androidx-compose-m3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version = "1.0.0" }
+androidx-compose-m3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version = "1.0.0" }
+
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
+
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.2" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.3.0" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.2.0" }
 
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
@@ -58,6 +77,9 @@ ktor-client = [
 coil = ["coil-compose", "coil-network"]
 
 [plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -65,3 +87,5 @@ jetbrains-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose"
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.2" }

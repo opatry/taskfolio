@@ -20,17 +20,29 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-    alias(libs.plugins.jetbrains.kotlin.compose.compiler) apply false
-    alias(libs.plugins.jetbrains.compose) apply false
-    alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.google.services) apply false
-    alias(libs.plugins.firebase.crashlytics) apply false
+package net.opatry.tasks.app.di
+
+import android.content.Context
+import androidx.room.Room
+import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.FileCredentialsStorage
+import net.opatry.tasks.data.TasksAppDatabase
+import org.koin.core.module.Module
+import org.koin.dsl.module
+import java.io.File
+
+actual fun platformModule(): Module = module {
+    single {
+        val context = get<Context>()
+        val appContext = context.applicationContext
+        val dbFile = appContext.getDatabasePath("tasks.db")
+        Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
+    }
+
+    single<CredentialsStorage> {
+        // TODO store in database
+        val context = get<Context>()
+        val credentialsFile = File(context.cacheDir, "google_auth_token_cache.json")
+        FileCredentialsStorage(credentialsFile.absolutePath)
+    }
 }

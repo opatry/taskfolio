@@ -20,17 +20,32 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
-    alias(libs.plugins.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-    alias(libs.plugins.jetbrains.kotlin.compose.compiler) apply false
-    alias(libs.plugins.jetbrains.compose) apply false
-    alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.androidx.room) apply false
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.google.services) apply false
-    alias(libs.plugins.firebase.crashlytics) apply false
+package net.opatry.tasks.app
+
+import android.app.Application
+import net.opatry.tasks.app.di.authModule
+import net.opatry.tasks.app.di.dataModule
+import net.opatry.tasks.app.di.networkModule
+import net.opatry.tasks.app.di.platformModule
+import net.opatry.tasks.app.di.tasksAppModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.androix.startup.KoinStartup.onKoinStartup
+
+private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
+
+class TasksApplication : Application() {
+
+    init {
+        @Suppress("OPT_IN_USAGE")
+        onKoinStartup {
+            androidContext(this@TasksApplication)
+            modules(
+                platformModule(),
+                dataModule,
+                authModule(GCP_CLIENT_ID),
+                networkModule,
+                tasksAppModule,
+            )
+        }
+    }
 }
