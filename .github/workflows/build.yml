@@ -31,5 +31,14 @@ jobs:
       with:
         add-job-summary-as-pr-comment: on-failure
 
-    - name: 🔨 Build
-      run: ./gradlew --no-daemon assemble
+    - name: 🔨 Build Desktop App 🖥️
+      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
+
+    - name: ✅ Test
+      run: ./gradlew --no-daemon test
+
+    - name: 🗒️ Publish Test Reports
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
