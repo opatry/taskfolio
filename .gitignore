@@ -6,6 +6,7 @@ build/
 local.properties
 *.iml
 
+.idea/.name
 .idea/modules.xml
 .idea/appInsightsSettings.xml
 .idea/artifacts/*.xml
