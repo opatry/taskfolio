@@ -20,7 +20,26 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-}
+package net.opatry.google.profile.model
+
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserInfo(
+    @SerialName("id")
+    val id: String,
+    @SerialName("name")
+    val name: String = "",
+    @SerialName("given_name")
+    val givenName: String = "",
+    @SerialName("family_name")
+    val familyName: String = "",
+    @SerialName("picture")
+    val picture: String? = null,
+    @SerialName("email")
+    val email: String? = null,
+    @SerialName("verified_email")
+    val isEmailVerified: Boolean? = null,
+)

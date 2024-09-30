@@ -20,7 +20,30 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
+package net.opatry.google.tasks.model
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import net.opatry.google.tasks.model.ContextType.GMail
+import net.opatry.google.tasks.model.ContextType.Space
+import net.opatry.google.tasks.model.ContextType.Unspecified
+
+@Serializable
+/**
+ * The [product](https://developers.google.com/tasks/reference/rest/v1/tasks#contexttype) associated with the task.
+ *
+ * @property Unspecified    Unknown value for this task's context.
+ * @property GMail	The task is created from Gmail.
+ * @property javax.print.Doc	The task is assigned from a document.
+ * @property Space	The task is assigned from a Chat Space.
+ */
+enum class ContextType {
+    @SerialName("CONTEXT_TYPE_UNSPECIFIED")
+    Unspecified,
+    @SerialName("GMAIL")
+    GMail,
+    @SerialName("DOCUMENT")
+    Document,
+    @SerialName("SPACE")
+    Space,
 }

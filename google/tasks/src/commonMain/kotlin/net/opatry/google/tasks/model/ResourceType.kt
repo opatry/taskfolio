@@ -20,7 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
+package net.opatry.google.tasks.model
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+enum class ResourceType {
+    @SerialName("tasks#taskList")
+    TaskList,
+    @SerialName("tasks#taskLists")
+    TaskLists,
+    @SerialName("tasks#task")
+    Task,
+    @SerialName("tasks#tasks")
+    Tasks,
 }

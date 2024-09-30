@@ -1,3 +1,5 @@
+[![Build & Test](https://github.com/opatry/tasks-app/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/tasks-app/actions/workflows/build.yml)
+
 # Taskfolio
 
 A basic TODO list application based on [Google Tasks REST API](https://developers.google.com/tasks/reference/rest) to showcase [KMP](https://kotlinlang.org/docs/multiplatform.html) app capabilities.
@@ -7,6 +9,7 @@ A basic TODO list application based on [Google Tasks REST API](https://developer
 - [Kotlin](https://kotlinlang.org/), [Multiplatform (KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Kotlin multiplatform](https://kotlinlang.org/docs/multiplatform.html) (aka KMP)
+- [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
 
 ## License
 

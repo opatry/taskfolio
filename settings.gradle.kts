@@ -35,3 +35,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "google-tasks-kmp"
+
+include(":google:oauth")
+include(":google:tasks")

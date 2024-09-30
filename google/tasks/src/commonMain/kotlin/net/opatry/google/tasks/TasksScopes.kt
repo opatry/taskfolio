@@ -20,7 +20,9 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
+package net.opatry.google.tasks
+
+object TasksScopes {
+    const val Tasks = "https://www.googleapis.com/auth/tasks"
+    const val TasksReadOnly = "https://www.googleapis.com/auth/tasks.readonly"
 }

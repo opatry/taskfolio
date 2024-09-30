@@ -20,7 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-}
+package net.opatry.google.tasks.model
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+/**
+ * https://developers.google.com/tasks/reference/rest/v1/tasklists/list#response-body
+ *
+ * @property kind Type of the resource. This is always [ResourceType.TaskLists].
+ * @property etag ETag of the resource.
+ * @property nextPageToken Token that can be used to request the next page of this result.
+ * @property items Collection of task lists.
+ */
+data class TaskListsListResponse(
+    @SerialName("kind")
+    val kind: ResourceType = ResourceType.TaskLists,
+    @SerialName("etag")
+    val etag: String,
+    @SerialName("nextPageToken")
+    val nextPageToken: String? = null,
+    @SerialName("items")
+    val items: List<TaskList>,
+)

@@ -20,7 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-}
+package net.opatry.google.tasks.model
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+/**
+ * Information about the source of the [task assignment](https://developers.google.com/tasks/reference/rest/v1/tasks#assignmentinfo) (Document, Chat Space).
+ */
+data class AssignmentInfo(
+    @SerialName("linkToTask")
+    val linkToTask: String,
+    @SerialName("surfaceType")
+    val surfaceType: ContextType,
+
+    // TODO Union field
+    @SerialName("driveResourceInfo")
+    val driveResourceInfo: SurfaceInfo.DriveResourceInfo? = null,
+    @SerialName("spaceInfo")
+    val spaceInfo: SurfaceInfo.SpaceInfo? = null,
+)
+
