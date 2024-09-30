@@ -4,6 +4,8 @@
 
 [**Taskfolio**](https://opatry.github.io/taskfolio) is an Android task management app built using [Google Tasks API](https://developers.google.com/tasks/reference/rest). Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
 
+> I set out to revisit the classical TODO app, ‘local-first’ syncing with Google Tasks—aiming for an <abbr title="Minimum Viable Experience">MVE</abbr> in 2 weeks, focusing on the 80/20 rule to nail the essentials.
+
 | ![](assets/screens/task_lists_light.png) | ![](assets/screens/groceries_light.png) | ![](assets/screens/home_dark.png)  |
 | --------------------------------------- |--------------------------------------- | ---------------------------------- |
 
@@ -20,6 +22,36 @@
 - [Material Design Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [Coil](https://coil-kt.github.io/coil/)
+
+## Project breakdown
+
+- `:google`
+  - [`:oauth`](google/oauth/) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
+    - [Google OAuth2](https://developers.google.com/identity/protocols/oauth2) authentication with Kotlin & Ktor
+    - KMP
+  - [`:tasks`](google/tasks) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
+    - [Google Tasks REST API](https://developers.google.com/tasks/reference/rest) bindings for Kotlin using Ktor HTTP client 
+    - KMP
+- [`:lucide-icons`](lucide-icons) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
+  - [Lucide Icons](https://lucide.dev/icons/) for Compose
+  - Made from [Compose Icons](https://composeicons.com/icon-libraries/lucide) (not using the direct Gradle dependency to tweak stroke width)
+  - Only integrates what seem relevant for the app needs
+  - KMP
+- [`:tasks-core`](tasks-core) <span style="color: #CCFF00;">■■■■■■</span>□□□□ 60%	
+  - Taskfolio business logic
+  - Local first with Room database, sync with Google Tasks 
+  - KMP
+- [`:tasks-app-shared`](tasks-app-shared) <span style="color: #99FF00;">■■■■■■■</span>□□□ 70%	
+  - All screens & UI components integrating the `:tasks-core` business logic
+    in Compose
+  - KMP
+- [`:tasks-app-desktop`](tasks-app-desktop) <span style="color: #33FF00;">■■■■■■■■■</span>□ 90%
+  - The Desktop application (thin layer fully reusing `:tasks-app-shared`)
+- [`:tasks-app-android`](tasks-app-android) <span style="color: #66FF00;">■■■■■■■■</span>□□ 80%
+  - The Android application (thin layer fully reusing `:tasks-app-shared`)
+- [`website/`](website) <span style="color: #FF6600;">■■</span>□□□□□□□□ 20%
+  - The [static site](https://opatry.github.io/taskfolio/) presenting the project
+  - Made with [Jekyll](https://jekyllrb.com/) and served by [Github pages](https://pages.github.com/)
 
 ## Local development
 
