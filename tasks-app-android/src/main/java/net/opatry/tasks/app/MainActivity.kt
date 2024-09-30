@@ -41,7 +41,7 @@ import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
-import net.opatry.tasks.app.ui.theme.TasksAppTheme
+import net.opatry.tasks.app.ui.theme.TasksfolioTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            TasksAppTheme {
+            TasksfolioTheme {
                 Surface {
                     when (userState) {
                         null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

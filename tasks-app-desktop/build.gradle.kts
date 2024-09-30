@@ -59,9 +59,9 @@ compose.desktop {
         mainClass = "MainAppKt"
 
         nativeDistributions {
-            packageVersion = "1.0.0"
-            packageName = "Tasks app"
-            version = "1.0.0"
+            packageVersion = libs.versions.tasksApp.name.get()
+            packageName = "Taskfolio"
+            version = libs.versions.tasksApp.name.get()
             targetFormats(
                 TargetFormat.Dmg,
             )

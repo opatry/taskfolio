@@ -107,7 +107,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun TasksAppTheme(
+fun TasksfolioTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

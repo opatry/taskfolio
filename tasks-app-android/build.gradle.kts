@@ -82,6 +82,13 @@ android {
             keyAlias = "dev"
             keyPassword = "devdev"
         }
+        create("store") {
+            val keystoreFilePath = findProperty("playstore.keystore.file") as? String
+            storeFile = keystoreFilePath?.let(::file)
+            storePassword = findProperty("playstore.keystore.password") as? String
+            keyAlias = "tasksApp_android"
+            keyPassword = findProperty("playstore.keystore.key_password") as? String
+        }
     }
 
     buildTypes {
@@ -93,7 +100,13 @@ android {
         getByName("release") {
             manifestPlaceholders["crashlyticsEnabled"] = true
 
-            signingConfig = signingConfigs.getByName("dev")
+            // we allow dev signing config in release build when not in CI to allow release builds on dev machine
+            val ciBuild = (findProperty("ci") as? String)?.toBoolean() ?: false
+            signingConfig = if (signingConfigs.getByName("store").storeFile == null && !ciBuild) {
+                signingConfigs.getByName("dev")
+            } else {
+                signingConfigs.getByName("store")
+            }
 
             isMinifyEnabled = false
             isShrinkResources = false

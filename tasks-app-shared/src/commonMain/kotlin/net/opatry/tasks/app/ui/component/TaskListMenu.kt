@@ -49,8 +49,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.tooling.TasksAppPreview
-import net.opatry.tasks.app.ui.tooling.TasksAppThemedPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 enum class TaskListMenuAction {
     Dismiss,
@@ -131,11 +131,11 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
     }
 }
 
-@TasksAppPreview
+@TaskfolioPreview
 @Composable
 private fun TaskListMenuPreview() {
     var showMenu by remember { mutableStateOf(true) }
-    TasksAppThemedPreview {
+    TaskfolioThemedPreview {
         Box(
             Modifier
                 .fillMaxWidth()

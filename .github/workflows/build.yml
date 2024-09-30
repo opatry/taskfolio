@@ -34,9 +34,15 @@ jobs:
     - name: 🔨 Build Android App 📱
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
       run: |
             ./_ci/decrypt_secrets.sh
-            ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease
+            ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
+              -Pci=true \
+              -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
+              -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+              -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
 
     - name: 🔨 Build Desktop App 🖥️
       run: ./gradlew --no-daemon :tasks-app-desktop:assemble

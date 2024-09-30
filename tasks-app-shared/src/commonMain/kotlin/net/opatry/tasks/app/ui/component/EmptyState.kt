@@ -37,8 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import net.opatry.tasks.app.ui.tooling.TasksAppPreview
-import net.opatry.tasks.app.ui.tooling.TasksAppThemedPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 
 @Composable
@@ -66,10 +66,10 @@ fun EmptyState(
     }
 }
 
-@TasksAppPreview
+@TaskfolioPreview
 @Composable
 private fun EmptyStatePreview() {
-    TasksAppThemedPreview {
+    TaskfolioThemedPreview {
         EmptyState(
             icon = LucideIcons.CircleOff,
             title = "No task",
@@ -79,10 +79,10 @@ private fun EmptyStatePreview() {
     }
 }
 
-@TasksAppPreview
+@TaskfolioPreview
 @Composable
 private fun EmptyStateNoDescriptionPreview() {
-    TasksAppThemedPreview {
+    TaskfolioThemedPreview {
         EmptyState(
             icon = LucideIcons.CalendarOff,
             title = "No scheduled task",

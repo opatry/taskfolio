@@ -21,7 +21,7 @@
   -->
 
 <resources>
-    <string name="app_name">Tasks app</string>
+    <string name="app_name">Taskfolio</string>
 
     <string name="navigation_tasks">Tasks</string>
     <string name="navigation_calendar">Calendar</string>

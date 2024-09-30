@@ -40,8 +40,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.tooling.TasksAppPreview
-import net.opatry.tasks.app.ui.tooling.TasksAppThemedPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 
 @Composable
@@ -101,10 +101,10 @@ private fun TaskListRowScaffold(
     )
 }
 
-@TasksAppPreview
+@TaskfolioPreview
 @Composable
 private fun TaskRowValuesPreview() {
-    TasksAppThemedPreview {
+    TaskfolioThemedPreview {
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TaskListRowScaffold("This is a task list with a very very very long name")
             TaskListRowScaffold(isSelected = true)

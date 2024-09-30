@@ -1,0 +1,99 @@
+name: 🚀 Play Store publish
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: "Play Store track"
+        required: true
+        type: choice
+        default: internal
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+      upload_binary:
+        description: "Upload App Bundle (AAB)"
+        required: true
+        type: boolean
+        default: true
+      upload_assets:
+        description: "Upload screenshots & metadata"
+        required: true
+        type: boolean
+        default: false
+      in_app_update_level:
+        description: "In-app update level"
+        required: true
+        type: choice
+        default: none
+        options:
+          - none
+          - feature
+          - bugfix
+          - hotfix
+      tag_repository:
+        description: "Tag the repository"
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+   build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: ☕ Setup JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'adopt'
+
+    - name: 🐘 Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        add-job-summary-as-pr-comment: on-failure
+
+    - name: 🔨 Build Android App
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+        CI_BUILD_NUMBER: ${{ github.run_number }}
+      run: |
+            ./_ci/decrypt_secrets.sh
+            ./gradlew --no-daemon :tasks-app-android:bundleStoreRelease \
+              -Pci=true \
+              -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
+              -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+              -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+
+    # allows Bundler gem installation (used for fastlane gem)
+    - name: 💎 Setup Ruby 3.0
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.0
+
+    - name: 🚀 Play Store publish
+      run: |
+            sudo apt -y install libxml2-utils
+            gem install bundler
+            bundle config set --local path .bundler
+            bundle install --jobs "$(nproc)"
+            ./_ci/playstore.sh "${{ inputs.track }}" ${{ inputs.upload_binary }} ${{ inputs.upload_assets }} "${{ inputs.in_app_update_level }}"
+
+    - name: 📌 Tag Release
+      if:  ${{ inputs.tag_repository }} 
+      run: |
+            sudo snap install yq
+            version_name=$(yq e '.versions.tasksApp-name' gradle/libs.versions.toml)
+            version_code=${{ github.run_number }}
+            git config user.name 'Github Actions'
+            git config user.email 'opatry-tasks-app@users.noreply.github.com'
+            git tag -a v${version_name}.${version_code}-playstore -m "🚀 Published version ${version_name}.${version_code} on Play Store"
+            git push origin --tags
