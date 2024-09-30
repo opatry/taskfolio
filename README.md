@@ -10,6 +10,7 @@ A basic TODO list application based on [Google Tasks REST API](https://developer
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Kotlin multiplatform](https://kotlinlang.org/docs/multiplatform.html) (aka KMP)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
+- [Jetpack Compose](https://developer.android.com/jetpack/compose)
 
 ## License
 

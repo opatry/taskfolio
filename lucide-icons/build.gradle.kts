@@ -21,8 +21,17 @@
  */
 
 plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
-    alias(libs.plugins.jetbrains.kotlin.serialization) apply false
-    alias(libs.plugins.jetbrains.kotlin.compose.compiler) apply false
-    alias(libs.plugins.jetbrains.compose) apply false
+    alias(libs.plugins.jetbrains.kotlin.multiplatform)
+    alias(libs.plugins.jetbrains.kotlin.compose.compiler)
+    alias(libs.plugins.jetbrains.compose)
+}
+
+kotlin {
+    jvm()
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(compose.foundation)
+        }
+    }
 }
