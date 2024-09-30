@@ -26,4 +26,7 @@ import androidx.compose.runtime.Composable
 import net.opatry.tasks.app.ui.TaskListsViewModel
 
 @Composable
-expect fun TaskListsMasterDetail(viewModel: TaskListsViewModel)
+expect fun TaskListsMasterDetail(
+    viewModel: TaskListsViewModel,
+    onNewTaskList: (String) -> Unit
+)
