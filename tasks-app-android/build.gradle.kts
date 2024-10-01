@@ -20,6 +20,32 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import com.mikepenz.aboutlibraries.plugin.DuplicateMode
+import com.mikepenz.aboutlibraries.plugin.DuplicateRule
+import com.mikepenz.aboutlibraries.plugin.StrictMode
+
+/*
+ * Copyright (c) 2024 Olivier Patry
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -27,6 +53,7 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.about.libraries)
 }
 
 val versionCodeValue = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
@@ -119,6 +146,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -157,4 +185,25 @@ dependencies {
     implementation(project(":google:oauth"))
     implementation(project(":google:tasks"))
     implementation(project(":tasks-app-shared"))
+}
+
+aboutLibraries {
+    // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
+    // - `./gradlew :tasks-app-android:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/assets`
+    // - the resulting file can for example be added as part of the SCM
+    registerAndroidTasks = false
+    outputFileName = "licenses_android.json"
+    // Define the path configuration files are located in. E.g. additional libraries, licenses to add to the target .json
+    // Warning: Do not use the parent folder of a module as path (see https://github.com/mikepenz/AboutLibraries/issues/936)
+    configPath = "license_config"
+    offlineMode = true
+    fetchRemoteLicense = true
+    fetchRemoteFunding = false
+    excludeFields = arrayOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
+    includePlatform = true
+    strictMode = StrictMode.FAIL
+    allowedLicenses = arrayOf("Apache-2.0", "asdkl", "MIT")
+    duplicationMode = DuplicateMode.LINK
+    duplicationRule = DuplicateRule.SIMPLE
+    prettyPrint = true
 }

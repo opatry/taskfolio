@@ -81,6 +81,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
+            implementation(libs.about.libraries.core)
+
             implementation(project(":tasks-core"))
 
             implementation(project(":lucide-icons"))
