@@ -12,4 +12,6 @@ Whether it’s robust architecture using MVVM, secure API integration, or a seam
 well-architected Android applications.
 
 If you’re interested in learning more about how this project was built or in seeing the full codebase,
-visit the project’s <a href="https://github.com/opatry/taskfolio">GitHub repository</a>!
+visit the project’s GitHub repository!
+
+https://github.com/opatry/taskfolio
