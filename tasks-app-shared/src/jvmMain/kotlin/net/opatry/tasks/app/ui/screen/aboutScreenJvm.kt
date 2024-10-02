@@ -22,14 +22,36 @@
 
 package net.opatry.tasks.app.ui.screen
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import net.opatry.tasks.resources.Res
-import net.opatry.tasks.resources.settings_screen_tbd
-import org.jetbrains.compose.resources.stringResource
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 
 
 @Composable
-fun SettingsScreen() {
-    Text(stringResource(Res.string.settings_screen_tbd))
+actual fun AboutScreen(aboutApp: AboutApp) {
+    var currentDestination by remember { mutableStateOf(AboutScreenDestination.About) }
+
+    Scaffold(topBar = {
+        when (currentDestination) {
+            AboutScreenDestination.Credits -> CreditsScreenTopAppBar {
+                currentDestination = AboutScreenDestination.About
+            }
+            AboutScreenDestination.About ->  AboutScreenTopAppBar(aboutApp.name, aboutApp.version)
+        }
+    }) { innerPadding ->
+        Box(Modifier.padding(innerPadding)) {
+            when (currentDestination) {
+                AboutScreenDestination.About -> AboutScreenContent(aboutApp) { destination ->
+                    currentDestination = destination
+                }
+                AboutScreenDestination.Credits -> CreditsScreenContent(aboutApp.aboutLibrariesJsonProvider)
+            }
+        }
+    }
 }

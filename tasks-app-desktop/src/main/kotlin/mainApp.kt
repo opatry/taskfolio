@@ -45,6 +45,7 @@ import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.component.LoadingPane
+import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
 import net.opatry.tasks.app.ui.theme.TasksfolioTheme
 import org.koin.compose.KoinApplication
@@ -55,9 +56,14 @@ import javax.swing.UIManager
 
 private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
 
+object MainApp
+
 fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
+    val appName = "Taskfolio"
+    val fullVersion = System.getProperty("app.version.full") ?: "0.0.0.0"
+    val versionLabel = System.getProperty("app.version")?.let { " v$it" } ?: ""
     application {
         val screenSize by remember {
             mutableStateOf(Toolkit.getDefaultToolkit().screenSize)
@@ -73,7 +79,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             state = windowState,
-            title = "Taskfolio",
+            title = "$appName$versionLabel",
         ) {
             if (window.minimumSize != minSize) window.minimumSize = minSize
 
@@ -120,8 +126,14 @@ fun main() {
 
                             is UserState.Unsigned,
                             is UserState.SignedIn -> {
+                                val aboutApp = AboutApp(
+                                    name = appName,
+                                    version = fullVersion
+                                ) {
+                                    MainApp::class.java.getResource("/licenses_desktop.json")?.readText() ?: ""
+                                }
                                 val tasksViewModel = koinViewModel<TaskListsViewModel>()
-                                TasksApp(userViewModel, tasksViewModel)
+                                TasksApp(aboutApp, userViewModel, tasksViewModel)
                             }
 
                             is UserState.Newcomer -> AuthorizationScreen(
