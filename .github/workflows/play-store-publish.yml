@@ -1,4 +1,5 @@
 name: 🚀 Play Store publish
+
 on:
   workflow_dispatch:
     inputs:
