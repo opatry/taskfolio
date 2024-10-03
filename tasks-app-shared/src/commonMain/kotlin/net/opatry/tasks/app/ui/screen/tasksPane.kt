@@ -126,6 +126,7 @@ import net.opatry.tasks.app.ui.component.TaskMenu
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ADD_TASK_FAB
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE_LABEL
@@ -139,6 +140,9 @@ import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_MENU_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_NOTES
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.TASK_EDITOR_SHEET
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.TASK_NOTES_FIELD
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.TASK_TITLE_FIELD
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
@@ -199,6 +203,10 @@ object TaskListPaneTestTag {
     const val COMPLETED_TASK_DELETE_ICON = "COMPLETED_TASK_DELETE_ICON"
     const val COMPLETED_TASKS_TOGGLE = "COMPLETED_TASKS_TOGGLE"
     const val COMPLETED_TASKS_TOGGLE_LABEL = "COMPLETED_TASKS_TOGGLE_LABEL"
+    const val ADD_TASK_FAB = "ADD_TASK_FAB"
+    const val TASK_TITLE_FIELD = "TASK_TITLE_FIELD"
+    const val TASK_NOTES_FIELD = "TASK_NOTES_FIELD"
+    const val TASK_EDITOR_SHEET = "TASK_EDITOR_SHEET"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -283,7 +291,7 @@ fun TaskListDetail(
         // FIXME should be driven by the NavigationRail
         floatingActionButton = {
             // FIXME hides bottom of screen
-            FloatingActionButton(onClick = { showNewTaskSheet = true }) {
+            FloatingActionButton(onClick = { showNewTaskSheet = true }, Modifier.testTag(ADD_TASK_FAB)) {
                 Icon(LucideIcons.Plus, null)
             }
         }
@@ -402,6 +410,7 @@ fun TaskListDetail(
         val task = taskOfInterest
         ModalBottomSheet(
             sheetState = taskEditorSheetState,
+            modifier = Modifier.testTag(TASK_EDITOR_SHEET),
             onDismissRequest = {
                 taskOfInterest = null
                 showEditTaskSheet = false
@@ -436,7 +445,9 @@ fun TaskListDetail(
                 OutlinedTextField(
                     newTitle,
                     onValueChange = { newTitle = it },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(TASK_TITLE_FIELD),
                     label = { Text(stringResource(Res.string.task_editor_sheet_title_field_label)) },
                     placeholder = { Text(stringResource(Res.string.task_editor_sheet_title_field_placeholder)) },
                     maxLines = 1,
@@ -455,7 +466,9 @@ fun TaskListDetail(
                 OutlinedTextField(
                     newNotes,
                     onValueChange = { newNotes = it },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(TASK_NOTES_FIELD),
                     label = { Text(stringResource(Res.string.task_editor_sheet_notes_field_label)) },
                     placeholder = { Text(stringResource(Res.string.task_editor_sheet_notes_field_placeholder)) },
                     leadingIcon = { Icon(LucideIcons.NotepadText, null) },
