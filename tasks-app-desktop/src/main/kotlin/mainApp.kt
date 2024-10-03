@@ -47,7 +47,7 @@ import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
-import net.opatry.tasks.app.ui.theme.TasksfolioTheme
+import net.opatry.tasks.app.ui.theme.TaskfolioTheme
 import org.koin.compose.KoinApplication
 import org.koin.compose.viewmodel.koinViewModel
 import java.awt.Dimension
@@ -119,7 +119,7 @@ fun main() {
                     }
                 }
 
-                TasksfolioTheme {
+                TaskfolioTheme {
                     Surface {
                         when (userState) {
                             null -> LoadingPane()

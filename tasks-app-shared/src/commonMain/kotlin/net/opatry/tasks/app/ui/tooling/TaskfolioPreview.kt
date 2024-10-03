@@ -24,7 +24,7 @@ package net.opatry.tasks.app.ui.tooling
 
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import net.opatry.tasks.app.ui.theme.TasksfolioTheme
+import net.opatry.tasks.app.ui.theme.TaskfolioTheme
 
 @Retention(AnnotationRetention.BINARY)
 @Target(
@@ -49,7 +49,7 @@ annotation class TaskfolioPreview
 
 @Composable
 fun TaskfolioThemedPreview(content: @Composable () -> Unit) {
-    TasksfolioTheme {
+    TaskfolioTheme {
         Surface {
             content()
         }
