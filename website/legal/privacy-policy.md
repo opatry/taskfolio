@@ -11,10 +11,13 @@ Upon downloading or utilizing the Application, you are automatically agreeing to
 
 The Service Provider is dedicated to ensuring that the Application is as beneficial and efficient as possible. As such, they reserve the right to modify the Application or charge for their services at any time and for any reason. The Service Provider assures you that any charges for the Application or its services will be clearly communicated to you.
 
-## Information Collection and Use
+## Data Protection
 
-The Application accesses Google Tasks data through the Google API to fetch user task information. This data is stored locally on the user’s device and is not transferred, shared, or sent to any third-party servers or external locations. The fetched data remains securely stored on Google’s servers, and our application only accesses it with the user’s explicit consent. The local storage is used solely for the functionality of the app and is never shared or used for any other purposes.
-It is your responsibility to maintain the security of your phone and access to the Application. The Service Provider strongly advise against jailbreaking or rooting your phone, which involves removing software restrictions and limitations imposed by the official operating system of your device. Such actions could expose your phone to malware, viruses, malicious programs, compromise your phone's security features, and may result in the Application not functioning correctly or at all.
+We are committed to ensuring that your data is secure. The Application accesses Google Tasks data through Google’s API and uses industry-standard security measures to protect this information. All data transmitted between the app and Google’s servers is encrypted using SSL (Secure Socket Layer) technology to prevent unauthorized access during transmission. The application accesses data only with your explicit consent and uses OAuth 2.0 for secure authorization. Furthermore, access to this data is limited to the local device, and we implement safeguards to ensure that only authorized users can access their own data. We do not store or process any user data on external servers.
+
+## Data Retention and Deletion
+
+The Application stores your Google Tasks data only locally on your device to enhance its functionality. We do not store or retain any Google user data on external servers. You have full control over this data, and if you uninstall the Application, all locally stored data is automatically deleted from your device. Furthermore, you can revoke the app’s access to your Google Tasks data at any time by managing your Google account permissions, which will stop any future access by the Application. We do not retain any data beyond the user’s active use of the Application.
 
 ## Service Providers
 
@@ -46,7 +49,7 @@ These Services do not address anyone under the age of 13. I do not knowingly col
 
 The Service Provider may periodically update its Privacy Policy. Therefore, you are advised to review this page regularly for any changes. The Service Provider will notify you of any changes by posting the new Privacy Policy on this page.
 
-This policy is effective as of 2024-10-02
+This policy is effective as of 2024-10-03
 
 ## Contact Us
 
