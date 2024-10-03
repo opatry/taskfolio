@@ -22,12 +22,11 @@
 
 package net.opatry.tasks.app.ui
 
-import AlignJustify
 import Calendar
+import Info
 import ListTodo
 import LucideIcons
 import Search
-import Settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -53,12 +52,14 @@ import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.MissingScreen
 import net.opatry.tasks.app.ui.component.ProfileIcon
+import net.opatry.tasks.app.ui.screen.AboutApp
+import net.opatry.tasks.app.ui.screen.AboutScreen
 import net.opatry.tasks.app.ui.screen.TaskListsMasterDetail
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.app_name
+import net.opatry.tasks.resources.navigation_about
 import net.opatry.tasks.resources.navigation_calendar
 import net.opatry.tasks.resources.navigation_search
-import net.opatry.tasks.resources.navigation_settings
 import net.opatry.tasks.resources.navigation_tasks
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -69,13 +70,14 @@ enum class AppTasksScreen(
     val contentDescription: StringResource? = null,
 ) {
     Tasks(Res.string.navigation_tasks, LucideIcons.ListTodo),
+
     Calendar(Res.string.navigation_calendar, LucideIcons.Calendar),
     Search(Res.string.navigation_search, LucideIcons.Search),
-    Settings(Res.string.navigation_settings, LucideIcons.Settings),
+    About(Res.string.navigation_about, LucideIcons.Info),
 }
 
 @Composable
-fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
+fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
     var selectedScreen by remember { mutableStateOf(AppTasksScreen.Tasks) }
     val userState by userViewModel.state.collectAsState(null)
     val isSigned by remember(userState) {
@@ -92,21 +94,11 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
     var newTaskListDefaultTitle by remember { mutableStateOf("") }
     var showNewTaskListDialog by remember { mutableStateOf(false) }
 
-    NavigationSuiteScaffold(navigationSuiteItems = {
-        // Only if expanded state
-        if (false) {
-            item(
-                selected = false,
-                onClick = { },
-                enabled = false,
-                icon = {
-                    Icon(LucideIcons.AlignJustify, null)
-                },
-                alwaysShowLabel = false,
-                modifier = Modifier.padding(vertical = 12.dp),
-            )
-        }
+    NavigationSuiteScaffold(modifier = Modifier.padding(top = 16.dp), navigationSuiteItems = {
         AppTasksScreen.entries.forEach { screen ->
+            // hide unsupported screens for now
+            if (screen == AppTasksScreen.Calendar) return@forEach
+            if (screen == AppTasksScreen.Search) return@forEach
             item(
                 selected = selectedScreen == screen,
                 onClick = { selectedScreen = screen },
@@ -160,7 +152,7 @@ fun TasksApp(userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
 
                 AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)
                 AppTasksScreen.Search -> MissingScreen(stringResource(AppTasksScreen.Search.labelRes), LucideIcons.Search)
-                AppTasksScreen.Settings -> MissingScreen(stringResource(AppTasksScreen.Settings.labelRes), LucideIcons.Settings)
+                AppTasksScreen.About -> AboutScreen(aboutApp)
             }
         }
     }

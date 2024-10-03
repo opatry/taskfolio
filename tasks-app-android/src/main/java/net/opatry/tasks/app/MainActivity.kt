@@ -34,8 +34,10 @@ import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.component.LoadingPane
+import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
 import net.opatry.tasks.app.ui.theme.TasksfolioTheme
+import net.opatry.tasks.app.util.readText
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -60,8 +62,14 @@ class MainActivity : AppCompatActivity() {
 
                         is UserState.Unsigned,
                         is UserState.SignedIn -> {
+                            val aboutApp = AboutApp(
+                                name = getString(R.string.app_name),
+                                version = "${BuildConfig.VERSION_NAME}.${BuildConfig.VERSION_CODE}"
+                            ) {
+                                assets.readText("licenses_android.json")
+                            }
                             val tasksViewModel = koinViewModel<TaskListsViewModel>()
-                            TasksApp(userViewModel, tasksViewModel)
+                            TasksApp(aboutApp, userViewModel, tasksViewModel)
                         }
 
                         is UserState.Newcomer -> AuthorizationScreen(

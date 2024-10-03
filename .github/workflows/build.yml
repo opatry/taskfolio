@@ -16,7 +16,8 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    # run on macOS to use Skiko mac for credits checks
+    runs-on: macos-latest
     permissions:
         contents: read
         checks: write
@@ -41,8 +42,23 @@ jobs:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
       run: ./_ci/decrypt_secrets.sh
 
+    - name:  ©️ Generate credits for ':tasks-app-desktop'
+      run: |
+            ./gradlew --no-daemon :tasks-app-desktop:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/resources
+            stale_credits=$(git diff tasks-app-desktop/src/main/resources/licenses_desktop.json)
+            # TODO if/once made reliable, would be nice to publish a PR comment to state about the status
+            if [ -n "${stale_credits}" ]; then ./_ci/generate_github_comment_stale_credits.sh ":tasks-app-desktop" >> "${GITHUB_STEP_SUMMARY}"; fi
+
     - name: 🔨 Build Desktop App 🖥️
-      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
+      run: |
+            ./gradlew --no-daemon :tasks-app-desktop:assemble
+
+    - name:  ©️ Generate credits for ':tasks-app-android'
+      run: |
+            ./gradlew --no-daemon :tasks-app-android:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/assets
+            stale_credits=$(git diff tasks-app-android/src/main/assets/licenses_android.json)
+            # TODO if/once made reliable, would be nice to publish a PR comment to state about the status
+            if [ -n "${stale_credits}" ]; then ./_ci/generate_github_comment_stale_credits.sh ":tasks-app-android" >> "${GITHUB_STEP_SUMMARY}"; fi
 
     - name: 🔨 Build Android App 📱
       env:

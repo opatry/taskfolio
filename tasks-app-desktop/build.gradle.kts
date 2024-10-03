@@ -20,13 +20,20 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import com.mikepenz.aboutlibraries.plugin.DuplicateMode
+import com.mikepenz.aboutlibraries.plugin.DuplicateRule
+import com.mikepenz.aboutlibraries.plugin.StrictMode
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.about.libraries)
 }
+
+val appVersion = libs.versions.tasksApp.name.get()
+val appVersionCode = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
 
 kotlin {
     jvmToolchain(17)
@@ -57,11 +64,14 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "MainAppKt"
-
+        jvmArgs += listOf(
+            "-Dapp.version=$appVersion",
+            "-Dapp.version.full=${appVersion}.${appVersionCode}",
+        )
         nativeDistributions {
-            packageVersion = libs.versions.tasksApp.name.get()
+            packageVersion = appVersion
             packageName = "Taskfolio"
-            version = libs.versions.tasksApp.name.get()
+            version = appVersion
             targetFormats(
                 TargetFormat.Dmg,
             )
@@ -78,4 +88,25 @@ compose.desktop {
             }
         }
     }
+}
+
+aboutLibraries {
+    // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
+    // - `./gradlew :tasks-app-desktop:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/resources`
+    // - the resulting file can for example be added as part of the SCM
+    registerAndroidTasks = false
+    outputFileName = "licenses_desktop.json"
+    // Define the path configuration files are located in. E.g. additional libraries, licenses to add to the target .json
+    // Warning: Do not use the parent folder of a module as path (see https://github.com/mikepenz/AboutLibraries/issues/936)
+    configPath = "license_config"
+    offlineMode = true
+    fetchRemoteLicense = true
+    fetchRemoteFunding = false
+    excludeFields = arrayOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
+    includePlatform = true
+    strictMode = StrictMode.FAIL
+    allowedLicenses = arrayOf("Apache-2.0", "asdkl", "MIT")
+    duplicationMode = DuplicateMode.LINK
+    duplicationRule = DuplicateRule.SIMPLE
+    prettyPrint = true
 }
