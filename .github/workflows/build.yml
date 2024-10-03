@@ -22,6 +22,7 @@ jobs:
         contents: read
         checks: write
         id-token: write
+        pull-requests: write
 
     steps:
     - uses: actions/checkout@v4
@@ -42,23 +43,68 @@ jobs:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
       run: ./_ci/decrypt_secrets.sh
 
-    - name:  ©️ Generate credits for ':tasks-app-desktop'
+    - name: ©️ Generate credits for ':tasks-app-desktop'
+      id: check_desktop_app_credits
       run: |
             ./gradlew --no-daemon :tasks-app-desktop:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/resources
             stale_credits=$(git diff tasks-app-desktop/src/main/resources/licenses_desktop.json)
-            # TODO if/once made reliable, would be nice to publish a PR comment to state about the status
-            if [ -n "${stale_credits}" ]; then ./_ci/generate_github_comment_stale_credits.sh ":tasks-app-desktop" >> "${GITHUB_STEP_SUMMARY}"; fi
+            if [ -n "${stale_credits}" ]; then
+                {
+                  echo "## Stale credits for \`:tasks-app-desktop\`"
+                  echo "\`\`\`diff"
+                  echo "${stale_credits}"
+                  echo "\`\`\`"
+                } >> "${GITHUB_STEP_SUMMARY}"
+              echo "::warning file=tasks-app-desktop/src/main/resources/licenses_desktop.json,title=Stale credits::Some licenses information are not up to date for ':tasks-app-desktop'"
+              # ::set-output is deprecated, but nothing works with multiline strings and GITHUB_OUTPUT :(
+              # see https://lab.amalitsky.com/posts/2022/github-actions-set-output-migration/
+              echo ::set-output name=credits_diff_comment::$(./_ci/generate_github_comment_stale_credits.sh ":tasks-app-desktop")
+            fi
+
+    - name: 🛎️ Notify stale credits for ':tasks-app-desktop'
+      if: steps.check_desktop_app_credits.outputs.credits_diff_comment != ''
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '${{ steps.check_desktop_app_credits.outputs.credits_diff_comment }}'
+          })
 
     - name: 🔨 Build Desktop App 🖥️
-      run: |
-            ./gradlew --no-daemon :tasks-app-desktop:assemble
+      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
 
-    - name:  ©️ Generate credits for ':tasks-app-android'
+    - name: ©️ Generate credits for ':tasks-app-android'
+      id: check_android_app_credits
       run: |
             ./gradlew --no-daemon :tasks-app-android:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/assets
             stale_credits=$(git diff tasks-app-android/src/main/assets/licenses_android.json)
-            # TODO if/once made reliable, would be nice to publish a PR comment to state about the status
-            if [ -n "${stale_credits}" ]; then ./_ci/generate_github_comment_stale_credits.sh ":tasks-app-android" >> "${GITHUB_STEP_SUMMARY}"; fi
+            if [ -n "${stale_credits}" ]; then
+                {
+                  echo "## Stale credits for \`:tasks-app-android\`"
+                  echo "\`\`\`diff"
+                  echo "${stale_credits}"
+                  echo "\`\`\`"
+                } >> "${GITHUB_STEP_SUMMARY}"
+              echo "::warning file=tasks-app-android/src/main/assets/licenses_android.json,title=Stale credits::Some licenses information are not up to date for ':tasks-app-android'"
+              # ::set-output is deprecated, but nothing works with multiline strings and GITHUB_OUTPUT :(
+              # see https://lab.amalitsky.com/posts/2022/github-actions-set-output-migration/
+              echo ::set-output name=credits_diff_comment::$(./_ci/generate_github_comment_stale_credits.sh ":tasks-app-android")
+            fi
+
+    - name: 🛎️ Notify stale credits for ':tasks-app-android'
+      if: steps.check_android_app_credits.outputs.credits_diff_comment != ''
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '${{ steps.check_android_app_credits.outputs.credits_diff_comment }}'
+          })
 
     - name: 🔨 Build Android App 📱
       env:
