@@ -16,7 +16,8 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    # run on macOS to use Skiko mac for credits checks
+    runs-on: macos-latest
     permissions:
         contents: read
         checks: write
