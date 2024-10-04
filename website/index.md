@@ -15,8 +15,8 @@ and scalable Android apps.
 
 [![Taskfolio Android Application]({{ site.baseurl }}/assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
 
-| --------------------------------------- |--------------------------------------- | ---------------------------------- |
-| ![]({{ site.baseurl }}/assets/screens/task_lists_light.png) | ![]({{ site.baseurl }}/assets/screens/groceries_light.png) | ![](assets/screens/home_dark.png)  |
+| --------------------------------------- |--------------------------------------- |--------------------------------------- | ---------------------------------- |
+| ![]({{ site.baseurl }}/assets/screens/task_lists_light.png) | ![]({{ site.baseurl }}/assets/screens/groceries_light.png) | ![]({{ site.baseurl }}/assets/screens/my_tasks_light.png) | ![](assets/screens/home_dark.png)  |
 
 ## 🎯 Project intentions
 
