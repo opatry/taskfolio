@@ -3,14 +3,14 @@ tasksApp-name = "1.1.0"
 compileSdk = "34"
 minSdk = "24"
 targetSdk = "34"
-agp = "8.6.1"
+agp = "8.5.1"
 kotlin = "2.0.20"
 ksp = "2.0.20-1.0.24"
 coroutines = "1.9.0"
-ktor = "2.3.12"
+ktor = "3.0.0-rc-2"
 compose-plugin = "1.7.0-rc01"
-room = "2.7.0-alpha08"
-sqlite = "2.5.0-alpha08"
+room = "2.7.0-alpha09"
+sqlite = "2.5.0-alpha09"
 koin = "4.0.0"
 coil = "3.0.0-alpha10"
 about-libraries = "11.2.3"
@@ -21,7 +21,7 @@ kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.1" }
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.2" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.3" }
 
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }

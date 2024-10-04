@@ -36,7 +36,7 @@ import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
-import net.opatry.tasks.app.ui.theme.TasksfolioTheme
+import net.opatry.tasks.app.ui.theme.TaskfolioTheme
 import net.opatry.tasks.app.util.readText
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            TasksfolioTheme {
+            TaskfolioTheme {
                 Surface {
                     when (userState) {
                         null -> LoadingPane()
