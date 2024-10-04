@@ -138,7 +138,8 @@ fun TaskListDetail(
     var showUndoTaskDeletionSnackbar by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    if (showUndoTaskDeletionSnackbar) {
+    val enableUndoTaskDeletion = false
+    if (enableUndoTaskDeletion && showUndoTaskDeletionSnackbar) {
         LaunchedEffect(Unit) {
             taskOfInterest?.let { task ->
                 val result = snackbarHostState.showSnackbar(
@@ -333,7 +334,8 @@ fun TaskListDetail(
                 OutlinedTextField(
                     newTitle,
                     onValueChange = { newTitle = it },
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Title") },
                     maxLines = 1,
                     supportingText = {
                         AnimatedVisibility(visible = titleHasError) {
@@ -346,7 +348,8 @@ fun TaskListDetail(
                 OutlinedTextField(
                     newNotes,
                     onValueChange = { newNotes = it },
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Notes") },
                     leadingIcon = { Icon(LucideIcons.NotepadText, null) },
                     singleLine = false,
                     minLines = 2,
@@ -360,45 +363,50 @@ fun TaskListDetail(
                     val dueDateLabel = task?.dateRange?.toLabel()?.takeUnless(String::isBlank) ?: "No due date"
                     AssistChip(
                         onClick = { showDatePickerDialog = true },
+                        enabled = false, // TODO not supported for now, super imposed dialogs breaks the flow
                         shape = MaterialTheme.shapes.large,
                         leadingIcon = { Icon(LucideIcons.CalendarDays, null) },
                         label = { Text(dueDateLabel, color = task?.dateRange.toColor()) },
                     )
 
-                    ExposedDropdownMenuBox(
-                        expanded = expandTaskListsDropDown,
-                        onExpandedChange = { expandTaskListsDropDown = it }
-                    ) {
-                        OutlinedTextField(
-                            targetList.title,
-                            onValueChange = {},
-                            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
-                            readOnly = true,
-                            trailingIcon = {
-                                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandTaskListsDropDown)
-                            },
-                        )
-
-                        ExposedDropdownMenu(
+                    val enableAdvancedTaskEdit = false
+                    if (enableAdvancedTaskEdit) {
+                        ExposedDropdownMenuBox(
                             expanded = expandTaskListsDropDown,
-                            onDismissRequest = { expandTaskListsDropDown = false }
+                            onExpandedChange = { expandTaskListsDropDown = it }
                         ) {
-                            taskLists.forEach { taskList ->
-                                DropdownMenuItem(
-                                    text = { Text(taskList.title) },
-                                    onClick = {
-                                        targetList = taskList
-                                        expandTaskListsDropDown = false
-                                    }
-                                )
+                            OutlinedTextField(
+                                targetList.title,
+                                onValueChange = {},
+                                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
+                                label = { Text("List title") },
+                                readOnly = true,
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandTaskListsDropDown)
+                                },
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expandTaskListsDropDown,
+                                onDismissRequest = { expandTaskListsDropDown = false }
+                            ) {
+                                taskLists.forEach { taskList ->
+                                    DropdownMenuItem(
+                                        text = { Text(taskList.title) },
+                                        onClick = {
+                                            targetList = taskList
+                                            expandTaskListsDropDown = false
+                                        }
+                                    )
+                                }
                             }
                         }
-                    }
 
-                    // TODO instead of a button opening a dialog, TextField could be editable to let user
-                    //  enter the new list name, if targetList isn't part of taskLists, then, it's a new one
-                    IconButton(onClick = {}) {
-                        Icon(LucideIcons.ListPlus, null)
+                        // TODO instead of a button opening a dialog, TextField could be editable to let user
+                        //  enter the new list name, if targetList isn't part of taskLists, then, it's a new one
+                        IconButton(onClick = {}) {
+                            Icon(LucideIcons.ListPlus, null)
+                        }
                     }
                 }
 

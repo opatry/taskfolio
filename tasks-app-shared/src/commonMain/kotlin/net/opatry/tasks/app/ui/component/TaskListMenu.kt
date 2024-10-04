@@ -73,7 +73,9 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
             text = {
                 Text(text = "Sort by", style = MaterialTheme.typography.titleSmall)
             },
-            enabled = false, onClick = {})
+            enabled = false,
+            onClick = {}
+        )
 
         DropdownMenuItem(
             text = {

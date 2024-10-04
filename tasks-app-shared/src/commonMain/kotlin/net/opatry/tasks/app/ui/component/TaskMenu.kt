@@ -70,7 +70,8 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                 text = {
                     RowWithIcon("Move to top")
                 },
-                onClick = { onAction(TaskMenuAction.MoveToTop) }
+                onClick = { onAction(TaskMenuAction.MoveToTop) },
+                enabled = false
             )
         }
 
@@ -79,7 +80,8 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                 text = {
                     RowWithIcon("Add subtask", LucideIcons.SquareStack)
                 },
-                onClick = { onAction(TaskMenuAction.AddSubTask) }
+                onClick = { onAction(TaskMenuAction.AddSubTask) },
+                enabled = false
             )
         }
 
@@ -88,7 +90,8 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                 text = {
                     RowWithIcon("Indent")
                 },
-                onClick = { onAction(TaskMenuAction.Indent) }
+                onClick = { onAction(TaskMenuAction.Indent) },
+                enabled = false
             )
         }
 
@@ -97,7 +100,8 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                 text = {
                     RowWithIcon("Unindent")
                 },
-                onClick = { onAction(TaskMenuAction.Unindent) }
+                onClick = { onAction(TaskMenuAction.Unindent) },
+                enabled = false
             )
         }
 
@@ -107,30 +111,36 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
             text = {
                 Text(text = "Move to…", style = MaterialTheme.typography.titleSmall)
             },
-            enabled = false, onClick = {})
+            enabled = false,
+            onClick = {}
+        )
 
         DropdownMenuItem(
             text = {
                 RowWithIcon("New list", LucideIcons.ListPlus)
             },
-            onClick = { onAction(TaskMenuAction.MoveToNewList) }
+            onClick = { onAction(TaskMenuAction.MoveToNewList) },
+            enabled = false,
         )
 
         // FIXME not ideal when a lot of list, maybe ask for a dialog or bottom sheet in which to choose?
         //  or using a submenu?
-        taskLists.forEach { taskList ->
-            DropdownMenuItem(
-                text = {
-                    RowWithIcon(icon = if (taskList.id == currentTaskList?.id) {
-                        { Icon(LucideIcons.Check, null) }
-                    } else null
-                    ) {
-                        Text(taskList.title, overflow = TextOverflow.Ellipsis, maxLines = 1)
-                    }
-                },
-                enabled = taskList.id != currentTaskList?.id,
-                onClick = { onAction(TaskMenuAction.MoveToList(taskList)) }
-            )
+        val enableMoveTaskList = false
+        if (enableMoveTaskList) {
+            taskLists.forEach { taskList ->
+                DropdownMenuItem(
+                    text = {
+                        RowWithIcon(icon = if (taskList.id == currentTaskList?.id) {
+                            { Icon(LucideIcons.Check, null) }
+                        } else null
+                        ) {
+                            Text(taskList.title, overflow = TextOverflow.Ellipsis, maxLines = 1)
+                        }
+                    },
+                    enabled = taskList.id != currentTaskList?.id,
+                    onClick = { onAction(TaskMenuAction.MoveToList(taskList)) }
+                )
+            }
         }
 
         HorizontalDivider()

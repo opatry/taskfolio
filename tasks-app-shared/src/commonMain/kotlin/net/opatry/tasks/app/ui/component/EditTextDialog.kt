@@ -77,6 +77,7 @@ fun EditTextDialog(
                 OutlinedTextField(
                     newTitle,
                     onValueChange = { newTitle = it },
+                    label = { Text("Title") },
                     maxLines = 1,
                     supportingText = if (allowBlank) null else {
                         {
