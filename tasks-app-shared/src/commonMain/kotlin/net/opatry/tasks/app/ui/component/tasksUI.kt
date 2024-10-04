@@ -333,7 +333,8 @@ fun TaskListDetail(
                 OutlinedTextField(
                     newTitle,
                     onValueChange = { newTitle = it },
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Title") },
                     maxLines = 1,
                     supportingText = {
                         AnimatedVisibility(visible = titleHasError) {
@@ -346,7 +347,8 @@ fun TaskListDetail(
                 OutlinedTextField(
                     newNotes,
                     onValueChange = { newNotes = it },
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Notes") },
                     leadingIcon = { Icon(LucideIcons.NotepadText, null) },
                     singleLine = false,
                     minLines = 2,
@@ -373,6 +375,7 @@ fun TaskListDetail(
                             targetList.title,
                             onValueChange = {},
                             modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
+                            label = { Text("List title") },
                             readOnly = true,
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandTaskListsDropDown)
