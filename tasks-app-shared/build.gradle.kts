@@ -59,8 +59,8 @@ kotlin {
             api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
             implementation(libs.bundles.ktor.server)
-            implementation(project(":google:oauth"))
-            implementation(project(":google:tasks"))
+            implementation(projects.google.oauth)
+            implementation(projects.google.tasks)
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
@@ -83,9 +83,9 @@ kotlin {
 
             implementation(libs.about.libraries.core)
 
-            implementation(project(":tasks-core"))
+            implementation(projects.tasksCore)
 
-            implementation(project(":lucide-icons"))
+            implementation(projects.lucideIcons)
         }
     }
 }

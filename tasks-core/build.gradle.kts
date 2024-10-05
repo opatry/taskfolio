@@ -39,8 +39,8 @@ kotlin {
             api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
             implementation(libs.bundles.ktor.server)
-            implementation(project(":google:oauth"))
-            implementation(project(":google:tasks"))
+            implementation(projects.google.oauth)
+            implementation(projects.google.tasks)
 
             implementation(libs.androidx.room.runtime)
         }

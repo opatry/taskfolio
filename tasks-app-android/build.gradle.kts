@@ -182,9 +182,9 @@ dependencies {
 
     implementation(libs.play.services.auth)
 
-    implementation(project(":google:oauth"))
-    implementation(project(":google:tasks"))
-    implementation(project(":tasks-app-shared"))
+    implementation(projects.google.oauth)
+    implementation(projects.google.tasks)
+    implementation(projects.tasksAppShared)
 }
 
 aboutLibraries {
