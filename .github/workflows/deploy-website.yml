@@ -5,7 +5,9 @@ on:
     branches:
       - main
     paths:
+      - 'assets/**'
       - 'website/**'
+  workflow_dispatch:
 
 permissions:
   contents: write
