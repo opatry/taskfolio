@@ -21,11 +21,5 @@
   -->
 
 <resources>
-    <!--
-    To be kept in sync with Compose counterparts `Color.kt` & `Theme.kt` in `:tasks-app-shared`
-    -->
-
-    <color name="primary">#FF006B58</color>
-
-    <color name="surface_color">#FFFFFFFF</color>
+    <bool name="light_status_bar">true</bool>
 </resources>

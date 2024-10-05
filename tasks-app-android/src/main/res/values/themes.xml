@@ -20,11 +20,26 @@
   OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
 
-<resources>
-    <!-- FIXME Material3 theme -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+    Use AppCompat and not Material3 to avoid retrieving a lot of useless dependencies just
+    by embedding `com.google.android.material:material` dependency.
+    There is no use of view theming except for Android system bars here anyway.
+    -->
     <style name="Theme.TasksApp" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary</item>
         <item name="colorAccent">@color/primary</item>
+
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="android:windowBackground">@color/surface_color</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">@bool/light_status_bar</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- Disable window features like ActionBar, Title and Overlay. -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 </resources>
