@@ -55,9 +55,9 @@ kotlin {
         implementation(compose.material3)
         implementation(compose.desktop.currentOs)
 
-        implementation(project(":google:oauth"))
-        implementation(project(":google:tasks"))
-        implementation(project(":tasks-app-shared"))
+        implementation(projects.google.oauth)
+        implementation(projects.google.tasks)
+        implementation(projects.tasksAppShared)
     }
 }
 
