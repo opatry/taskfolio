@@ -39,7 +39,6 @@ import io.ktor.http.fullPath
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationStarted
-import io.ktor.server.application.call
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
@@ -146,7 +145,7 @@ open class HttpGoogleAuthenticator(private val config: ApplicationConfig) : Goog
                         }
                     }
                 }
-                server.environment.monitor.subscribe(ApplicationStarted) {
+                server.monitor.subscribe(ApplicationStarted) {
                     requestUserAuthorization("${config.authUri}$params")
                 }
                 server.start(wait = false)
