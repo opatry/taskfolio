@@ -25,7 +25,8 @@
     To be kept in sync with Compose counterparts `Color.kt` & `Theme.kt` in `:tasks-app-shared`
     -->
 
-    <color name="primary">#FF006B58</color>
+    <!-- FIXME Material3 theme -->
+    <color name="primary">#FFFFFFFF</color>
 
-    <color name="surface_color">#FFFFFFFF</color>
+    <color name="surface_color">#FF222222</color>
 </resources>
