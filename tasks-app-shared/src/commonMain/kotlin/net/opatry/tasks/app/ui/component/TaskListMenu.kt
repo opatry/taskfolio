@@ -51,6 +51,15 @@ import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.task_list_menu_clear_all_completed_tasks
+import net.opatry.tasks.resources.task_list_menu_default_list_cannot_be_deleted
+import net.opatry.tasks.resources.task_list_menu_delete
+import net.opatry.tasks.resources.task_list_menu_rename
+import net.opatry.tasks.resources.task_list_menu_sort_by
+import net.opatry.tasks.resources.task_list_menu_sort_due_date
+import net.opatry.tasks.resources.task_list_menu_sort_manual
+import org.jetbrains.compose.resources.stringResource
 
 enum class TaskListMenuAction {
     Dismiss,
@@ -71,7 +80,7 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
     ) {
         DropdownMenuItem(
             text = {
-                Text(text = "Sort by", style = MaterialTheme.typography.titleSmall)
+                Text(stringResource(Res.string.task_list_menu_sort_by), style = MaterialTheme.typography.titleSmall)
             },
             enabled = false,
             onClick = {}
@@ -79,7 +88,9 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
 
         DropdownMenuItem(
             text = {
-                RowWithIcon("Manual", LucideIcons.Check.takeIf { false/*taskList.sorting == TaskListSorting.Manual*/ })
+                RowWithIcon(
+                    stringResource(Res.string.task_list_menu_sort_manual),
+                    LucideIcons.Check.takeIf { false/*taskList.sorting == TaskListSorting.Manual*/ })
             },
             enabled = false, // TODO enable when sorting is implemented
             onClick = { onAction(TaskListMenuAction.SortManual) }
@@ -87,7 +98,9 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
 
         DropdownMenuItem(
             text = {
-                RowWithIcon("Due date", LucideIcons.Check.takeIf { false/*taskList.sorting == TaskListSorting.Date*/ })
+                RowWithIcon(
+                    stringResource(Res.string.task_list_menu_sort_due_date),
+                    LucideIcons.Check.takeIf { false/*taskList.sorting == TaskListSorting.Date*/ })
             },
             enabled = false, // TODO enable when sorting is implemented
             onClick = { onAction(TaskListMenuAction.SortDate) }
@@ -97,14 +110,14 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
 
         DropdownMenuItem(
             text = {
-                Text(text = "Rename")
+                Text(stringResource(Res.string.task_list_menu_rename))
             },
             onClick = { onAction(TaskListMenuAction.Rename) }
         )
 
         DropdownMenuItem(
             text = {
-                Text(text = "Clear all completed tasks")
+                Text(stringResource(Res.string.task_list_menu_clear_all_completed_tasks))
             },
             enabled = taskList.hasCompletedTasks,
             onClick = { onAction(TaskListMenuAction.ClearCompletedTasks) }
@@ -120,9 +133,12 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
                 }
                 CompositionLocalProvider(LocalContentColor provides color) {
                     Column(Modifier.padding(vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        RowWithIcon("Delete list", LucideIcons.Trash2)
+                        RowWithIcon(stringResource(Res.string.task_list_menu_delete), LucideIcons.Trash2)
                         if (!allowDelete) {
-                            Text("Default list can't be deleted", style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                stringResource(Res.string.task_list_menu_default_list_cannot_be_deleted),
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 }

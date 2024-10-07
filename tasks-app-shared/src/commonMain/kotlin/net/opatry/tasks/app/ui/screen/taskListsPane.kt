@@ -53,6 +53,9 @@ import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.task_lists_screen_add_task_list_cta
+import org.jetbrains.compose.resources.stringResource
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -76,7 +79,7 @@ fun TaskListsColumn(
                 TextButton(
                     onClick = onNewTaskList,
                 ) {
-                    RowWithIcon("Add task list…", LucideIcons.CircleFadingPlus)
+                    RowWithIcon(stringResource(Res.string.task_lists_screen_add_task_list_cta), LucideIcons.CircleFadingPlus)
                 }
             }
 

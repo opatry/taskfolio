@@ -43,6 +43,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.text.style.TextOverflow
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.task_menu_add_subtask
+import net.opatry.tasks.resources.task_menu_delete
+import net.opatry.tasks.resources.task_menu_indent
+import net.opatry.tasks.resources.task_menu_move_to
+import net.opatry.tasks.resources.task_menu_move_to_top
+import net.opatry.tasks.resources.task_menu_new_list
+import net.opatry.tasks.resources.task_menu_unindent
+import org.jetbrains.compose.resources.stringResource
 
 sealed class TaskMenuAction {
     data object Dismiss : TaskMenuAction()
@@ -68,7 +77,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
         if (canMoveToTop) {
             DropdownMenuItem(
                 text = {
-                    RowWithIcon("Move to top")
+                    RowWithIcon(stringResource(Res.string.task_menu_move_to_top))
                 },
                 onClick = { onAction(TaskMenuAction.MoveToTop) },
                 enabled = false
@@ -78,7 +87,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
         if (task.canCreateSubTask) {
             DropdownMenuItem(
                 text = {
-                    RowWithIcon("Add subtask", LucideIcons.SquareStack)
+                    RowWithIcon(stringResource(Res.string.task_menu_add_subtask), LucideIcons.SquareStack)
                 },
                 onClick = { onAction(TaskMenuAction.AddSubTask) },
                 enabled = false
@@ -88,7 +97,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
         if (task.canIndent && taskPosition > 0) {
             DropdownMenuItem(
                 text = {
-                    RowWithIcon("Indent")
+                    RowWithIcon(stringResource(Res.string.task_menu_indent))
                 },
                 onClick = { onAction(TaskMenuAction.Indent) },
                 enabled = false
@@ -98,7 +107,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
         if (task.canUnindent) {
             DropdownMenuItem(
                 text = {
-                    RowWithIcon("Unindent")
+                    RowWithIcon(stringResource(Res.string.task_menu_unindent))
                 },
                 onClick = { onAction(TaskMenuAction.Unindent) },
                 enabled = false
@@ -109,7 +118,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
 
         DropdownMenuItem(
             text = {
-                Text(text = "Move to…", style = MaterialTheme.typography.titleSmall)
+                Text(stringResource(Res.string.task_menu_move_to), style = MaterialTheme.typography.titleSmall)
             },
             enabled = false,
             onClick = {}
@@ -117,7 +126,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
 
         DropdownMenuItem(
             text = {
-                RowWithIcon("New list", LucideIcons.ListPlus)
+                RowWithIcon(stringResource(Res.string.task_menu_new_list), LucideIcons.ListPlus)
             },
             onClick = { onAction(TaskMenuAction.MoveToNewList) },
             enabled = false,
@@ -148,7 +157,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
         DropdownMenuItem(
             text = {
                 CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.error) {
-                    RowWithIcon("Delete", LucideIcons.Trash2)
+                    RowWithIcon(stringResource(Res.string.task_menu_delete), LucideIcons.Trash2)
                 }
             },
             onClick = { onAction(TaskMenuAction.Delete) }

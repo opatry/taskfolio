@@ -94,10 +94,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -130,6 +128,37 @@ import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.dialog_cancel
+import net.opatry.tasks.resources.task_due_date_label_days_ago
+import net.opatry.tasks.resources.task_due_date_label_today
+import net.opatry.tasks.resources.task_due_date_label_tomorrow
+import net.opatry.tasks.resources.task_due_date_label_weeks_ago
+import net.opatry.tasks.resources.task_due_date_label_yesterday
+import net.opatry.tasks.resources.task_due_date_update_cta
+import net.opatry.tasks.resources.task_editor_sheet_edit_title
+import net.opatry.tasks.resources.task_editor_sheet_list_dropdown_label
+import net.opatry.tasks.resources.task_editor_sheet_new_title
+import net.opatry.tasks.resources.task_editor_sheet_no_due_date_fallback
+import net.opatry.tasks.resources.task_editor_sheet_notes_field_label
+import net.opatry.tasks.resources.task_editor_sheet_title_field_empty_error
+import net.opatry.tasks.resources.task_editor_sheet_title_field_label
+import net.opatry.tasks.resources.task_editor_sheet_validate
+import net.opatry.tasks.resources.task_list_pane_all_tasks_complete_desc
+import net.opatry.tasks.resources.task_list_pane_all_tasks_complete_title
+import net.opatry.tasks.resources.task_list_pane_clear_completed_confirm_dialog_confirm
+import net.opatry.tasks.resources.task_list_pane_clear_completed_confirm_dialog_message
+import net.opatry.tasks.resources.task_list_pane_clear_completed_confirm_dialog_title
+import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_count
+import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_confirm
+import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_message
+import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_title
+import net.opatry.tasks.resources.task_list_pane_delete_task_icon_content_desc
+import net.opatry.tasks.resources.task_list_pane_rename_dialog_cta
+import net.opatry.tasks.resources.task_list_pane_rename_dialog_title
+import net.opatry.tasks.resources.task_list_pane_task_deleted_snackbar
+import net.opatry.tasks.resources.task_list_pane_task_deleted_undo_snackbar
+import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
+import net.opatry.tasks.resources.task_list_pane_task_restored_snackbar
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
 import org.jetbrains.compose.resources.stringResource
@@ -162,11 +191,14 @@ fun TaskListDetail(
 
     val enableUndoTaskDeletion = false
     if (enableUndoTaskDeletion && showUndoTaskDeletionSnackbar) {
+        val taskDeletedMessage = stringResource(Res.string.task_list_pane_task_deleted_snackbar)
+        val taskDeletedUndo = stringResource(Res.string.task_list_pane_task_deleted_undo_snackbar)
+        val taskRestoredMessage = stringResource(Res.string.task_list_pane_task_restored_snackbar)
         LaunchedEffect(Unit) {
             taskOfInterest?.let { task ->
                 val result = snackbarHostState.showSnackbar(
-                    message = "Task deleted",
-                    actionLabel = "Undo",
+                    message = taskDeletedMessage,
+                    actionLabel = taskDeletedUndo,
                     duration = SnackbarDuration.Short
                 )
                 taskOfInterest = null
@@ -175,7 +207,7 @@ fun TaskListDetail(
                     SnackbarResult.Dismissed -> viewModel.confirmTaskDeletion(task)
                     SnackbarResult.ActionPerformed -> {
                         viewModel.restoreTask(task)
-                        snackbarHostState.showSnackbar("Task restored")
+                        snackbarHostState.showSnackbar(taskRestoredMessage, duration = SnackbarDuration.Short)
                     }
                 }
             }
@@ -269,8 +301,8 @@ fun TaskListDetail(
                 showRenameTaskListDialog = false
                 viewModel.renameTaskList(taskList, newTitle)
             },
-            validateLabel = "Rename",
-            dialogTitle = "Rename list",
+            validateLabel = stringResource(Res.string.task_list_pane_rename_dialog_cta),
+            dialogTitle = stringResource(Res.string.task_list_pane_rename_dialog_title),
             initialText = taskList.title,
             allowBlank = false,
         )
@@ -280,14 +312,14 @@ fun TaskListDetail(
         AlertDialog(
             onDismissRequest = { showClearTaskListCompletedTasksDialog = false },
             title = {
-                Text("Clear all completed tasks?")
+                Text(stringResource(Res.string.task_list_pane_clear_completed_confirm_dialog_title))
             },
             text = {
-                Text("All completed tasks will be permanently deleted from this list.")
+                Text(stringResource(Res.string.task_list_pane_clear_completed_confirm_dialog_message))
             },
             dismissButton = {
                 TextButton(onClick = { showClearTaskListCompletedTasksDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(Res.string.dialog_cancel))
                 }
             },
             confirmButton = {
@@ -295,7 +327,7 @@ fun TaskListDetail(
                     showClearTaskListCompletedTasksDialog = false
                     viewModel.clearTaskListCompletedTasks(taskList)
                 }) {
-                    Text("Clear")
+                    Text(stringResource(Res.string.task_list_pane_clear_completed_confirm_dialog_confirm))
                 }
             },
         )
@@ -305,14 +337,14 @@ fun TaskListDetail(
         AlertDialog(
             onDismissRequest = { showDeleteTaskListDialog = false },
             title = {
-                Text("Delete this list?")
+                Text(stringResource(Res.string.task_list_pane_delete_list_confirm_dialog_title))
             },
             text = {
-                Text("All tasks in this list will be permanently deleted.")
+                Text(stringResource(Res.string.task_list_pane_delete_list_confirm_dialog_message))
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteTaskListDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(Res.string.dialog_cancel))
                 }
             },
             confirmButton = {
@@ -321,7 +353,7 @@ fun TaskListDetail(
                     viewModel.deleteTaskList(taskList)
                     onNavigateTo(null)
                 }) {
-                    Text("Delete")
+                    Text(stringResource(Res.string.task_list_pane_delete_list_confirm_dialog_confirm))
                 }
             },
         )
@@ -338,7 +370,7 @@ fun TaskListDetail(
                 showNewTaskSheet = false
             }
         ) {
-            val sheetTitle = if (showEditTaskSheet) "Edit task" else "New task"
+            val sheetTitleRes = if (showEditTaskSheet) Res.string.task_editor_sheet_edit_title else Res.string.task_editor_sheet_new_title
             var newTitle by remember { mutableStateOf(task?.title ?: "") }
             val titleHasError by remember {
                 derivedStateOf {
@@ -361,17 +393,17 @@ fun TaskListDetail(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(sheetTitle, style = MaterialTheme.typography.titleLarge)
+                Text(stringResource(sheetTitleRes), style = MaterialTheme.typography.titleLarge)
 
                 OutlinedTextField(
                     newTitle,
                     onValueChange = { newTitle = it },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Title") },
+                    label = { Text(stringResource(Res.string.task_editor_sheet_title_field_label)) },
                     maxLines = 1,
                     supportingText = {
                         AnimatedVisibility(visible = titleHasError) {
-                            Text("Title cannot be empty")
+                            Text(stringResource(Res.string.task_editor_sheet_title_field_empty_error))
                         }
                     },
                     keyboardOptions = KeyboardOptions(
@@ -385,7 +417,7 @@ fun TaskListDetail(
                     newNotes,
                     onValueChange = { newNotes = it },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Notes") },
+                    label = { Text(stringResource(Res.string.task_editor_sheet_notes_field_label)) },
                     leadingIcon = { Icon(LucideIcons.NotepadText, null) },
                     singleLine = false,
                     minLines = 2,
@@ -397,7 +429,8 @@ fun TaskListDetail(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     // TODO Add shortcuts for Today, Tomorrow, Next Week
                     // FIXME when dialog is dismissed, current state is reset but shouldn't need to extract date picker dialog use
-                    val dueDateLabel = task?.dateRange?.toLabel()?.takeUnless(String::isBlank) ?: "No due date"
+                    val dueDateLabel = task?.dateRange?.toLabel()?.takeUnless(String::isBlank)
+                        ?: stringResource(Res.string.task_editor_sheet_no_due_date_fallback)
                     AssistChip(
                         onClick = { showDatePickerDialog = true },
                         enabled = false, // TODO not supported for now, super imposed dialogs breaks the flow
@@ -416,7 +449,7 @@ fun TaskListDetail(
                                 targetList.title,
                                 onValueChange = {},
                                 modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
-                                label = { Text("List title") },
+                                label = { Text(stringResource(Res.string.task_editor_sheet_list_dropdown_label)) },
                                 readOnly = true,
                                 trailingIcon = {
                                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandTaskListsDropDown)
@@ -457,7 +490,7 @@ fun TaskListDetail(
                         showEditTaskSheet = false
                         showNewTaskSheet = false
                     }) {
-                        Text("Cancel")
+                        Text(stringResource(Res.string.dialog_cancel))
                     }
                     Button(
                         onClick = {
@@ -476,7 +509,7 @@ fun TaskListDetail(
                         },
                         enabled = newTitle.isNotBlank()
                     ) {
-                        Text("Validate")
+                        Text(stringResource(Res.string.task_editor_sheet_validate))
                     }
                 }
             }
@@ -496,7 +529,7 @@ fun TaskListDetail(
                         taskOfInterest = null
                         showDatePickerDialog = false
                     }) {
-                        Text("Cancel")
+                        Text(stringResource(Res.string.dialog_cancel))
                     }
                 },
                 confirmButton = {
@@ -509,7 +542,7 @@ fun TaskListDetail(
                             ?.date
                         viewModel.updateTaskDueDate(task, dueDate = newDate)
                     }) {
-                        Text("Update")
+                        Text(stringResource(Res.string.task_due_date_update_cta))
                     }
                 },
             ) {
@@ -568,8 +601,8 @@ fun TasksColumn(
             item {
                 EmptyState(
                     icon = LucideIcons.CheckCheck,
-                    title = "All tasks complete",
-                    description = "Nice work!",
+                    title = stringResource(Res.string.task_list_pane_all_tasks_complete_title),
+                    description = stringResource(Res.string.task_list_pane_all_tasks_complete_desc),
                     modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
                 )
             }
@@ -595,7 +628,7 @@ fun TasksColumn(
                             }
                         ) {
                             Text(
-                                "Completed (${completedCount})",
+                                stringResource(Res.string.task_list_pane_completed_section_title_with_count, completedCount),
                                 style = MaterialTheme.typography.titleSmall
                             )
                         }
@@ -637,17 +670,16 @@ fun DateRange?.toColor(): Color = when (this) {
 @Composable
 fun DateRange.toLabel(): String = when (this) {
     is DateRange.Overdue -> {
-        // TODO string resources with quantity
         if (numberOfDays < 7) {
-            "$numberOfDays days ago"
+            stringResource(Res.string.task_due_date_label_days_ago, numberOfDays)
         } else {
-            "${numberOfDays / 7} weeks ago"
+            stringResource(Res.string.task_due_date_label_weeks_ago, numberOfDays / 7)
         }
     }
 
-    DateRange.Yesterday -> "Yesterday"
-    DateRange.Today -> "Today"
-    DateRange.Tomorrow -> "Tomorrow"
+    DateRange.Yesterday -> stringResource(Res.string.task_due_date_label_yesterday)
+    DateRange.Today -> stringResource(Res.string.task_due_date_label_today)
+    DateRange.Tomorrow -> stringResource(Res.string.task_due_date_label_tomorrow)
     // TODO localize names & format
     is DateRange.Later -> LocalDate.Format {
         if (date.year == Clock.System.todayIn(TimeZone.currentSystemDefault()).year) {
@@ -733,12 +765,12 @@ fun TaskRow(
         }
         if (task.isCompleted) {
             IconButton(onClick = onDeleteTask) {
-                Icon(LucideIcons.Trash, "Delete task")
+                Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
             }
         } else {
             Box {
                 IconButton(onClick = { showContextualMenu = true }) {
-                    Icon(LucideIcons.EllipsisVertical, "Task options")
+                    Icon(LucideIcons.EllipsisVertical, stringResource(Res.string.task_list_pane_task_options_icon_content_desc))
                 }
                 TaskMenu(taskLists, task, showContextualMenu) { action ->
                     showContextualMenu = false

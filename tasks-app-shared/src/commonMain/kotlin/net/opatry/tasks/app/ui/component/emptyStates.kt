@@ -35,13 +35,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.task_lists_screen_empty_state_cta
+import net.opatry.tasks.resources.task_lists_screen_empty_state_desc
+import net.opatry.tasks.resources.task_lists_screen_empty_state_no_selection_desc
+import net.opatry.tasks.resources.task_lists_screen_empty_state_no_selection_title
+import net.opatry.tasks.resources.task_lists_screen_empty_state_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NoTaskListSelectedEmptyState() {
     EmptyState(
         icon = LucideIcons.CircleOff,
-        title = "No task list selected",
-        description = "Select a task list to see its tasks",
+        title = stringResource(Res.string.task_lists_screen_empty_state_no_selection_title),
+        description = stringResource(Res.string.task_lists_screen_empty_state_no_selection_desc),
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -54,12 +61,12 @@ fun NoTaskListEmptyState(onNewTaskListClick: () -> Unit) {
     ) {
         EmptyState(
             icon = LucideIcons.CheckCheck,
-            title = "No task list",
-            description = "Create a new task list to get started",
+            title = stringResource(Res.string.task_lists_screen_empty_state_title),
+            description = stringResource(Res.string.task_lists_screen_empty_state_desc),
             modifier = Modifier.fillMaxWidth(1f)
         )
         Button(onClick = onNewTaskListClick) {
-            Text("New task list")
+            Text(stringResource(Res.string.task_lists_screen_empty_state_cta))
         }
     }
 }

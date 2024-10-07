@@ -23,6 +23,11 @@
 <resources>
     <string name="app_name">Taskfolio</string>
 
+    <string name="dialog_cancel">Cancel</string>
+
+    <string name="edit_text_dialog_title">Title</string>
+    <string name="edit_text_dialog_empty_title_error">Text cannot be empty</string>
+
     <string name="navigation_tasks">Tasks</string>
     <string name="navigation_calendar">Calendar</string>
     <string name="navigation_search">Search</string>
@@ -33,13 +38,78 @@
     <string name="onboarding_screen_skip">Skip</string>
     <string name="onboarding_screen_authorize_cta">Authorize</string>
 
-    <string name="default_task_list_title">My tasks</string>
+    <string name="profile_popup_no_email">No email information</string>
+    <string name="profile_popup_sign_explanation">Sign in and authorize access to your Google Tasks to enable sync.</string>
+    <string name="profile_popup_sign_out">Sign out</string>
+
+    <string name="task_lists_screen_default_task_list_title">My tasks</string>
+    <string name="task_lists_screen_empty_state_no_selection_title">No task list selected</string>
+    <string name="task_lists_screen_empty_state_no_selection_desc">Select a task list to see its tasks</string>
     <string name="task_lists_screen_empty_state_title">No task lists</string>
+    <string name="task_lists_screen_empty_state_desc">Create a new task list to get started</string>
+    <string name="task_lists_screen_empty_state_cta">New task list</string>
+    <string name="task_lists_screen_add_task_list_cta">Add task list…</string>
     <string name="task_lists_screen_empty_list_title">No tasks yet</string>
     <string name="task_lists_screen_empty_list_desc">Start planning to keep track of your pending tasks.</string>
     <string name="task_lists_screen_add_task">Add task</string>
+    <string name="task_lists_screen_create_task_list_dialog_title">New task list</string>
+    <string name="task_lists_screen_create_task_list_dialog_confirm">Create</string>
 
-    <string name="search_screen_tbd">Search</string>
+    <string name="task_list_pane_task_deleted_snackbar">Task deleted</string>
+    <string name="task_list_pane_task_deleted_undo_snackbar">Undo</string>
+    <string name="task_list_pane_task_restored_snackbar">Task restored</string>
+    <string name="task_list_pane_rename_dialog_title">Rename list</string>
+    <string name="task_list_pane_rename_dialog_cta">Rename</string>
+    <string name="task_list_pane_clear_completed_confirm_dialog_title">Clear all completed tasks?</string>
+    <string name="task_list_pane_clear_completed_confirm_dialog_message">All completed tasks will be permanently deleted from this list.</string>
+    <string name="task_list_pane_clear_completed_confirm_dialog_confirm">Clear</string>
+    <string name="task_list_pane_delete_list_confirm_dialog_title">Delete this list?</string>
+    <string name="task_list_pane_delete_list_confirm_dialog_message">All tasks in this list will be permanently deleted.</string>
+    <string name="task_list_pane_delete_list_confirm_dialog_confirm">Delete</string>
+    <string name="task_list_pane_all_tasks_complete_title">All tasks complete</string>
+    <string name="task_list_pane_all_tasks_complete_desc">Nice work!</string>
+    <string name="task_list_pane_completed_section_title_with_count">Completed (%1$s)</string>
+    <string name="task_list_pane_delete_task_icon_content_desc">Delete task</string>
+    <string name="task_list_pane_task_options_icon_content_desc">Task options</string>
 
-    <string name="settings_screen_tbd">Settings</string>
+    <string name="task_due_date_label_days_ago">%1$s days ago</string>
+    <string name="task_due_date_label_weeks_ago">%1$s weeks ago</string>
+    <string name="task_due_date_label_yesterday">Yesterday</string>
+    <string name="task_due_date_label_today">Today</string>
+    <string name="task_due_date_label_tomorrow">Tomorrow</string>
+    <string name="task_due_date_update_cta">Update</string>
+
+    <string name="task_editor_sheet_edit_title">Edit task</string>
+    <string name="task_editor_sheet_new_title">New task</string>
+    <string name="task_editor_sheet_title_field_label">Title</string>
+    <string name="task_editor_sheet_title_field_empty_error">Title cannot be empty</string>
+    <string name="task_editor_sheet_notes_field_label">Notes</string>
+    <string name="task_editor_sheet_no_due_date_fallback">No due date</string>
+    <string name="task_editor_sheet_list_dropdown_label">List title</string>
+    <string name="task_editor_sheet_validate">Validate</string>
+
+    <string name="task_list_menu_sort_by">Sort by</string>
+    <string name="task_list_menu_sort_manual">Manual</string>
+    <string name="task_list_menu_sort_due_date">Due date</string>
+    <string name="task_list_menu_rename">Rename</string>
+    <string name="task_list_menu_clear_all_completed_tasks">Clear all completed tasks</string>
+    <string name="task_list_menu_delete">Delete list</string>
+    <string name="task_list_menu_default_list_cannot_be_deleted">Default list can’t be deleted</string>
+
+    <string name="task_menu_move_to_top">Move to top</string>
+    <string name="task_menu_add_subtask">Add subtask</string>
+    <string name="task_menu_indent">Indent</string>
+    <string name="task_menu_unindent">Unindent</string>
+    <string name="task_menu_move_to">Move to…</string>
+    <string name="task_menu_new_list">New list</string>
+    <string name="task_menu_delete">Delete</string>
+
+    <string name="about_screen_app_version_subtitle">Version %1$s</string>
+    <string name="about_screen_website_item">Website</string>
+    <string name="about_screen_github_item">Github</string>
+    <string name="about_screen_privacy_policy_item">Privacy Policy</string>
+    <string name="about_screen_credits_item">Credits</string>
+
+    <string name="credits_screen_title">Credits</string>
+    <string name="credits_screen_license_unknown_authors">Unknown authors</string>
 </resources>

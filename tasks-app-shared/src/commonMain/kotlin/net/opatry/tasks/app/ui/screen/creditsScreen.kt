@@ -60,9 +60,12 @@ import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.credits_screen_license_unknown_authors
+import net.opatry.tasks.resources.credits_screen_title
+import org.jetbrains.compose.resources.stringResource
 
 private fun Library.authors(max: Int = 3): String? {
-    if (developers.size > 1) println("THIS=$uniqueId HAS ${developers.size} DEVELOPERS")
     return organization?.name
         ?: developers.mapNotNull(Developer::name)
             .take(max)
@@ -84,7 +87,7 @@ private fun rememberLibraries(block: suspend () -> String): State<Libs?> = produ
 fun CreditsScreenTopAppBar(onBack: () -> Unit) {
     TopAppBar(
         title = {
-            Text("Credits")
+            Text(stringResource(Res.string.credits_screen_title))
         },
         navigationIcon = {
             IconButton(onClick = onBack) {
@@ -119,7 +122,7 @@ fun CreditsScreenContent(librariesJsonProvider: suspend () -> String, modifier: 
     LazyColumn(modifier) {
         libraryGroups?.forEach { (authors, libs) ->
             stickyHeader {
-                LibraryAuthorsRow(authors ?: "Unknown authors")
+                LibraryAuthorsRow(authors ?: stringResource(Res.string.credits_screen_license_unknown_authors))
             }
             items(libs) { lib ->
                 LibraryRow(lib, uriHandler::openUri)

@@ -45,6 +45,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.dialog_cancel
+import net.opatry.tasks.resources.edit_text_dialog_empty_title_error
+import net.opatry.tasks.resources.edit_text_dialog_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EditTextDialog(
@@ -77,12 +82,12 @@ fun EditTextDialog(
                 OutlinedTextField(
                     newTitle,
                     onValueChange = { newTitle = it },
-                    label = { Text("Title") },
+                    label = { Text(stringResource(Res.string.edit_text_dialog_title)) },
                     maxLines = 1,
                     supportingText = if (allowBlank) null else {
                         {
                             AnimatedVisibility(visible = hasError) {
-                                Text("Text cannot be empty")
+                                Text(stringResource(Res.string.edit_text_dialog_empty_title_error))
                             }
                         }
                     },
@@ -94,7 +99,7 @@ fun EditTextDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     TextButton(onClick = onDismissRequest) {
-                        Text("Cancel")
+                        Text(stringResource(Res.string.dialog_cancel))
                     }
                     Button(
                         onClick = { onValidate(newTitle) },
