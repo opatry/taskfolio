@@ -94,7 +94,7 @@ fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: T
     var newTaskListDefaultTitle by remember { mutableStateOf("") }
     var showNewTaskListDialog by remember { mutableStateOf(false) }
 
-    NavigationSuiteScaffold(modifier = Modifier.padding(top = 16.dp), navigationSuiteItems = {
+    NavigationSuiteScaffold(navigationSuiteItems = {
         AppTasksScreen.entries.forEach { screen ->
             // hide unsupported screens for now
             if (screen == AppTasksScreen.Calendar) return@forEach
@@ -114,7 +114,7 @@ fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: T
             when (selectedScreen) {
                 AppTasksScreen.Tasks -> {
                     Card(
-                        Modifier.padding(16.dp),
+                        Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         shape = MaterialTheme.shapes.extraLarge,
                         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                     ) {

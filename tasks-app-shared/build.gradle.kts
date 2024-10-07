@@ -96,9 +96,8 @@ room {
 }
 
 dependencies {
-    // FIXME deprecated, rely on add("kspJvm", project(...)) and counterparts (to be clarified)
-    //  see https://kotlinlang.org/docs/ksp-multiplatform.html
-    ksp(libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
+    add("kspAndroid", libs.androidx.room.compiler)
 }
 
 android {
