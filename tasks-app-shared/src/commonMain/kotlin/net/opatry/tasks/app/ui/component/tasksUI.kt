@@ -97,6 +97,10 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.format.DayOfWeekNames
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
@@ -611,12 +615,26 @@ fun DateRange.toLabel(): String = when (this) {
     DateRange.Yesterday -> "Yesterday"
     DateRange.Today -> "Today"
     DateRange.Tomorrow -> "Tomorrow"
-    // TODO nicer formatting with "Jvm" formatter (localized)
-    is DateRange.Later -> if (date.year != Clock.System.todayIn(TimeZone.currentSystemDefault()).year) {
-        "${date.month.name} ${date.dayOfMonth}, ${date.year}"
-    } else {
-        "${date.dayOfWeek.name}, ${date.dayOfMonth}, ${date.year}"
-    }
+    // TODO localize names & format
+    is DateRange.Later -> LocalDate.Format {
+        if (date.year == Clock.System.todayIn(TimeZone.currentSystemDefault()).year) {
+            // FIXME doesn't work with more than 2 dd or MM
+            //  byUnicodePattern("ddd', 'MMM' 'yyyy")
+            dayOfWeek(DayOfWeekNames.ENGLISH_ABBREVIATED) // TODO translation
+            chars(", ")
+            monthName(MonthNames.ENGLISH_ABBREVIATED) // TODO translation
+            char(' ')
+            dayOfMonth(Padding.NONE)
+        } else {
+            // FIXME doesn't work with more than 2 MM
+            //  byUnicodePattern("MMMM' 'dd', 'yyyy")
+            monthName(MonthNames.ENGLISH_FULL) // TODO translation
+            char(' ')
+            dayOfMonth(Padding.NONE)
+            chars(", ")
+            year()
+        }
+    }.format(date)
 
     DateRange.None -> ""
 }
