@@ -61,7 +61,7 @@ object MainApp
 fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
-    val appName = "Taskfolio"
+    val appName = System.getProperty("app.name") ?: "Taskfolio"
     val fullVersion = System.getProperty("app.version.full") ?: "0.0.0.0"
     val versionLabel = System.getProperty("app.version")?.let { " v$it" } ?: ""
     application {

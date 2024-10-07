@@ -32,6 +32,7 @@ plugins {
     alias(libs.plugins.about.libraries)
 }
 
+val appName = "Taskfolio"
 val appVersion = libs.versions.tasksApp.name.get()
 val appVersionCode = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
 
@@ -65,15 +66,23 @@ compose.desktop {
     application {
         mainClass = "MainAppKt"
         jvmArgs += listOf(
+            "-Dapp.name=$appName",
             "-Dapp.version=$appVersion",
             "-Dapp.version.full=${appVersion}.${appVersionCode}",
         )
+
         nativeDistributions {
             packageVersion = appVersion
-            packageName = "Taskfolio"
+            packageName = appName
             version = appVersion
+            description =
+                "An Android task management app built using Google Tasks API. Developed to demonstrate my skills in Kotlin multiplatform development."
+            copyright = "Copyright (c) 2024 Olivier Patry"
+            vendor = "Olivier Patry"
             targetFormats(
                 TargetFormat.Dmg,
+                TargetFormat.Msi,
+                TargetFormat.Deb
             )
 
             modules(
@@ -83,8 +92,29 @@ compose.desktop {
                 "java.sql",
             )
 
+            buildTypes {
+                release {
+                    proguard {
+                        isEnabled = false
+                        // TODO enable proguard
+                        //  configurationFiles.from("tasks-app.pro")
+                    }
+                }
+            }
+
             macOS {
+                iconFile.set(project.file("icon.icns"))
                 bundleID = "net.opatry.tasks.app"
+            }
+            windows {
+                iconFile.set(project.file("icon.ico"))
+                menuGroup = "Tools"
+                shortcut = true
+                // see https://wixtoolset.org/documentation/manual/v3/howtos/general/generate_guids.html
+                upgradeUuid = "7EA468EF-E056-4DFF-8290-C052D9757AC7"
+            }
+            linux {
+                iconFile.set(project.file("icon.png"))
             }
         }
     }
