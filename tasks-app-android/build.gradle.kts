@@ -161,6 +161,10 @@ dependencies {
 
     implementation(libs.kotlinx.serialization)
 
+    implementation(libs.androidx.room.runtime) {
+        because("needed to RoomRawQuery")
+    }
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
 
