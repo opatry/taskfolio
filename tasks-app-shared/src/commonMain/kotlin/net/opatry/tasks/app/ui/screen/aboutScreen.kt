@@ -56,11 +56,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.about_screen_app_version_subtitle
+import net.opatry.tasks.resources.about_screen_credits_item
+import net.opatry.tasks.resources.about_screen_github_item
+import net.opatry.tasks.resources.about_screen_privacy_policy_item
+import net.opatry.tasks.resources.about_screen_website_item
+import org.jetbrains.compose.resources.stringResource
 
 
 data class AboutApp(
@@ -77,31 +80,35 @@ enum class AboutScreenDestination {
 @Composable
 expect fun AboutScreen(aboutApp: AboutApp)
 
+private const val TASKFOLIO_WEBSITE_URL = "https://opatry.github.io/taskfolio/"
+private const val TASKFOLIO_GITHUB_URL = "https://github.com/opatry/taskfolio"
+private const val TASKFOLIO_PRIVACY_POLICY_URL = "https://opatry.github.io/taskfolio/privacy-policy"
+
 @Composable
 fun AboutScreenContent(aboutApp: AboutApp, onNavigate: (AboutScreenDestination) -> Unit) {
     val uriHandler = LocalUriHandler.current
 
     LazyColumn {
         item {
-            AboutExternalLink("Website", LucideIcons.Earth) {
-                uriHandler.openUri("https://opatry.github.io/taskfolio")
+            AboutExternalLink(stringResource(Res.string.about_screen_website_item), LucideIcons.Earth) {
+                uriHandler.openUri(TASKFOLIO_WEBSITE_URL)
             }
         }
         item {
-            AboutExternalLink("Github", LucideIcons.Github) {
-                uriHandler.openUri("https://github.com/opatry/taskfolio")
+            AboutExternalLink(stringResource(Res.string.about_screen_github_item), LucideIcons.Github) {
+                uriHandler.openUri(TASKFOLIO_GITHUB_URL)
             }
         }
         item {
-            AboutExternalLink("Privacy Policy", LucideIcons.ShieldCheck) {
-                uriHandler.openUri("https://opatry.github.io/taskfolio/privacy-policy")
+            AboutExternalLink(stringResource(Res.string.about_screen_privacy_policy_item), LucideIcons.ShieldCheck) {
+                uriHandler.openUri(TASKFOLIO_PRIVACY_POLICY_URL)
             }
         }
         item {
             ListItem(
                 modifier = Modifier.clickable(onClick = { onNavigate(AboutScreenDestination.Credits) }),
                 leadingContent = { Icon(LucideIcons.Copyright, null) },
-                headlineContent = { Text("Credits") },
+                headlineContent = { Text(stringResource(Res.string.about_screen_credits_item)) },
                 trailingContent = { Icon(LucideIcons.ChevronRight, null) },
             )
         }
@@ -115,12 +122,8 @@ internal fun AboutScreenTopAppBar(appName: String, appVersion: String) {
         title = {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(appName)
-                Text(buildAnnotatedString {
-                    append("Version ")
-                    withStyle(SpanStyle(fontFamily = FontFamily.Monospace)) {
-                        append(appVersion)
-                    }
-                }, style = MaterialTheme.typography.labelSmall)
+                // FIXME How to style only the version part taking into account localization?
+                Text(stringResource(Res.string.about_screen_app_version_subtitle, appVersion), style = MaterialTheme.typography.labelSmall)
             }
         },
         navigationIcon = { AppIcon() }

@@ -58,6 +58,11 @@ import androidx.compose.ui.window.Popup
 import coil3.compose.AsyncImage
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.profile_popup_no_email
+import net.opatry.tasks.resources.profile_popup_sign_explanation
+import net.opatry.tasks.resources.profile_popup_sign_out
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProfileIcon(viewModel: UserViewModel) {
@@ -109,7 +114,7 @@ fun ProfileIcon(viewModel: UserViewModel) {
                                     is UserState.SignedIn -> {
                                         Text(state.name, style = MaterialTheme.typography.titleMedium)
                                         Text(
-                                            state.email ?: "No email information",
+                                            state.email ?: stringResource(Res.string.profile_popup_no_email),
                                             style = MaterialTheme.typography.bodySmall,
                                             fontFamily = FontFamily.Monospace
                                         )
@@ -123,13 +128,13 @@ fun ProfileIcon(viewModel: UserViewModel) {
                                             modifier = Modifier.align(Alignment.CenterHorizontally)
                                         ) {
                                             // TODO confirmation dialog?
-                                            Text("Sign out")
+                                            Text(stringResource(Res.string.profile_popup_sign_out))
                                         }
                                     }
 
                                     UserState.Unsigned -> {
                                         Text(
-                                            "Sign in and authorize access to your Google Tasks to enable sync.",
+                                            stringResource(Res.string.profile_popup_sign_explanation),
                                             style = MaterialTheme.typography.bodyMedium
                                         )
 

@@ -37,10 +37,8 @@ import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
 import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
-import net.opatry.tasks.app.ui.component.TaskListDetail
-import net.opatry.tasks.app.ui.component.TaskListsColumn
 import net.opatry.tasks.resources.Res
-import net.opatry.tasks.resources.default_task_list_title
+import net.opatry.tasks.resources.task_lists_screen_default_task_list_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -60,7 +58,7 @@ actual fun TaskListsMasterDetail(
             list == null -> LoadingPane()
 
             list.isEmpty() -> {
-                val newTaskListName = stringResource(Res.string.default_task_list_title)
+                val newTaskListName = stringResource(Res.string.task_lists_screen_default_task_list_title)
                 NoTaskListEmptyState {
                     onNewTaskList(newTaskListName)
                 }

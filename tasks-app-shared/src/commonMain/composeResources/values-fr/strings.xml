@@ -1,0 +1,115 @@
+<!--
+  Copyright (c) 2024 Olivier Patry
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom the Software
+  is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<resources>
+    <string name="app_name">Taskfolio</string>
+
+    <string name="dialog_cancel">Annuler</string>
+
+    <string name="edit_text_dialog_title">Titre</string>
+    <string name="edit_text_dialog_empty_title_error">Le texte ne peut pas être vide</string>
+
+    <string name="navigation_tasks">Tâches</string>
+    <string name="navigation_calendar">Calendrier</string>
+    <string name="navigation_search">Recherche</string>
+    <string name="navigation_settings">Paramètres</string>
+    <string name="navigation_about">À propos</string>
+
+    <string name="onboarding_screen_authorize_explanation">Vous devez autoriser l'accès à vos tâches Google.</string>
+    <string name="onboarding_screen_skip">Passer</string>
+    <string name="onboarding_screen_authorize_cta">Autoriser</string>
+
+    <string name="profile_popup_no_email">Aucune information sur l'email</string>
+    <string name="profile_popup_sign_explanation">Connectez-vous et autorisez l'accès à vos tâches Google pour activer la synchronisation.</string>
+    <string name="profile_popup_sign_out">Déconnexion</string>
+
+    <string name="task_lists_screen_default_task_list_title">Mes tâches</string>
+    <string name="task_lists_screen_empty_state_no_selection_title">Aucune liste de tâches sélectionnée</string>
+    <string name="task_lists_screen_empty_state_no_selection_desc">Sélectionnez une liste de tâches pour afficher son contenu</string>
+    <string name="task_lists_screen_empty_state_title">Aucune liste de tâches</string>
+    <string name="task_lists_screen_empty_state_desc">Créez une nouvelle liste de tâches pour commencer</string>
+    <string name="task_lists_screen_empty_state_cta">Nouvelle liste de tâches</string>
+    <string name="task_lists_screen_add_task_list_cta">Ajouter une liste de tâches…</string>
+    <string name="task_lists_screen_empty_list_title">Aucune tâche pour le moment</string>
+    <string name="task_lists_screen_empty_list_desc">Commencez à planifier pour suivre vos tâches en attente.</string>
+    <string name="task_lists_screen_add_task">Ajouter une tâche</string>
+    <string name="task_lists_screen_create_task_list_dialog_title">Nouvelle liste de tâches</string>
+    <string name="task_lists_screen_create_task_list_dialog_confirm">Créer</string>
+
+    <string name="task_list_pane_task_deleted_snackbar">Tâche supprimée</string>
+    <string name="task_list_pane_task_deleted_undo_snackbar">Annuler</string>
+    <string name="task_list_pane_task_restored_snackbar">Tâche restaurée</string>
+    <string name="task_list_pane_rename_dialog_title">Renommer la liste</string>
+    <string name="task_list_pane_rename_dialog_cta">Renommer</string>
+    <string name="task_list_pane_clear_completed_confirm_dialog_title">Effacer toutes les tâches terminées ?</string>
+    <string name="task_list_pane_clear_completed_confirm_dialog_message">Toutes les tâches terminées seront définitivement supprimées de cette liste.</string>
+    <string name="task_list_pane_clear_completed_confirm_dialog_confirm">Effacer</string>
+    <string name="task_list_pane_delete_list_confirm_dialog_title">Supprimer cette liste ?</string>
+    <string name="task_list_pane_delete_list_confirm_dialog_message">Toutes les tâches de cette liste seront définitivement supprimées.</string>
+    <string name="task_list_pane_delete_list_confirm_dialog_confirm">Supprimer</string>
+    <string name="task_list_pane_all_tasks_complete_title">Toutes les tâches sont terminées</string>
+    <string name="task_list_pane_all_tasks_complete_desc">Beau travail !</string>
+    <string name="task_list_pane_completed_section_title_with_count">Terminées (%1$s)</string>
+    <string name="task_list_pane_delete_task_icon_content_desc">Supprimer la tâche</string>
+    <string name="task_list_pane_task_options_icon_content_desc">Options de la tâche</string>
+
+    <string name="task_due_date_label_days_ago">Il y a %1$s jours</string>
+    <string name="task_due_date_label_weeks_ago">Il y a %1$s semaines</string>
+    <string name="task_due_date_label_yesterday">Hier</string>
+    <string name="task_due_date_label_today">Aujourd'hui</string>
+    <string name="task_due_date_label_tomorrow">Demain</string>
+    <string name="task_due_date_update_cta">Mettre à jour</string>
+
+    <string name="task_editor_sheet_edit_title">Modifier la tâche</string>
+    <string name="task_editor_sheet_new_title">Nouvelle tâche</string>
+    <string name="task_editor_sheet_title_field_label">Titre</string>
+    <string name="task_editor_sheet_title_field_empty_error">Le titre ne peut pas être vide</string>
+    <string name="task_editor_sheet_notes_field_label">Notes</string>
+    <string name="task_editor_sheet_no_due_date_fallback">Pas de date d'échéance</string>
+    <string name="task_editor_sheet_list_dropdown_label">Titre de la liste</string>
+    <string name="task_editor_sheet_validate">Valider</string>
+
+    <string name="task_list_menu_sort_by">Trier par</string>
+    <string name="task_list_menu_sort_manual">Manuel</string>
+    <string name="task_list_menu_sort_due_date">Date d'échéance</string>
+    <string name="task_list_menu_rename">Renommer</string>
+    <string name="task_list_menu_clear_all_completed_tasks">Effacer toutes les tâches terminées</string>
+    <string name="task_list_menu_delete">Supprimer la liste</string>
+    <string name="task_list_menu_default_list_cannot_be_deleted">La liste par défaut ne peut pas être supprimée</string>
+
+    <string name="task_menu_move_to_top">Déplacer en haut</string>
+    <string name="task_menu_add_subtask">Ajouter une sous-tâche</string>
+    <string name="task_menu_indent">Indenter</string>
+    <string name="task_menu_unindent">Désindenter</string>
+    <string name="task_menu_move_to">Déplacer vers…</string>
+    <string name="task_menu_new_list">Nouvelle liste</string>
+    <string name="task_menu_delete">Supprimer</string>
+
+    <string name="about_screen_app_version_subtitle">Version %1$s</string>
+    <string name="about_screen_website_item">Site web</string>
+    <string name="about_screen_github_item">Github</string>
+    <string name="about_screen_privacy_policy_item">Politique de confidentialité</string>
+    <string name="about_screen_credits_item">Crédits</string>
+
+    <string name="credits_screen_title">Crédits</string>
+    <string name="credits_screen_license_unknown_authors">Auteurs inconnus</string>
+</resources>
