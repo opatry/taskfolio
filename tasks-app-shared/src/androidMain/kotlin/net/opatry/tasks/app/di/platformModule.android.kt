@@ -24,6 +24,8 @@ package net.opatry.tasks.app.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.FileCredentialsStorage
 import net.opatry.tasks.data.TasksAppDatabase
@@ -33,17 +35,23 @@ import java.io.File
 
 actual fun platformModule(flavor: String): Module = module {
     single {
-        val dbNameSuffix = when (flavor) {
-            "store" -> ""
-            else -> "_$flavor"
-        }
         val context = get<Context>()
         val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath("tasks${dbNameSuffix}.db")
-        if (flavor == "demo") {
-            dbFile.delete()
+        val dbFile = appContext.getDatabasePath("tasks.db")
+        val isDemoFlavor = flavor == "demo"
+        if (isDemoFlavor && dbFile.exists()) {
+//            dbFile.delete()
         }
-        Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
+        Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath).also { builder ->
+            if (isDemoFlavor) {
+                builder.createFromAsset("databases/tasks.db", object : RoomDatabase.PrepackagedDatabaseCallback() {
+                    override fun onOpenPrepackagedDatabase(db: SupportSQLiteDatabase) {
+                        super.onOpenPrepackagedDatabase(db)
+                        println("onOpenPrepackagedDatabase")
+                    }
+                })
+            }
+        }
     }
 
     single<CredentialsStorage> {

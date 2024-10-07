@@ -65,7 +65,7 @@ class TasksApplication : Application() {
         super.onCreate()
 
         @Suppress("KotlinConstantConditions")
-        if (BuildConfig.FLAVOR == "demo") {
+        if (false && BuildConfig.FLAVOR == "demo") {
             // TODO would be more elegant to use Room preloaded data mechanism
             //  but feels like overkill for now and maybe direct approach clearer.
             //  see https://developer.android.com/training/data-storage/room/prepopulate
