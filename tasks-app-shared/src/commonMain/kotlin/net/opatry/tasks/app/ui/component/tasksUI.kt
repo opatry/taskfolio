@@ -47,9 +47,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -88,6 +94,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -135,7 +145,7 @@ fun TaskListDetail(
 
     var showEditTaskSheet by remember { mutableStateOf(false) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
-    val taskEditorSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val taskEditorSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showNewTaskSheet by remember { mutableStateOf(false) }
     var showNewTaskListAlert by remember { mutableStateOf(false) }
 
@@ -332,7 +342,17 @@ fun TaskListDetail(
             var targetList by remember { mutableStateOf(taskList) }
 
             // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
-            Column(Modifier.padding(24.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .imePadding()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(sheetTitle, style = MaterialTheme.typography.titleLarge)
 
                 OutlinedTextField(
@@ -346,6 +366,10 @@ fun TaskListDetail(
                             Text("Title cannot be empty")
                         }
                     },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next,
+                    ),
                     isError = titleHasError,
                 )
 
@@ -357,6 +381,7 @@ fun TaskListDetail(
                     leadingIcon = { Icon(LucideIcons.NotepadText, null) },
                     singleLine = false,
                     minLines = 2,
+                    maxLines = 4,
                 )
 
                 // TODO one of top of the other or side by side Date|TaskList
