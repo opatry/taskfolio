@@ -23,13 +23,15 @@
 package net.opatry.tasks.app.di
 
 import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.coroutines.Dispatchers
 import net.opatry.tasks.data.TasksAppDatabase
 import org.koin.dsl.module
 
 private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
-//    .setDriver(BundledSQLiteDriver())
-//    .fallbackToDestructiveMigration(dropAllTables = true)
-//    .setQueryCoroutineContext(Dispatchers.IO)
+    .setDriver(BundledSQLiteDriver())
+    .fallbackToDestructiveMigration(dropAllTables = true)
+    .setQueryCoroutineContext(Dispatchers.IO)
 //    .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
     .build()
 
