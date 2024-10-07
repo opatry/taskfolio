@@ -40,10 +40,10 @@ actual fun platformModule(flavor: String): Module = module {
         val dbFile = appContext.getDatabasePath("tasks.db")
         val isDemoFlavor = flavor == "demo"
         if (isDemoFlavor && dbFile.exists()) {
-//            dbFile.delete()
+            dbFile.delete()
         }
         Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath).also { builder ->
-            if (isDemoFlavor) {
+            if (false && isDemoFlavor) {
                 builder.createFromAsset("databases/tasks.db", object : RoomDatabase.PrepackagedDatabaseCallback() {
                     override fun onOpenPrepackagedDatabase(db: SupportSQLiteDatabase) {
                         super.onOpenPrepackagedDatabase(db)
