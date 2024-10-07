@@ -665,7 +665,7 @@ fun TaskRow(
     Row(Modifier.clickable(onClick = onEditTask)) {
         IconButton(
             onClick = onToggleCompletionState,
-            Modifier.padding(start = 24.dp * task.indent)
+            Modifier.padding(start = 36.dp * task.indent)
         ) {
             Icon(taskCheckIcon, null, tint = taskCheckIconColor)
         }
