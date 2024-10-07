@@ -29,18 +29,33 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
 
 sealed class DateRange {
+    open val date: LocalDate? = null
+    open val numberOfDays: Int? = null
     data object None : DateRange()
-    data class Overdue(val date: LocalDate, val numberOfDays: Int) : DateRange()
-    data object Yesterday : DateRange()
-    data object Today : DateRange()
-    data object Tomorrow : DateRange()
-    data class Later(val date: LocalDate, val numberOfDays: Int) : DateRange()
+    data class Overdue(override val date: LocalDate, override val numberOfDays: Int) : DateRange()
+    data class Today(override val date: LocalDate) : DateRange() {
+        override val numberOfDays: Int = 0
+    }
+    data class Later(override val date: LocalDate, override val numberOfDays: Int) : DateRange()
+}
+
+operator fun DateRange.compareTo(other: DateRange): Int {
+    // local variable for non null smart cast convenience
+    val lhsNumberOfDays = this.numberOfDays
+    val rhsNumberOfDays = other.numberOfDays
+    // No date should come last
+    return when {
+        lhsNumberOfDays == null -> 1
+        rhsNumberOfDays == null -> -1
+        else -> lhsNumberOfDays.compareTo(rhsNumberOfDays)
+    }
 }
 
 data class TaskUIModel(
     val id: Long,
     val title: String,
     val dueDate: LocalDate? = null,
+    val completionDate: LocalDate? = null,
     val notes: String = "",
     val isCompleted: Boolean = false,
     val position: String = "", // FIXME for debug?
@@ -56,12 +71,9 @@ data class TaskUIModel(
             val daysUntilDueDate = todayLocalDate.daysUntil(dueLocalDate)
 
             return when {
-                daysUntilDueDate < -1 -> DateRange.Overdue(dueLocalDate, -daysUntilDueDate)
-                daysUntilDueDate == -1 -> DateRange.Yesterday
-                daysUntilDueDate == 0 -> DateRange.Today
-                daysUntilDueDate == 1 -> DateRange.Tomorrow
-                // daysUntilDueDate > 1
-                else -> DateRange.Later(dueLocalDate, daysUntilDueDate)
+                daysUntilDueDate < 0 -> DateRange.Overdue(dueLocalDate, daysUntilDueDate)
+                daysUntilDueDate > 0 -> DateRange.Later(dueLocalDate, daysUntilDueDate)
+                else -> DateRange.Today(dueLocalDate)
             }
         }
 

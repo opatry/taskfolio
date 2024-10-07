@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.ui.screen.TaskListSorting
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
@@ -71,7 +72,12 @@ enum class TaskListMenuAction {
 }
 
 @Composable
-fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskListMenuAction) -> Unit) {
+fun TaskListMenu(
+    taskList: TaskListUIModel,
+    expanded: Boolean,
+    sorting: TaskListSorting = TaskListSorting.Manual,
+    onAction: (TaskListMenuAction) -> Unit
+) {
     val allowDelete by remember(taskList.canDelete) { mutableStateOf(taskList.canDelete) }
 
     DropdownMenu(
@@ -90,9 +96,9 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
             text = {
                 RowWithIcon(
                     stringResource(Res.string.task_list_menu_sort_manual),
-                    LucideIcons.Check.takeIf { false/*taskList.sorting == TaskListSorting.Manual*/ })
+                    LucideIcons.Check.takeIf { sorting == TaskListSorting.Manual })
             },
-            enabled = false, // TODO enable when sorting is implemented
+            enabled = sorting != TaskListSorting.Manual,
             onClick = { onAction(TaskListMenuAction.SortManual) }
         )
 
@@ -100,9 +106,9 @@ fun TaskListMenu(taskList: TaskListUIModel, expanded: Boolean, onAction: (TaskLi
             text = {
                 RowWithIcon(
                     stringResource(Res.string.task_list_menu_sort_due_date),
-                    LucideIcons.Check.takeIf { false/*taskList.sorting == TaskListSorting.Date*/ })
+                    LucideIcons.Check.takeIf { sorting == TaskListSorting.DueDate })
             },
-            enabled = false, // TODO enable when sorting is implemented
+            enabled = sorting != TaskListSorting.DueDate,
             onClick = { onAction(TaskListMenuAction.SortDate) }
         )
 

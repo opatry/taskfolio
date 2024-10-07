@@ -22,10 +22,6 @@
 
 package net.opatry.tasks.app.ui.model
 
-enum class TaskListSorting {
-    Manual,
-    Date,
-}
 
 data class TaskListUIModel(
     val id: Long,
