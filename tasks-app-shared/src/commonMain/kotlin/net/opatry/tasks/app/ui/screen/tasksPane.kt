@@ -602,7 +602,7 @@ fun TasksColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         if (completedCount > 0 && todoCount == 0) {
-            item {
+            item(key = "all_tasks_complete") {
                 EmptyState(
                     icon = LucideIcons.CheckCheck,
                     title = stringResource(Res.string.task_list_pane_all_tasks_complete_title),
@@ -613,7 +613,7 @@ fun TasksColumn(
         }
         groupedTasks.forEach { (completed, tasks) ->
             if (completed && completedCount > 0) {
-                stickyHeader {
+                stickyHeader(key = "completed") {
                     Box(
                         Modifier
                             .clip(MaterialTheme.shapes.large)
@@ -639,7 +639,7 @@ fun TasksColumn(
                     }
                 }
             }
-            items(tasks) { task ->
+            items(tasks, key = TaskUIModel::id) { task ->
                 TaskRow(
                     taskLists,
                     task,
