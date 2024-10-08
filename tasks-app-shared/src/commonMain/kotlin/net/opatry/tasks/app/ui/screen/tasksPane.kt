@@ -140,8 +140,10 @@ import net.opatry.tasks.resources.task_editor_sheet_list_dropdown_label
 import net.opatry.tasks.resources.task_editor_sheet_new_title
 import net.opatry.tasks.resources.task_editor_sheet_no_due_date_fallback
 import net.opatry.tasks.resources.task_editor_sheet_notes_field_label
+import net.opatry.tasks.resources.task_editor_sheet_notes_field_placeholder
 import net.opatry.tasks.resources.task_editor_sheet_title_field_empty_error
 import net.opatry.tasks.resources.task_editor_sheet_title_field_label
+import net.opatry.tasks.resources.task_editor_sheet_title_field_placeholder
 import net.opatry.tasks.resources.task_editor_sheet_validate
 import net.opatry.tasks.resources.task_list_pane_all_tasks_complete_desc
 import net.opatry.tasks.resources.task_list_pane_all_tasks_complete_title
@@ -400,6 +402,7 @@ fun TaskListDetail(
                     onValueChange = { newTitle = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(Res.string.task_editor_sheet_title_field_label)) },
+                    placeholder = { Text(stringResource(Res.string.task_editor_sheet_title_field_placeholder)) },
                     maxLines = 1,
                     supportingText = {
                         AnimatedVisibility(visible = titleHasError) {
@@ -418,6 +421,7 @@ fun TaskListDetail(
                     onValueChange = { newNotes = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(Res.string.task_editor_sheet_notes_field_label)) },
+                    placeholder = { Text(stringResource(Res.string.task_editor_sheet_notes_field_placeholder)) },
                     leadingIcon = { Icon(LucideIcons.NotepadText, null) },
                     singleLine = false,
                     minLines = 2,
