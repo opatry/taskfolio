@@ -82,8 +82,10 @@
     <string name="task_editor_sheet_edit_title">Modifier la tâche</string>
     <string name="task_editor_sheet_new_title">Nouvelle tâche</string>
     <string name="task_editor_sheet_title_field_label">Titre</string>
+    <string name="task_editor_sheet_title_field_placeholder">Donner un titre</string>
     <string name="task_editor_sheet_title_field_empty_error">Le titre ne peut pas être vide</string>
     <string name="task_editor_sheet_notes_field_label">Notes</string>
+    <string name="task_editor_sheet_notes_field_placeholder">Ajouter des précisions</string>
     <string name="task_editor_sheet_no_due_date_fallback">Pas de date d'échéance</string>
     <string name="task_editor_sheet_list_dropdown_label">Titre de la liste</string>
     <string name="task_editor_sheet_validate">Valider</string>

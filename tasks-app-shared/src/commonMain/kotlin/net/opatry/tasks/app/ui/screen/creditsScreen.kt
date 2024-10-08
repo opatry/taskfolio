@@ -121,10 +121,10 @@ fun CreditsScreenContent(librariesJsonProvider: suspend () -> String, modifier: 
 
     LazyColumn(modifier) {
         libraryGroups?.forEach { (authors, libs) ->
-            stickyHeader {
+            stickyHeader(key = authors) {
                 LibraryAuthorsRow(authors ?: stringResource(Res.string.credits_screen_license_unknown_authors))
             }
-            items(libs) { lib ->
+            items(libs, Library::uniqueId) { lib ->
                 LibraryRow(lib, uriHandler::openUri)
             }
         }

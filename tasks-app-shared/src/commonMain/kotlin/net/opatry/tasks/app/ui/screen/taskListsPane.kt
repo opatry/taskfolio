@@ -68,7 +68,7 @@ fun TaskListsColumn(
 ) {
     val listState = rememberLazyListState()
     LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        stickyHeader {
+        stickyHeader(key = "new_task_list") {
             Box(
                 Modifier
                     .background(MaterialTheme.colorScheme.background)
@@ -87,10 +87,10 @@ fun TaskListsColumn(
                 HorizontalDivider()
             }
         }
-        items(taskLists) { taskList ->
+        items(taskLists, TaskListUIModel::id) { taskList ->
             TaskListRow(
                 taskList,
-                Modifier.padding(horizontal = 8.dp),
+                Modifier.padding(horizontal = 8.dp).animateItem(),
                 isSelected = taskList.id == selectedItem?.id,
                 onClick = { onItemClick(taskList) }
             )
