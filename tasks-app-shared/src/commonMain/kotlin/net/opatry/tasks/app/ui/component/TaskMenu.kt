@@ -53,33 +53,40 @@ import net.opatry.tasks.resources.task_menu_new_list
 import net.opatry.tasks.resources.task_menu_unindent
 import org.jetbrains.compose.resources.stringResource
 
-sealed class TaskMenuAction {
-    data object Dismiss : TaskMenuAction()
-    data object AddSubTask : TaskMenuAction()
-    data object MoveToTop : TaskMenuAction()
-    data object Unindent : TaskMenuAction()
-    data object Indent : TaskMenuAction()
-    data class MoveToList(val targetParentList: TaskListUIModel) : TaskMenuAction()
-    data object MoveToNewList : TaskMenuAction()
-    data object Delete : TaskMenuAction()
+sealed class TaskAction {
+    data object ToggleCompletion : TaskAction()
+    data object Edit : TaskAction()
+    data object UpdateDueDate : TaskAction()
+    data object AddSubTask : TaskAction()
+    data object MoveToTop : TaskAction()
+    data object Unindent : TaskAction()
+    data object Indent : TaskAction()
+    data class MoveToList(val targetParentList: TaskListUIModel) : TaskAction()
+    data object MoveToNewList : TaskAction()
+    data object Delete : TaskAction()
 }
 
 @Composable
-fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Boolean, onAction: (TaskMenuAction) -> Unit) {
+fun TaskMenu(
+    taskLists: List<TaskListUIModel>,
+    task: TaskUIModel,
+    expanded: Boolean,
+    onAction: (TaskAction?) -> Unit
+) {
     val currentTaskList = taskLists.firstOrNull { it.tasks.map(TaskUIModel::id).contains(task.id) }
     val taskPosition by remember(currentTaskList) { mutableStateOf(currentTaskList?.tasks?.indexOf(task) ?: -1) }
     val canMoveToTop by remember(task) { derivedStateOf { taskPosition > 0 && task.canIndent } }
 
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onAction(TaskMenuAction.Dismiss) }
+        onDismissRequest = { onAction(null) }
     ) {
         if (canMoveToTop) {
             DropdownMenuItem(
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_move_to_top))
                 },
-                onClick = { onAction(TaskMenuAction.MoveToTop) },
+                onClick = { onAction(TaskAction.MoveToTop) },
                 enabled = false
             )
         }
@@ -89,7 +96,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_add_subtask), LucideIcons.SquareStack)
                 },
-                onClick = { onAction(TaskMenuAction.AddSubTask) },
+                onClick = { onAction(TaskAction.AddSubTask) },
                 enabled = false
             )
         }
@@ -99,7 +106,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_indent))
                 },
-                onClick = { onAction(TaskMenuAction.Indent) },
+                onClick = { onAction(TaskAction.Indent) },
                 enabled = false
             )
         }
@@ -109,7 +116,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_unindent))
                 },
-                onClick = { onAction(TaskMenuAction.Unindent) },
+                onClick = { onAction(TaskAction.Unindent) },
                 enabled = false
             )
         }
@@ -128,7 +135,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
             text = {
                 RowWithIcon(stringResource(Res.string.task_menu_new_list), LucideIcons.ListPlus)
             },
-            onClick = { onAction(TaskMenuAction.MoveToNewList) },
+            onClick = { onAction(TaskAction.MoveToNewList) },
             enabled = false,
         )
 
@@ -147,7 +154,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                         }
                     },
                     enabled = taskList.id != currentTaskList?.id,
-                    onClick = { onAction(TaskMenuAction.MoveToList(taskList)) }
+                    onClick = { onAction(TaskAction.MoveToList(taskList)) }
                 )
             }
         }
@@ -160,7 +167,7 @@ fun TaskMenu(taskLists: List<TaskListUIModel>, task: TaskUIModel, expanded: Bool
                     RowWithIcon(stringResource(Res.string.task_menu_delete), LucideIcons.Trash2)
                 }
             },
-            onClick = { onAction(TaskMenuAction.Delete) }
+            onClick = { onAction(TaskAction.Delete) }
         )
     }
 }
