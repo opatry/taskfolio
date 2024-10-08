@@ -759,7 +759,15 @@ fun TaskRow(
                 AssistChip(
                     onClick = onUpdateDueDate,
                     shape = MaterialTheme.shapes.large,
-                    label = { Text(task.dateRange.toLabel(), color = task.dateRange.toColor()) },
+                    label = {
+                        Text(
+                            task.dateRange.toLabel(),
+                            color = if (task.isCompleted)
+                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            else
+                                task.dateRange.toColor()
+                        )
+                    },
                 )
             }
         }
