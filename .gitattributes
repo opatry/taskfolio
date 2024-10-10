@@ -63,6 +63,7 @@
 *.jpeg  binary diff=exif
 *.jpg   binary diff=exif
 *.png   binary diff=exif
+*.xcf   binary
 *.psd   binary diff=exif
 *.svg   text
 *.tif   binary diff=exif
