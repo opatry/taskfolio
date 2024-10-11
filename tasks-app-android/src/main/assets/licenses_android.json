@@ -1877,7 +1877,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-network-ktor2-android",
+            "uniqueId": "io.coil-kt.coil3:coil-network-ktor3-android",
             "developers": [
                 {
                     "name": "Coil Contributors"
@@ -1885,7 +1885,7 @@
             ],
             "artifactVersion": "3.0.0-alpha10",
             "description": "An image loading library for Android and Compose Multiplatform.",
-            "name": "coil-network-ktor2",
+            "name": "coil-network-ktor3",
             "licenses": [
                 "Apache-2.0"
             ]

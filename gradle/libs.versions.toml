@@ -54,7 +54,7 @@ androidx-compose-m3-adaptive-layout = { module = "androidx.compose.material3.ada
 androidx-compose-m3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version = "1.0.0" }
 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-coil-network = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.2" }
