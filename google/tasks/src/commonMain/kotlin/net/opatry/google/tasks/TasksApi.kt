@@ -304,6 +304,6 @@ suspend fun TasksApi.listAll(
             )
             addAll(response.items)
             nextPageToken = response.nextPageToken
-        } while (nextPageToken != null)
+        } while (!nextPageToken.isNullOrEmpty())
     }
 }
