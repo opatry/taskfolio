@@ -73,7 +73,7 @@ class UserViewModel(
 
     private suspend fun fetchUserInfo(): UserInfo? {
         return try {
-            val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
+            val response = httpClient.get("http://0.0.0.0:8080/oauth2/v1/userinfo?alt=json")
 
             if (response.status.isSuccess()) {
                 response.body()

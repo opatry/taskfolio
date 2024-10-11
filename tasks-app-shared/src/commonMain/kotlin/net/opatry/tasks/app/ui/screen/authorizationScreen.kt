@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.opatry.google.auth.GoogleAuthenticator
-import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.onboarding_screen_authorize_explanation
 import net.opatry.tasks.resources.onboarding_screen_skip
@@ -77,7 +77,23 @@ fun AuthorizationScreen(
             Icon(LucideIcons.ShieldCheck, null, Modifier.size(96.dp), tint = MaterialTheme.colorScheme.primary)
             Text(stringResource(Res.string.onboarding_screen_authorize_explanation), textAlign = TextAlign.Center)
 
-            AuthorizeGoogleTasksButton(onSuccess = onSuccess)
+//            AuthorizeGoogleTasksButton(onSuccess = onSuccess)
+            Button(
+                onClick = {
+                    onSuccess(
+                        GoogleAuthenticator.OAuthToken(
+                            accessToken = "accessToken",
+                            expiresIn = 1000L,
+                            idToken = "idToken",
+                            refreshToken = "refreshToken",
+                            scope = "scope",
+                            tokenType = GoogleAuthenticator.OAuthToken.TokenType.Bearer,
+                        )
+                    )
+                }
+            ) {
+                Text("Authorize Tasks Backend")
+            }
         }
     }
 }

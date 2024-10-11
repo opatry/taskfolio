@@ -26,7 +26,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.CurlUserAgent
 import io.ktor.client.plugins.auth.Auth
-import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -34,17 +33,12 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.datetime.Clock
-import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.HttpTaskListsApi
 import net.opatry.google.tasks.HttpTasksApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
-import net.opatry.tasks.CredentialsStorage
-import net.opatry.tasks.TokenCache
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import kotlin.time.Duration.Companion.seconds
 
 
 enum class HttpClientName {
@@ -53,7 +47,7 @@ enum class HttpClientName {
 
 val networkModule = module {
     single(named(HttpClientName.Tasks)) {
-        val credentialsStorage = get<CredentialsStorage>()
+//        val credentialsStorage = get<CredentialsStorage>()
 
         HttpClient(CIO) {
             CurlUserAgent()
@@ -64,6 +58,7 @@ val networkModule = module {
                 bearer {
                     // TODO handle 401 (clear storage)
                     // TODO handle no network
+                    /*
                     loadTokens {
                         val tokenCache = credentialsStorage.load()
                         BearerTokens(tokenCache?.accessToken ?: "", tokenCache?.refreshToken ?: "")
@@ -86,11 +81,17 @@ val networkModule = module {
                                 BearerTokens(it.accessToken, it.refreshToken ?: oldTokens?.refreshToken ?: "")
                             }
                     }
+                     */
                 }
             }
             defaultRequest {
                 if (url.host.isEmpty()) {
-                    val defaultUrl = URLBuilder().takeFrom("https://tasks.googleapis.com")
+//                    val defaultUrl = URLBuilder().takeFrom("https://tasks.googleapis.com")
+//                    val defaultUrl = URLBuilder().takeFrom("http://0.0.0.0:8080")
+//                    val defaultUrl = URLBuilder().takeFrom("http://localhost:8080/")
+                    val defaultUrl = URLBuilder().takeFrom("http://localhost:8080")
+//                    val defaultUrl = URLBuilder().takeFrom("http://192.168.1.86:8080")
+//                    val defaultUrl = URLBuilder().takeFrom("http://127.0.0.1:8080")
                     url.host = defaultUrl.host
                     url.port = defaultUrl.port
                     url.protocol = defaultUrl.protocol

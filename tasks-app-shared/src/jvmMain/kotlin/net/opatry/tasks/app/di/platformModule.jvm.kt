@@ -43,7 +43,7 @@ actual fun platformModule(): Module = module {
     }
 
     single {
-        val dbFile = File(get<File>(named("app_root_dir")), "tasks.db")
+        val dbFile = File(get<File>(named("app_root_dir")), "tasks_backend_mode.db")
         Room.databaseBuilder<TasksAppDatabase>(dbFile.absolutePath)
     }
 
