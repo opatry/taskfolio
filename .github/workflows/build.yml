@@ -62,7 +62,7 @@ jobs:
             fi
 
     - name: 🛎️ Notify stale credits for ':tasks-app-desktop'
-      if: steps.check_desktop_app_credits.outputs.credits_diff_comment != ''
+      if: github.event_name == 'pull_request' && steps.check_desktop_app_credits.outputs.credits_diff_comment != ''
       uses: actions/github-script@v7
       with:
         script: |
@@ -95,7 +95,7 @@ jobs:
             fi
 
     - name: 🛎️ Notify stale credits for ':tasks-app-android'
-      if: steps.check_android_app_credits.outputs.credits_diff_comment != ''
+      if: github.event_name == 'pull_request' && steps.check_android_app_credits.outputs.credits_diff_comment != ''
       uses: actions/github-script@v7
       with:
         script: |
