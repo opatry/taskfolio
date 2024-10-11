@@ -325,7 +325,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-network-ktor2-jvm",
+            "uniqueId": "io.coil-kt.coil3:coil-network-ktor3-jvm",
             "developers": [
                 {
                     "name": "Coil Contributors"
