@@ -34,7 +34,12 @@ import java.io.File
 actual fun platformModule(): Module = module {
     single(named("app_root_dir")) {
         val userHome = File(System.getProperty("user.home"))
-        File(userHome, ".tasksApp")
+        val legacyRootDir = File(userHome, ".tasksApp")
+        val rootDir = File(userHome, ".taskfolio")
+        if (legacyRootDir.isDirectory && !rootDir.exists()) {
+            legacyRootDir.renameTo(rootDir)
+        }
+        rootDir
     }
 
     single {
