@@ -22,20 +22,15 @@
 
 package net.opatry.google.tasks
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.request.delete
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.request.patch
-import io.ktor.client.request.post
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import io.ktor.http.isSuccess
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Headers
+import de.jensklingenberg.ktorfit.http.PATCH
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.datetime.Instant
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
@@ -44,23 +39,14 @@ import net.opatry.google.tasks.model.Task
 /**
  * Service for interacting with the [Google Tasks REST API](https://developers.google.com/tasks/reference/rest/v1/tasks).
  */
-class TasksApi(
-    private val httpClient: HttpClient
-) {
+interface TasksApi {
     /**
      * [Clears all completed tasks](https://developers.google.com/tasks/reference/rest/v1/tasks/clear) from the specified task list. The affected tasks will be marked as 'hidden' and no longer be returned by default when retrieving all tasks for a task list.
      *
      * @param taskListId Task list identifier.
      */
-    suspend fun clear(taskListId: String) {
-        val response = httpClient.post("tasks/v1/lists/${taskListId}/clear")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @POST("tasks/v1/lists/{taskListId}/clear")
+    suspend fun clear(@Path("taskListId") taskListId: String)
 
     /**
      * [Deletes the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/delete) from the task list. If the task is assigned, both the assigned task and the original task (in Docs, Chat Spaces) are deleted. To delete the assigned task only, navigate to the assignment surface and unassign the task from there.
@@ -68,15 +54,11 @@ class TasksApi(
      * @param taskListId Task list identifier.
      * @param taskId Task identifier.
      */
-    suspend fun delete(taskListId: String, taskId: String) {
-        val response = httpClient.delete("tasks/v1/lists/${taskListId}/tasks/${taskId}")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @DELETE("tasks/v1/lists/{taskListId}/tasks/{taskId}")
+    suspend fun delete(
+        @Path("taskListId") taskListId: String,
+        @Path("taskId") taskId: String
+    )
 
     /**
      * [Returns the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/get).
@@ -86,17 +68,11 @@ class TasksApi(
      *
      * @return an instance of [Task].
      */
-    suspend fun get(taskListId: String, taskId: String): Task {
-        val response = httpClient.get("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
-            contentType(ContentType.Application.Json)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @GET("tasks/v1/lists/{taskListId}/tasks/{taskId}")
+    suspend fun get(
+        @Path("taskListId") taskListId: String,
+        @Path("taskId") taskId: String
+    ): Task
 
     /**
      * [Creates a new task](https://developers.google.com/tasks/reference/rest/v1/tasks/insert) on the specified task list. Tasks assigned from Docs or Chat Spaces cannot be inserted from Tasks Public API; they can only be created by assigning them from Docs or Chat Spaces. A user can have up to 20,000 non-hidden tasks per list and up to 100,000 tasks in total at a time.
@@ -108,24 +84,14 @@ class TasksApi(
      *
      * @return a newly created instance of [Task].
      */
-    suspend fun insert(taskListId: String, task: Task, parentTaskId: String? = null, previousTaskId: String? = null): Task {
-        val response = httpClient.post("tasks/v1/lists/${taskListId}/tasks") {
-            if (parentTaskId != null) {
-                parameter("parent", parentTaskId)
-            }
-            if (previousTaskId != null) {
-                parameter("previous", previousTaskId)
-            }
-            contentType(ContentType.Application.Json)
-            setBody(task)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @Headers("Content-Type: application/json")
+    @POST("tasks/v1/lists/{taskListId}/tasks")
+    suspend fun insert(
+        @Path("taskListId") taskListId: String,
+        @Body task: Task,
+        @Query("parent") parentTaskId: String? = null,
+        @Query("previous") previousTaskId: String? = null
+    ): Task
 
     /**
      * Returns [all tasks in the specified task list](https://developers.google.com/tasks/reference/rest/v1/tasks/list). Does not return assigned tasks be default (from Docs, Chat Spaces). A user can have up to 20,000 non-hidden tasks per list and up to 100,000 tasks in total at a time.
@@ -145,52 +111,21 @@ class TasksApi(
      *
      * @return an instance of [ResourceListResponse] of type [Task], whose type is always [ResourceType.Tasks].
      */
+    @GET("tasks/v1/lists/{taskListId}/tasks")
     suspend fun list(
-        taskListId: String,
-        completedMin: Instant? = null,
-        completedMax: Instant? = null,
-        dueMin: Instant? = null,
-        dueMax: Instant? = null,
-        maxResults: Int = 20,
-        pageToken: String? = null,
-        showCompleted: Boolean = true,
-        showDeleted: Boolean = false,
-        showHidden: Boolean = false,
-        updatedMin: Instant? = null,
-        showAssigned: Boolean = false
-    ): ResourceListResponse<Task> {
-        val response = httpClient.get("tasks/v1/lists/${taskListId}/tasks") {
-            if (completedMin != null) {
-                parameter("completedMin", completedMin.toString())
-            }
-            if (completedMax != null) {
-                parameter("completedMax", completedMax.toString())
-            }
-            if (dueMin != null) {
-                parameter("dueMin", dueMin.toString())
-            }
-            if (dueMax != null) {
-                parameter("dueMax", dueMax.toString())
-            }
-            parameter("maxResults", maxResults.toString())
-            if (pageToken != null) {
-                parameter("pageToken", pageToken)
-            }
-            parameter("showCompleted", showCompleted.toString())
-            parameter("showDeleted", showDeleted.toString())
-            parameter("showHidden", showHidden.toString())
-            if (updatedMin != null) {
-                parameter("updatedMin", updatedMin.toString())
-            }
-            parameter("showAssigned", showAssigned.toString())
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+        @Path("taskListId") taskListId: String,
+        @Query("completedMin") completedMin: Instant? = null,
+        @Query("completedMax") completedMax: Instant? = null,
+        @Query("dueMin") dueMin: Instant? = null,
+        @Query("dueMax") dueMax: Instant? = null,
+        @Query("maxResults") maxResults: Int = 20,
+        @Query("pageToken") pageToken: String? = null,
+        @Query("showCompleted") showCompleted: Boolean = true,
+        @Query("showDeleted") showDeleted: Boolean = false,
+        @Query("showHidden") showHidden: Boolean = false,
+        @Query("updatedMin") updatedMin: Instant? = null,
+        @Query("showAssigned") showAssigned: Boolean = false
+    ): ResourceListResponse<Task>
 
     /**
      * [Moves the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/move) to another position in the destination task list.
@@ -203,26 +138,15 @@ class TasksApi(
      *
      * @return an instance of [Task].
      */
-    suspend fun move(taskListId: String, taskId: String, parentTaskId: String? = null, previousTaskId: String? = null, destinationTaskListId: String? = null): Task {
-        val response = httpClient.post("tasks/v1/lists/${taskListId}/tasks/${taskId}/move") {
-            if (parentTaskId != null) {
-                parameter("parent", parentTaskId)
-            }
-            if (previousTaskId != null) {
-                parameter("previous", previousTaskId)
-            }
-            if (destinationTaskListId != null) {
-                @Suppress("SpellCheckingInspection")
-                parameter("destinationTasklist", destinationTaskListId)
-            }
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @POST("tasks/v1/lists/{taskListId}/tasks/{taskId}/move")
+    suspend fun move(
+        @Path("taskListId") taskListId: String,
+        @Path("taskId") taskId: String,
+        @Query("parent") parentTaskId: String? = null,
+        @Query("previous") previousTaskId: String? = null,
+        @Suppress("SpellCheckingInspection")
+        @Query("destinationTasklist") destinationTaskListId: String? = null
+    ): Task
 
     /**
      * [Updates the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/patch). This method supports patch semantics.
@@ -233,18 +157,13 @@ class TasksApi(
      * 
      * @return an instance of [Task].
      */
-    suspend fun patch(taskListId: String, taskId: String, task: Task): Task {
-        val response = httpClient.patch("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
-            contentType(ContentType.Application.Json)
-            setBody(task)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @Headers("Content-Type: application/json")
+    @PATCH("tasks/v1/lists/{taskListId}/tasks/{taskId}")
+    suspend fun patch(
+        @Path("taskListId") taskListId: String,
+        @Path("taskId") taskId: String,
+        @Body task: Task
+    ): Task
 
     /**
      * [Updates the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/update).
@@ -255,18 +174,13 @@ class TasksApi(
      *
      * @return an instance of [Task].
      */
-    suspend fun update(taskListId: String, taskId: String, task: Task): Task {
-        val response = httpClient.put("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
-            contentType(ContentType.Application.Json)
-            setBody(task)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @Headers("Content-Type: application/json")
+    @PUT("tasks/v1/lists/{taskListId}/tasks/{taskId}")
+    suspend fun update(
+        @Path("taskListId") taskListId: String,
+        @Path("taskId") taskId: String,
+        @Body task: Task
+    ): Task
 }
 
 /**

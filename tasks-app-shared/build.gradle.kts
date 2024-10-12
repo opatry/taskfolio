@@ -33,6 +33,7 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.ktorfit)
 }
 
 compose.resources {
@@ -65,6 +66,7 @@ kotlin {
             api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
             implementation(libs.bundles.ktor.server)
+            implementation(libs.ktorfit)
             implementation(projects.google.oauth)
             implementation(projects.google.tasks)
 

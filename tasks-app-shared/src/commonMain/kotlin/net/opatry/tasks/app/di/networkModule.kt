@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.app.di
 
+import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.CurlUserAgent
@@ -29,10 +30,6 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.http.URLBuilder
-import io.ktor.http.encodedPath
-import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
@@ -86,26 +83,25 @@ val networkModule = module {
                     }
                 }
             }
-            defaultRequest {
-                if (url.host.isEmpty()) {
-                    val defaultUrl = URLBuilder().takeFrom("https://tasks.googleapis.com")
-                    url.host = defaultUrl.host
-                    url.port = defaultUrl.port
-                    url.protocol = defaultUrl.protocol
-                    if (!url.encodedPath.startsWith('/')) {
-                        val basePath = defaultUrl.encodedPath
-                        url.encodedPath = "$basePath/${url.encodedPath}"
-                    }
-                }
-            }
         }
     }
 
     single {
-        TaskListsApi(get(named(HttpClientName.Tasks)))
+        Ktorfit.Builder()
+            .httpClient(get<HttpClient>(named(HttpClientName.Tasks)))
+            .baseUrl("https://tasks.googleapis.com/")
+            .build()
     }
 
     single {
-        TasksApi(get(named(HttpClientName.Tasks)))
+        // FIXME why ktorfit.createTaskListsApi() isn't generated?
+        //  It appears to be generated in jvmMain build dir of :google:tasks module, not being reachable from :tasks-app-shared
+        get<Ktorfit>().create<TaskListsApi>()
+    }
+
+    single {
+        // FIXME why ktorfit.createTasksApi() isn't generated?
+        //  It appears to be generated in jvmMain build dir of :google:tasks module, not being reachable from :tasks-app-shared
+        get<Ktorfit>().create<TasksApi>()
     }
 }
