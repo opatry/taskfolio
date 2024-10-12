@@ -34,4 +34,5 @@ plugins {
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.about.libraries) apply false
+    alias(libs.plugins.ktorfit) apply false
 }

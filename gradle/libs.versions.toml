@@ -8,6 +8,7 @@ kotlin = "2.1.10"
 ksp = "2.1.10-1.0.29"
 coroutines = "1.10.1"
 ktor = "3.1.0"
+ktorfit = "2.2.0"
 compose-plugin = "1.7.3"
 compose-m3-adaptive = "1.0.1"
 room = "2.7.0-beta01"
@@ -37,6 +38,8 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+
+ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib-ktor-3.0.0", version.ref = "ktorfit" }
 
 slf4j-nop = { module = "org.slf4j:slf4j-nop", version = "2.0.16" }
 
@@ -104,3 +107,4 @@ androidx-room = { id = "androidx.room", version.ref = "room" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.3" }
 about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
+ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
