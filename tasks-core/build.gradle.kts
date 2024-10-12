@@ -24,7 +24,6 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -42,7 +41,7 @@ kotlin {
             implementation(projects.google.oauth)
             implementation(projects.google.tasks)
 
-            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.common)
         }
     }
 }
