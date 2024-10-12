@@ -1835,6 +1835,34 @@
             ]
         },
         {
+            "uniqueId": "com.squareup.okhttp3:okhttp",
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "4.12.0",
+            "description": "Square\u2019s meticulous HTTP client for Java and Kotlin.",
+            "name": "okhttp",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "com.squareup.okhttp3:okhttp-sse",
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "4.12.0",
+            "description": "Square\u2019s meticulous HTTP client for Java and Kotlin.",
+            "name": "okhttp-sse",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "com.squareup.okio:okio",
             "developers": [
                 {
@@ -1844,6 +1872,20 @@
             "artifactVersion": "3.11.0",
             "description": "A modern I/O library for Android, Java, and Kotlin Multiplatform.",
             "name": "okio",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "de.jensklingenberg.ktorfit:ktorfit-lib",
+            "developers": [
+                {
+                    "name": "Jens Klingenberg"
+                }
+            ],
+            "artifactVersion": "2.5.1",
+            "description": "Ktorfit",
+            "name": "Ktorfit",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -2026,6 +2068,20 @@
             "artifactVersion": "3.1.3",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-logging",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-client-okhttp",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.2",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-client-okhttp",
             "licenses": [
                 "Apache-2.0"
             ]

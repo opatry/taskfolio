@@ -38,6 +38,7 @@ plugins {
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.about.libraries) apply false
     alias(libs.plugins.kover)
+    alias(libs.plugins.ktorfit) apply false
 }
 
 val koverProjects = listOf(

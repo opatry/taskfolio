@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.app.di
 
+import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.CurlUserAgent
@@ -31,19 +32,14 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.HttpHeaders
-import io.ktor.http.URLBuilder
-import io.ktor.http.encodedPath
-import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
-import net.opatry.google.tasks.HttpTaskListsApi
-import net.opatry.google.tasks.HttpTasksApi
+import net.opatry.google.tasks.ClientRequestExceptionConverterFactory
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
@@ -121,26 +117,26 @@ val networkModule = module {
                     }
                 }
             }
-            defaultRequest {
-                if (url.host.isEmpty()) {
-                    val defaultUrl = URLBuilder().takeFrom("https://tasks.googleapis.com")
-                    url.host = defaultUrl.host
-                    url.port = defaultUrl.port
-                    url.protocol = defaultUrl.protocol
-                    if (!url.encodedPath.startsWith('/')) {
-                        val basePath = defaultUrl.encodedPath
-                        url.encodedPath = "$basePath/${url.encodedPath}"
-                    }
-                }
-            }
         }
     }
 
-    single<TaskListsApi> {
-        HttpTaskListsApi(get(named(HttpClientName.Tasks)))
+    single {
+        Ktorfit.Builder()
+            .httpClient(get<HttpClient>(named(HttpClientName.Tasks)))
+            .baseUrl("https://tasks.googleapis.com/")
+            .converterFactories(ClientRequestExceptionConverterFactory)
+            .build()
     }
 
-    single<TasksApi> {
-        HttpTasksApi(get(named(HttpClientName.Tasks)))
+    single {
+        // FIXME why ktorfit.createTaskListsApi() isn't generated?
+        //  It appears to be generated in jvmMain build dir of :google:tasks module, not being reachable from :tasks-app-shared
+        get<Ktorfit>().create<TaskListsApi>()
+    }
+
+    single {
+        // FIXME why ktorfit.createTasksApi() isn't generated?
+        //  It appears to be generated in jvmMain build dir of :google:tasks module, not being reachable from :tasks-app-shared
+        get<Ktorfit>().create<TasksApi>()
     }
 }

@@ -34,6 +34,7 @@ plugins {
     alias(libs.plugins.compose.hot.reload)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.ktorfit)
 }
 
 compose.resources {
@@ -75,6 +76,7 @@ kotlin {
 
             api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
+            implementation(libs.ktorfit)
             implementation(libs.slf4j.nop)
             implementation(projects.google.oauth)
             implementation(projects.google.tasks)
