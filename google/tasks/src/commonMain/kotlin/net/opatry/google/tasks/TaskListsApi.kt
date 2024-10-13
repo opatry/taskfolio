@@ -120,22 +120,6 @@ class TaskListsApi(
     }
 
     /**
-     * Iterate on [list]'s paginated results and returns single list of all task lists.
-     *
-     * @see [list]
-     */
-    suspend fun listAll(): List<TaskList> {
-        var nextPageToken: String? = null
-        return buildList {
-            do {
-                val response = list(maxResults = 100, nextPageToken)
-                addAll(response.items)
-                nextPageToken = response.nextPageToken
-            } while (nextPageToken != null)
-        }
-    }
-
-    /**
      * [Updates the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/patch). This method supports patch semantics.
      *
      * @param taskListId Task list identifier.
@@ -175,5 +159,21 @@ class TaskListsApi(
         } else {
             throw ClientRequestException(response, response.bodyAsText())
         }
+    }
+}
+
+/**
+ * Iterate on [TaskListsApi.list]'s paginated results and returns single list of all task lists.
+ *
+ * @see [TaskListsApi.list]
+ */
+suspend fun TaskListsApi.listAll(): List<TaskList> {
+    var nextPageToken: String? = null
+    return buildList {
+        do {
+            val response = list(maxResults = 100, nextPageToken)
+            addAll(response.items)
+            nextPageToken = response.nextPageToken
+        } while (nextPageToken != null)
     }
 }

@@ -192,46 +192,6 @@ class TasksApi(
     }
 
     /**
-     * Iterate on [list]'s paginated results and returns single list of all tasks.
-     *
-     * @see [list]
-     */
-    suspend fun listAll(
-        taskListId: String,
-        completedMin: Instant? = null,
-        completedMax: Instant? = null,
-        dueMin: Instant? = null,
-        dueMax: Instant? = null,
-        showCompleted: Boolean = true,
-        showDeleted: Boolean = false,
-        showHidden: Boolean = false,
-        updatedMin: Instant? = null,
-        showAssigned: Boolean = false
-    ): List<Task> {
-        var nextPageToken: String? = null
-        return buildList {
-            do {
-                val response = list(
-                    taskListId,
-                    completedMin,
-                    completedMax,
-                    dueMin,
-                    dueMax,
-                    maxResults = 100,
-                    nextPageToken,
-                    showCompleted,
-                    showDeleted,
-                    showHidden,
-                    updatedMin,
-                    showAssigned
-                )
-                addAll(response.items)
-                nextPageToken = response.nextPageToken
-            } while (nextPageToken != null)
-        }
-    }
-
-    /**
      * [Moves the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/move) to another position in the destination task list.
      *
      * @param taskListId Task list identifier.
@@ -305,5 +265,45 @@ class TasksApi(
         } else {
             throw ClientRequestException(response, response.bodyAsText())
         }
+    }
+}
+
+/**
+ * Iterate on [TasksApi.list]'s paginated results and returns single list of all tasks.
+ *
+ * @see [TasksApi.list]
+ */
+suspend fun TasksApi.listAll(
+    taskListId: String,
+    completedMin: Instant? = null,
+    completedMax: Instant? = null,
+    dueMin: Instant? = null,
+    dueMax: Instant? = null,
+    showCompleted: Boolean = true,
+    showDeleted: Boolean = false,
+    showHidden: Boolean = false,
+    updatedMin: Instant? = null,
+    showAssigned: Boolean = false
+): List<Task> {
+    var nextPageToken: String? = null
+    return buildList {
+        do {
+            val response = list(
+                taskListId,
+                completedMin,
+                completedMax,
+                dueMin,
+                dueMax,
+                maxResults = 100,
+                nextPageToken,
+                showCompleted,
+                showDeleted,
+                showHidden,
+                updatedMin,
+                showAssigned
+            )
+            addAll(response.items)
+            nextPageToken = response.nextPageToken
+        } while (nextPageToken != null)
     }
 }
