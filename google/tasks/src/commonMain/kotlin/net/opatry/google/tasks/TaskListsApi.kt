@@ -174,6 +174,6 @@ suspend fun TaskListsApi.listAll(): List<TaskList> {
             val response = list(maxResults = 100, nextPageToken)
             addAll(response.items)
             nextPageToken = response.nextPageToken
-        } while (nextPageToken != null)
+        } while (!nextPageToken.isNullOrEmpty())
     }
 }

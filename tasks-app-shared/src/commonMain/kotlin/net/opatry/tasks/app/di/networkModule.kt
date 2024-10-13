@@ -90,6 +90,7 @@ val networkModule = module {
                 if (url.host.isEmpty()) {
                     val defaultUrl = URLBuilder().takeFrom("https://tasks.googleapis.com")
                     url.host = defaultUrl.host
+                    url.port = defaultUrl.port
                     url.protocol = defaultUrl.protocol
                     if (!url.encodedPath.startsWith('/')) {
                         val basePath = defaultUrl.encodedPath
