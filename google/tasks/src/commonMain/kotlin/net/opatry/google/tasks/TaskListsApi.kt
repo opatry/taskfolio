@@ -36,8 +36,9 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
+import net.opatry.google.tasks.model.ResourceListResponse
+import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.TaskList
-import net.opatry.google.tasks.model.TaskListsListResponse
 
 /**
  * Service for interacting with the [Google Task Lists REST API](https://developers.google.com/tasks/reference/rest/v1/tasklists).
@@ -103,9 +104,9 @@ class TaskListsApi(
      * @param maxResults Maximum number of task lists returned on one page. Optional. The default is 20 (max allowed: 100).
      * @param pageToken Token specifying the result page to return. Optional.
      *
-     * @return an instance of [TaskListsListResponse].
+     * @return an instance of [ResourceListResponse] of type [TaskList], whose type is always [ResourceType.TaskLists].
      */
-    suspend fun list(maxResults: Int = 20, pageToken: String? = null): TaskListsListResponse {
+    suspend fun list(maxResults: Int = 20, pageToken: String? = null): ResourceListResponse<TaskList> {
         val response = httpClient.get("tasks/v1/users/@me/lists") {
             parameter("maxResults", maxResults.coerceIn(0, 100))
             if (pageToken != null) {
