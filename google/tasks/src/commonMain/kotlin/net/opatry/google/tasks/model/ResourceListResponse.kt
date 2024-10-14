@@ -27,20 +27,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 /**
- * https://developers.google.com/tasks/reference/rest/v1/tasks/list#response-body
- * 
- * @property kind Type of the resource. This is always [ResourceType.Tasks].
+ * Paginated response.
+ *
+ * @property kind Type of the resource.
  * @property etag ETag of the resource.
  * @property nextPageToken Token that can be used to request the next page of this result.
- * @property items Collection of tasks.
+ * @property items Collection of items.
  */
-data class TasksListResponse(
+data class ResourceListResponse<T>(
     @SerialName("kind")
-    val kind: ResourceType = ResourceType.Tasks,
+    val kind: ResourceType,
     @SerialName("etag")
     val etag: String,
     @SerialName("nextPageToken")
     val nextPageToken: String? = null,
     @SerialName("items")
-    val items: List<Task>,
+    val items: List<T>,
 )

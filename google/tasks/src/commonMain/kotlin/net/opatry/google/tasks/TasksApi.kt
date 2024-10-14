@@ -37,8 +37,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.datetime.Instant
+import net.opatry.google.tasks.model.ResourceListResponse
+import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
-import net.opatry.google.tasks.model.TasksListResponse
 
 /**
  * Service for interacting with the [Google Tasks REST API](https://developers.google.com/tasks/reference/rest/v1/tasks).
@@ -142,7 +143,7 @@ class TasksApi(
      * @param updatedMin Lower bound for a task's last modification time (as an RFC 3339 timestamp) to filter by. The default is not to filter by last modification time.
      * @param showAssigned Flag indicating whether tasks assigned to the current user are returned in the result. The default is `false`.
      *
-     * @return an instance of [TasksListResponse].
+     * @return an instance of [ResourceListResponse] of type [Task], whose type is always [ResourceType.Tasks].
      */
     suspend fun list(
         taskListId: String,
@@ -157,7 +158,7 @@ class TasksApi(
         showHidden: Boolean = false,
         updatedMin: Instant? = null,
         showAssigned: Boolean = false
-        ): TasksListResponse {
+    ): ResourceListResponse<Task> {
         val response = httpClient.get("tasks/v1/lists/${taskListId}/tasks") {
             if (completedMin != null) {
                 parameter("completedMin", completedMin.toString())
