@@ -1,5 +1,5 @@
 [versions]
-tasksApp-name = "1.2.0"
+tasksApp-name = "1.2.1"
 compileSdk = "34"
 minSdk = "24"
 targetSdk = "34"
