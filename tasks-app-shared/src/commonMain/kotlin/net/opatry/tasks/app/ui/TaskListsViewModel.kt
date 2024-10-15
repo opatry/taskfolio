@@ -59,7 +59,7 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
             .groupBy { task ->
                 when (task.dateRange) {
                     // merge all overdue tasks to the same range
-                    is DateRange.Overdue -> DateRange.Overdue(LocalDate.fromEpochDays(-1), 1)
+                    is DateRange.Overdue -> DateRange.Overdue(LocalDate.fromEpochDays(0), -1)
                     else -> task.dateRange
                 }
             }

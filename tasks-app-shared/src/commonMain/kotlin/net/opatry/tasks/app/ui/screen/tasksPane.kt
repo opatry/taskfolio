@@ -606,7 +606,7 @@ fun TasksColumn(
 
         taskList.remainingTasks.forEach { (dateRange, tasks) ->
             if (dateRange != null) {
-                stickyHeader(key = dateRange) {
+                stickyHeader(key = dateRange.key) {
                     Box(
                         Modifier
                             .fillMaxWidth()
@@ -689,8 +689,16 @@ fun TasksColumn(
     }
 }
 
+private val DateRange.key: String
+    get() = when (this) {
+        is DateRange.Overdue -> "overdue${numberOfDays}"
+        is DateRange.Today -> "today"
+        is DateRange.Later -> "later${numberOfDays}"
+        DateRange.None -> "none"
+    }
+
 @Composable
-fun DateRange?.toColor(): Color = when (this) {
+private fun DateRange?.toColor(): Color = when (this) {
     is DateRange.Overdue -> MaterialTheme.colorScheme.error
     is DateRange.Today -> MaterialTheme.colorScheme.primary
     is DateRange.Later,
@@ -699,7 +707,7 @@ fun DateRange?.toColor(): Color = when (this) {
 }
 
 @Composable
-fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (this) {
+private fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (this) {
     is DateRange.Overdue -> {
         val numberOfDays = abs(numberOfDays)
         when {
