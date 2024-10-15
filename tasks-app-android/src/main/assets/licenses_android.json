@@ -75,7 +75,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.8.1",
+            "artifactVersion": "1.8.2",
             "description": "Provides source annotations for tooling and readability.",
             "name": "Annotation",
             "licenses": [
@@ -792,7 +792,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle-Common for Java 8 Language",
             "name": "Lifecycle-Common for Java 8",
             "licenses": [
@@ -809,7 +809,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle-Common",
             "name": "Lifecycle-Common",
             "licenses": [
@@ -826,7 +826,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle LiveData",
             "name": "Lifecycle LiveData",
             "licenses": [
@@ -843,7 +843,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle LiveData Core",
             "name": "Lifecycle LiveData Core",
             "licenses": [
@@ -860,7 +860,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Kotlin extensions for 'livedata-core' artifact",
             "name": "LiveData Core Kotlin Extensions",
             "licenses": [
@@ -877,7 +877,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle Process",
             "name": "Lifecycle Process",
             "licenses": [
@@ -894,7 +894,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle Runtime",
             "name": "Lifecycle Runtime",
             "licenses": [
@@ -911,7 +911,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Compose integration with Lifecycle",
             "name": "Lifecycle Runtime Compose",
             "licenses": [
@@ -928,7 +928,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Kotlin extensions for 'lifecycle' artifact",
             "name": "Lifecycle Kotlin Extensions",
             "licenses": [
@@ -945,7 +945,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle Service",
             "name": "Lifecycle Service",
             "licenses": [
@@ -962,7 +962,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -979,7 +979,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -996,7 +996,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Compose integration with Lifecycle ViewModel",
             "name": "Lifecycle ViewModel Compose",
             "licenses": [
@@ -1013,7 +1013,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Kotlin extensions for 'viewmodel' artifact",
             "name": "Lifecycle ViewModel Kotlin Extensions",
             "licenses": [
@@ -1030,7 +1030,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.8.6",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel with SavedState",
             "licenses": [
@@ -1061,12 +1061,15 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.3.1",
+            "artifactVersion": "1.4.1",
             "description": "Allows libraries to prepopulate ahead of time compilation traces to be read by ART",
-            "name": "androidx.profileinstaller:profileinstaller",
+            "name": "Profile Installer",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
             "uniqueId": "androidx.resourceinspection:resourceinspection-annotation",
@@ -1427,7 +1430,7 @@
                     "name": "Google"
                 }
             ],
-            "artifactVersion": "0.34.0",
+            "artifactVersion": "0.36.0",
             "description": "Utilities for Jetpack Compose",
             "name": "Accompanist Drawable Painter library",
             "licenses": [
@@ -1782,7 +1785,7 @@
                     "name": "Square, Inc."
                 }
             ],
-            "artifactVersion": "3.9.0",
+            "artifactVersion": "3.9.1",
             "description": "A modern I/O library for Android, Java, and Kotlin Multiplatform.",
             "name": "okio",
             "licenses": [
@@ -1813,7 +1816,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-alpha10",
+            "artifactVersion": "3.0.0-rc01",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil",
             "licenses": [
@@ -1827,7 +1830,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-alpha10",
+            "artifactVersion": "3.0.0-rc01",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-compose",
             "licenses": [
@@ -1841,7 +1844,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-alpha10",
+            "artifactVersion": "3.0.0-rc01",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-compose-core",
             "licenses": [
@@ -1855,7 +1858,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-alpha10",
+            "artifactVersion": "3.0.0-rc01",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-core",
             "licenses": [
@@ -1869,7 +1872,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-alpha10",
+            "artifactVersion": "3.0.0-rc01",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-network-core",
             "licenses": [
@@ -1883,7 +1886,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-alpha10",
+            "artifactVersion": "3.0.0-rc01",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-network-ktor3",
             "licenses": [
