@@ -72,6 +72,11 @@ android {
         resourceConfigurations += listOf("en", "fr")
     }
 
+    androidResources {
+        @Suppress("UnstableApiUsage")
+        generateLocaleConfig = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
