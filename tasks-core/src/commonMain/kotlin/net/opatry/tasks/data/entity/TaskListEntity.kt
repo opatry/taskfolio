@@ -41,5 +41,12 @@ data class TaskListEntity(
     val title: String,
     @ColumnInfo(name = "update_date")
     val lastUpdateDate: Instant,
-)
+    @ColumnInfo(name = "sorting", defaultValue = "UserDefined") // tightly coupled to converters & enum/string mapping
+    val sorting: Sorting = Sorting.UserDefined,
+) {
+    enum class Sorting {
+        UserDefined,
+        DueDate,
+    }
+}
 

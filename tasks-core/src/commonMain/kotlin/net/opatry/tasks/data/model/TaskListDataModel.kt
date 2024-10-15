@@ -23,10 +23,12 @@
 package net.opatry.tasks.data.model
 
 import kotlinx.datetime.Instant
+import net.opatry.tasks.data.TaskListSorting
 
 data class TaskListDataModel(
     val id: Long,
     val title: String,
     val lastUpdate: Instant,
     val tasks: List<TaskDataModel>,
+    val sorting: TaskListSorting,
 )

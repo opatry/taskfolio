@@ -135,7 +135,6 @@ private fun TaskListRowScaffold(
             id = 0L,
             title = title,
             "TODO DATE",
-            tasks = emptyList(),
         ),
         isSelected = isSelected,
         onClick = {}

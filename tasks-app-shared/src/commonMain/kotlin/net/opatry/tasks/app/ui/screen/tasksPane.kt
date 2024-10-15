@@ -118,18 +118,21 @@ import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.EmptyState
 import net.opatry.tasks.app.ui.component.MissingScreen
 import net.opatry.tasks.app.ui.component.RowWithIcon
+import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskListMenu
 import net.opatry.tasks.app.ui.component.TaskListMenuAction
 import net.opatry.tasks.app.ui.component.TaskMenu
-import net.opatry.tasks.app.ui.component.TaskMenuAction
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
 import net.opatry.tasks.resources.task_due_date_label_days_ago
+import net.opatry.tasks.resources.task_due_date_label_no_date
+import net.opatry.tasks.resources.task_due_date_label_past
 import net.opatry.tasks.resources.task_due_date_label_today
 import net.opatry.tasks.resources.task_due_date_label_tomorrow
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
@@ -164,6 +167,8 @@ import net.opatry.tasks.resources.task_list_pane_task_restored_snackbar
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.abs
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -231,8 +236,8 @@ fun TaskListDetail(
                         showTaskListActions = false
                         when (action) {
                             TaskListMenuAction.Dismiss -> Unit
-                            TaskListMenuAction.SortManual -> {}
-                            TaskListMenuAction.SortDate -> {}
+                            TaskListMenuAction.SortManual -> viewModel.sortBy(taskList, TaskListSorting.Manual)
+                            TaskListMenuAction.SortDate -> viewModel.sortBy(taskList, TaskListSorting.DueDate)
                             TaskListMenuAction.Rename -> showRenameTaskListDialog = true
                             TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
                             TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
@@ -583,25 +588,12 @@ fun TasksColumn(
     onDeleteTask: (TaskUIModel) -> Unit,
 ) {
     var showCompleted by remember(taskList.id) { mutableStateOf(false) }
-    val tasks = taskList.tasks
-
-    // TODO depending on sorting (manual vs date), sections could be different
-    //  manual: no section title for not completed tasks, expandable "completed" section
-    //  date: sections by date cluster (past, today, tomorrow, future), expandable "completed" section
-
-    // FIXME remember computation & derived states
-    val groupedTasks = tasks.sortedBy { it.isCompleted }.groupBy { it.isCompleted }.toMutableMap()
-    val todoCount = groupedTasks[false]?.size ?: 0
-    val completedCount = groupedTasks[true]?.size ?: 0
-    if (!showCompleted) {
-        groupedTasks[true] = emptyList()
-    }
 
     LazyColumn(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (completedCount > 0 && todoCount == 0) {
+        if (taskList.isEmptyRemainingTasksVisible) {
             item(key = "all_tasks_complete") {
                 EmptyState(
                     icon = LucideIcons.CheckCheck,
@@ -611,48 +603,86 @@ fun TasksColumn(
                 )
             }
         }
-        groupedTasks.forEach { (completed, tasks) ->
-            if (completed && completedCount > 0) {
-                stickyHeader(key = "completed") {
+
+        taskList.remainingTasks.forEach { (dateRange, tasks) ->
+            if (dateRange != null) {
+                stickyHeader(key = dateRange) {
                     Box(
                         Modifier
-                            .clip(MaterialTheme.shapes.large)
                             .fillMaxWidth()
-                            .clickable { showCompleted = !showCompleted }
                             .background(MaterialTheme.colorScheme.background)
                             .padding(horizontal = 12.dp, vertical = 8.dp)
                     ) {
-                        RowWithIcon(
-                            icon = {
-                                if (showCompleted) {
-                                    Icon(LucideIcons.ChevronDown, null)
-                                } else {
-                                    Icon(LucideIcons.ChevronRight, null)
-                                }
-                            }
-                        ) {
-                            Text(
-                                stringResource(Res.string.task_list_pane_completed_section_title_with_count, completedCount),
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                        }
+                        Text(
+                            dateRange.toLabel(sectionLabel = true),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = dateRange.toColor(),
+                        )
                     }
                 }
             }
             items(tasks, key = TaskUIModel::id) { task ->
-                TaskRow(
+                RemainingTaskRow(
                     taskLists,
                     task,
-                    onToggleCompletionState = { onToggleCompletionState(task) },
-                    onEditTask = { onEditTask(task) },
-                    onUpdateDueDate = { onUpdateDueDate(task) },
-                    onNewSubTask = { onNewSubTask(task) },
-                    onUnindent = { onUnindent(task) },
-                    onIndent = { onIndent(task) },
-                    onMoveToTop = { onMoveToTop(task) },
-                    onMoveToList = { onMoveToList(task, it) },
-                    onMoveToNewList = { onMoveToNewList(task) },
-                    onDeleteTask = { onDeleteTask(task) },
+                    showDate = taskList.sorting == TaskListSorting.Manual || dateRange is DateRange.Overdue
+                ) { action ->
+                    when (action) {
+                        TaskAction.ToggleCompletion -> onToggleCompletionState(task)
+                        TaskAction.Edit -> onEditTask(task)
+                        TaskAction.UpdateDueDate -> onUpdateDueDate(task)
+                        TaskAction.AddSubTask -> onNewSubTask(task)
+                        TaskAction.Unindent -> onUnindent(task)
+                        TaskAction.Indent -> onIndent(task)
+                        TaskAction.MoveToTop -> onMoveToTop(task)
+                        is TaskAction.MoveToList -> onMoveToList(task, action.targetParentList)
+                        TaskAction.MoveToNewList -> onMoveToNewList(task)
+                        TaskAction.Delete -> onDeleteTask(task)
+                    }
+                }
+            }
+        }
+
+        if (taskList.hasCompletedTasks) {
+            stickyHeader(key = "completed") {
+                Box(
+                    Modifier
+                        .clip(MaterialTheme.shapes.large)
+                        .fillMaxWidth()
+                        .clickable { showCompleted = !showCompleted }
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    RowWithIcon(
+                        icon = {
+                            when {
+                                showCompleted -> Icon(LucideIcons.ChevronDown, null)
+                                else -> Icon(LucideIcons.ChevronRight, null)
+                            }
+                        }
+                    ) {
+                        Text(
+                            stringResource(Res.string.task_list_pane_completed_section_title_with_count, taskList.completedTasks.size),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                }
+            }
+        }
+
+        if (showCompleted) {
+            items(taskList.completedTasks, key = TaskUIModel::id) { task ->
+                CompletedTaskRow(
+                    task,
+                    onAction = { action ->
+                        when (action) {
+                            TaskAction.ToggleCompletion -> onToggleCompletionState(task)
+                            TaskAction.Edit -> onEditTask(task)
+                            TaskAction.UpdateDueDate -> onUpdateDueDate(task)
+                            TaskAction.Delete -> onDeleteTask(task)
+                            else -> Unit
+                        }
+                    },
                 )
             }
         }
@@ -661,32 +691,30 @@ fun TasksColumn(
 
 @Composable
 fun DateRange?.toColor(): Color = when (this) {
-    is DateRange.Overdue,
-    DateRange.Yesterday -> MaterialTheme.colorScheme.error
-
-    DateRange.Today -> MaterialTheme.colorScheme.primary
-    DateRange.Tomorrow,
+    is DateRange.Overdue -> MaterialTheme.colorScheme.error
+    is DateRange.Today -> MaterialTheme.colorScheme.primary
     is DateRange.Later,
     DateRange.None,
     null -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
 }
 
 @Composable
-fun DateRange.toLabel(): String = when (this) {
+fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (this) {
     is DateRange.Overdue -> {
-        if (numberOfDays < 7) {
-            stringResource(Res.string.task_due_date_label_days_ago, numberOfDays)
-        } else {
-            stringResource(Res.string.task_due_date_label_weeks_ago, numberOfDays / 7)
+        val numberOfDays = abs(numberOfDays)
+        when {
+            sectionLabel -> stringResource(Res.string.task_due_date_label_past)
+            numberOfDays == 1 -> stringResource(Res.string.task_due_date_label_yesterday)
+            numberOfDays < 7 -> stringResource(Res.string.task_due_date_label_days_ago, numberOfDays)
+            else -> stringResource(Res.string.task_due_date_label_weeks_ago, numberOfDays / 7)
         }
     }
 
-    DateRange.Yesterday -> stringResource(Res.string.task_due_date_label_yesterday)
-    DateRange.Today -> stringResource(Res.string.task_due_date_label_today)
-    DateRange.Tomorrow -> stringResource(Res.string.task_due_date_label_tomorrow)
-    // TODO localize names & format
-    is DateRange.Later -> LocalDate.Format {
-        if (date.year == Clock.System.todayIn(TimeZone.currentSystemDefault()).year) {
+    is DateRange.Today -> stringResource(Res.string.task_due_date_label_today)
+    is DateRange.Later -> when {
+        numberOfDays == 1 -> stringResource(Res.string.task_due_date_label_tomorrow)
+        // TODO localize names & format
+        date.year == Clock.System.todayIn(TimeZone.currentSystemDefault()).year -> LocalDate.Format {
             // FIXME doesn't work with more than 2 dd or MM
             //  byUnicodePattern("ddd', 'MMM' 'yyyy")
             dayOfWeek(DayOfWeekNames.ENGLISH_ABBREVIATED) // TODO translation
@@ -694,7 +722,9 @@ fun DateRange.toLabel(): String = when (this) {
             monthName(MonthNames.ENGLISH_ABBREVIATED) // TODO translation
             char(' ')
             dayOfMonth(Padding.NONE)
-        } else {
+        }.format(date)
+
+        else -> LocalDate.Format {
             // FIXME doesn't work with more than 2 MM
             //  byUnicodePattern("MMMM' 'dd', 'yyyy")
             monthName(MonthNames.ENGLISH_FULL) // TODO translation
@@ -702,41 +732,31 @@ fun DateRange.toLabel(): String = when (this) {
             dayOfMonth(Padding.NONE)
             chars(", ")
             year()
-        }
-    }.format(date)
+        }.format(date)
+    }
 
-    DateRange.None -> ""
+    DateRange.None -> when {
+        sectionLabel -> stringResource(Res.string.task_due_date_label_no_date)
+        else -> ""
+    }
 }
 
 @Composable
-fun TaskRow(
+private fun RemainingTaskRow(
     taskLists: List<TaskListUIModel>,
     task: TaskUIModel,
-    onToggleCompletionState: () -> Unit,
-    onEditTask: () -> Unit,
-    onUpdateDueDate: () -> Unit,
-    onNewSubTask: () -> Unit,
-    onUnindent: () -> Unit,
-    onIndent: () -> Unit,
-    onMoveToTop: () -> Unit,
-    onMoveToList: (TaskListUIModel) -> Unit,
-    onMoveToNewList: () -> Unit,
-    onDeleteTask: () -> Unit,
+    modifier: Modifier = Modifier,
+    showDate: Boolean = true,
+    onAction: (TaskAction) -> Unit,
 ) {
     var showContextualMenu by remember { mutableStateOf(false) }
 
-    // TODO remember?
-    val (taskCheckIcon, taskCheckIconColor) = when {
-        task.isCompleted -> LucideIcons.CircleCheckBig to MaterialTheme.colorScheme.primary
-        else -> LucideIcons.Circle to MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-    }
-
-    Row(Modifier.clickable(onClick = onEditTask)) {
+    Row(modifier.clickable(onClick = { onAction(TaskAction.Edit) })) {
         IconButton(
-            onClick = onToggleCompletionState,
-            Modifier.padding(start = 36.dp * task.indent)
+            onClick = { onAction(TaskAction.ToggleCompletion) },
+            modifier = Modifier.padding(start = 36.dp * task.indent)
         ) {
-            Icon(taskCheckIcon, null, tint = taskCheckIconColor)
+            Icon(LucideIcons.Circle, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
         Column(
             Modifier
@@ -745,7 +765,61 @@ fun TaskRow(
         ) {
             Text(
                 task.title,
-                textDecoration = TextDecoration.LineThrough.takeIf { task.isCompleted },
+                style = MaterialTheme.typography.titleMedium,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+
+            if (task.notes.isNotBlank()) {
+                Text(
+                    task.notes,
+                    style = MaterialTheme.typography.bodySmall,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
+                )
+            }
+            if (showDate && task.dueDate != null) {
+                AssistChip(
+                    onClick = { onAction(TaskAction.UpdateDueDate) },
+                    shape = MaterialTheme.shapes.large,
+                    label = {
+                        Text(
+                            task.dateRange.toLabel(),
+                            color = task.dateRange.toColor()
+                        )
+                    },
+                )
+            }
+        }
+        Box {
+            IconButton(onClick = { showContextualMenu = true }) {
+                Icon(LucideIcons.EllipsisVertical, stringResource(Res.string.task_list_pane_task_options_icon_content_desc))
+            }
+            TaskMenu(taskLists, task, showContextualMenu) { action ->
+                showContextualMenu = false
+                action?.let(onAction)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompletedTaskRow(
+    task: TaskUIModel,
+    onAction: (TaskAction) -> Unit,
+) {
+    Row(Modifier.clickable(onClick = { onAction(TaskAction.Edit) })) {
+        IconButton(onClick = { onAction(TaskAction.ToggleCompletion) }) {
+            Icon(LucideIcons.CircleCheckBig, null, tint = MaterialTheme.colorScheme.primary)
+        }
+        Column(
+            Modifier
+                .weight(1f)
+                .padding(vertical = 8.dp)
+        ) {
+            Text(
+                task.title,
+                textDecoration = TextDecoration.LineThrough,
                 style = MaterialTheme.typography.titleMedium,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
@@ -761,43 +835,20 @@ fun TaskRow(
             }
             if (task.dueDate != null) {
                 AssistChip(
-                    onClick = onUpdateDueDate,
+                    onClick = { onAction(TaskAction.UpdateDueDate) },
                     shape = MaterialTheme.shapes.large,
                     label = {
                         Text(
                             task.dateRange.toLabel(),
-                            color = if (task.isCompleted)
-                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                            else
-                                task.dateRange.toColor()
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     },
                 )
             }
         }
-        if (task.isCompleted) {
-            IconButton(onClick = onDeleteTask) {
-                Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
-            }
-        } else {
-            Box {
-                IconButton(onClick = { showContextualMenu = true }) {
-                    Icon(LucideIcons.EllipsisVertical, stringResource(Res.string.task_list_pane_task_options_icon_content_desc))
-                }
-                TaskMenu(taskLists, task, showContextualMenu) { action ->
-                    showContextualMenu = false
-                    when (action) {
-                        TaskMenuAction.Dismiss -> Unit
-                        TaskMenuAction.AddSubTask -> onNewSubTask()
-                        TaskMenuAction.Indent -> onIndent()
-                        TaskMenuAction.Unindent -> onUnindent()
-                        TaskMenuAction.MoveToTop -> onMoveToTop()
-                        is TaskMenuAction.MoveToList -> onMoveToList(action.targetParentList)
-                        TaskMenuAction.MoveToNewList -> onMoveToNewList()
-                        TaskMenuAction.Delete -> onDeleteTask()
-                    }
-                }
-            }
+
+        IconButton(onClick = { onAction(TaskAction.Delete) }) {
+            Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
         }
     }
 }
@@ -809,7 +860,7 @@ private fun TaskRowScaffold(
     dueDate: LocalDate? = Clock.System.todayIn(TimeZone.currentSystemDefault()),
     isCompleted: Boolean = false
 ) {
-    TaskRow(
+    RemainingTaskRow(
         emptyList(),
         TaskUIModel(
             id = 0L,
@@ -817,18 +868,8 @@ private fun TaskRowScaffold(
             notes = notes,
             dueDate = dueDate,
             isCompleted = isCompleted
-        ),
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {}
-    )
+        )
+    ) {}
 }
 
 @TaskfolioPreview

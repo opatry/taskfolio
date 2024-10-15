@@ -77,6 +77,8 @@
     <string name="task_due_date_label_yesterday">Hier</string>
     <string name="task_due_date_label_today">Aujourd'hui</string>
     <string name="task_due_date_label_tomorrow">Demain</string>
+    <string name="task_due_date_label_past">Passée</string>
+    <string name="task_due_date_label_no_date">Sans date</string>
     <string name="task_due_date_update_cta">Mettre à jour</string>
 
     <string name="task_editor_sheet_edit_title">Modifier la tâche</string>

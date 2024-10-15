@@ -42,13 +42,19 @@ import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 
-private fun TaskList.asTaskListEntity(localId: Long?): TaskListEntity {
+enum class TaskListSorting {
+    Manual,
+    DueDate,
+}
+
+private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.Sorting): TaskListEntity {
     return TaskListEntity(
         id = localId ?: 0,
         remoteId = id,
         etag = etag,
         title = title,
         lastUpdateDate = updatedDate,
+        sorting = sorting,
     )
 }
 
@@ -71,14 +77,21 @@ private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?): TaskEntity {
 }
 
 private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskListDataModel {
-    val sortedTasks = sortTasks(tasks).map { (task, indent) ->
-        task.asTaskDataModel(indent)
+    val (sorting, sortedTasks) = when (sorting) {
+        TaskListEntity.Sorting.UserDefined -> TaskListSorting.Manual to sortTasksManualOrdering(tasks).map { (task, indent) ->
+            task.asTaskDataModel(indent)
+        }
+
+        TaskListEntity.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
+            task.asTaskDataModel(0)
+        }
     }
     return TaskListDataModel(
         id = id,
         title = title,
         lastUpdate = lastUpdateDate,
         tasks = sortedTasks,
+        sorting = sorting
     )
 }
 
@@ -109,7 +122,7 @@ private fun TaskEntity.asTask(): Task {
     )
 }
 
-fun sortTasks(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
+fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
     // Step 1: Create a map of tasks by their IDs for easy lookup
     val taskMap = tasks.associateBy { it.remoteId ?: it.id.toString() }.toMutableMap() // FIXME local data only?
 
@@ -128,7 +141,7 @@ fun sortTasks(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
 
     // Step 3: Sort the child tasks by position
     tree.forEach { (_, children) ->
-        children.sortBy { it.position }
+        children.sortBy(TaskEntity::position)
     }
 
     // Step 4: Recursive function to traverse tasks and assign indentation levels
@@ -148,6 +161,10 @@ fun sortTasks(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
     }
 
     return sortedTasks
+}
+
+fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
+    return tasks.sortedBy(TaskEntity::dueDate)
 }
 
 class TaskRepository(
@@ -188,8 +205,8 @@ class TaskRepository(
             //  - check new ones
             //  - etc.
             val existingEntity = taskListDao.getByRemoteId(remoteTaskList.id)
-            val finalLocalId = taskListDao.insert(remoteTaskList.asTaskListEntity(existingEntity?.id))
-            println("task list ${remoteTaskList.etag} vs ${existingEntity?.etag}) with final local id $finalLocalId")
+            val updatedEntity = remoteTaskList.asTaskListEntity(existingEntity?.id, existingEntity?.sorting ?: TaskListEntity.Sorting.UserDefined)
+            val finalLocalId = taskListDao.insert(updatedEntity)
             taskListIds[finalLocalId] = remoteTaskList.id
         }
         taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
@@ -237,7 +254,7 @@ class TaskRepository(
             }
         }
         if (taskList != null) {
-            taskListDao.insert(taskList.asTaskListEntity(taskListId))
+            taskListDao.insert(taskList.asTaskListEntity(taskListId, TaskListEntity.Sorting.UserDefined))
         }
     }
 
@@ -302,6 +319,15 @@ class TaskRepository(
                 }.awaitAll()
             }
         }
+    }
+
+    suspend fun sortTasksBy(taskListId: Long, sorting: TaskListSorting) {
+        val dbSorting = when (sorting) {
+            TaskListSorting.Manual -> TaskListEntity.Sorting.UserDefined
+            TaskListSorting.DueDate -> TaskListEntity.Sorting.DueDate
+        }
+        // no update date change, it's a local only information unrelated to remote tasks
+        taskListDao.sortTasksBy(taskListId, dbSorting)
     }
 
     suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null) {
