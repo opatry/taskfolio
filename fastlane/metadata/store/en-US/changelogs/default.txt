@@ -1,1 +1,2 @@
-General under-the-hood improvements for enhanced performance.
+• Support for sorting tasks by date
+• General under-the-hood improvements for enhanced performance.
