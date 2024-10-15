@@ -36,10 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.text.style.TextOverflow
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
@@ -73,15 +69,13 @@ fun TaskMenu(
     expanded: Boolean,
     onAction: (TaskAction?) -> Unit
 ) {
-    val currentTaskList = taskLists.firstOrNull { it.tasks.map(TaskUIModel::id).contains(task.id) }
-    val taskPosition by remember(currentTaskList) { mutableStateOf(currentTaskList?.tasks?.indexOf(task) ?: -1) }
-    val canMoveToTop by remember(task) { derivedStateOf { taskPosition > 0 && task.canIndent } }
+    val currentTaskList = taskLists.firstOrNull { it.containsTask(task) }
 
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = { onAction(null) }
     ) {
-        if (canMoveToTop) {
+        if (task.canMoveToTop) {
             DropdownMenuItem(
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_move_to_top))
@@ -101,7 +95,7 @@ fun TaskMenu(
             )
         }
 
-        if (task.canIndent && taskPosition > 0) {
+        if (task.canIndent) {
             DropdownMenuItem(
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_indent))

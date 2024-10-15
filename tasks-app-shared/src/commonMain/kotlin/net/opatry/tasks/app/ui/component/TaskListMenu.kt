@@ -166,7 +166,7 @@ private fun TaskListMenuPreview() {
         ) {
             IconButton(onClick = { showMenu = true }) {
                 Icon(LucideIcons.EllipsisVertical, null)
-                TaskListMenu(TaskListUIModel(0L, "My task list", "TODO DATE", tasks = emptyList(), sorting = TaskListSorting.Manual), showMenu) {}
+                TaskListMenu(TaskListUIModel(0L, "My task list", "TODO DATE"), showMenu) {}
             }
         }
     }

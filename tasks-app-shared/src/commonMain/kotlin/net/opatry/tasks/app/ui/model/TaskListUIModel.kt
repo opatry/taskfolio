@@ -29,10 +29,17 @@ data class TaskListUIModel(
     val id: Long,
     val title: String,
     val lastUpdate: String,
-    val tasks: List<TaskUIModel>,
-    val sorting: TaskListSorting,
+    val remainingTasks: Map<DateRange?, List<TaskUIModel>> = emptyMap(),
+    val completedTasks: List<TaskUIModel> = emptyList(),
+    val sorting: TaskListSorting = TaskListSorting.Manual,
 ) {
-    val isEmpty: Boolean = tasks.isEmpty()
-    val hasCompletedTasks: Boolean = tasks.any { it.isCompleted }
+    fun containsTask(task: TaskUIModel, includeCompleted: Boolean = false): Boolean {
+        return remainingTasks.values.flatten().contains(task)
+                || (includeCompleted && completedTasks.contains(task))
+    }
+
+    val isEmpty: Boolean = remainingTasks.isEmpty() && completedTasks.isEmpty()
+    val hasCompletedTasks: Boolean = completedTasks.isNotEmpty()
+    val isEmptyRemainingTasksVisible: Boolean = remainingTasks.isEmpty() && hasCompletedTasks
     val canDelete: Boolean = true // FIXME default list can't be deleted, how to know it?
 }

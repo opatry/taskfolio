@@ -125,7 +125,6 @@ import net.opatry.tasks.app.ui.component.TaskMenu
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
-import net.opatry.tasks.app.ui.model.compareTo
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
@@ -590,30 +589,11 @@ fun TasksColumn(
 ) {
     var showCompleted by remember(taskList.id) { mutableStateOf(false) }
 
-    // FIXME remember computation & derived states
-    val (completedTasks, remainingTasks) = taskList.tasks.partition(TaskUIModel::isCompleted)
-
-    val taskGroups = when (taskList.sorting) {
-        // no grouping
-        TaskListSorting.Manual -> mapOf(null to remainingTasks)
-        TaskListSorting.DueDate -> remainingTasks
-            .map { it.copy(indent = 0) }
-            .sortedWith { o1, o2 -> o1.dateRange.compareTo(o2.dateRange) }
-            .groupBy { task ->
-                when (task.dateRange) {
-                    // merge all overdue tasks to the same range
-                    is DateRange.Overdue -> DateRange.Overdue(LocalDate.fromEpochDays(-1), 1)
-
-                    else -> task.dateRange
-                }
-            }
-    }
-
     LazyColumn(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (completedTasks.isNotEmpty() && remainingTasks.isEmpty()) {
+        if (taskList.isEmptyRemainingTasksVisible) {
             item(key = "all_tasks_complete") {
                 EmptyState(
                     icon = LucideIcons.CheckCheck,
@@ -624,7 +604,7 @@ fun TasksColumn(
             }
         }
 
-        taskGroups.forEach { (dateRange, tasks) ->
+        taskList.remainingTasks.forEach { (dateRange, tasks) ->
             if (dateRange != null) {
                 stickyHeader(key = dateRange) {
                     Box(
@@ -663,7 +643,7 @@ fun TasksColumn(
             }
         }
 
-        if (completedTasks.isNotEmpty()) {
+        if (taskList.hasCompletedTasks) {
             stickyHeader(key = "completed") {
                 Box(
                     Modifier
@@ -682,7 +662,7 @@ fun TasksColumn(
                         }
                     ) {
                         Text(
-                            stringResource(Res.string.task_list_pane_completed_section_title_with_count, completedTasks.size),
+                            stringResource(Res.string.task_list_pane_completed_section_title_with_count, taskList.completedTasks.size),
                             style = MaterialTheme.typography.titleSmall
                         )
                     }
@@ -691,7 +671,7 @@ fun TasksColumn(
         }
 
         if (showCompleted) {
-            items(completedTasks, key = TaskUIModel::id) { task ->
+            items(taskList.completedTasks, key = TaskUIModel::id) { task ->
                 CompletedTaskRow(
                     task,
                     onAction = { action ->

@@ -77,7 +77,8 @@ data class TaskUIModel(
             }
         }
 
+    val canMoveToTop: Boolean = false // TODO not in first position in list
     val canUnindent: Boolean = indent > 0
-    val canIndent: Boolean = indent < 1
+    val canIndent: Boolean = indent < 1 // TODO & not first position in list
     val canCreateSubTask: Boolean = indent == 0
 }

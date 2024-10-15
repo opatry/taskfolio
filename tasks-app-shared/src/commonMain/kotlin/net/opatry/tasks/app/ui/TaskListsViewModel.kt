@@ -37,8 +37,10 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
+import net.opatry.tasks.app.ui.model.compareTo
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
@@ -47,13 +49,28 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
-    // TODO children
-    // TODO date formatter
+    val (completedTasks, remainingTasks) = tasks.map(TaskDataModel::asTaskUIModel).partition(TaskUIModel::isCompleted)
+
+    val taskGroups = when (sorting) {
+        // no grouping
+        TaskListSorting.Manual -> mapOf(null to remainingTasks)
+        TaskListSorting.DueDate -> remainingTasks
+            .sortedWith { o1, o2 -> o1.dateRange.compareTo(o2.dateRange) }
+            .groupBy { task ->
+                when (task.dateRange) {
+                    // merge all overdue tasks to the same range
+                    is DateRange.Overdue -> DateRange.Overdue(LocalDate.fromEpochDays(-1), 1)
+                    else -> task.dateRange
+                }
+            }
+    }
+
     return TaskListUIModel(
         id = id,
         title = title,
         lastUpdate = lastUpdate.toString(),
-        tasks = tasks.map(TaskDataModel::asTaskUIModel),
+        remainingTasks = taskGroups.toMap(),
+        completedTasks = completedTasks,
         sorting = sorting,
     )
 }
