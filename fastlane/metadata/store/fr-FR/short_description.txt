@@ -1,1 +1,1 @@
-Gérez vos tâches avec synchronisation vers Google Tasks. Application portfolio "toy-project".
+Gérez vos tâches avec synchronisation Google Tasks. Portfolio app.
