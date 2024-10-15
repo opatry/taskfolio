@@ -1,0 +1,1 @@
+Améliorations générales sous le capot pour des performances optimisées.
