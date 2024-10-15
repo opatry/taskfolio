@@ -1,0 +1,15 @@
+<b>Taskfolio</b> est une application de gestion de tâches simple et intuitive, conçue pour se synchroniser facilement avec Google Tasks tout en offrant des fonctionnalités complètes hors-ligne.
+Cette application a été développée pour mettre en avant mon expertise en développement Android, en utilisant les outils les plus récents et les bonne pratiques.
+
+Fonctionnalités clés :
+
+•	Hors-ligne : Gérez vos tâches même sans connexion, avec une synchronisation automatique dès que vous êtes de nouveau en ligne.
+•	Intégration avec Google Tasks : Synchronisez facilement vos tâches avec votre compte Google.
+•	Interface propre et intuitive : Conçue avec Jetpack Compose et Material Design 3 pour une expérience utilisateur fluide.
+
+<b>Taskfolio</b> n'est pas seulement un autre gestionnaire de tâches, c’est une vitrine de mes compétences en développement Android.
+Que ce soit avec une architecture robuste en utilisant MVVM, une intégration d'API sécurisée ou une expérience utilisateur fluide, cette application démontre ma façon de concevoir des applications Android.
+
+Si vous êtes intéressé par plus de détails sur la création de ce projet ou si vous souhaitez voir l'intégralité du code source, visitez le dépôt GitHub du projet !
+
+https://github.com/opatry/taskfolio

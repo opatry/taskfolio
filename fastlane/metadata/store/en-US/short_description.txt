@@ -1,1 +1,1 @@
-	Manage tasks offline with sync to Google Tasks. Toy project portfolio app.
+Manage tasks with sync to Google Tasks. Toy project portfolio app.

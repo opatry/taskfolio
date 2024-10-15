@@ -1,0 +1,2 @@
+• Support du tri des tâches par date
+• Améliorations générales sous le capot pour des performances optimisées.
