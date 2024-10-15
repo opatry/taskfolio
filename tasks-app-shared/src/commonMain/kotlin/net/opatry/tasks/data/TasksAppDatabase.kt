@@ -41,6 +41,12 @@ object Converters {
 
     @TypeConverter
     fun instantToString(instant: Instant?): String? = instant?.toString()
+
+    @TypeConverter
+    fun sortingFromString(value: String?): TaskListEntity.Sorting? = value?.let(TaskListEntity.Sorting::valueOf)
+
+    @TypeConverter
+    fun sortingToString(sorting: TaskListEntity.Sorting?): String? = sorting?.name
 }
 
 @Database(
@@ -49,9 +55,10 @@ object Converters {
         TaskEntity::class,
         UserEntity::class,
     ],
-    version = 2,
+    version = 3,
     autoMigrations = [
-        AutoMigration(from = 1, to = 2)
+        AutoMigration(from = 1, to = 2), // add user table
+        AutoMigration(from = 2, to = 3), // add sorting column in task_list table
     ],
 )
 @ConstructedBy(TasksAppDatabaseConstructor::class)

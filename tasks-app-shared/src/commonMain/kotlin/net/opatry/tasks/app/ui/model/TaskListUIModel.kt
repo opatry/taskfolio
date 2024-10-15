@@ -22,12 +22,15 @@
 
 package net.opatry.tasks.app.ui.model
 
+import net.opatry.tasks.data.TaskListSorting
+
 
 data class TaskListUIModel(
     val id: Long,
     val title: String,
     val lastUpdate: String,
     val tasks: List<TaskUIModel>,
+    val sorting: TaskListSorting,
 ) {
     val isEmpty: Boolean = tasks.isEmpty()
     val hasCompletedTasks: Boolean = tasks.any { it.isCompleted }

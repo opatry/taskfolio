@@ -61,4 +61,7 @@ LEFT JOIN task ON task_list.local_id = task.parent_list_local_id ORDER BY task_l
 
     @Query("DELETE FROM task_list WHERE remote_id IS NOT NULL AND remote_id NOT IN (:validRemoteIds)")
     suspend fun deleteStaleTaskLists(validRemoteIds: List<String>)
+
+    @Query("UPDATE task_list SET sorting = :sorting WHERE local_id = :taskListId")
+    suspend fun sortTasksBy(taskListId: Long, sorting: TaskListEntity.Sorting)
 }

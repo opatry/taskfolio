@@ -39,6 +39,7 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
+import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
@@ -52,7 +53,8 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
         id = id,
         title = title,
         lastUpdate = lastUpdate.toString(),
-        tasks = tasks.map(TaskDataModel::asTaskUIModel)
+        tasks = tasks.map(TaskDataModel::asTaskUIModel),
+        sorting = sorting,
     )
 }
 
@@ -136,6 +138,17 @@ class TaskListsViewModel(
                 taskRepository.clearTaskListCompletedTasks(taskList.id)
             } catch (e: Exception) {
                 println("Error creating task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun sortBy(taskList: TaskListUIModel, sorting: TaskListSorting) {
+        viewModelScope.launch {
+            try {
+                taskRepository.sortTasksBy(taskList.id, sorting)
+            } catch (e: Exception) {
+                println("Error while sorting task list: $e")
                 // TODO error handling
             }
         }

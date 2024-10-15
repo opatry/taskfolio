@@ -49,9 +49,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.screen.TaskListSorting
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_menu_clear_all_completed_tasks
 import net.opatry.tasks.resources.task_list_menu_default_list_cannot_be_deleted
@@ -75,7 +75,6 @@ enum class TaskListMenuAction {
 fun TaskListMenu(
     taskList: TaskListUIModel,
     expanded: Boolean,
-    sorting: TaskListSorting = TaskListSorting.Manual,
     onAction: (TaskListMenuAction) -> Unit
 ) {
     val allowDelete by remember(taskList.canDelete) { mutableStateOf(taskList.canDelete) }
@@ -96,9 +95,9 @@ fun TaskListMenu(
             text = {
                 RowWithIcon(
                     stringResource(Res.string.task_list_menu_sort_manual),
-                    LucideIcons.Check.takeIf { sorting == TaskListSorting.Manual })
+                    LucideIcons.Check.takeIf { taskList.sorting == TaskListSorting.Manual })
             },
-            enabled = sorting != TaskListSorting.Manual,
+            enabled = taskList.sorting != TaskListSorting.Manual,
             onClick = { onAction(TaskListMenuAction.SortManual) }
         )
 
@@ -106,9 +105,9 @@ fun TaskListMenu(
             text = {
                 RowWithIcon(
                     stringResource(Res.string.task_list_menu_sort_due_date),
-                    LucideIcons.Check.takeIf { sorting == TaskListSorting.DueDate })
+                    LucideIcons.Check.takeIf { taskList.sorting == TaskListSorting.DueDate })
             },
-            enabled = sorting != TaskListSorting.DueDate,
+            enabled = taskList.sorting != TaskListSorting.DueDate,
             onClick = { onAction(TaskListMenuAction.SortDate) }
         )
 
@@ -167,7 +166,7 @@ private fun TaskListMenuPreview() {
         ) {
             IconButton(onClick = { showMenu = true }) {
                 Icon(LucideIcons.EllipsisVertical, null)
-                TaskListMenu(TaskListUIModel(0L, "My task list", "TODO DATE", tasks = emptyList()), showMenu) {}
+                TaskListMenu(TaskListUIModel(0L, "My task list", "TODO DATE", tasks = emptyList(), sorting = TaskListSorting.Manual), showMenu) {}
             }
         }
     }

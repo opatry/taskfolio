@@ -128,6 +128,7 @@ import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.model.compareTo
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
 import net.opatry.tasks.resources.task_due_date_label_days_ago
@@ -169,10 +170,6 @@ import net.opatry.tasks.resources.task_lists_screen_empty_list_title
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
 
-enum class TaskListSorting {
-    Manual,
-    DueDate,
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -182,7 +179,6 @@ fun TaskListDetail(
     onNavigateTo: (TaskListUIModel?) -> Unit
 ) {
     val taskLists by viewModel.taskLists.collectAsState(emptyList())
-    var taskSorting by remember { mutableStateOf(TaskListSorting.Manual) }
 
     // TODO extract a smart state for all this mess
     var taskOfInterest by remember { mutableStateOf<TaskUIModel?>(null) }
@@ -237,12 +233,12 @@ fun TaskListDetail(
                     IconButton(onClick = { showTaskListActions = true }) {
                         Icon(LucideIcons.EllipsisVertical, null)
                     }
-                    TaskListMenu(taskList, showTaskListActions, taskSorting) { action ->
+                    TaskListMenu(taskList, showTaskListActions) { action ->
                         showTaskListActions = false
                         when (action) {
                             TaskListMenuAction.Dismiss -> Unit
-                            TaskListMenuAction.SortManual -> taskSorting = TaskListSorting.Manual
-                            TaskListMenuAction.SortDate -> taskSorting = TaskListSorting.DueDate
+                            TaskListMenuAction.SortManual -> viewModel.sortBy(taskList, TaskListSorting.Manual)
+                            TaskListMenuAction.SortDate -> viewModel.sortBy(taskList, TaskListSorting.DueDate)
                             TaskListMenuAction.Rename -> showRenameTaskListDialog = true
                             TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
                             TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
@@ -275,7 +271,6 @@ fun TaskListDetail(
                 TasksColumn(
                     taskLists,
                     taskList,
-                    taskSorting,
                     onToggleCompletionState = viewModel::toggleTaskCompletionState,
                     onEditTask = {
                         taskOfInterest = it
@@ -582,7 +577,6 @@ fun TaskListDetail(
 fun TasksColumn(
     taskLists: List<TaskListUIModel>,
     taskList: TaskListUIModel,
-    taskSorting: TaskListSorting,
     onToggleCompletionState: (TaskUIModel) -> Unit,
     onEditTask: (TaskUIModel) -> Unit,
     onUpdateDueDate: (TaskUIModel) -> Unit,
@@ -599,7 +593,7 @@ fun TasksColumn(
     // FIXME remember computation & derived states
     val (completedTasks, remainingTasks) = taskList.tasks.partition(TaskUIModel::isCompleted)
 
-    val taskGroups = when (taskSorting) {
+    val taskGroups = when (taskList.sorting) {
         // no grouping
         TaskListSorting.Manual -> mapOf(null to remainingTasks)
         TaskListSorting.DueDate -> remainingTasks
@@ -651,7 +645,7 @@ fun TasksColumn(
                 RemainingTaskRow(
                     taskLists,
                     task,
-                    simpleDisplay = taskSorting == TaskListSorting.DueDate
+                    showDate = taskList.sorting == TaskListSorting.Manual || dateRange is DateRange.Overdue
                 ) { action ->
                     when (action) {
                         TaskAction.ToggleCompletion -> onToggleCompletionState(task)
@@ -718,7 +712,6 @@ fun TasksColumn(
 @Composable
 fun DateRange?.toColor(): Color = when (this) {
     is DateRange.Overdue -> MaterialTheme.colorScheme.error
-
     is DateRange.Today -> MaterialTheme.colorScheme.primary
     is DateRange.Later,
     DateRange.None,
@@ -773,7 +766,7 @@ private fun RemainingTaskRow(
     taskLists: List<TaskListUIModel>,
     task: TaskUIModel,
     modifier: Modifier = Modifier,
-    simpleDisplay: Boolean = false,
+    showDate: Boolean = true,
     onAction: (TaskAction) -> Unit,
 ) {
     var showContextualMenu by remember { mutableStateOf(false) }
@@ -781,10 +774,7 @@ private fun RemainingTaskRow(
     Row(modifier.clickable(onClick = { onAction(TaskAction.Edit) })) {
         IconButton(
             onClick = { onAction(TaskAction.ToggleCompletion) },
-            modifier = if (simpleDisplay)
-                Modifier
-            else
-                Modifier.padding(start = 36.dp * task.indent)
+            modifier = Modifier.padding(start = 36.dp * task.indent)
         ) {
             Icon(LucideIcons.Circle, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
@@ -808,7 +798,7 @@ private fun RemainingTaskRow(
                     maxLines = 2
                 )
             }
-            if (!simpleDisplay && task.dueDate != null) {
+            if (showDate && task.dueDate != null) {
                 AssistChip(
                     onClick = { onAction(TaskAction.UpdateDueDate) },
                     shape = MaterialTheme.shapes.large,

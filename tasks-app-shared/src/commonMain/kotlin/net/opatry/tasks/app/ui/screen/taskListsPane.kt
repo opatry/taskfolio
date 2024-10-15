@@ -53,6 +53,7 @@ import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_add_task_list_cta
 import org.jetbrains.compose.resources.stringResource
@@ -136,6 +137,7 @@ private fun TaskListRowScaffold(
             title = title,
             "TODO DATE",
             tasks = emptyList(),
+            sorting = TaskListSorting.Manual,
         ),
         isSelected = isSelected,
         onClick = {}
