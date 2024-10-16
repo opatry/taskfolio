@@ -3,12 +3,13 @@ tasksApp-name = "1.2.2"
 compileSdk = "34"
 minSdk = "24"
 targetSdk = "34"
-agp = "8.5.1"
+agp = "8.5.2"
 kotlin = "2.0.20"
 ksp = "2.0.20-1.0.24"
 coroutines = "1.9.0"
 ktor = "3.0.0"
-compose-plugin = "1.7.0-rc01"
+compose-plugin = "1.7.0"
+compose-m3-adaptive = "1.0.0"
 room = "2.7.0-alpha09"
 sqlite = "2.5.0-alpha09"
 koin = "4.0.0"
@@ -50,9 +51,9 @@ koin-androidx-startup = { module = "io.insert-koin:koin-androidx-startup" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 
-androidx-compose-m3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version = "1.0.0" }
-androidx-compose-m3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version = "1.0.0" }
-androidx-compose-m3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version = "1.0.0" }
+compose-m3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "compose-m3-adaptive" }
+compose-m3-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "compose-m3-adaptive" }
+compose-m3-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "compose-m3-adaptive" }
 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }

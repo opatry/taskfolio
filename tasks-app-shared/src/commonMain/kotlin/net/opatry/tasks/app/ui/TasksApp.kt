@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.MissingScreen
+import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.app.ui.component.ProfileIcon
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AboutScreen
@@ -95,6 +96,10 @@ fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: T
 
     var newTaskListDefaultTitle by remember { mutableStateOf("") }
     var showNewTaskListDialog by remember { mutableStateOf(false) }
+
+    MyBackHandler({ selectedScreen != AppTasksScreen.Tasks }) {
+        selectedScreen = AppTasksScreen.Tasks
+    }
 
     NavigationSuiteScaffold(navigationSuiteItems = {
         AppTasksScreen.entries.forEach { screen ->
