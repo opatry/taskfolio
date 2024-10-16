@@ -44,34 +44,33 @@ export BLUE_BOLD
 export MAGENTA
 export MAGENTA_BOLD
 
-function step_done()
-{
+step_done() {
   echo -e " ✅  Done\n"
 }
 
-function step_error()
-{
-  echo -e " ❌  ${RED_BOLD}Error${RESET} ($1)\n"
+error() {
+  echo -e " ❌ ${RED_BOLD}Error${RESET} ($1)"
+}
+
+step_error() {
+  error "$1"
+  echo ""
   exit 1
 }
 
-function step()
-{
+step() {
   echo -e " 🏃 $1"
 }
 
-function info()
-{
+info() {
   echo -e " ℹ️  $1"
 }
 
-function warn()
-{
-  echo -e "⚠️ $1"
+warn() {
+  echo -e " ⚠️  $1"
 }
 
-function ask_yn_choice()
-{
+ask_yn_choice() {
   read -r -p "${1} (y/${BOLD}N${RESET}) " choice
   case "${choice}" in 
     y|Y)
