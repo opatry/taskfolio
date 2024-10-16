@@ -1,0 +1,20 @@
+name: 🔢 Check Play Store requirements
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'fastlane/metadata'
+
+jobs:
+  check:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: ✅ Check character limits
+        run: ./_ci/check_playstore_requirements.sh
