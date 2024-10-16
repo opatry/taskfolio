@@ -47,9 +47,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +62,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.about_screen_app_version_subtitle
 import net.opatry.tasks.resources.about_screen_credits_item
@@ -78,7 +84,35 @@ enum class AboutScreenDestination {
 }
 
 @Composable
-expect fun AboutScreen(aboutApp: AboutApp)
+fun AboutScreen(aboutApp: AboutApp) {
+    var currentDestination by remember { mutableStateOf(AboutScreenDestination.About) }
+
+    MyBackHandler({ currentDestination != AboutScreenDestination.About }) {
+        // TODO doesn't support deep navigation for now, would need a real "navigator.navigateBack()" if needed
+        //  kept simple for now, just handle Android native back to leave Credits screen
+        currentDestination = AboutScreenDestination.About
+    }
+
+    Scaffold(topBar = {
+        when (currentDestination) {
+            AboutScreenDestination.Credits -> CreditsScreenTopAppBar {
+                currentDestination = AboutScreenDestination.About
+            }
+
+            AboutScreenDestination.About -> AboutScreenTopAppBar(aboutApp.name, aboutApp.version)
+        }
+    }) { innerPadding ->
+        Box(Modifier.padding(innerPadding)) {
+            when (currentDestination) {
+                AboutScreenDestination.About -> AboutScreenContent(aboutApp) { destination ->
+                    currentDestination = destination
+                }
+
+                AboutScreenDestination.Credits -> CreditsScreenContent(aboutApp.aboutLibrariesJsonProvider)
+            }
+        }
+    }
+}
 
 private const val TASKFOLIO_WEBSITE_URL = "https://opatry.github.io/taskfolio/"
 private const val TASKFOLIO_GITHUB_URL = "https://github.com/opatry/taskfolio"
