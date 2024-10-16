@@ -6,6 +6,15 @@ on:
       - main
     paths:
       - 'fastlane/metadata/**'
+      - '_ci/check_playstore_requirements.sh'
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'fastlane/metadata/**'
+      - '_ci/check_playstore_requirements.sh'
+      - main
 
 jobs:
   check:
