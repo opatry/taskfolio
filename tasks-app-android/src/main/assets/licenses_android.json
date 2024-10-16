@@ -2324,7 +2324,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.0-rc01",
+            "artifactVersion": "1.7.0",
             "description": "Resources for Compose JB",
             "name": "Resources for Compose JB",
             "licenses": [

@@ -46,9 +46,6 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.compose.m3.adaptive)
-            implementation(libs.androidx.compose.m3.adaptive.layout)
-            implementation(libs.androidx.compose.m3.adaptive.navigation)
 
             implementation(libs.play.services.auth)
         }
@@ -71,6 +68,9 @@ kotlin {
             implementation(compose.material3)
             api(compose.components.resources)
             implementation(compose.material3AdaptiveNavigationSuite)
+            implementation(libs.compose.m3.adaptive)
+            implementation(libs.compose.m3.adaptive.layout)
+            implementation(libs.compose.m3.adaptive.navigation)
             implementation(libs.bundles.coil)
 
             implementation(libs.jetbrains.lifecycle.viewmodel.compose)
