@@ -1,0 +1,119 @@
+/*
+ * Copyright (c) 2024 Olivier Patry
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.runComposeUiTest
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TOGGLE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
+import net.opatry.tasks.app.ui.screen.TasksColumn
+import kotlin.test.Test
+
+@Suppress("TestFunctionName")
+@OptIn(ExperimentalTestApi::class)
+class TasksColumnTest {
+    @Test
+    fun TasksColumn_TaskRows() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 2, completedTaskCount = 1)
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                taskList = taskList,
+            )
+        }
+
+        onAllNodesWithTag(REMAINING_TASK_ROW)
+            .assertCountEquals(2)
+
+        onNodeWithTag(COMPLETED_TOGGLE)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun TasksColumn_AllCompletedEmptyState() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 0, completedTaskCount = 1)
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                taskList = taskList,
+            )
+        }
+
+        onNodeWithTag(ALL_COMPLETE_EMPTY_STATE)
+            .assertIsDisplayed()
+
+        onNodeWithTag(COMPLETED_TOGGLE)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun TasksColumn_NoCompletedSectionIfNotNeeded() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 2, completedTaskCount = 0)
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                taskList = taskList,
+            )
+        }
+
+        onNodeWithTag(COMPLETED_TOGGLE)
+            .assertDoesNotExist()
+
+        onAllNodesWithTag(COMPLETED_TASK_ROW)
+            .assertCountEquals(0)
+    }
+
+    @Test
+    fun TasksColumn_ToggleCompletedSection() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 1, completedTaskCount = 2)
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                taskList = taskList,
+            )
+        }
+
+        onAllNodesWithTag(COMPLETED_TASK_ROW)
+            .assertCountEquals(0)
+
+        onNodeWithTag(COMPLETED_TOGGLE)
+            .assertIsDisplayed()
+            .performClick()
+            .assertIsDisplayed()
+
+        onAllNodesWithTag(COMPLETED_TASK_ROW)
+            .assertCountEquals(2)
+
+        onNodeWithTag(COMPLETED_TOGGLE)
+            .performClick()
+            .assertIsDisplayed()
+
+        onAllNodesWithTag(COMPLETED_TASK_ROW)
+            .assertCountEquals(0)
+    }
+}

@@ -20,6 +20,10 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
+
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
@@ -39,7 +43,12 @@ compose.resources {
 
 kotlin {
     jvm()
-    androidTarget()
+
+    androidTarget {
+        // useful to allow using commonTest in Android instrumentation tests
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+    }
 
     jvmToolchain(17)
 
@@ -86,6 +95,17 @@ kotlin {
             implementation(projects.tasksCore)
 
             implementation(projects.lucideIcons)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+        jvmTest.dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }
