@@ -71,9 +71,16 @@
     <string name="task_list_pane_completed_section_title_with_count">Terminées (%1$s)</string>
     <string name="task_list_pane_delete_task_icon_content_desc">Supprimer la tâche</string>
     <string name="task_list_pane_task_options_icon_content_desc">Options de la tâche</string>
-
-    <string name="task_due_date_label_days_ago">Il y a %1$s jours</string>
-    <string name="task_due_date_label_weeks_ago">Il y a %1$s semaines</string>
+    <plurals name="task_due_date_label_days_ago">
+        <item quantity="zero">Aujourd'hui</item>
+        <item quantity="one">Hier</item>
+        <item quantity="other">Il y a %1$s jours</item>
+    </plurals>
+    <plurals name="task_due_date_label_weeks_ago">
+        <item quantity="zero">Aujourd'hui</item>
+        <item quantity="one">La semaine dernière</item>
+        <item quantity="other">Il y a %1$s semaines</item>
+    </plurals>
     <string name="task_due_date_label_yesterday">Hier</string>
     <string name="task_due_date_label_today">Aujourd'hui</string>
     <string name="task_due_date_label_tomorrow">Demain</string>
