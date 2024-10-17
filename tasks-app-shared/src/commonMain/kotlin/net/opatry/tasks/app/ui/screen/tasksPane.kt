@@ -94,6 +94,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
@@ -125,6 +126,19 @@ import net.opatry.tasks.app.ui.component.TaskMenu
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DELETE_ICON
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ICON
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_NOTES
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TOGGLE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TOGGLE_LABEL
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ICON
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_MENU_ICON
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_NOTES
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
@@ -166,9 +180,26 @@ import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
 import net.opatry.tasks.resources.task_list_pane_task_restored_snackbar
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
+import org.jetbrains.annotations.VisibleForTesting
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
 
+object TaskListPaneTestTag {
+    const val ALL_COMPLETE_EMPTY_STATE = "ALL_COMPLETE_EMPTY_STATE"
+    const val REMAINING_TASK_ROW = "REMAINING_TASK_ROW"
+    const val REMAINING_TASK_ICON = "REMAINING_TASK_ICON"
+    const val REMAINING_TASK_NOTES = "REMAINING_TASK_NOTES"
+    const val REMAINING_TASK_DUE_DATE_CHIP = "REMAINING_TASK_DUE_DATE_CHIP"
+    const val REMAINING_TASK_MENU_ICON = "REMAINING_TASK_MENU_ICON"
+    const val COMPLETED_TASK_ROW = "COMPLETED_TASK_ROW"
+    const val COMPLETED_TASK_ICON = "COMPLETED_TASK_ICON"
+    const val COMPLETED_TASK_NOTES = "COMPLETED_TASK_NOTES"
+    const val COMPLETED_TASK_DUE_DATE_CHIP = "COMPLETED_TASK_DUE_DATE_CHIP"
+    const val COMPLETED_TASK_DELETE_ICON = "COMPLETED_TASK_DELETE_ICON"
+    const val COMPLETED_TOGGLE = "COMPLETED_TOGGLE"
+    const val COMPLETED_TOGGLE_LABEL = "COMPLETED_TOGGLE_LABEL"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -576,16 +607,16 @@ fun TaskListDetail(
 fun TasksColumn(
     taskLists: List<TaskListUIModel>,
     taskList: TaskListUIModel,
-    onToggleCompletionState: (TaskUIModel) -> Unit,
-    onEditTask: (TaskUIModel) -> Unit,
-    onUpdateDueDate: (TaskUIModel) -> Unit,
-    onNewSubTask: (TaskUIModel) -> Unit,
-    onUnindent: (TaskUIModel) -> Unit,
-    onIndent: (TaskUIModel) -> Unit,
-    onMoveToTop: (TaskUIModel) -> Unit,
-    onMoveToList: (TaskUIModel, TaskListUIModel) -> Unit,
-    onMoveToNewList: (TaskUIModel) -> Unit,
-    onDeleteTask: (TaskUIModel) -> Unit,
+    onToggleCompletionState: (TaskUIModel) -> Unit = {},
+    onEditTask: (TaskUIModel) -> Unit = {},
+    onUpdateDueDate: (TaskUIModel) -> Unit = {},
+    onNewSubTask: (TaskUIModel) -> Unit = {},
+    onUnindent: (TaskUIModel) -> Unit = {},
+    onIndent: (TaskUIModel) -> Unit = {},
+    onMoveToTop: (TaskUIModel) -> Unit = {},
+    onMoveToList: (TaskUIModel, TaskListUIModel) -> Unit = { _, _ -> },
+    onMoveToNewList: (TaskUIModel) -> Unit = {},
+    onDeleteTask: (TaskUIModel) -> Unit = {},
 ) {
     var showCompleted by remember(taskList.id) { mutableStateOf(false) }
 
@@ -599,7 +630,10 @@ fun TasksColumn(
                     icon = LucideIcons.CheckCheck,
                     title = stringResource(Res.string.task_list_pane_all_tasks_complete_title),
                     description = stringResource(Res.string.task_list_pane_all_tasks_complete_desc),
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp)
+                        .testTag(ALL_COMPLETE_EMPTY_STATE),
                 )
             }
         }
@@ -652,6 +686,7 @@ fun TasksColumn(
                         .clickable { showCompleted = !showCompleted }
                         .background(MaterialTheme.colorScheme.background)
                         .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .testTag(COMPLETED_TOGGLE)
                 ) {
                     RowWithIcon(
                         icon = {
@@ -663,6 +698,7 @@ fun TasksColumn(
                     ) {
                         Text(
                             stringResource(Res.string.task_list_pane_completed_section_title_with_count, taskList.completedTasks.size),
+                            modifier = Modifier.testTag(COMPLETED_TOGGLE_LABEL),
                             style = MaterialTheme.typography.titleSmall
                         )
                     }
@@ -697,8 +733,9 @@ private val DateRange.key: String
         DateRange.None -> "none"
     }
 
+@VisibleForTesting
 @Composable
-private fun DateRange?.toColor(): Color = when (this) {
+internal fun DateRange?.toColor(): Color = when (this) {
     is DateRange.Overdue -> MaterialTheme.colorScheme.error
     is DateRange.Today -> MaterialTheme.colorScheme.primary
     is DateRange.Later,
@@ -706,15 +743,18 @@ private fun DateRange?.toColor(): Color = when (this) {
     null -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
 }
 
+@VisibleForTesting
 @Composable
-private fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (this) {
+internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (this) {
     is DateRange.Overdue -> {
         val numberOfDays = abs(numberOfDays)
         when {
             sectionLabel -> stringResource(Res.string.task_due_date_label_past)
             numberOfDays == 1 -> stringResource(Res.string.task_due_date_label_yesterday)
-            numberOfDays < 7 -> stringResource(Res.string.task_due_date_label_days_ago, numberOfDays)
-            else -> stringResource(Res.string.task_due_date_label_weeks_ago, numberOfDays / 7)
+            numberOfDays < 7 -> pluralStringResource(Res.plurals.task_due_date_label_days_ago, numberOfDays, numberOfDays)
+            else -> (numberOfDays / 7).let { numberOfWeeks ->
+                pluralStringResource(Res.plurals.task_due_date_label_weeks_ago, numberOfWeeks, numberOfWeeks)
+            }
         }
     }
 
@@ -749,20 +789,26 @@ private fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (thi
     }
 }
 
+@VisibleForTesting
 @Composable
-private fun RemainingTaskRow(
+internal fun RemainingTaskRow(
     taskLists: List<TaskListUIModel>,
     task: TaskUIModel,
-    modifier: Modifier = Modifier,
     showDate: Boolean = true,
     onAction: (TaskAction) -> Unit,
 ) {
     var showContextualMenu by remember { mutableStateOf(false) }
 
-    Row(modifier.clickable(onClick = { onAction(TaskAction.Edit) })) {
+    Row(
+        Modifier
+            .testTag(REMAINING_TASK_ROW)
+            .clickable(onClick = { onAction(TaskAction.Edit) })
+    ) {
         IconButton(
             onClick = { onAction(TaskAction.ToggleCompletion) },
-            modifier = Modifier.padding(start = 36.dp * task.indent)
+            modifier = Modifier
+                .testTag(REMAINING_TASK_ICON)
+                .padding(start = 36.dp * task.indent)
         ) {
             Icon(LucideIcons.Circle, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
@@ -781,6 +827,7 @@ private fun RemainingTaskRow(
             if (task.notes.isNotBlank()) {
                 Text(
                     task.notes,
+                    modifier = Modifier.testTag(REMAINING_TASK_NOTES),
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
@@ -789,18 +836,19 @@ private fun RemainingTaskRow(
             if (showDate && task.dueDate != null) {
                 AssistChip(
                     onClick = { onAction(TaskAction.UpdateDueDate) },
-                    shape = MaterialTheme.shapes.large,
                     label = {
                         Text(
                             task.dateRange.toLabel(),
                             color = task.dateRange.toColor()
                         )
                     },
+                    modifier = Modifier.testTag(REMAINING_TASK_DUE_DATE_CHIP),
+                    shape = MaterialTheme.shapes.large,
                 )
             }
         }
         Box {
-            IconButton(onClick = { showContextualMenu = true }) {
+            IconButton(onClick = { showContextualMenu = true }, Modifier.testTag(REMAINING_TASK_MENU_ICON)) {
                 Icon(LucideIcons.EllipsisVertical, stringResource(Res.string.task_list_pane_task_options_icon_content_desc))
             }
             TaskMenu(taskLists, task, showContextualMenu) { action ->
@@ -811,13 +859,18 @@ private fun RemainingTaskRow(
     }
 }
 
+@VisibleForTesting
 @Composable
-private fun CompletedTaskRow(
+internal fun CompletedTaskRow(
     task: TaskUIModel,
     onAction: (TaskAction) -> Unit,
 ) {
-    Row(Modifier.clickable(onClick = { onAction(TaskAction.Edit) })) {
-        IconButton(onClick = { onAction(TaskAction.ToggleCompletion) }) {
+    Row(
+        Modifier
+            .testTag(COMPLETED_TASK_ROW)
+            .clickable(onClick = { onAction(TaskAction.Edit) })
+    ) {
+        IconButton(onClick = { onAction(TaskAction.ToggleCompletion) }, Modifier.testTag(COMPLETED_TASK_ICON)) {
             Icon(LucideIcons.CircleCheckBig, null, tint = MaterialTheme.colorScheme.primary)
         }
         Column(
@@ -836,6 +889,7 @@ private fun CompletedTaskRow(
             if (task.notes.isNotBlank()) {
                 Text(
                     task.notes,
+                    modifier = Modifier.testTag(COMPLETED_TASK_NOTES),
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
@@ -844,18 +898,19 @@ private fun CompletedTaskRow(
             if (task.dueDate != null) {
                 AssistChip(
                     onClick = { onAction(TaskAction.UpdateDueDate) },
-                    shape = MaterialTheme.shapes.large,
                     label = {
                         Text(
                             task.dateRange.toLabel(),
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     },
+                    modifier = Modifier.testTag(COMPLETED_TASK_DUE_DATE_CHIP),
+                    shape = MaterialTheme.shapes.large,
                 )
             }
         }
 
-        IconButton(onClick = { onAction(TaskAction.Delete) }) {
+        IconButton(onClick = { onAction(TaskAction.Delete) }, Modifier.testTag(COMPLETED_TASK_DELETE_ICON)) {
             Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
         }
     }
