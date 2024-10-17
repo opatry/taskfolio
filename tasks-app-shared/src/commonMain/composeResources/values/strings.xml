@@ -72,8 +72,16 @@
     <string name="task_list_pane_delete_task_icon_content_desc">Delete task</string>
     <string name="task_list_pane_task_options_icon_content_desc">Task options</string>
 
-    <string name="task_due_date_label_days_ago">%1$s days ago</string>
-    <string name="task_due_date_label_weeks_ago">%1$s weeks ago</string>
+    <plurals name="task_due_date_label_days_ago">
+        <item quantity="zero">Today</item>
+        <item quantity="one">Yesterday</item>
+        <item quantity="other">%1$s days ago</item>
+    </plurals>
+    <plurals name="task_due_date_label_weeks_ago">
+        <item quantity="zero">Today</item>
+        <item quantity="one">Last week</item>
+        <item quantity="other">%1$s weeks ago</item>
+    </plurals>
     <string name="task_due_date_label_yesterday">Yesterday</string>
     <string name="task_due_date_label_today">Today</string>
     <string name="task_due_date_label_tomorrow">Tomorrow</string>

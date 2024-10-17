@@ -45,18 +45,26 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
+import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.TASK_LIST_ROW
 import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_add_task_list_cta
 import org.jetbrains.compose.resources.stringResource
 
+
+object TaskListsPaneTestTag {
+    const val NEW_TASK_LIST_BUTTON = "NEW_TASK_LIST_BUTTON"
+    const val TASK_LIST_ROW = "TASK_LIST_ROW"
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -78,6 +86,7 @@ fun TaskListsColumn(
                 // TODO could be a "in-place" replace with a text field (no border)
                 TextButton(
                     onClick = onNewTaskList,
+                    Modifier.testTag(NEW_TASK_LIST_BUTTON)
                 ) {
                     RowWithIcon(stringResource(Res.string.task_lists_screen_add_task_list_cta), LucideIcons.CircleFadingPlus)
                 }
@@ -112,7 +121,9 @@ fun TaskListRow(
 
     Card(
         onClick = onClick,
-        modifier = modifier.semantics { selected = isSelected },
+        modifier = modifier
+            .testTag(TASK_LIST_ROW)
+            .semantics { selected = isSelected },
     ) {
         ListItem(
             headlineContent = {

@@ -36,7 +36,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.ADD_SUBTASK
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.DELETE
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.INDENT
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_LIST
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_NEW_LIST
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_TOP
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.TASK_MENU
+import net.opatry.tasks.app.ui.component.TaskMenuTestTag.UNINDENT
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.resources.Res
@@ -48,6 +58,17 @@ import net.opatry.tasks.resources.task_menu_move_to_top
 import net.opatry.tasks.resources.task_menu_new_list
 import net.opatry.tasks.resources.task_menu_unindent
 import org.jetbrains.compose.resources.stringResource
+
+object TaskMenuTestTag {
+    const val TASK_MENU = "TASK_MENU"
+    const val ADD_SUBTASK = "TASK_MENU_ADD_SUBTASK"
+    const val MOVE_TO_TOP = "MOVE_TO_TOP"
+    const val UNINDENT = "UNINDENT"
+    const val INDENT = "INDENT"
+    const val MOVE_TO_LIST = "MOVE_TO_LIST"
+    const val MOVE_TO_NEW_LIST = "MOVE_TO_NEW_LIST"
+    const val DELETE = "DELETE"
+}
 
 sealed class TaskAction {
     data object ToggleCompletion : TaskAction()
@@ -73,7 +94,8 @@ fun TaskMenu(
 
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onAction(null) }
+        onDismissRequest = { onAction(null) },
+        modifier = Modifier.testTag(TASK_MENU)
     ) {
         if (task.canMoveToTop) {
             DropdownMenuItem(
@@ -81,6 +103,7 @@ fun TaskMenu(
                     RowWithIcon(stringResource(Res.string.task_menu_move_to_top))
                 },
                 onClick = { onAction(TaskAction.MoveToTop) },
+                modifier = Modifier.testTag(MOVE_TO_TOP),
                 enabled = false
             )
         }
@@ -91,6 +114,7 @@ fun TaskMenu(
                     RowWithIcon(stringResource(Res.string.task_menu_add_subtask), LucideIcons.SquareStack)
                 },
                 onClick = { onAction(TaskAction.AddSubTask) },
+                modifier = Modifier.testTag(ADD_SUBTASK),
                 enabled = false
             )
         }
@@ -101,6 +125,7 @@ fun TaskMenu(
                     RowWithIcon(stringResource(Res.string.task_menu_indent))
                 },
                 onClick = { onAction(TaskAction.Indent) },
+                modifier = Modifier.testTag(INDENT),
                 enabled = false
             )
         }
@@ -111,6 +136,7 @@ fun TaskMenu(
                     RowWithIcon(stringResource(Res.string.task_menu_unindent))
                 },
                 onClick = { onAction(TaskAction.Unindent) },
+                modifier = Modifier.testTag(UNINDENT),
                 enabled = false
             )
         }
@@ -130,6 +156,7 @@ fun TaskMenu(
                 RowWithIcon(stringResource(Res.string.task_menu_new_list), LucideIcons.ListPlus)
             },
             onClick = { onAction(TaskAction.MoveToNewList) },
+            modifier = Modifier.testTag(MOVE_TO_NEW_LIST),
             enabled = false,
         )
 
@@ -147,6 +174,7 @@ fun TaskMenu(
                             Text(taskList.title, overflow = TextOverflow.Ellipsis, maxLines = 1)
                         }
                     },
+                    modifier = Modifier.testTag(MOVE_TO_LIST),
                     enabled = taskList.id != currentTaskList?.id,
                     onClick = { onAction(TaskAction.MoveToList(taskList)) }
                 )
@@ -161,6 +189,7 @@ fun TaskMenu(
                     RowWithIcon(stringResource(Res.string.task_menu_delete), LucideIcons.Trash2)
                 }
             },
+            modifier = Modifier.testTag(DELETE),
             onClick = { onAction(TaskAction.Delete) }
         )
     }
