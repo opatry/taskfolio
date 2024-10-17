@@ -127,13 +127,13 @@ import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DELETE_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_NOTES
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TOGGLE
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_MENU_ICON
@@ -197,8 +197,8 @@ object TaskListPaneTestTag {
     const val COMPLETED_TASK_NOTES = "COMPLETED_TASK_NOTES"
     const val COMPLETED_TASK_DUE_DATE_CHIP = "COMPLETED_TASK_DUE_DATE_CHIP"
     const val COMPLETED_TASK_DELETE_ICON = "COMPLETED_TASK_DELETE_ICON"
-    const val COMPLETED_TOGGLE = "COMPLETED_TOGGLE"
-    const val COMPLETED_TOGGLE_LABEL = "COMPLETED_TOGGLE_LABEL"
+    const val COMPLETED_TASKS_TOGGLE = "COMPLETED_TASKS_TOGGLE"
+    const val COMPLETED_TASKS_TOGGLE_LABEL = "COMPLETED_TASKS_TOGGLE_LABEL"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -686,7 +686,7 @@ fun TasksColumn(
                         .clickable { showCompleted = !showCompleted }
                         .background(MaterialTheme.colorScheme.background)
                         .padding(horizontal = 12.dp, vertical = 8.dp)
-                        .testTag(COMPLETED_TOGGLE)
+                        .testTag(COMPLETED_TASKS_TOGGLE)
                 ) {
                     RowWithIcon(
                         icon = {
@@ -698,7 +698,7 @@ fun TasksColumn(
                     ) {
                         Text(
                             stringResource(Res.string.task_list_pane_completed_section_title_with_count, taskList.completedTasks.size),
-                            modifier = Modifier.testTag(COMPLETED_TOGGLE_LABEL),
+                            modifier = Modifier.testTag(COMPLETED_TASKS_TOGGLE_LABEL),
                             style = MaterialTheme.typography.titleSmall
                         )
                     }

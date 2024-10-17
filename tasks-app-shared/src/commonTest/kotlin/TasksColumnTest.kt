@@ -23,15 +23,20 @@
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TOGGLE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.app.ui.screen.TasksColumn
+import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_count
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 
 @Suppress("TestFunctionName")
@@ -50,7 +55,7 @@ class TasksColumnTest {
         onAllNodesWithTag(REMAINING_TASK_ROW)
             .assertCountEquals(2)
 
-        onNodeWithTag(COMPLETED_TOGGLE)
+        onNodeWithTag(COMPLETED_TASKS_TOGGLE)
             .assertIsDisplayed()
     }
 
@@ -67,7 +72,7 @@ class TasksColumnTest {
         onNodeWithTag(ALL_COMPLETE_EMPTY_STATE)
             .assertIsDisplayed()
 
-        onNodeWithTag(COMPLETED_TOGGLE)
+        onNodeWithTag(COMPLETED_TASKS_TOGGLE)
             .assertIsDisplayed()
     }
 
@@ -81,7 +86,7 @@ class TasksColumnTest {
             )
         }
 
-        onNodeWithTag(COMPLETED_TOGGLE)
+        onNodeWithTag(COMPLETED_TASKS_TOGGLE)
             .assertDoesNotExist()
 
         onAllNodesWithTag(COMPLETED_TASK_ROW)
@@ -91,7 +96,9 @@ class TasksColumnTest {
     @Test
     fun TasksColumn_ToggleCompletedSection() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1, completedTaskCount = 2)
+        lateinit var completedTaskLabel: String
         setContent {
+            completedTaskLabel = stringResource(Res.string.task_list_pane_completed_section_title_with_count, 2)
             TasksColumn(
                 taskLists = listOf(taskList),
                 taskList = taskList,
@@ -101,15 +108,20 @@ class TasksColumnTest {
         onAllNodesWithTag(COMPLETED_TASK_ROW)
             .assertCountEquals(0)
 
-        onNodeWithTag(COMPLETED_TOGGLE)
+        onNodeWithTag(COMPLETED_TASKS_TOGGLE)
             .assertIsDisplayed()
             .performClick()
             .assertIsDisplayed()
 
+        // FIXME why useUnmergedTree is needed?
+        onNodeWithTag(COMPLETED_TASKS_TOGGLE_LABEL, useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertTextEquals(completedTaskLabel)
+
         onAllNodesWithTag(COMPLETED_TASK_ROW)
             .assertCountEquals(2)
 
-        onNodeWithTag(COMPLETED_TOGGLE)
+        onNodeWithTag(COMPLETED_TASKS_TOGGLE)
             .performClick()
             .assertIsDisplayed()
 
