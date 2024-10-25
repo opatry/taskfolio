@@ -1055,6 +1055,91 @@
             ]
         },
         {
+            "uniqueId": "androidx.navigation:navigation-common",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.0-rc01",
+            "description": "Android Navigation-Common",
+            "name": "Navigation Common",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.navigation:navigation-common-ktx",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.0-rc01",
+            "description": "Android Navigation-Common-Ktx",
+            "name": "Navigation Common Kotlin Extensions",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.navigation:navigation-compose",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.0-rc01",
+            "description": "Compose integration with Navigation",
+            "name": "Compose Navigation",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.navigation:navigation-runtime",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.0-rc01",
+            "description": "Android Navigation-Runtime",
+            "name": "Navigation Runtime",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.navigation:navigation-runtime-ktx",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.0-rc01",
+            "description": "Android Navigation-Runtime-Ktx",
+            "name": "Navigation Runtime Kotlin Extensions",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
             "uniqueId": "androidx.profileinstaller:profileinstaller",
             "developers": [
                 {
@@ -2296,7 +2381,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.0.1",
             "description": "Provides Bundle in Kotlin Multiplatform projects",
             "name": "androidx.core:core-bundle",
             "licenses": [
@@ -2310,7 +2395,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.0.1",
             "description": "Provides Bundle in Kotlin Multiplatform projects",
             "name": "androidx.core:core-bundle",
             "licenses": [

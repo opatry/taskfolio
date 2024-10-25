@@ -751,13 +751,55 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.androidx.navigation:navigation-common-desktop",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "2.8.0-alpha10",
+            "description": "Android Navigation-Common",
+            "name": "Navigation Common",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.navigation:navigation-compose-desktop",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "2.8.0-alpha10",
+            "description": "Compose integration with Navigation",
+            "name": "Compose Navigation",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.navigation:navigation-runtime-desktop",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "2.8.0-alpha10",
+            "description": "Android Navigation-Runtime",
+            "name": "Navigation Runtime",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.androidx.savedstate:savedstate-desktop",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.2.0",
+            "artifactVersion": "1.2.2",
             "description": "Android Lifecycle Saved State",
             "name": "Saved State",
             "licenses": [

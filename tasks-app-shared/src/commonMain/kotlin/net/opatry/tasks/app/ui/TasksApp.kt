@@ -49,9 +49,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.MissingScreen
-import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.app.ui.component.ProfileIcon
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AboutScreen
@@ -73,7 +79,6 @@ enum class AppTasksScreen(
     val contentDescription: StringResource? = null,
 ) {
     Tasks(Res.string.navigation_tasks, LucideIcons.ListTodo),
-
     Calendar(Res.string.navigation_calendar, LucideIcons.Calendar),
     Search(Res.string.navigation_search, LucideIcons.Search),
     About(Res.string.navigation_about, LucideIcons.Info),
@@ -81,7 +86,9 @@ enum class AppTasksScreen(
 
 @Composable
 fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: TaskListsViewModel) {
-    var selectedScreen by remember { mutableStateOf(AppTasksScreen.Tasks) }
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
     val userState by userViewModel.state.collectAsState(null)
     val isSigned by remember(userState) {
         derivedStateOf {
@@ -97,18 +104,14 @@ fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: T
     var newTaskListDefaultTitle by remember { mutableStateOf("") }
     var showNewTaskListDialog by remember { mutableStateOf(false) }
 
-    MyBackHandler({ selectedScreen != AppTasksScreen.Tasks }) {
-        selectedScreen = AppTasksScreen.Tasks
-    }
-
     NavigationSuiteScaffold(navigationSuiteItems = {
         AppTasksScreen.entries.forEach { screen ->
             // hide unsupported screens for now
             if (screen == AppTasksScreen.Calendar) return@forEach
             if (screen == AppTasksScreen.Search) return@forEach
             item(
-                selected = selectedScreen == screen,
-                onClick = { selectedScreen = screen },
+                selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == screen.name } == true,
+                onClick = { navController.navigateWithBackStackHandling(screen.name) },
                 label = { Text(stringResource(screen.labelRes)) },
                 icon = {
                     Icon(screen.icon, screen.contentDescription?.let { stringResource(it) })
@@ -117,9 +120,9 @@ fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: T
             )
         }
     }) {
-        Column {
-            when (selectedScreen) {
-                AppTasksScreen.Tasks -> {
+        NavHost(navController, AppTasksScreen.Tasks.name) {
+            composable(AppTasksScreen.Tasks.name) {
+                Column {
                     Card(
                         Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         shape = MaterialTheme.shapes.extraLarge,
@@ -156,11 +159,30 @@ fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: T
                         )
                     }
                 }
+            }
 
-                AppTasksScreen.Calendar -> MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)
-                AppTasksScreen.Search -> MissingScreen(stringResource(AppTasksScreen.Search.labelRes), LucideIcons.Search)
-                AppTasksScreen.About -> AboutScreen(aboutApp)
+            composable(AppTasksScreen.Calendar.name) {
+                MissingScreen(stringResource(AppTasksScreen.Calendar.labelRes), LucideIcons.Calendar)
+            }
+
+            composable(AppTasksScreen.Search.name) {
+                MissingScreen(stringResource(AppTasksScreen.Search.labelRes), LucideIcons.Search)
+            }
+
+            composable(AppTasksScreen.About.name) {
+                AboutScreen(aboutApp)
             }
         }
+    }
+}
+
+fun NavHostController.navigateWithBackStackHandling(route: String) {
+    // avoids stacking A/B/A/B/A/B when navigating back and forth between A and B using bottom sheet
+    navigate(route) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
     }
 }
