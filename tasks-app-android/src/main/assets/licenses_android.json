@@ -7,7 +7,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.9.2",
+            "artifactVersion": "1.9.3",
             "description": "Provides the base Activity subclass and the relevant hooks to build a composable structure on top.",
             "name": "Activity",
             "licenses": [
@@ -24,7 +24,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.9.2",
+            "artifactVersion": "1.9.3",
             "description": "Compose integration with Activity",
             "name": "Activity Compose",
             "licenses": [
@@ -41,7 +41,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.9.2",
+            "artifactVersion": "1.9.3",
             "description": "Kotlin extensions for 'activity' artifact",
             "name": "Activity Kotlin Extensions",
             "licenses": [
@@ -1092,7 +1092,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-alpha09",
+            "artifactVersion": "2.7.0-alpha10",
             "description": "Android Room-Common",
             "name": "Room-Common",
             "licenses": [
@@ -1109,7 +1109,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-alpha09",
+            "artifactVersion": "2.7.0-alpha10",
             "description": "Android Room Kotlin Extensions",
             "name": "Room Kotlin Extensions",
             "licenses": [
@@ -1126,7 +1126,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-alpha09",
+            "artifactVersion": "2.7.0-alpha10",
             "description": "Android Room-Runtime",
             "name": "Room-Runtime",
             "licenses": [
@@ -1171,7 +1171,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-alpha09",
+            "artifactVersion": "2.5.0-alpha10",
             "description": "SQLite API",
             "name": "SQLite",
             "licenses": [
@@ -1188,7 +1188,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-alpha09",
+            "artifactVersion": "2.5.0-alpha10",
             "description": "The implementation of SQLite library using the bundled SQLite.",
             "name": "SQLite Bundled Integration",
             "licenses": [
@@ -1205,7 +1205,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-alpha09",
+            "artifactVersion": "2.5.0-alpha10",
             "description": "The implementation of SQLite library using the framework code.",
             "name": "SQLite Framework Integration",
             "licenses": [
@@ -1589,7 +1589,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "33.4.0",
+            "artifactVersion": "33.5.1",
             "description": "",
             "name": "com.google.firebase:firebase-bom",
             "licenses": [
@@ -1649,7 +1649,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "19.2.0",
+            "artifactVersion": "19.2.1",
             "description": "",
             "name": "com.google.firebase:firebase-crashlytics",
             "licenses": [
@@ -1745,7 +1745,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.0.5",
+            "artifactVersion": "2.0.6",
             "description": "",
             "name": "com.google.firebase:firebase-sessions",
             "licenses": [
