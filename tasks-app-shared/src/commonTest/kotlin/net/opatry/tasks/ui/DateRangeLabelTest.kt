@@ -20,6 +20,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks.ui
+
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.datetime.DateTimeUnit

@@ -127,4 +127,13 @@ android {
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
     }
+
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        unitTests {
+            all {
+                it.exclude("**/ui/**")
+            }
+        }
+    }
 }

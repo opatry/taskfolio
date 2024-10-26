@@ -20,6 +20,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks.ui
+
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
