@@ -1,0 +1,22 @@
+{
+  "kind": "tasks#taskLists",
+  "etag": "\"MjEwOTM2OTcxOQ\"",
+  "items": [
+    {
+      "kind": "tasks#taskList",
+      "id": "MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow",
+      "etag": "\"LTkzOTI5MzMyNQ\"",
+      "title": "My tasks",
+      "updated": "2024-10-26T08:48:46.790Z",
+      "selfLink": "https://www.googleapis.com/tasks/v1/users/@me/lists/MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow"
+    },
+    {
+      "kind": "tasks#taskList",
+      "id": "OXl0d1JibXgyeW1zWWFIMw",
+      "etag": "\"LTE4NjM1MzE4NDk\"",
+      "title": "Other tasks",
+      "updated": "2024-10-15T16:04:48.522Z",
+      "selfLink": "https://www.googleapis.com/tasks/v1/users/@me/lists/OXl0d1JibXgyeW1zWWFIMw"
+    }
+  ]
+}
