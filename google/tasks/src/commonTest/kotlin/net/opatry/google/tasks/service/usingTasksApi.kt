@@ -20,24 +20,28 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+package net.opatry.google.tasks.service
 
-kotlin {
-    jvm()
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import net.opatry.google.tasks.TasksApi
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
+
+fun usingTasksApi(
+    httpClientEngine: HttpClientEngine,
+    test: suspend TestScope.(api: TasksApi) -> Unit
+) {
+    val httpClient = HttpClient(httpClientEngine) {
+        install(ContentNegotiation) {
+            json()
         }
+    }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.ktor.client.mock)
-            implementation(libs.kotlinx.coroutines.test)
-        }
+    runTest {
+        test(TasksApi(httpClient))
     }
 }
