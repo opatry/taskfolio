@@ -1,0 +1,13 @@
+{
+  "kind": "tasks#task",
+  "id": "dnBVd2IwZUlMcjZWNU84YQ",
+  "etag": "\"LTkzOTI4MTk4Nw\"",
+  "title": "First task TODO",
+  "updated": "2024-10-26T08:48:57.000Z",
+  "selfLink": "https://www.googleapis.com/tasks/v1/lists/MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow/tasks/dnBVd2IwZUlMcjZWNU84YQ",
+  "position": "00000000000000000000",
+  "status": "needsAction",
+  "due": "2024-10-28T00:00:00.000Z",
+  "links": [],
+  "webViewLink": "https://tasks.google.com/task/vpUwb0eILr6V5O8a?sa=6"
+}

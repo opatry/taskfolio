@@ -20,24 +20,23 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
+package net.opatry.google.tasks.util
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+
+private object JsonLoader
+
+suspend fun loadJson(fileName: String): String {
+    return withContext(Dispatchers.IO) {
+        JsonLoader::class.java.getResource(fileName)?.readText()
+            ?: error("Resource $fileName not found")
+    }
 }
 
-kotlin {
-    jvm()
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.ktor.client.mock)
-            implementation(libs.kotlinx.coroutines.test)
-        }
+suspend inline fun <reified T> loadJsonAsObject(fileName: String): T {
+    return withContext(Dispatchers.Default) {
+        Json.decodeFromString<T>(loadJson(fileName))
     }
 }

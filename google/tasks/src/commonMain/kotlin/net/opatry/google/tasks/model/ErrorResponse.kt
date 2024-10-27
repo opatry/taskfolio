@@ -20,24 +20,33 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+package net.opatry.google.tasks.model
 
-kotlin {
-    jvm()
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.ktor.client.mock)
-            implementation(libs.kotlinx.coroutines.test)
-        }
+@Serializable
+data class ErrorResponse(
+    @SerialName("error")
+    val error: Error
+) {
+    @Serializable
+    data class Error(
+        @SerialName("code")
+        val code: Int,
+        @SerialName("message")
+        val message: String,
+        @SerialName("errors")
+        val errors: List<ErrorDetail>,
+    ) {
+        @Serializable
+        data class ErrorDetail(
+            @SerialName("message")
+            val message: String,
+            @SerialName("domain")
+            val domain: String,
+            @SerialName("reason")
+            val reason: String,
+        )
     }
 }

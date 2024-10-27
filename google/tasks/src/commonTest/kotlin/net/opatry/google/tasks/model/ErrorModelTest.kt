@@ -20,24 +20,33 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+package net.opatry.google.tasks.model
 
-kotlin {
-    jvm()
+import kotlinx.coroutines.test.runTest
+import net.opatry.google.tasks.util.loadJsonAsObject
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-        }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.ktor.client.mock)
-            implementation(libs.kotlinx.coroutines.test)
-        }
+class ErrorModelTest {
+    @Test
+    fun `parse error response from json`() = runTest {
+        val errorResponse = loadJsonAsObject<ErrorResponse>("/error_400.json")
+        assertEquals(
+            ErrorResponse(
+                error = ErrorResponse.Error(
+                    code = 400,
+                    message = "Invalid task list ID",
+                    errors = listOf(
+                        ErrorResponse.Error.ErrorDetail(
+                            message = "Invalid task list ID",
+                            domain = "global",
+                            reason = "invalid"
+                        )
+                    )
+                )
+            ),
+            errorResponse
+        )
     }
 }
