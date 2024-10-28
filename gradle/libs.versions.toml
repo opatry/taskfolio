@@ -53,6 +53,7 @@ koin-android = { module = "io.insert-koin:koin-android" }
 koin-androidx-startup = { module = "io.insert-koin:koin-androidx-startup" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+koin-test = { module = "io.insert-koin:koin-test" }
 
 compose-m3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "compose-m3-adaptive" }
 compose-m3-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "compose-m3-adaptive" }
