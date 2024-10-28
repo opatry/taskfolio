@@ -59,6 +59,15 @@ kotlin {
         implementation(projects.google.oauth)
         implementation(projects.google.tasks)
         implementation(projects.tasksAppShared)
+
+        testImplementation(libs.kotlin.test)
+        testImplementation(libs.koin.test)
+        testImplementation(libs.ktor.client.core) {
+            because("needed for Koin DI tests injectedParameters")
+        }
+        testImplementation(projects.tasksCore) {
+            because("needed for Koin DI tests injectedParameters")
+        }
     }
 }
 
@@ -135,7 +144,7 @@ aboutLibraries {
     excludeFields = arrayOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
     includePlatform = true
     strictMode = StrictMode.FAIL
-    allowedLicenses = arrayOf("Apache-2.0", "asdkl", "MIT")
+    allowedLicenses = arrayOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
     duplicationMode = DuplicateMode.LINK
     duplicationRule = DuplicateRule.SIMPLE
     prettyPrint = true
