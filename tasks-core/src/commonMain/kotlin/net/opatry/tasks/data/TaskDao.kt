@@ -32,8 +32,11 @@ import net.opatry.tasks.data.entity.TaskEntity
 
 @Dao
 interface TaskDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(item: TaskEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(item: TaskEntity): Long
 
     @Query("SELECT * FROM task WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): TaskEntity?
@@ -41,8 +44,8 @@ interface TaskDao {
     @Query("SELECT * FROM task")
     fun getAllAsFlow(): Flow<List<TaskEntity>>
 
-    @Query("SELECT * FROM task WHERE remote_id IS NULL")
-    suspend fun getLocalOnlyTasks(): List<TaskEntity>
+    @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND remote_id IS NULL")
+    suspend fun getLocalOnlyTasks(taskListLocalId: Long): List<TaskEntity>
 
     // FIXME should be a pending deletion "flag" until sync is done
     @Query("DELETE FROM task WHERE local_id = :id")

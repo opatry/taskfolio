@@ -206,18 +206,18 @@ class TaskRepository(
             //  - etc.
             val existingEntity = taskListDao.getByRemoteId(remoteTaskList.id)
             val updatedEntity = remoteTaskList.asTaskListEntity(existingEntity?.id, existingEntity?.sorting ?: TaskListEntity.Sorting.UserDefined)
-            val finalLocalId = taskListDao.insert(updatedEntity)
+            val finalLocalId = taskListDao.upsert(updatedEntity)
             taskListIds[finalLocalId] = remoteTaskList.id
         }
         taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
         taskListDao.getLocalOnlyTaskLists().onEach { localTaskList ->
-            val remoteId = try {
-                taskListsApi.insert(TaskList(title = localTaskList.title)).id
+            val remoteTaskList = try {
+                taskListsApi.insert(TaskList(localTaskList.title))
             } catch (e: Exception) {
                 null
             }
-            if (remoteId != null) {
-                taskListDao.insert(localTaskList.copy(remoteId = remoteId))
+            if (remoteTaskList != null) {
+                taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
             }
         }
         taskListIds.forEach { (localListId, remoteListId) ->
@@ -227,17 +227,17 @@ class TaskRepository(
             val remoteTasks = tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
             remoteTasks.onEach { remoteTask ->
                 val existingEntity = taskDao.getByRemoteId(remoteTask.id)
-                taskDao.insert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
+                taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
             }
             taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
-            taskDao.getLocalOnlyTasks().onEach { localTask ->
-                val remoteId = try {
-                    tasksApi.insert(remoteListId, Task(title = localTask.title)).id
+            taskDao.getLocalOnlyTasks(localListId).onEach { localTask ->
+                val remoteTask = try {
+                    tasksApi.insert(remoteListId, localTask.asTask())
                 } catch (e: Exception) {
                     null
                 }
-                if (remoteId != null) {
-                    taskDao.insert(localTask.copy(remoteId = remoteId))
+                if (remoteTask != null) {
+                    taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id))
                 }
             }
         }
@@ -254,7 +254,7 @@ class TaskRepository(
             }
         }
         if (taskList != null) {
-            taskListDao.insert(taskList.asTaskListEntity(taskListId, TaskListEntity.Sorting.UserDefined))
+            taskListDao.upsert(taskList.asTaskListEntity(taskListId, TaskListEntity.Sorting.UserDefined))
         }
     }
 
@@ -280,7 +280,7 @@ class TaskRepository(
                 title = newTitle,
                 lastUpdateDate = now
             )
-        taskListDao.insert(taskListEntity)
+        taskListDao.upsert(taskListEntity)
         if (taskListEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
@@ -345,16 +345,13 @@ class TaskRepository(
         if (taskListEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
-                    tasksApi.insert(
-                        taskListEntity.remoteId,
-                        taskEntity.asTask()
-                    )
+                    tasksApi.insert(taskListEntity.remoteId, taskEntity.asTask())
                 } catch (e: Exception) {
                     null
                 }
             }
             if (task != null) {
-                taskDao.insert(task.asTaskEntity(taskListId, taskId))
+                taskDao.upsert(task.asTaskEntity(taskListId, taskId))
             }
         }
     }
@@ -386,7 +383,7 @@ class TaskRepository(
         val task = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val updatedTaskEntity = updateLogic(task, now) ?: return
 
-        taskDao.insert(updatedTaskEntity)
+        taskDao.upsert(updatedTaskEntity)
 
         // FIXME should already be available in entity, quick & dirty workaround
         val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
