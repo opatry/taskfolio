@@ -116,3 +116,25 @@ data class Task(
         val link: String
     )
 }
+
+/**
+ * Factory function to create a new [TaskList] exposing only relevant parameters.
+ *
+ * @property title Title of the task. Maximum length allowed: 1024 characters.
+ * @property notes Notes describing the task. Tasks assigned from Google Docs cannot have notes. Optional. Maximum length allowed: 8192 characters.
+ * @property status Status of the task. This is either [Status.NeedsAction] or [Status.Completed].
+ * @property dueDate Due date of the task (as a RFC 3339 timestamp). Optional. The due date only records date information; the time portion of the timestamp is discarded when setting the due date. It isn't possible to read or write the time that a task is due via the API.
+ * @property completedDate Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.
+ */
+fun Task(
+    title: String,
+    notes: String? = null,
+    status: Status = Status.NeedsAction,
+    dueDate: Instant? = null,
+    completedDate: Instant? = null
+): Task {
+    require(title.length <= 1024) { "Title length must be at most 1024 characters" }
+    require(notes == null || notes.length <= 8192) { "Notes length must be at most 8192 characters" }
+    // need to artificially define an extra parameter to call data class ctor instead of recursive call
+    return Task(id = "", title = title, notes = notes, status = status, dueDate = dueDate, completedDate = completedDate)
+}
