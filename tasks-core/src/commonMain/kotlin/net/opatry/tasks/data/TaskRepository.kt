@@ -118,6 +118,9 @@ private fun TaskEntity.asTask(): Task {
         updatedDate = lastUpdateDate,
         status = if (isCompleted) Task.Status.Completed else Task.Status.NeedsAction,
         completedDate = completionDate,
+        // doc says it's a read only field, but status is not hidden when syncing local only completed tasks
+        // forcing the hidden status works and makes everything more consistent (position following 099999... pattern, hidden status)
+        isHidden = isCompleted,
         position = position,
     )
 }
