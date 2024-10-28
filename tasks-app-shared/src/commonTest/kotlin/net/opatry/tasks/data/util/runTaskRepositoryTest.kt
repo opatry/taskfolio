@@ -26,53 +26,18 @@ import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
-import net.opatry.google.tasks.model.ErrorResponse
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.TasksAppDatabase
 
 
-@Suppress("TestFunctionName")
-fun NoContentMockEngine() = MockEngine {
-    respond("", HttpStatusCode.NoContent)
-}
-
-@Suppress("TestFunctionName")
-fun ErrorMockEngine(code: HttpStatusCode) = MockEngine {
-    val errorResponse = ErrorResponse(
-        ErrorResponse.Error(
-            code.value,
-            message = code.description,
-            errors = listOf(
-                ErrorResponse.Error.ErrorDetail(
-                    message = code.description,
-                    domain = "global",
-                    reason = "backendError",
-                )
-            )
-        )
-    )
-    respond(
-        Json.encodeToString(errorResponse),
-        code,
-        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-    )
-}
-
 internal fun runTaskRepositoryTest(
-    mockEngine: MockEngine = NoContentMockEngine(),
+    mockEngine: MockEngine = MockEngine { respondNoNetwork() },
     test: suspend TestScope.(TaskRepository) -> Unit
 ) = runTest {
     val db = Room.inMemoryDatabaseBuilder<TasksAppDatabase>()
