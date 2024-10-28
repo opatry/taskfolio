@@ -28,11 +28,12 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -95,12 +96,7 @@ actual fun AuthorizeGoogleTasksButton(
         }
     }
 
-    Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        if (ongoingAuth) {
-            CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
-        } else {
-            Spacer(Modifier.size(24.dp))
-        }
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Button(
             onClick = {
                 ongoingAuth = true
@@ -127,11 +123,20 @@ actual fun AuthorizeGoogleTasksButton(
             },
             enabled = !ongoingAuth
         ) {
-            Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+            Box(modifier, contentAlignment = Alignment.Center) {
+                AnimatedContent(ongoingAuth, label = "authorize_button_content") { ongoing ->
+                    if (ongoing) {
+                        CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
+                    } else {
+                        Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+                    }
+                }
+            }
         }
-    }
-    AnimatedContent(error, label = "authorize_error_message") {
-        Text(it ?: "")
+
+        AnimatedContent(error, label = "authorize_error_message") { message ->
+            Text(message ?: "", color = MaterialTheme.colorScheme.error)
+        }
     }
 }
 

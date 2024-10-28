@@ -124,7 +124,7 @@ fun main() {
                         when (userState) {
                             null -> LoadingPane()
 
-                            is UserState.Unsigned,
+                            UserState.Unsigned,
                             is UserState.SignedIn -> {
                                 val aboutApp = AboutApp(
                                     name = appName,
@@ -136,7 +136,7 @@ fun main() {
                                 TasksApp(aboutApp, userViewModel, tasksViewModel)
                             }
 
-                            is UserState.Newcomer -> AuthorizationScreen(
+                            UserState.Newcomer -> AuthorizationScreen(
                                 onSkip = userViewModel::skipSignIn,
                                 onSuccess = userViewModel::signIn,
                             )
