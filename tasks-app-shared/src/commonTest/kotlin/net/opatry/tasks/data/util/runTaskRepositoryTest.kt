@@ -22,7 +22,6 @@
 
 package net.opatry.tasks.data.util
 
-import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -33,14 +32,13 @@ import kotlinx.coroutines.test.runTest
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.data.TaskRepository
-import net.opatry.tasks.data.TasksAppDatabase
 
 
 internal fun runTaskRepositoryTest(
     mockEngine: MockEngine = MockEngine { respondNoNetwork() },
     test: suspend TestScope.(TaskRepository) -> Unit
 ) = runTest {
-    val db = Room.inMemoryDatabaseBuilder<TasksAppDatabase>()
+    val db = inMemoryTasksAppDatabaseBuilder()
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(backgroundScope.coroutineContext)
         .build()

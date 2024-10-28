@@ -113,6 +113,10 @@ kotlin {
         jvmTest.dependencies {
             implementation(compose.desktop.currentOs)
         }
+
+        androidInstrumentedTest.dependencies {
+            implementation(libs.androidx.test.core)
+        }
     }
 }
 

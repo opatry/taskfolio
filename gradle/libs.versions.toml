@@ -71,6 +71,8 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 
 about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "about-libraries" }
 
+androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
+
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
 ktor-client = [
