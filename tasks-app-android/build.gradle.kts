@@ -191,7 +191,7 @@ dependencies {
     implementation(projects.google.tasks)
     implementation(projects.tasksAppShared)
 
-    testImplementation(libs.kotlin.test)
+    testImplementation(kotlin("test"))
     testImplementation(libs.koin.test)
     testImplementation(libs.ktor.client.core) {
         because("needed for Koin DI tests injectedParameters")
