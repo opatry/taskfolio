@@ -25,7 +25,6 @@ package net.opatry.google.tasks.service
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.request.HttpRequestData
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
@@ -45,9 +44,7 @@ class TasksApiTest {
 
     @Test
     fun `TasksApi list`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(loadJson("/tasks_with_completed_and_hidden.json")),
                 status = HttpStatusCode.OK,
@@ -58,15 +55,17 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             val tasks = tasksApi.list("SOME_ID", showCompleted = true, showDeleted = true, showHidden = true, showAssigned = true)
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/tasks", request?.url?.encodedPath)
-            assertEquals(5, queryParams?.names()?.size)
-            assertEquals("20", queryParams?.get("maxResults"))
-            assertEquals("true", queryParams?.get("showCompleted"))
-            assertEquals("true", queryParams?.get("showDeleted"))
-            assertEquals("true", queryParams?.get("showHidden"))
-            assertEquals("true", queryParams?.get("showAssigned"))
-            assertEquals(HttpMethod.Get, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/tasks", request.url.encodedPath)
+            assertEquals(5, queryParams.names().size)
+            assertEquals("20", queryParams["maxResults"])
+            assertEquals("true", queryParams["showCompleted"])
+            assertEquals("true", queryParams["showDeleted"])
+            assertEquals("true", queryParams["showHidden"])
+            assertEquals("true", queryParams["showAssigned"])
+            assertEquals(HttpMethod.Get, request.method)
             assertEquals(ResourceType.Tasks, tasks.kind)
             assertEquals(5, tasks.items.size)
             assertContentEquals(listOf("First task TODO", "A completed task", "🎵 with emoji", "Deleted task", "Task with notes & due date"), tasks.items.map(Task::title))
@@ -90,13 +89,14 @@ class TasksApiTest {
                 }
             }
         }
+
+        assertEquals(1, mockEngine.responseHistory.size)
+        assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
     }
 
     @Test
     fun `TasksApi insert`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(loadJson("/task.json")),
                 status = HttpStatusCode.OK,
@@ -107,10 +107,12 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             val task = tasksApi.insert("SOME_ID", Task(title = "First task TODO"))
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/tasks", request?.url?.encodedPath)
-            assertEquals(0, queryParams?.names()?.size)
-            assertEquals(HttpMethod.Post, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/tasks", request.url.encodedPath)
+            assertEquals(0, queryParams.names().size)
+            assertEquals(HttpMethod.Post, request.method)
             assertEquals(ResourceType.Task, task.kind)
             assertEquals("First task TODO", task.title)
             assertEquals("dnBVd2IwZUlMcjZWNU84YQ", task.id)
@@ -134,13 +136,14 @@ class TasksApiTest {
                 }
             }
         }
+
+        assertEquals(1, mockEngine.responseHistory.size)
+        assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
     }
 
     @Test
     fun `TasksApi get`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(loadJson("/task.json")),
                 status = HttpStatusCode.OK,
@@ -151,10 +154,12 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             val task = tasksApi.get("SOME_ID", "dnBVd2IwZUlMcjZWNU84YQ")
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request?.url?.encodedPath)
-            assertEquals(0, queryParams?.names()?.size)
-            assertEquals(HttpMethod.Get, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request.url.encodedPath)
+            assertEquals(0, queryParams.names().size)
+            assertEquals(HttpMethod.Get, request.method)
             assertEquals(ResourceType.Task, task.kind)
             assertEquals("First task TODO", task.title)
             assertEquals("dnBVd2IwZUlMcjZWNU84YQ", task.id)
@@ -178,13 +183,14 @@ class TasksApiTest {
                 }
             }
         }
+
+        assertEquals(1, mockEngine.responseHistory.size)
+        assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
     }
 
     @Test
     fun `TasksApi delete`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(""),
                 status = HttpStatusCode.NoContent,
@@ -194,10 +200,12 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             tasksApi.delete("SOME_ID", "dnBVd2IwZUlMcjZWNU84YQ")
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request?.url?.encodedPath)
-            assertEquals(0, queryParams?.names()?.size)
-            assertEquals(HttpMethod.Delete, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request.url.encodedPath)
+            assertEquals(0, queryParams.names().size)
+            assertEquals(HttpMethod.Delete, request.method)
         }
     }
 
@@ -218,13 +226,14 @@ class TasksApiTest {
                 }
             }
         }
+
+        assertEquals(1, mockEngine.responseHistory.size)
+        assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
     }
 
     @Test
     fun `TasksApi patch`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(loadJson("/task.json")),
                 status = HttpStatusCode.OK,
@@ -235,10 +244,12 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             val task = tasksApi.patch("SOME_ID", "dnBVd2IwZUlMcjZWNU84YQ", Task(title = "First task TODO"))
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request?.url?.encodedPath)
-            assertEquals(0, queryParams?.names()?.size)
-            assertEquals(HttpMethod.Patch, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request.url.encodedPath)
+            assertEquals(0, queryParams.names().size)
+            assertEquals(HttpMethod.Patch, request.method)
             assertEquals(ResourceType.Task, task.kind)
             assertEquals("First task TODO", task.title)
             assertEquals("dnBVd2IwZUlMcjZWNU84YQ", task.id)
@@ -266,9 +277,7 @@ class TasksApiTest {
 
     @Test
     fun `TasksApi update`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(loadJson("/task.json")),
                 status = HttpStatusCode.OK,
@@ -279,10 +288,12 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             val task = tasksApi.update("SOME_ID", "dnBVd2IwZUlMcjZWNU84YQ", Task(title = "First task TODO"))
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request?.url?.encodedPath)
-            assertEquals(0, queryParams?.names()?.size)
-            assertEquals(HttpMethod.Put, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ", request.url.encodedPath)
+            assertEquals(0, queryParams.names().size)
+            assertEquals(HttpMethod.Put, request.method)
             assertEquals(ResourceType.Task, task.kind)
             assertEquals("First task TODO", task.title)
             assertEquals("dnBVd2IwZUlMcjZWNU84YQ", task.id)
@@ -306,13 +317,14 @@ class TasksApiTest {
                 }
             }
         }
+
+        assertEquals(1, mockEngine.responseHistory.size)
+        assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
     }
 
     @Test
     fun `TasksApi move`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(loadJson("/task.json")),
                 status = HttpStatusCode.OK,
@@ -323,11 +335,13 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             val task = tasksApi.move("SOME_ID", "dnBVd2IwZUlMcjZWNU84YQ", destinationTaskListId = "SOME_OTHER_ID")
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ/move", request?.url?.encodedPath)
-            assertEquals(1, queryParams?.names()?.size)
-            assertEquals("SOME_OTHER_ID", queryParams?.get("destinationTasklist"))
-            assertEquals(HttpMethod.Post, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/tasks/dnBVd2IwZUlMcjZWNU84YQ/move", request.url.encodedPath)
+            assertEquals(1, queryParams.names().size)
+            assertEquals("SOME_OTHER_ID", queryParams["destinationTasklist"])
+            assertEquals(HttpMethod.Post, request.method)
             assertEquals(ResourceType.Task, task.kind)
             assertEquals("dnBVd2IwZUlMcjZWNU84YQ", task.id)
         }
@@ -350,13 +364,14 @@ class TasksApiTest {
                 }
             }
         }
+
+        assertEquals(1, mockEngine.responseHistory.size)
+        assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
     }
 
     @Test
     fun `TasksApi clear`() {
-        var request: HttpRequestData? = null
         val mockEngine = MockEngine {
-            request = it
             respond(
                 content = ByteReadChannel(""),
                 status = HttpStatusCode.NoContent,
@@ -367,10 +382,12 @@ class TasksApiTest {
         usingTasksApi(mockEngine) { tasksApi ->
             tasksApi.clear("SOME_ID")
 
-            val queryParams = request?.url?.parameters
-            assertEquals("/tasks/v1/lists/SOME_ID/clear", request?.url?.encodedPath)
-            assertEquals(0, queryParams?.names()?.size)
-            assertEquals(HttpMethod.Post, request?.method)
+            assertEquals(1, mockEngine.requestHistory.size)
+            val request = mockEngine.requestHistory.first()
+            val queryParams = request.url.parameters
+            assertEquals("/tasks/v1/lists/SOME_ID/clear", request.url.encodedPath)
+            assertEquals(0, queryParams.names().size)
+            assertEquals(HttpMethod.Post, request.method)
         }
     }
 
@@ -391,5 +408,8 @@ class TasksApiTest {
                 }
             }
         }
+
+        assertEquals(1, mockEngine.responseHistory.size)
+        assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
     }
 }
