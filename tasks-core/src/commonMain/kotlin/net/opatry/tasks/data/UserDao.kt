@@ -32,8 +32,11 @@ import net.opatry.tasks.data.entity.UserEntity
 
 @Dao
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(user: UserEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(user: UserEntity): Long
 
     @Query("SELECT * FROM user WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): UserEntity?
@@ -61,6 +64,6 @@ interface UserDao {
     @Transaction
     suspend fun setSignedInUser(userEntity: UserEntity) {
         clearAllSignedInStatus()
-        insert(userEntity.copy(isSignedIn = true))
+        upsert(userEntity.copy(isSignedIn = true))
     }
 }

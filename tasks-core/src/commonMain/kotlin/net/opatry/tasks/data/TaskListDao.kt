@@ -32,8 +32,11 @@ import net.opatry.tasks.data.entity.TaskListEntity
 
 @Dao
 interface TaskListDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(item: TaskListEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(item: TaskListEntity): Long
 
     // FIXME should be a pending deletion "flag" until sync is done
     @Query("DELETE FROM task_list WHERE local_id = :id")

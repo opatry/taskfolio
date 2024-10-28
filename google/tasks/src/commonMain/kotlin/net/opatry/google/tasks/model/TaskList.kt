@@ -53,3 +53,14 @@ data class TaskList(
     @SerialName("selfLink")
     val selfLink: String = "",
 )
+
+/**
+ * Factory function to create a new [TaskList] exposing only relevant parameters.
+ *
+ * @param title Title of the task list. Maximum length allowed: 1024 characters.
+ */
+fun TaskList(title: String): TaskList {
+    require(title.length <= 1024) { "Title length must be at most 1024 characters" }
+    // need to artificially define an extra parameter to call data class ctor instead of recursive call
+    return TaskList(id = "", title = title)
+}
