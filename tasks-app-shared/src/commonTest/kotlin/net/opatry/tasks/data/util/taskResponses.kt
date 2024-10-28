@@ -55,6 +55,14 @@ fun MockRequestHandleScope.respondWithTaskLists(vararg idToTitles: Pair<String, 
     )
 }
 
+fun MockRequestHandleScope.respondWithTaskList(id: String, title: String): HttpResponseData {
+    return respond(
+        content = Json.encodeToString(TaskList(id = id, title = title)),
+        status = HttpStatusCode.OK,
+        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+    )
+}
+
 fun MockRequestHandleScope.respondWithTasks(vararg idToTitles: Pair<String, String>): HttpResponseData {
     val tasks = idToTitles.map { Task(id = it.first, title = it.second) }
     val tasksResponse = ResourceListResponse(

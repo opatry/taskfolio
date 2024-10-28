@@ -29,6 +29,7 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.firstOrNull
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.util.respondNoNetwork
+import net.opatry.tasks.data.util.respondWithTaskList
 import net.opatry.tasks.data.util.respondWithTaskLists
 import net.opatry.tasks.data.util.respondWithTasks
 import net.opatry.tasks.data.util.runTaskRepositoryTest
@@ -105,36 +106,32 @@ class TaskRepositorySyncTest {
 
     @Test
     fun `local only tasks are synced at next sync`() {
-        var requestCount = 0
+        var isNetworkAvailable = true
         MockEngine { request ->
-            ++requestCount
             when {
-                requestCount == 1
-                        && request.method == HttpMethod.Post
-                        && request.url.encodedPath == "/tasks/v1/users/@me/lists"
-                -> respondNoNetwork()
+                !isNetworkAvailable -> respondNoNetwork()
 
-                requestCount == 2
-                        && request.method == HttpMethod.Get
+                request.method == HttpMethod.Get
                         && request.url.encodedPath == "/tasks/v1/users/@me/lists"
                 -> respondWithTaskLists()
 
-                requestCount == 3
-                        && request.method == HttpMethod.Post
+                request.method == HttpMethod.Post
                         && request.url.encodedPath == "/tasks/v1/users/@me/lists"
-                -> respondWithTaskLists("MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow" to "Task list")
+                -> respondWithTaskList("MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow", "Task list")
 
                 else -> fail("Unexpected request: $request")
             }
         }.use { mockEngine ->
             runTaskRepositoryTest(mockEngine) { repository ->
                 // for first request, no network
+                isNetworkAvailable = false
                 repository.createTaskList("Task list")
                 val taskList = repository.getTaskLists().firstOrNull()?.firstOrNull()
                 assertNotNull(taskList)
                 assertEquals(0, mockEngine.responseHistory.size)
 
                 // network is considered back, sync should trigger fetch & push requests
+                isNetworkAvailable = true
                 repository.sync()
                 assertEquals(2, mockEngine.responseHistory.size)
             }
