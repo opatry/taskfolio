@@ -211,10 +211,12 @@ class TaskRepository(
         }
         taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
         taskListDao.getLocalOnlyTaskLists().onEach { localTaskList ->
-            val remoteTaskList = try {
-                taskListsApi.insert(TaskList(localTaskList.title))
-            } catch (e: Exception) {
-                null
+            val remoteTaskList = withContext(Dispatchers.IO) {
+                try {
+                    taskListsApi.insert(TaskList(localTaskList.title))
+                } catch (e: Exception) {
+                    null
+                }
             }
             if (remoteTaskList != null) {
                 taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
@@ -224,17 +226,21 @@ class TaskRepository(
             // TODO deal with showDeleted, showHidden, etc.
             // TODO updatedMin could be used to filter out unchanged tasks since last sync
             //  /!\ this would impact the deleteStaleTasks logic
-            val remoteTasks = tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
+            val remoteTasks = withContext(Dispatchers.IO) {
+                tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
+            }
             remoteTasks.onEach { remoteTask ->
                 val existingEntity = taskDao.getByRemoteId(remoteTask.id)
                 taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
             }
             taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
             taskDao.getLocalOnlyTasks(localListId).onEach { localTask ->
-                val remoteTask = try {
-                    tasksApi.insert(remoteListId, localTask.asTask())
-                } catch (e: Exception) {
-                    null
+                val remoteTask = withContext(Dispatchers.IO) {
+                    try {
+                        tasksApi.insert(remoteListId, localTask.asTask())
+                    } catch (e: Exception) {
+                        null
+                    }
                 }
                 if (remoteTask != null) {
                     taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id))
