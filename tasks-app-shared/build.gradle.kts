@@ -103,6 +103,11 @@ kotlin {
 
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
+
+            implementation(libs.ktor.client.mock)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.testing)
         }
 
         jvmTest.dependencies {
@@ -133,7 +138,7 @@ android {
     testOptions {
         unitTests {
             all {
-                it.exclude("**/ui/**")
+                it.exclude("**/ui/**", "**/data/**")
             }
         }
     }
