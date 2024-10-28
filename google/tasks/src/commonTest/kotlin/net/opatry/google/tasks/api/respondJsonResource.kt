@@ -20,28 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.google.tasks.service
+package net.opatry.google.tasks.api
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
-import net.opatry.google.tasks.TaskListsApi
+import io.ktor.client.engine.mock.MockRequestHandleScope
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.request.HttpResponseData
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
+import net.opatry.google.tasks.util.loadJson
 
 
-fun usingTaskListsApi(
-    httpClientEngine: HttpClientEngine,
-    test: suspend TestScope.(api: TaskListsApi) -> Unit
-) {
-    val httpClient = HttpClient(httpClientEngine) {
-        install(ContentNegotiation) {
-            json()
-        }
-    }
-
-    runTest {
-        test(TaskListsApi(httpClient))
-    }
+suspend fun MockRequestHandleScope.respondJsonResource(
+    resourcePath: String,
+    statusCode: HttpStatusCode = HttpStatusCode.OK
+): HttpResponseData {
+    return respond(
+        content = loadJson(resourcePath),
+        status = statusCode,
+        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+    )
 }

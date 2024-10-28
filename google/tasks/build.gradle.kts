@@ -35,7 +35,7 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            implementation(kotlin("test"))
             implementation(libs.ktor.client.mock)
             implementation(libs.kotlinx.coroutines.test)
         }
