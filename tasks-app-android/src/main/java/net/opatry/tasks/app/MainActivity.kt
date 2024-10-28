@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                     when (userState) {
                         null -> LoadingPane()
 
-                        is UserState.Unsigned,
+                        UserState.Unsigned,
                         is UserState.SignedIn -> {
                             val aboutApp = AboutApp(
                                 name = getString(R.string.app_name),
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                             TasksApp(aboutApp, userViewModel, tasksViewModel)
                         }
 
-                        is UserState.Newcomer -> AuthorizationScreen(
+                        UserState.Newcomer -> AuthorizationScreen(
                             onSkip = userViewModel::skipSignIn,
                             onSuccess = userViewModel::signIn,
                         )
