@@ -65,6 +65,7 @@ kotlin {
             api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
             implementation(libs.bundles.ktor.server)
+            implementation(libs.slf4j.nop)
             implementation(projects.google.oauth)
             implementation(projects.google.tasks)
 
