@@ -1436,6 +1436,21 @@
             "organization": {
                 "name": "QOS.ch"
             }
+        },
+        {
+            "uniqueId": "org.slf4j:slf4j-nop",
+            "developers": [
+                
+            ],
+            "artifactVersion": "2.0.16",
+            "description": "SLF4J NOP Provider",
+            "name": "SLF4J NOP Provider",
+            "licenses": [
+                "MIT"
+            ],
+            "organization": {
+                "name": "QOS.ch"
+            }
         }
     ],
     "licenses": {
