@@ -110,6 +110,8 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
             "${it.key}=${it.value}"
         }
 
+        var authCode: String? = null
+
         return withTimeout(5.minutes) {
             callbackFlow {
                 val url = Url(config.redirectUrl)
@@ -118,11 +120,16 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
                         get("signed-in") {
                             val status = HttpStatusCode.OK
                             call.respond(status, "$status: Authorization accepted.")
+                            authCode?.let {
+                                send(it)
+                                close(null)
+                            } ?: close(IllegalStateException("No auth code"))
                         }
                         get("error") {
                             val errorMessage = call.request.queryParameters["message"] ?: "Unknown error"
                             val status = HttpStatusCode.BadRequest
                             call.respond(status, "$status: $errorMessage")
+                            close(IllegalStateException(errorMessage))
                         }
                         get(url.fullPath.takeIf(String::isNotEmpty) ?: "/") {
                             fun Parameters.require(key: String): String =
@@ -135,14 +142,11 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
 
                                 val state = queryParams.require("state")
                                 require(uuid == Uuid.parse(state)) { "Mismatch between expected & provided state ($state)." }
-                                val authCode = queryParams.require("code")
+                                authCode = queryParams.require("code")
                                 // redirect to another endpoint to hide the code from the user as quickly as possible
                                 call.respondRedirect("${url}/signed-in")
-                                send(authCode)
-                                close(null)
                             } catch (e: Exception) {
                                 call.respondRedirect("${url}/error?message=${e.message}")
-                                close(e)
                             }
                         }
                     }
