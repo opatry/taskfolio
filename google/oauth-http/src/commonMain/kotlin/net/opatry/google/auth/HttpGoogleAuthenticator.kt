@@ -39,8 +39,10 @@ import io.ktor.http.fullPath
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationStarted
+import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.response.respond
+import io.ktor.server.html.respondHtml
+import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
@@ -48,6 +50,15 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeout
+import kotlinx.html.a
+import kotlinx.html.code
+import kotlinx.html.details
+import kotlinx.html.pre
+import kotlinx.html.summary
+import net.opatry.google.auth.html.authScaffold
+import net.opatry.google.auth.html.internalError
+import net.opatry.google.auth.html.notFound
+import java.net.URLDecoder
 import java.net.URLEncoder
 import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
@@ -110,23 +121,77 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
             "${it.key}=${it.value}"
         }
 
+        var authCode: String? = null
+
         return withTimeout(5.minutes) {
             callbackFlow {
                 val url = Url(config.redirectUrl)
                 val server = embeddedServer(ServerEngineCIO, port = url.port, host = url.host) {
+                    install(StatusPages) {
+                        notFound()
+                        internalError()
+                    }
+
                     routing {
                         get("signed-in") {
-                            val status = HttpStatusCode.OK
-                            call.respond(status, "$status: Authorization accepted.")
+                            // FIXME redirect URL coupled to product
+                            val redirectToAppUrl = "taskfolio://signin/success"
+                            call.respondHtml(HttpStatusCode.OK) {
+                                authScaffold(
+                                    pageTitle = "Google Authorization",
+                                    subTitle = "Google Authorization successful",
+                                    illustrationName = "undraw_completing_re_i7ap",
+                                    redirectUrl = redirectToAppUrl
+                                ) {
+                                    +"You can "
+                                    a(href = redirectToAppUrl) {
+                                        +" go back to the application"
+                                    }
+                                    +" and close this window."
+                                }
+                            }
+
+                            authCode?.let {
+                                send(it)
+                                close(null)
+                            } ?: close(IllegalStateException("No auth code"))
                         }
                         get("error") {
                             val errorMessage = call.request.queryParameters["message"] ?: "Unknown error"
-                            val status = HttpStatusCode.BadRequest
-                            call.respond(status, "$status: $errorMessage")
+                            val errorDetails = call.request.queryParameters["details"]
+                            // FIXME redirect URL coupled to product
+                            val redirectToAppUrl = "taskfolio://signin/failure?message=${errorMessage}"
+                            call.respondHtml(HttpStatusCode.BadRequest) {
+                                authScaffold(
+                                    pageTitle = "Google Authorization",
+                                    subTitle = "Google Authorization failed",
+                                    illustrationName = "undraw_warning_re_eoyh",
+                                    redirectUrl = redirectToAppUrl
+                                ) {
+                                    +"An error occurred ("
+                                    code {
+                                        +URLDecoder.decode(errorMessage, Charsets.UTF_8.name())
+                                    }
+                                    +") during the Google Authorization process. Please try again."
+
+                                    if (errorDetails != null) {
+                                        details {
+                                            summary {
+                                                +"See details"
+                                            }
+                                            pre {
+                                                +URLDecoder.decode(errorDetails, Charsets.UTF_8.name())
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            close(IllegalStateException(errorMessage))
                         }
                         get(url.fullPath.takeIf(String::isNotEmpty) ?: "/") {
-                            fun Parameters.require(key: String): String =
-                                requireNotNull(get(key)) { "Expected '$key' query parameter not available." }
+                            fun Parameters.require(key: String): String {
+                                return requireNotNull(get(key)) { "Expected '$key' query parameter not available." }
+                            }
 
                             val queryParams = call.request.queryParameters
                             try {
@@ -135,14 +200,20 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
 
                                 val state = queryParams.require("state")
                                 require(uuid == Uuid.parse(state)) { "Mismatch between expected & provided state ($state)." }
-                                val authCode = queryParams.require("code")
+                                // store the auth code in memory for further reuse in /signed-in route
+                                // redirect immediately minimizes the time the code is visible to the user in the URL
+                                authCode = queryParams.require("code")
                                 // redirect to another endpoint to hide the code from the user as quickly as possible
                                 call.respondRedirect("${url}/signed-in")
-                                send(authCode)
-                                close(null)
                             } catch (e: Exception) {
-                                call.respondRedirect("${url}/error?message=${e.message}")
-                                close(e)
+                                // FIXME URLEncoder is not KMP-friendly
+                                val errorQueryParams = mapOf(
+                                    "message" to e.message,
+                                    "details" to e.stackTraceToString(),
+                                ).entries.joinToString(prefix = "?", separator = "&") { (key, value) ->
+                                    "${URLEncoder.encode(key, Charsets.UTF_8.name())}=${URLEncoder.encode(value, Charsets.UTF_8.name())}"
+                                }
+                                call.respondRedirect("${url}/error$errorQueryParams")
                             }
                         }
                     }

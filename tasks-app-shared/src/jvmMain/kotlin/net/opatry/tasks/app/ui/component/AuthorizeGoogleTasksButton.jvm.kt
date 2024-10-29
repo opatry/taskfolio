@@ -61,7 +61,7 @@ actual fun AuthorizeGoogleTasksButton(
     var ongoingAuth by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Button(
             onClick = {
                 ongoingAuth = true
