@@ -46,17 +46,17 @@ import kotlin.test.assertEquals
 
 class TaskListsApiTest {
     private fun runTaskListsApi(
-        httpClientEngine: HttpClientEngine,
+        engine: HttpClientEngine,
         test: suspend TestScope.(api: TaskListsApi) -> Unit
     ) {
-        val httpClient = HttpClient(httpClientEngine) {
+        HttpClient(engine) {
             install(ContentNegotiation) {
                 json()
             }
-        }
-
-        runTest {
-            test(TaskListsApi(httpClient))
+        }.use { httpClient ->
+            runTest {
+                test(TaskListsApi(httpClient))
+            }
         }
     }
 
