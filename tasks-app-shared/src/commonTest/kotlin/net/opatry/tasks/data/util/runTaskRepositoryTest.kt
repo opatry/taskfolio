@@ -24,6 +24,7 @@ package net.opatry.tasks.data.util
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -35,27 +36,26 @@ import net.opatry.tasks.data.TaskRepository
 
 
 internal fun runTaskRepositoryTest(
-    mockEngine: MockEngine = MockEngine { respondNoNetwork() },
+    engine: HttpClientEngine = MockEngine { respondNoNetwork() },
     test: suspend TestScope.(TaskRepository) -> Unit
 ) = runTest {
     val db = inMemoryTasksAppDatabaseBuilder()
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(backgroundScope.coroutineContext)
         .build()
-    val taskListDao = db.getTaskListDao()
-    val taskDao = db.getTaskDao()
-
-    val httpClient = HttpClient(mockEngine) {
-        install(ContentNegotiation) {
-            json()
-        }
-    }
-    val taskListsApi = TaskListsApi(httpClient)
-    val tasksApi = TasksApi(httpClient)
-    val repository = TaskRepository(taskListDao, taskDao, taskListsApi, tasksApi)
 
     try {
-        test(repository)
+        HttpClient(engine) {
+            install(ContentNegotiation) {
+                json()
+            }
+        }.use { httpClient ->
+            val taskListsApi = TaskListsApi(httpClient)
+            val tasksApi = TasksApi(httpClient)
+            val repository = TaskRepository(db.getTaskListDao(), db.getTaskDao(), taskListsApi, tasksApi)
+
+            test(repository)
+        }
     } finally {
         db.close()
     }
