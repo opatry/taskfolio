@@ -410,9 +410,11 @@ fun TaskListDetail(
         ) {
             val sheetTitleRes = if (showEditTaskSheet) Res.string.task_editor_sheet_edit_title else Res.string.task_editor_sheet_new_title
             var newTitle by remember { mutableStateOf(task?.title ?: "") }
+            // avoid displaying an error message when user didn't even started to write content
+            var alreadyHadSomeContent by remember { mutableStateOf((task?.title ?: "").isNotBlank()) }
             val titleHasError by remember {
                 derivedStateOf {
-                    showEditTaskSheet && newTitle.isBlank()
+                    newTitle.isBlank()
                 }
             }
             var newNotes by remember { mutableStateOf(task?.notes ?: "") }
@@ -435,13 +437,16 @@ fun TaskListDetail(
 
                 OutlinedTextField(
                     newTitle,
-                    onValueChange = { newTitle = it },
+                    onValueChange = {
+                        alreadyHadSomeContent = alreadyHadSomeContent || it.isNotBlank()
+                        newTitle = it
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(stringResource(Res.string.task_editor_sheet_title_field_label)) },
                     placeholder = { Text(stringResource(Res.string.task_editor_sheet_title_field_placeholder)) },
                     maxLines = 1,
                     supportingText = {
-                        AnimatedVisibility(visible = titleHasError) {
+                        AnimatedVisibility(visible = titleHasError && alreadyHadSomeContent) {
                             Text(stringResource(Res.string.task_editor_sheet_title_field_empty_error))
                         }
                     },
@@ -449,7 +454,7 @@ fun TaskListDetail(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next,
                     ),
-                    isError = titleHasError,
+                    isError = titleHasError && alreadyHadSomeContent,
                 )
 
                 OutlinedTextField(

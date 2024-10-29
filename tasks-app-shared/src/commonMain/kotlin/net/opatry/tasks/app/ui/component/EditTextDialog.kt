@@ -65,6 +65,8 @@ fun EditTextDialog(
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
         var newTitle by remember { mutableStateOf(initialText) }
+        // avoid displaying an error message when user didn't even started to write content
+        var alreadyHadSomeContent by remember { mutableStateOf(initialText.isNotBlank()) }
         val hasError by remember(newTitle, allowBlank) {
             derivedStateOf {
                 !allowBlank && newTitle.isBlank()
@@ -81,17 +83,20 @@ fun EditTextDialog(
                 }
                 OutlinedTextField(
                     newTitle,
-                    onValueChange = { newTitle = it },
+                    onValueChange = {
+                        alreadyHadSomeContent = alreadyHadSomeContent || it.isNotBlank()
+                        newTitle = it
+                    },
                     label = { Text(stringResource(Res.string.edit_text_dialog_title)) },
                     maxLines = 1,
                     supportingText = if (allowBlank) null else {
                         {
-                            AnimatedVisibility(visible = hasError) {
+                            AnimatedVisibility(visible = hasError && alreadyHadSomeContent) {
                                 Text(stringResource(Res.string.edit_text_dialog_empty_title_error))
                             }
                         }
                     },
-                    isError = hasError,
+                    isError = hasError && alreadyHadSomeContent,
                 )
                 Row(
                     Modifier.align(Alignment.End),
