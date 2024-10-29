@@ -28,8 +28,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import net.opatry.google.auth.GoogleAuth
 import net.opatry.google.auth.GoogleAuthenticator
-import net.opatry.google.auth.HttpGoogleAuthenticator.ApplicationConfig
 import net.opatry.tasks.app.auth.PlayServicesGoogleAuthenticator
+import net.opatry.tasks.app.auth.PlayServicesGoogleAuthenticator.ApplicationConfig
 import org.koin.dsl.module
 
 

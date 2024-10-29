@@ -1878,23 +1878,6 @@
             ]
         },
         {
-            "uniqueId": "com.typesafe:config",
-            "developers": [
-                {
-                    "name": "Havoc Pennington"
-                }
-            ],
-            "artifactVersion": "1.4.3",
-            "description": "configuration library for JVM languages using HOCON files",
-            "name": "config",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "com.typesafe"
-            }
-        },
-        {
             "uniqueId": "io.coil-kt.coil3:coil-android",
             "developers": [
                 {
@@ -2273,34 +2256,6 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-server-cio-jvm",
-            "developers": [
-                {
-                    "name": "Jetbrains Team"
-                }
-            ],
-            "artifactVersion": "3.0.0",
-            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
-            "name": "ktor-server-cio",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.ktor:ktor-server-core-jvm",
-            "developers": [
-                {
-                    "name": "Jetbrains Team"
-                }
-            ],
-            "artifactVersion": "3.0.0",
-            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
-            "name": "ktor-server-core",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "io.ktor:ktor-sse-jvm",
             "developers": [
                 {
@@ -2392,26 +2347,6 @@
             ],
             "organization": {
                 "name": "JUnit"
-            }
-        },
-        {
-            "uniqueId": "org.fusesource.jansi:jansi",
-            "developers": [
-                {
-                    "name": "Hiram Chirino"
-                },
-                {
-                    "name": "Guillaume Nodet"
-                }
-            ],
-            "artifactVersion": "2.4.1",
-            "description": "Jansi is a java library for generating and interpreting ANSI escape sequences.",
-            "name": "Jansi",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "FuseSource, Corp."
             }
         },
         {

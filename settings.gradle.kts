@@ -51,6 +51,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Taskfolio"
 
 include(":google:oauth")
+include(":google:oauth-http")
 include(":google:tasks")
 include(":lucide-icons")
 include(":tasks-core")

@@ -60,7 +60,7 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation(libs.bundles.ktor.server)
+            implementation(projects.google.oauthHttp)
         }
 
         commonMain.dependencies {
