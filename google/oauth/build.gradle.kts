@@ -30,8 +30,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.bundles.ktor.client)
-            implementation(libs.bundles.ktor.server)
+            implementation(libs.kotlinx.serialization)
         }
     }
 }

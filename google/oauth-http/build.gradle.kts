@@ -20,27 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
     jvm()
 
-    jvmToolchain(17)
-
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
+            api(projects.google.oauth)
 
-            api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
-            implementation(projects.google.oauth)
-            implementation(projects.google.tasks)
-
-            implementation(libs.androidx.room.common)
+            implementation(libs.bundles.ktor.server)
         }
     }
 }

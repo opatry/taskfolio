@@ -59,12 +59,14 @@ import io.ktor.server.cio.CIO as ServerEngineCIO
  * A Google OAuth2 authenticator using a localhost HTTP server for redirect URL interception and
  * HTTP client for auth & token requests.
  */
-open class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAuthenticator {
+class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAuthenticator {
 
     /**
      * @property redirectUrl Redirect url
      * @property clientId OAuth2 Client ID
      * @property clientSecret OAuth2 Client Secret
+     * @property authUri OAuth2 Authorization URI
+     * @property tokenUri OAuth2 Token URI
      */
     data class ApplicationConfig(
         val redirectUrl: String,
