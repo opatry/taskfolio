@@ -96,7 +96,7 @@ actual fun AuthorizeGoogleTasksButton(
         }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Button(
             onClick = {
                 ongoingAuth = true
