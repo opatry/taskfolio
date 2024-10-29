@@ -35,8 +35,10 @@ object ProtobufTimestampSerializer : KSerializer<Instant> {
         PrimitiveSerialDescriptor("google.protobuf.Timestamp", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Instant) {
-        // Serialize the Instant as an ISO 8601 string (RFC 3339)
-        encoder.encodeString(value.toString())
+        // Serialize the Instant as an ISO 8601 string (RFC 3339),
+        // normalizing to 000 milliseconds which is the precision of the Google Tasks API
+        val truncatedValue = Instant.fromEpochMilliseconds(value.toEpochMilliseconds() / 1000 * 1000)
+        encoder.encodeString(truncatedValue.toString())
     }
 
     override fun deserialize(decoder: Decoder): Instant {
