@@ -619,6 +619,34 @@
             ]
         },
         {
+            "uniqueId": "io.ktor:ktor-server-html-builder-jvm",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.0.0",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-server-html-builder",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-server-status-pages-jvm",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.0.0",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-server-status-pages",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "io.ktor:ktor-sse-jvm",
             "developers": [
                 {
@@ -1292,6 +1320,23 @@
             "artifactVersion": "0.6.1",
             "description": "Kotlin Datetime Library",
             "name": "kotlinx-datetime",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-html-jvm",
+            "developers": [
+                {
+                    "name": "Sergey Mashkov"
+                },
+                {
+                    "name": "Anton Dmitriev"
+                }
+            ],
+            "artifactVersion": "0.11.0",
+            "description": "A kotlinx.html library provides DSL to build HTML to Writer/Appendable or DOM at JVM and browser (or other JavaScript engine) for better Kotlin programming for Web.",
+            "name": "kotlinx.html",
             "licenses": [
                 "Apache-2.0"
             ]

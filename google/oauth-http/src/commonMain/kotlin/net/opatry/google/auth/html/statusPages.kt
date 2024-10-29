@@ -20,21 +20,39 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
+package net.opatry.google.auth.html
+
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.html.respondHtml
+import io.ktor.server.plugins.statuspages.StatusPagesConfig
+import kotlinx.html.code
+
+fun StatusPagesConfig.notFound() {
+    status(HttpStatusCode.NotFound) { call, code ->
+        call.respondHtml(code) {
+            authScaffold(
+                pageTitle = "Resource not found",
+                illustrationName = "undraw_page_not_found_re_e9o6"
+            ) {
+                +"Can't find the requested resource."
+            }
+        }
+    }
 }
 
-kotlin {
-    jvm()
-
-    sourceSets {
-        commonMain.dependencies {
-            api(projects.google.oauth)
-
-            implementation(libs.bundles.ktor.client)
-            implementation(libs.bundles.ktor.server)
-            implementation(libs.ktor.server.htmlBuilder)
-            implementation(libs.ktor.server.statusPages)
+fun StatusPagesConfig.internalError() {
+    exception<Throwable> { call, cause ->
+        call.respondHtml(HttpStatusCode.InternalServerError) {
+            authScaffold(
+                pageTitle = "Internal server error",
+                illustrationName = "undraw_fixing_bugs_w7gi"
+            ) {
+                +"An unexpected error occurred ("
+                code {
+                    +(cause.message ?: "unknown error")
+                }
+                +")."
+            }
         }
     }
 }

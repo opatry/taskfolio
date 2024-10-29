@@ -114,6 +114,19 @@ compose.desktop {
             macOS {
                 iconFile.set(project.file("icon.icns"))
                 bundleID = "net.opatry.tasks.app"
+                infoPlist {
+                    extraKeysRawXml = """
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>taskfolio</string>
+      </array>
+    </dict>
+  </array>
+"""
+                }
             }
             windows {
                 iconFile.set(project.file("icon.ico"))
