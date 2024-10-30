@@ -41,6 +41,7 @@ import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import java.math.BigInteger
 
 enum class TaskListSorting {
     Manual,
@@ -168,6 +169,48 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
 
 fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
     return tasks.sortedBy(TaskEntity::dueDate)
+}
+
+/**
+ * Updates the position of tasks among the provided list of tasks.
+ * The tasks to complete are kept in the same order and their position is recomputed starting from 0.
+ * The completed tasks are sorted last and sorted by completion date.
+ * Position is reset for each list & parent task.
+ */
+fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
+    return buildList {
+        val tasksByList = tasks.groupBy(TaskEntity::parentListLocalId)
+        tasksByList.forEach { (_, tasks) ->
+            tasks.groupBy(TaskEntity::parentTaskLocalId).forEach { (_, subTasks) ->
+                val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
+                val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
+                val todoWithPositions = todo.mapIndexed { index, taskEntity -> taskEntity.copy(position = index.toString().padStart(20, '0')) }
+
+                val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(TaskEntity::position)
+                addAll(sortedSubTasks)
+            }
+        }
+    }
+}
+
+fun computeCompletedTaskPosition(task: TaskEntity): String {
+    val completionDate = task.completionDate
+    require(task.isCompleted && completionDate != null) {
+        "Task must be completed and have a completion date"
+    }
+    // ignore milliseconds, on backend side, Google Tasks API truncates milliseconds
+    val truncatedDate = Instant.fromEpochMilliseconds(completionDate.toEpochMilliseconds() / 1000 * 1000)
+    return truncatedDate.asCompletedTaskPosition()
+}
+
+/**
+ * Converts a completion date as the position of a completed task for Google Tasks sorting logic.
+ * The sorting of completed tasks puts last completed tasks first.
+ */
+fun Instant.asCompletedTaskPosition(): String {
+    val upperBound = BigInteger("9999999999999999999")
+    val sorting = upperBound - this.toEpochMilliseconds().toBigInteger()
+    return sorting.toString().padStart(20, '0')
 }
 
 class TaskRepository(
