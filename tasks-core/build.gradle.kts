@@ -42,5 +42,9 @@ kotlin {
 
             implementation(libs.androidx.room.common)
         }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
     }
 }
