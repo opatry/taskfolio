@@ -309,6 +309,7 @@ class TaskRepository(
             }
             if (remoteTaskList != null) {
                 taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
+                taskListIds[localTaskList.id] = remoteTaskList.id
             }
         }
         taskListIds.forEach { (localListId, remoteListId) ->
