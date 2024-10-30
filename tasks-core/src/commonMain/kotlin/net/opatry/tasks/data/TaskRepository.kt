@@ -325,20 +325,41 @@ class TaskRepository(
                 taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id, parentTaskEntity?.id))
             }
             taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
-            taskDao.getLocalOnlyTasks(localListId).onEach { localTask ->
-                val remoteTask = withContext(Dispatchers.IO) {
-                    try {
-                        tasksApi.insert(remoteListId, localTask.asTask())
-                    } catch (_: Exception) {
-                        null
-                    }
+            val localOnlyTasks = taskDao.getLocalOnlyTasks(localListId)
+            val sortedRootTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == null })
+            var previousTaskId: String? = null
+            sortedRootTasks.onEach { localRootTask ->
+                val remoteTask = syncLocalTask(localListId, remoteListId, localRootTask, null, previousTaskId)
+                val sortedSubTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == localRootTask.id })
+                var previousSubTaskId: String? = null
+                sortedSubTasks.onEach { localSubTask ->
+                    val remoteSubTask = syncLocalTask(localListId, remoteListId, localSubTask, remoteTask?.id, previousSubTaskId)
+                    previousSubTaskId = remoteSubTask?.id
                 }
-                if (remoteTask != null) {
-                    val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                    taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id, parentTaskEntity?.id))
-                }
+                previousTaskId = remoteTask?.id
             }
         }
+    }
+
+    private suspend fun syncLocalTask(
+        localTaskListId: Long,
+        remoteTaskListId: String,
+        localTask: TaskEntity,
+        parentTaskId: String?,
+        previousTaskId: String?
+    ): Task? {
+        val remoteTask = withContext(Dispatchers.IO) {
+            try {
+                tasksApi.insert(remoteTaskListId, localTask.asTask(), parentTaskId, previousTaskId)
+            } catch (_: Exception) {
+                null
+            }
+        }
+        if (remoteTask != null) {
+            val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
+            taskDao.upsert(remoteTask.asTaskEntity(localTaskListId, localTask.id, parentTaskEntity?.id))
+        }
+        return remoteTask
     }
 
     suspend fun createTaskList(title: String): Long {
