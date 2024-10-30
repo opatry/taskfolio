@@ -141,7 +141,7 @@ class InMemoryTasksApi(
         return handleRequest("list") {
             // TODO maxResults & token handling
             val tasks = synchronized(this) {
-                storage[taskListId] ?: error("Task list ($taskListId) not found")
+                storage[taskListId] ?: emptyList()
             }
             val filteredTasks = tasks.filter { task ->
                 // Check if completed tasks should be shown

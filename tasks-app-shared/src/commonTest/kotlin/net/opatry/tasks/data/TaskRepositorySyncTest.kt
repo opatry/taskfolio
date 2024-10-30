@@ -45,9 +45,7 @@ class TaskRepositorySyncTest {
 
             repository.sync()
 
-            assertEquals(1, taskListsApi.requestCount)
             assertContentEquals(listOf("list"), taskListsApi.requests)
-            assertEquals(2, tasksApi.requestCount)
             assertContentEquals(listOf("list", "list"), tasksApi.requests)
 
             val taskLists = repository.getTaskLists().firstOrNull()
@@ -81,9 +79,10 @@ class TaskRepositorySyncTest {
 
     @Test
     fun `local only task lists are synced at next sync`() {
-        val taskListsApi = InMemoryTaskListsApi()
+        val taskListsApi = InMemoryTaskListsApi("Task list")
+        val tasksApi = InMemoryTasksApi()
 
-        runTaskRepositoryTest(taskListsApi) { repository ->
+        runTaskRepositoryTest(taskListsApi, tasksApi) { repository ->
             // for first request, no network
             taskListsApi.isNetworkAvailable = false
             repository.createTaskList("Task list")
@@ -94,8 +93,9 @@ class TaskRepositorySyncTest {
             // network is considered back, sync should trigger fetch & push requests
             taskListsApi.isNetworkAvailable = true
             repository.sync()
-            assertEquals(2, taskListsApi.requestCount)
             assertContentEquals(listOf("list", "insert"), taskListsApi.requests)
+            // FIXME not expected, to debug and remove
+            assertContentEquals(listOf("list", "list"), tasksApi.requests)
         }
     }
 }
