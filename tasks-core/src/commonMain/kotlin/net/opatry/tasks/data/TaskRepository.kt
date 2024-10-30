@@ -414,9 +414,10 @@ class TaskRepository(
 
     suspend fun toggleTaskCompletionState(taskId: Long) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            val isNowCompleted = !taskEntity.isCompleted
             taskEntity.copy(
-                isCompleted = !taskEntity.isCompleted,
-                completionDate = if (taskEntity.isCompleted) null else updateTime,
+                isCompleted = isNowCompleted,
+                completionDate = if (isNowCompleted) updateTime else null,
                 lastUpdateDate = updateTime,
             )
         }
