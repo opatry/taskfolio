@@ -528,9 +528,10 @@ class TaskRepository(
     suspend fun toggleTaskCompletionState(taskId: Long) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
             // TODO should update position when changed/restored to not completed, what should it be?
+            val isNowCompleted = !taskEntity.isCompleted
             taskEntity.copy(
-                isCompleted = !taskEntity.isCompleted,
-                completionDate = if (taskEntity.isCompleted) null else updateTime,
+                isCompleted = isNowCompleted,
+                completionDate = if (isNowCompleted) updateTime else null,
                 lastUpdateDate = updateTime,
             )
         }
