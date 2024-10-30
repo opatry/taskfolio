@@ -153,7 +153,7 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
         result.add(task to level)
         val children = tree[taskId] ?: return
         for (child in children) {
-            traverseTasks(child.remoteId ?: "", level + 1, result) // FIXME local data only?
+            traverseTasks(child.remoteId ?: child.id.toString(), level + 1, result) // FIXME local data only?
         }
     }
 
