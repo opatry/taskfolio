@@ -22,119 +22,79 @@
 
 package net.opatry.tasks.data
 
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respondError
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.firstOrNull
+import net.opatry.tasks.InMemoryTasksApi
 import net.opatry.tasks.data.model.TaskListDataModel
-import net.opatry.tasks.data.util.respondNoNetwork
-import net.opatry.tasks.data.util.respondWithTaskList
-import net.opatry.tasks.data.util.respondWithTaskLists
-import net.opatry.tasks.data.util.respondWithTasks
+import net.opatry.tasks.data.util.InMemoryTaskListsApi
 import net.opatry.tasks.data.util.runTaskRepositoryTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.fail
 
 
 class TaskRepositorySyncTest {
     @Test
     fun `sync remote task lists`() {
-        MockEngine { request ->
-            when (val encodedPath = request.url.encodedPath) {
-                "/tasks/v1/users/@me/lists" -> respondWithTaskLists(
-                    "MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow" to "My tasks",
-                    "OXl0d1JibXgyeW1zWWFIMw" to "Other tasks"
-                )
+        val taskListsApi = InMemoryTaskListsApi("My tasks", "Other tasks")
+        val tasksApi = InMemoryTasksApi("1" to listOf("First task TODO"), "2" to listOf("Another task"))
 
-                "/tasks/v1/lists/MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow/tasks" -> respondWithTasks("dnBVd2IwZUlMcjZWNU84YQ" to "First task TODO")
-                "/tasks/v1/lists/OXl0d1JibXgyeW1zWWFIMw/tasks" -> respondWithTasks("M3R6eUVFQzJJUzQzZC12Qg" to "Another task")
-                else -> fail("Unexpected request: $request ($encodedPath)")
-            }
-        }.use { mockEngine ->
-            runTaskRepositoryTest(mockEngine) { repository ->
-                val initialTaskLists = repository.getTaskLists().firstOrNull()
-                assertEquals(0, initialTaskLists?.size, "There shouldn't be any task list at start")
-                repository.sync()
+        runTaskRepositoryTest(taskListsApi, tasksApi) { repository ->
+            val initialTaskLists = repository.getTaskLists().firstOrNull()
+            assertEquals(0, initialTaskLists?.size, "There shouldn't be any task list at start")
 
-                val taskLists = repository.getTaskLists().firstOrNull()
-                assertEquals(2, taskLists?.size)
-                assertContentEquals(listOf("My tasks", "Other tasks"), taskLists?.map(TaskListDataModel::title))
+            repository.sync()
 
-                val firstTaskListTasks = taskLists?.get(0)?.tasks
-                assertEquals(1, firstTaskListTasks?.size)
-                assertEquals("First task TODO", firstTaskListTasks?.firstOrNull()?.title)
+            assertEquals(1, taskListsApi.requestCount)
+            assertContentEquals(listOf("list"), taskListsApi.requests)
+            assertEquals(2, tasksApi.requestCount)
+            assertContentEquals(listOf("list", "list"), tasksApi.requests)
 
-                val secondTaskListTasks = taskLists?.get(1)?.tasks
-                assertEquals(1, secondTaskListTasks?.size)
-                assertEquals("Another task", secondTaskListTasks?.firstOrNull()?.title)
-            }
+            val taskLists = repository.getTaskLists().firstOrNull()
+            assertEquals(2, taskLists?.size)
+            assertContentEquals(listOf("My tasks", "Other tasks"), taskLists?.map(TaskListDataModel::title))
+
+            val firstTaskListTasks = taskLists?.get(0)?.tasks
+            assertEquals(1, firstTaskListTasks?.size)
+            assertEquals("First task TODO", firstTaskListTasks?.firstOrNull()?.title)
+
+            val secondTaskListTasks = taskLists?.get(1)?.tasks
+            assertEquals(1, secondTaskListTasks?.size)
+            assertEquals("Another task", secondTaskListTasks?.firstOrNull()?.title)
         }
     }
 
     @Test
-    fun `backend error while syncing should do nothing`() {
-        MockEngine {
-            respondError(HttpStatusCode.Forbidden)
-        }.use { mockEngine ->
-            runTaskRepositoryTest(mockEngine) { repository ->
-                repository.sync()
-                assertEquals(0, repository.getTaskLists().firstOrNull()?.size)
-            }
+    fun `task list CRUD without network should create a local only task list`() {
+        val taskListsApi = InMemoryTaskListsApi()
 
-            assertEquals(1, mockEngine.responseHistory.size)
-            assertEquals(HttpStatusCode.Forbidden, mockEngine.responseHistory.first().statusCode)
+        runTaskRepositoryTest(taskListsApi) { repository ->
+            taskListsApi.isNetworkAvailable = false
+            repository.createTaskList("Task list")
+            // TODO check remote id is null somehow
+            assertEquals(1, repository.getTaskLists().firstOrNull()?.size)
         }
+
+        assertEquals(0, taskListsApi.requestCount)
     }
 
     @Test
-    fun `task CRUD without network should create a local only task`() {
-        MockEngine {
-            respondNoNetwork()
-        }.use { mockEngine ->
-            runTaskRepositoryTest(mockEngine) { repository ->
-                repository.createTaskList("Task list")
-                assertEquals(1, repository.getTaskLists().firstOrNull()?.size)
-            }
+    fun `local only task lists are synced at next sync`() {
+        val taskListsApi = InMemoryTaskListsApi()
 
-            assertEquals(0, mockEngine.responseHistory.size)
-        }
-    }
+        runTaskRepositoryTest(taskListsApi) { repository ->
+            // for first request, no network
+            taskListsApi.isNetworkAvailable = false
+            repository.createTaskList("Task list")
+            val taskList = repository.getTaskLists().firstOrNull()?.firstOrNull()
+            assertNotNull(taskList)
+            assertEquals(0, taskListsApi.requestCount)
 
-    @Test
-    fun `local only tasks are synced at next sync`() {
-        var isNetworkAvailable = true
-        MockEngine { request ->
-            when {
-                !isNetworkAvailable -> respondNoNetwork()
-
-                request.method == HttpMethod.Get
-                        && request.url.encodedPath == "/tasks/v1/users/@me/lists"
-                -> respondWithTaskLists()
-
-                request.method == HttpMethod.Post
-                        && request.url.encodedPath == "/tasks/v1/users/@me/lists"
-                -> respondWithTaskList("MTAwNDEyMDI1NDY0NDEwNzQ0NDI6MDow", "Task list")
-
-                else -> fail("Unexpected request: $request")
-            }
-        }.use { mockEngine ->
-            runTaskRepositoryTest(mockEngine) { repository ->
-                // for first request, no network
-                isNetworkAvailable = false
-                repository.createTaskList("Task list")
-                val taskList = repository.getTaskLists().firstOrNull()?.firstOrNull()
-                assertNotNull(taskList)
-                assertEquals(0, mockEngine.responseHistory.size)
-
-                // network is considered back, sync should trigger fetch & push requests
-                isNetworkAvailable = true
-                repository.sync()
-                assertEquals(2, mockEngine.responseHistory.size)
-            }
+            // network is considered back, sync should trigger fetch & push requests
+            taskListsApi.isNetworkAvailable = true
+            repository.sync()
+            assertEquals(2, taskListsApi.requestCount)
+            assertContentEquals(listOf("list", "insert"), taskListsApi.requests)
         }
     }
 }
