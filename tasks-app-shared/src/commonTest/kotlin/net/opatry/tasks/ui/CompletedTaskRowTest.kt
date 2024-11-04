@@ -22,7 +22,13 @@
 
 package net.opatry.tasks.ui
 
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
@@ -46,6 +52,15 @@ import net.opatry.tasks.resources.task_due_date_label_weeks_ago
 import org.jetbrains.compose.resources.pluralStringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
+
+fun hasRole(role: Role) = SemanticsMatcher("Searches for role: $role") {
+    it.config.getOrNull(SemanticsProperties.Role) == role
+}
+
+fun SemanticsNodeInteractionsProvider.onNodeWithRole(
+    role: Role,
+    useUnmergedTree: Boolean = false
+): SemanticsNodeInteraction = onNode(hasRole(role), useUnmergedTree)
 
 
 @Suppress("TestFunctionName")

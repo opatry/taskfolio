@@ -54,6 +54,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -95,6 +96,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
@@ -812,6 +814,11 @@ internal fun RemainingTaskRow(
         IconButton(
             onClick = { onAction(TaskAction.ToggleCompletion) },
             modifier = Modifier
+                .toggleable(
+                    role = Role.Switch,
+                    value = task.isCompleted,
+                    onValueChange = { onAction(TaskAction.ToggleCompletion) }
+                )
                 .testTag(REMAINING_TASK_ICON)
                 .padding(start = 36.dp * task.indent)
         ) {
@@ -875,7 +882,16 @@ internal fun CompletedTaskRow(
             .testTag(COMPLETED_TASK_ROW)
             .clickable(onClick = { onAction(TaskAction.Edit) })
     ) {
-        IconButton(onClick = { onAction(TaskAction.ToggleCompletion) }, Modifier.testTag(COMPLETED_TASK_ICON)) {
+        IconButton(
+            onClick = { onAction(TaskAction.ToggleCompletion) },
+            Modifier
+                .toggleable(
+                    role = Role.Switch,
+                    value = task.isCompleted,
+                    onValueChange = { onAction(TaskAction.ToggleCompletion) }
+                )
+                .testTag(COMPLETED_TASK_ICON)
+        ) {
             Icon(LucideIcons.CircleCheckBig, null, tint = MaterialTheme.colorScheme.primary)
         }
         Column(
