@@ -38,6 +38,10 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.ktor.client.mock)
             implementation(libs.kotlinx.coroutines.test)
+
+            implementation(libs.slf4j.nop)
+            implementation(projects.google.oauthHttp)
+            implementation(projects.google.tasks)
         }
     }
 }
