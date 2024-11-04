@@ -88,6 +88,7 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
         }
     }
     return TaskListDataModel(
+        _entity = this,
         id = id,
         title = title,
         lastUpdate = lastUpdateDate,
@@ -98,6 +99,7 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
 
 private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
     return TaskDataModel(
+        _entity = this,
         id = id,
         title = title,
         notes = notes,
