@@ -122,6 +122,8 @@ kotlin {
             implementation(libs.androidx.room.testing)
 
             implementation(libs.bundles.mockito)
+
+            implementation(projects.google.oauthHttp)
         }
 
         jvmTest.dependencies {
