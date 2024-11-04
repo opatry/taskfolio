@@ -50,6 +50,12 @@ interface TaskDao {
     @Query("SELECT * FROM task ORDER BY position ASC")
     fun getAllAsFlow(): Flow<List<TaskEntity>>
 
+    @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND parent_local_id IS NULL ORDER BY position ASC")
+    suspend fun getDirectTasksOfList(taskListLocalId: Long): List<TaskEntity>
+
+    @Query("SELECT * FROM task WHERE parent_local_id = :taskLocalId ORDER BY position ASC")
+    suspend fun getChildTasks(taskLocalId: Long): List<TaskEntity>
+
     @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND remote_id IS NULL ORDER BY position ASC")
     suspend fun getLocalOnlyTasks(taskListLocalId: Long): List<TaskEntity>
 
