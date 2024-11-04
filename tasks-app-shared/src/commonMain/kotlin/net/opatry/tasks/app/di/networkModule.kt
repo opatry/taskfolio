@@ -36,6 +36,8 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.google.tasks.HttpTaskListsApi
+import net.opatry.google.tasks.HttpTasksApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
@@ -101,11 +103,11 @@ val networkModule = module {
         }
     }
 
-    single {
-        TaskListsApi(get(named(HttpClientName.Tasks)))
+    single<TaskListsApi> {
+        HttpTaskListsApi(get(named(HttpClientName.Tasks)))
     }
 
-    single {
-        TasksApi(get(named(HttpClientName.Tasks)))
+    single<TasksApi> {
+        HttpTasksApi(get(named(HttpClientName.Tasks)))
     }
 }

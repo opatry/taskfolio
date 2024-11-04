@@ -43,15 +43,67 @@ import net.opatry.google.tasks.model.TaskList
 /**
  * Service for interacting with the [Google Task Lists REST API](https://developers.google.com/tasks/reference/rest/v1/tasklists).
  */
-class TaskListsApi(
-    private val httpClient: HttpClient
-) {
+interface TaskListsApi {
     /**
      * [Deletes the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/delete). If the list contains assigned tasks, both the assigned tasks and the original tasks in the assignment surface (Docs, Chat Spaces) are deleted.
      *
      * @param taskListId Task list identifier.
      */
-    suspend fun delete(taskListId: String) {
+    suspend fun delete(taskListId: String)
+
+    /**
+     * [Returns the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/get).
+     *
+     * @param taskListId Task list identifier.
+     *
+     * @return an instance of [TaskList].
+     */
+    suspend fun get(taskListId: String): TaskList
+
+    /**
+     * [Creates a new task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/insert) and adds it to the authenticated user's task lists. A user can have up to 2000 lists at a time.
+     *
+     * @param taskList  the task list to insert.
+     *
+     * @return a newly created instance of [TaskList].
+     */
+    suspend fun insert(taskList: TaskList): TaskList
+
+    /**
+     * [Returns all the authenticated user's task lists](https://developers.google.com/tasks/reference/rest/v1/tasklists/list). A user can have up to 2000 lists at a time.
+     *
+     * @param maxResults Maximum number of task lists returned on one page. Optional. The default is 20 (max allowed: 100).
+     * @param pageToken Token specifying the result page to return. Optional.
+     *
+     * @return an instance of [ResourceListResponse] of type [TaskList], whose type is always [ResourceType.TaskLists].
+     */
+    suspend fun list(maxResults: Int = 20, pageToken: String? = null): ResourceListResponse<TaskList>
+
+    /**
+     * [Updates the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/patch). This method supports patch semantics.
+     *
+     * @param taskListId Task list identifier.
+     * @param taskList  the task list to patch.
+     *
+     * @return an instance of [TaskList].
+     */
+    suspend fun patch(taskListId: String, taskList: TaskList): TaskList
+
+    /**
+     * [Updates the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/update).
+     *
+     * @param taskListId Task list identifier.
+     * @param taskList  the task list to update.
+     *
+     * @return an instance of [TaskList].
+     */
+    suspend fun update(taskListId: String, taskList: TaskList): TaskList
+}
+
+class HttpTaskListsApi(
+    private val httpClient: HttpClient
+) : TaskListsApi {
+    override suspend fun delete(taskListId: String) {
         val response = httpClient.delete("tasks/v1/users/@me/lists/${taskListId}")
 
         if (response.status.isSuccess()) {
@@ -61,14 +113,7 @@ class TaskListsApi(
         }
     }
 
-    /**
-     * [Returns the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/get).
-     *
-     * @param taskListId Task list identifier.
-     *
-     * @return an instance of [TaskList].
-     */
-    suspend fun get(taskListId: String): TaskList {
+    override suspend fun get(taskListId: String): TaskList {
         val response = httpClient.get("tasks/v1/users/@me/lists/${taskListId}")
 
         if (response.status.isSuccess()) {
@@ -78,14 +123,7 @@ class TaskListsApi(
         }
     }
 
-    /**
-     * [Creates a new task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/insert) and adds it to the authenticated user's task lists. A user can have up to 2000 lists at a time.
-     *
-     * @param taskList  the task list to insert.
-     *
-     * @return a newly created instance of [TaskList].
-     */
-    suspend fun insert(taskList: TaskList): TaskList {
+    override suspend fun insert(taskList: TaskList): TaskList {
         val response = httpClient.post("tasks/v1/users/@me/lists") {
             contentType(ContentType.Application.Json)
             setBody(taskList)
@@ -98,15 +136,7 @@ class TaskListsApi(
         }
     }
 
-    /**
-     * [Returns all the authenticated user's task lists](https://developers.google.com/tasks/reference/rest/v1/tasklists/list). A user can have up to 2000 lists at a time.
-     *
-     * @param maxResults Maximum number of task lists returned on one page. Optional. The default is 20 (max allowed: 100).
-     * @param pageToken Token specifying the result page to return. Optional.
-     *
-     * @return an instance of [ResourceListResponse] of type [TaskList], whose type is always [ResourceType.TaskLists].
-     */
-    suspend fun list(maxResults: Int = 20, pageToken: String? = null): ResourceListResponse<TaskList> {
+    override suspend fun list(maxResults: Int, pageToken: String?): ResourceListResponse<TaskList> {
         val response = httpClient.get("tasks/v1/users/@me/lists") {
             parameter("maxResults", maxResults.coerceIn(0, 100))
             if (pageToken != null) {
@@ -120,15 +150,7 @@ class TaskListsApi(
         }
     }
 
-    /**
-     * [Updates the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/patch). This method supports patch semantics.
-     *
-     * @param taskListId Task list identifier.
-     * @param taskList  the task list to patch.
-     *
-     * @return an instance of [TaskList].
-     */
-    suspend fun patch(taskListId: String, taskList: TaskList): TaskList {
+    override suspend fun patch(taskListId: String, taskList: TaskList): TaskList {
         val response = httpClient.patch("tasks/v1/users/@me/lists/${taskListId}") {
             contentType(ContentType.Application.Json)
             setBody(taskList)
@@ -141,15 +163,7 @@ class TaskListsApi(
         }
     }
 
-    /**
-     * [Updates the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/update).
-     *
-     * @param taskListId Task list identifier.
-     * @param taskList  the task list to update.
-     *
-     * @return an instance of [TaskList].
-     */
-    suspend fun update(taskListId: String, taskList: TaskList): TaskList {
+    override suspend fun update(taskListId: String, taskList: TaskList): TaskList {
         val response = httpClient.put("tasks/v1/users/@me/lists/${taskListId}") {
             contentType(ContentType.Application.Json)
             setBody(taskList)

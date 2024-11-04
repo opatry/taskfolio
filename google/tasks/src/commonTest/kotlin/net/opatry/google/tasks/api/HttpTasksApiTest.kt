@@ -35,6 +35,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import net.opatry.google.tasks.HttpTasksApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
@@ -44,7 +45,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
-class TasksApiTest {
+class HttpTasksApiTest {
     private fun runTasksApi(
         engine: HttpClientEngine,
         test: suspend TestScope.(api: TasksApi) -> Unit
@@ -55,7 +56,7 @@ class TasksApiTest {
             }
         }.use { httpClient ->
             runTest {
-                test(TasksApi(httpClient))
+                test(HttpTasksApi(httpClient))
             }
         }
     }

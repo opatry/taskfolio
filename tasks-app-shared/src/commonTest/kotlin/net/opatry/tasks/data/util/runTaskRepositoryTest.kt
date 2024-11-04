@@ -30,8 +30,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import net.opatry.google.tasks.TaskListsApi
-import net.opatry.google.tasks.TasksApi
+import net.opatry.google.tasks.HttpTaskListsApi
+import net.opatry.google.tasks.HttpTasksApi
 import net.opatry.tasks.data.TaskRepository
 
 
@@ -50,8 +50,8 @@ internal fun runTaskRepositoryTest(
                 json()
             }
         }.use { httpClient ->
-            val taskListsApi = TaskListsApi(httpClient)
-            val tasksApi = TasksApi(httpClient)
+            val taskListsApi = HttpTaskListsApi(httpClient)
+            val tasksApi = HttpTasksApi(httpClient)
             val repository = TaskRepository(db.getTaskListDao(), db.getTaskDao(), taskListsApi, tasksApi)
 
             test(repository)
