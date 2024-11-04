@@ -413,6 +413,11 @@ class TaskRepository(
     }
 
     suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null) {
+        // creating a task without position put it first in the list
+        // all task sorted after should have their position updated
+
+        // TODO transactional
+
         val now = Clock.System.now()
         val taskEntity = TaskEntity(
             parentListLocalId = taskListId,
@@ -420,9 +425,14 @@ class TaskRepository(
             notes = notes,
             lastUpdateDate = now,
             dueDate = dueDate,
-            position = ""/*TODO local position value?*/
+            position = ""
         )
+
         val taskId = taskDao.insert(taskEntity)
+
+        val tasksWithPositions = computeTaskPositions(taskDao.getDirectTasksOfList(taskListId))
+        taskDao.upsertAll(tasksWithPositions)
+
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         if (taskListEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
