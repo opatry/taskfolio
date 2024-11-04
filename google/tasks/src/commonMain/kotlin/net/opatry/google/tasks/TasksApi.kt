@@ -44,23 +44,13 @@ import net.opatry.google.tasks.model.Task
 /**
  * Service for interacting with the [Google Tasks REST API](https://developers.google.com/tasks/reference/rest/v1/tasks).
  */
-class TasksApi(
-    private val httpClient: HttpClient
-) {
+interface TasksApi {
     /**
      * [Clears all completed tasks](https://developers.google.com/tasks/reference/rest/v1/tasks/clear) from the specified task list. The affected tasks will be marked as 'hidden' and no longer be returned by default when retrieving all tasks for a task list.
      *
      * @param taskListId Task list identifier.
      */
-    suspend fun clear(taskListId: String) {
-        val response = httpClient.post("tasks/v1/lists/${taskListId}/clear")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    suspend fun clear(taskListId: String)
 
     /**
      * [Deletes the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/delete) from the task list. If the task is assigned, both the assigned task and the original task (in Docs, Chat Spaces) are deleted. To delete the assigned task only, navigate to the assignment surface and unassign the task from there.
@@ -68,15 +58,7 @@ class TasksApi(
      * @param taskListId Task list identifier.
      * @param taskId Task identifier.
      */
-    suspend fun delete(taskListId: String, taskId: String) {
-        val response = httpClient.delete("tasks/v1/lists/${taskListId}/tasks/${taskId}")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    suspend fun delete(taskListId: String, taskId: String)
 
     /**
      * [Returns the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/get).
@@ -86,17 +68,7 @@ class TasksApi(
      *
      * @return an instance of [Task].
      */
-    suspend fun get(taskListId: String, taskId: String): Task {
-        val response = httpClient.get("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
-            contentType(ContentType.Application.Json)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    suspend fun get(taskListId: String, taskId: String): Task
 
     /**
      * [Creates a new task](https://developers.google.com/tasks/reference/rest/v1/tasks/insert) on the specified task list. Tasks assigned from Docs or Chat Spaces cannot be inserted from Tasks Public API; they can only be created by assigning them from Docs or Chat Spaces. A user can have up to 20,000 non-hidden tasks per list and up to 100,000 tasks in total at a time.
@@ -108,24 +80,7 @@ class TasksApi(
      *
      * @return a newly created instance of [Task].
      */
-    suspend fun insert(taskListId: String, task: Task, parentTaskId: String? = null, previousTaskId: String? = null): Task {
-        val response = httpClient.post("tasks/v1/lists/${taskListId}/tasks") {
-            if (parentTaskId != null) {
-                parameter("parent", parentTaskId)
-            }
-            if (previousTaskId != null) {
-                parameter("previous", previousTaskId)
-            }
-            contentType(ContentType.Application.Json)
-            setBody(task)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    suspend fun insert(taskListId: String, task: Task, parentTaskId: String? = null, previousTaskId: String? = null): Task
 
     /**
      * Returns [all tasks in the specified task list](https://developers.google.com/tasks/reference/rest/v1/tasks/list). Does not return assigned tasks be default (from Docs, Chat Spaces). A user can have up to 20,000 non-hidden tasks per list and up to 100,000 tasks in total at a time.
@@ -158,6 +113,118 @@ class TasksApi(
         showHidden: Boolean = false,
         updatedMin: Instant? = null,
         showAssigned: Boolean = false
+    ): ResourceListResponse<Task>
+
+    /**
+     * [Moves the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/move) to another position in the destination task list.
+     *
+     * @param taskListId Task list identifier.
+     * @param taskId Task identifier.
+     * @param parentTaskId New parent task identifier. If the task is moved to the top level, this parameter is omitted. Assigned tasks can not be set as parent task (have subtasks) or be moved under a parent task (become subtasks).
+     * @param previousTaskId New previous sibling task identifier. If the task is moved to the first position among its siblings, this parameter is omitted.
+     * @param destinationTaskListId Destination task list identifier. If set, the task is moved from [taskListId] to the [destinationTaskListId] list. Otherwise, the task is moved within its current list. Recurrent tasks cannot currently be moved between lists.
+     *
+     * @return an instance of [Task].
+     */
+    suspend fun move(
+        taskListId: String,
+        taskId: String,
+        parentTaskId: String? = null,
+        previousTaskId: String? = null,
+        destinationTaskListId: String? = null
+    ): Task
+
+    /**
+     * [Updates the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/patch). This method supports patch semantics.
+     *
+     * @param taskListId Task list identifier.
+     * @param taskId Task identifier.
+     * @param task the task data to patch.
+     *
+     * @return an instance of [Task].
+     */
+    suspend fun patch(taskListId: String, taskId: String, task: Task): Task
+
+    /**
+     * [Updates the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/update).
+     *
+     * @param taskListId Task list identifier.
+     * @param taskId Task identifier.
+     * @param task the task data to update.
+     *
+     * @return an instance of [Task].
+     */
+    suspend fun update(taskListId: String, taskId: String, task: Task): Task
+}
+
+
+class HttpTasksApi(
+    private val httpClient: HttpClient
+) : TasksApi {
+    override suspend fun clear(taskListId: String) {
+        val response = httpClient.post("tasks/v1/lists/${taskListId}/clear")
+
+        if (response.status.isSuccess()) {
+            return response.body()
+        } else {
+            throw ClientRequestException(response, response.bodyAsText())
+        }
+    }
+
+    override suspend fun delete(taskListId: String, taskId: String) {
+        val response = httpClient.delete("tasks/v1/lists/${taskListId}/tasks/${taskId}")
+
+        if (response.status.isSuccess()) {
+            return response.body()
+        } else {
+            throw ClientRequestException(response, response.bodyAsText())
+        }
+    }
+
+    override suspend fun get(taskListId: String, taskId: String): Task {
+        val response = httpClient.get("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
+            contentType(ContentType.Application.Json)
+        }
+
+        if (response.status.isSuccess()) {
+            return response.body()
+        } else {
+            throw ClientRequestException(response, response.bodyAsText())
+        }
+    }
+
+    override suspend fun insert(taskListId: String, task: Task, parentTaskId: String?, previousTaskId: String?): Task {
+        val response = httpClient.post("tasks/v1/lists/${taskListId}/tasks") {
+            if (parentTaskId != null) {
+                parameter("parent", parentTaskId)
+            }
+            if (previousTaskId != null) {
+                parameter("previous", previousTaskId)
+            }
+            contentType(ContentType.Application.Json)
+            setBody(task)
+        }
+
+        if (response.status.isSuccess()) {
+            return response.body()
+        } else {
+            throw ClientRequestException(response, response.bodyAsText())
+        }
+    }
+
+    override suspend fun list(
+        taskListId: String,
+        completedMin: Instant?,
+        completedMax: Instant?,
+        dueMin: Instant?,
+        dueMax: Instant?,
+        maxResults: Int,
+        pageToken: String?,
+        showCompleted: Boolean,
+        showDeleted: Boolean,
+        showHidden: Boolean,
+        updatedMin: Instant?,
+        showAssigned: Boolean
     ): ResourceListResponse<Task> {
         val response = httpClient.get("tasks/v1/lists/${taskListId}/tasks") {
             if (completedMin != null) {
@@ -192,18 +259,13 @@ class TasksApi(
         }
     }
 
-    /**
-     * [Moves the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/move) to another position in the destination task list.
-     *
-     * @param taskListId Task list identifier.
-     * @param taskId Task identifier.
-     * @param parentTaskId New parent task identifier. If the task is moved to the top level, this parameter is omitted. Assigned tasks can not be set as parent task (have subtasks) or be moved under a parent task (become subtasks).
-     * @param previousTaskId New previous sibling task identifier. If the task is moved to the first position among its siblings, this parameter is omitted.
-     * @param destinationTaskListId Destination task list identifier. If set, the task is moved from [taskListId] to the [destinationTaskListId] list. Otherwise, the task is moved within its current list. Recurrent tasks cannot currently be moved between lists.
-     *
-     * @return an instance of [Task].
-     */
-    suspend fun move(taskListId: String, taskId: String, parentTaskId: String? = null, previousTaskId: String? = null, destinationTaskListId: String? = null): Task {
+    override suspend fun move(
+        taskListId: String,
+        taskId: String,
+        parentTaskId: String?,
+        previousTaskId: String?,
+        destinationTaskListId: String?
+    ): Task {
         val response = httpClient.post("tasks/v1/lists/${taskListId}/tasks/${taskId}/move") {
             if (parentTaskId != null) {
                 parameter("parent", parentTaskId)
@@ -224,16 +286,7 @@ class TasksApi(
         }
     }
 
-    /**
-     * [Updates the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/patch). This method supports patch semantics.
-     *
-     * @param taskListId Task list identifier.
-     * @param taskId Task identifier.
-     * @param task the task data to patch.
-     * 
-     * @return an instance of [Task].
-     */
-    suspend fun patch(taskListId: String, taskId: String, task: Task): Task {
+    override suspend fun patch(taskListId: String, taskId: String, task: Task): Task {
         val response = httpClient.patch("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
             contentType(ContentType.Application.Json)
             setBody(task)
@@ -246,16 +299,7 @@ class TasksApi(
         }
     }
 
-    /**
-     * [Updates the specified task](https://developers.google.com/tasks/reference/rest/v1/tasks/update).
-     *
-     * @param taskListId Task list identifier.
-     * @param taskId Task identifier.
-     * @param task the task data to update.
-     *
-     * @return an instance of [Task].
-     */
-    suspend fun update(taskListId: String, taskId: String, task: Task): Task {
+    override suspend fun update(taskListId: String, taskId: String, task: Task): Task {
         val response = httpClient.put("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
             contentType(ContentType.Application.Json)
             setBody(task)
