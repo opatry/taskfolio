@@ -23,9 +23,11 @@
 package net.opatry.tasks.data.model
 
 import kotlinx.datetime.Instant
+import net.opatry.tasks.data.entity.TaskEntity
 
 
 data class TaskDataModel(
+    val _entity: TaskEntity,
     val id: Long,
     val title: String,
     val notes: String = "",
