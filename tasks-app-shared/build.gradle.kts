@@ -52,6 +52,10 @@ kotlin {
 
     jvmToolchain(17)
 
+    compilerOptions {
+        extraWarnings.set(true)
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

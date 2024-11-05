@@ -20,7 +20,6 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
@@ -30,6 +29,10 @@ kotlin {
     jvm()
 
     jvmToolchain(17)
+
+    compilerOptions {
+        extraWarnings.set(true)
+    }
 
     sourceSets {
         commonMain.dependencies {

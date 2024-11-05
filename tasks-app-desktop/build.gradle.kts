@@ -39,6 +39,10 @@ val appVersionCode = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
 kotlin {
     jvmToolchain(17)
 
+    compilerOptions {
+        extraWarnings.set(true)
+    }
+
     dependencies {
         implementation(libs.kotlinx.coroutines.swing) {
             because("requires Dispatchers.Main & co at runtime for Jvm")

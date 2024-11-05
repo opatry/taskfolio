@@ -27,6 +27,10 @@ plugins {
 kotlin {
     jvm()
 
+    compilerOptions {
+        extraWarnings.set(true)
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(projects.google.oauth)

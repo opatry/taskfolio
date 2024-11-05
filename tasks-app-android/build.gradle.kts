@@ -62,6 +62,10 @@ android {
 
     kotlin {
         jvmToolchain(17)
+
+        compilerOptions {
+            extraWarnings.set(true)
+        }
     }
 
     flavorDimensions += "target"

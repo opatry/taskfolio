@@ -28,6 +28,10 @@ plugins {
 kotlin {
     jvm()
 
+    compilerOptions {
+        extraWarnings.set(true)
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization)
