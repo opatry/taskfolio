@@ -1,8 +1,8 @@
 [versions]
 tasksApp-name = "1.2.2"
-compileSdk = "34"
+compileSdk = "35"
 minSdk = "24"
-targetSdk = "34"
+targetSdk = "35"
 agp = "8.7.2"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.28"
