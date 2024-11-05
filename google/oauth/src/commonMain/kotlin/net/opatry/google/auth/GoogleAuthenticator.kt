@@ -36,7 +36,6 @@ interface GoogleAuthenticator {
         }
     }
 
-    @Serializable
     /**
      * @property accessToken The token that your application sends to authorize a Google API request.
      * @property expiresIn The remaining lifetime of the access token in seconds.
@@ -45,6 +44,7 @@ interface GoogleAuthenticator {
      * @property scope The scopes of access granted by the [accessToken] expressed as a list of [Scope].
      * @property tokenType The type of token returned. At this time, this field's value is always set to `Bearer`.
      */
+    @Serializable
     data class OAuthToken(
         @SerialName("access_token")
         val accessToken: String,
@@ -69,6 +69,7 @@ interface GoogleAuthenticator {
          *
          * @property Bearer `"Bearer"` token type defined in [RFC6750](https://datatracker.ietf.org/doc/html/rfc6750) is utilized by simply including the access token string in the request.
          */
+        @Serializable
         enum class TokenType {
             @SerialName("Bearer")
             Bearer,

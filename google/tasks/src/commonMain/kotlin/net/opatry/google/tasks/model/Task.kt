@@ -29,7 +29,6 @@ import kotlinx.serialization.Serializable
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.model.Task.Status
 
-@Serializable
 /**
  * https://developers.google.com/tasks/reference/rest/v1/tasks#resource:-task
  *
@@ -51,6 +50,7 @@ import net.opatry.google.tasks.model.Task.Status
  * @property webViewLink Output only. An absolute link to the task in the Google Tasks Web UI.
  * @property assignmentInfo Output only. Context information for assigned tasks. A task can be assigned to a user, currently possible from surfaces like Docs and Chat Spaces. This field is populated for tasks assigned to the current user and identifies where the task was assigned from. This field is read-only.
  */
+@Serializable
 data class Task(
     @SerialName("kind")
     val kind: ResourceType = ResourceType.Task,
@@ -101,12 +101,12 @@ data class Task(
         Completed,
     }
 
-    @Serializable
     /**
      * @property type Type of the link, e.g. "email".
      * @property description The description. In HTML speak: Everything between <a> and </a>.
      * @property link The URL.
      */
+    @Serializable
     data class Link(
         @SerialName("type")
         val type: String,

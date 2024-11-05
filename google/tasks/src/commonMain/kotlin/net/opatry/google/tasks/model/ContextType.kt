@@ -28,7 +28,6 @@ import net.opatry.google.tasks.model.ContextType.GMail
 import net.opatry.google.tasks.model.ContextType.Space
 import net.opatry.google.tasks.model.ContextType.Unspecified
 
-@Serializable
 /**
  * The [product](https://developers.google.com/tasks/reference/rest/v1/tasks#contexttype) associated with the task.
  *
@@ -37,6 +36,7 @@ import net.opatry.google.tasks.model.ContextType.Unspecified
  * @property javax.print.Doc	The task is assigned from a document.
  * @property Space	The task is assigned from a Chat Space.
  */
+@Serializable
 enum class ContextType {
     @SerialName("CONTEXT_TYPE_UNSPECIFIED")
     Unspecified,

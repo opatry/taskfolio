@@ -25,7 +25,6 @@ package net.opatry.google.tasks.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
 /**
  * Paginated response.
  *
@@ -34,6 +33,7 @@ import kotlinx.serialization.Serializable
  * @property nextPageToken Token that can be used to request the next page of this result.
  * @property items Collection of items.
  */
+@Serializable
 data class ResourceListResponse<T>(
     @SerialName("kind")
     val kind: ResourceType,

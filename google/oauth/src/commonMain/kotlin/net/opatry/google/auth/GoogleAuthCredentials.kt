@@ -25,10 +25,10 @@ package net.opatry.google.auth
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
 /**
  * Represents a Google OAuth2 client credentials (`client_secret_xxx.apps.googleusercontent.com.json` files).
  */
+@Serializable
 data class GoogleAuth(
     @SerialName("web")
     val webCredentials: Credentials.Web? = null,
