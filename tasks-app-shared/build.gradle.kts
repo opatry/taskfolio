@@ -42,12 +42,20 @@ compose.resources {
 }
 
 kotlin {
-    jvm()
+    jvm {
+//        compilerOptions {
+//            noJdk.set(true)
+//        }
+    }
 
     androidTarget {
         // useful to allow using commonTest in Android instrumentation tests
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
+
+        compilerOptions {
+            noJdk = true
+        }
     }
 
     jvmToolchain(17)

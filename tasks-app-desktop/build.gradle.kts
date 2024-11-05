@@ -40,6 +40,7 @@ kotlin {
     jvmToolchain(17)
 
     compilerOptions {
+//        noJdk = true
         extraWarnings.set(true)
     }
 

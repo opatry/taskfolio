@@ -26,7 +26,11 @@ plugins {
 }
 
 kotlin {
-    jvm()
+    jvm {
+//        compilerOptions {
+//            noJdk = true
+//        }
+    }
 
     compilerOptions {
         extraWarnings.set(true)

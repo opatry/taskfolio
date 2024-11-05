@@ -26,7 +26,11 @@ plugins {
 }
 
 kotlin {
-    jvm()
+    jvm {
+//        compilerOptions {
+//            noJdk = true
+//        }
+    }
 
     jvmToolchain(17)
 
