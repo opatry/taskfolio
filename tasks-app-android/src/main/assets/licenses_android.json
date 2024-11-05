@@ -75,7 +75,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.8.2",
+            "artifactVersion": "1.9.0",
             "description": "Provides source annotations for tooling and readability.",
             "name": "Annotation",
             "licenses": [
@@ -1884,7 +1884,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-rc01",
+            "artifactVersion": "3.0.0",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil",
             "licenses": [
@@ -1898,7 +1898,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-rc01",
+            "artifactVersion": "3.0.0",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-compose",
             "licenses": [
@@ -1912,7 +1912,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-rc01",
+            "artifactVersion": "3.0.0",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-compose-core",
             "licenses": [
@@ -1926,7 +1926,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-rc01",
+            "artifactVersion": "3.0.0",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-core",
             "licenses": [
@@ -1940,7 +1940,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-rc01",
+            "artifactVersion": "3.0.0",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-network-core",
             "licenses": [
@@ -1954,7 +1954,7 @@
                     "name": "Coil Contributors"
                 }
             ],
-            "artifactVersion": "3.0.0-rc01",
+            "artifactVersion": "3.0.0",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "name": "coil-network-ktor3",
             "licenses": [
