@@ -32,6 +32,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.about.libraries)
+    alias(libs.plugins.baselineProfile)
 }
 
 val versionCodeValue = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
@@ -171,6 +172,9 @@ dependencies {
     testImplementation(projects.tasksCore) {
         because("needed for Koin DI tests injectedParameters")
     }
+
+    implementation(libs.androidx.profileInstaller)
+    baselineProfile(projects.baselineProfile)
 }
 
 aboutLibraries {
