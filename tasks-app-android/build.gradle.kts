@@ -55,12 +55,6 @@ android {
         generateLocaleConfig = true
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -118,8 +112,8 @@ android {
                 signingConfigs.getByName("store")
             }
 
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
         }
     }
 
