@@ -25,19 +25,18 @@ package net.opatry.google.tasks.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
 /**
  * Information about the surface (Docs, Chat Spaces) where this task was assigned from.
  */
+@Serializable
 abstract class SurfaceInfo {
-//    @SerialName("driveResourceInfo")
-    @Serializable
     /**
      * Information about the [Drive resource](https://developers.google.com/tasks/reference/rest/v1/tasks#driveresourceinfo) where a task was assigned from (the document, sheet, etc.).
      *
      * @property driveFileId Output only. Identifier of the file in the Drive API.
      * @property resourceKey Output only. Resource key required to access files shared via a shared link. Not required for all files. See also developers.google.com/drive/api/guides/resource-keys.
      */
+    @Serializable
     data class DriveResourceInfo(
         @SerialName("driveFileId")
         val driveFileId: String,
@@ -45,13 +44,12 @@ abstract class SurfaceInfo {
         val resourceKey: String,
     ) : SurfaceInfo()
 
-//    @SerialName("spaceInfo")
-    @Serializable
     /**
      * Information about the [Chat Space](https://developers.google.com/tasks/reference/rest/v1/tasks#spaceinfo) where a task was assigned from.
      *
      * @property space Output only. The Chat space where this task originates from. The format is "spaces/{space}".
      */
+    @Serializable
     data class SpaceInfo(
         @SerialName("space")
         val space: String,

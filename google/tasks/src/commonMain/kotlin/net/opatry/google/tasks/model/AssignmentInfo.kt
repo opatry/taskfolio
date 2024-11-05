@@ -25,10 +25,10 @@ package net.opatry.google.tasks.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
 /**
  * Information about the source of the [task assignment](https://developers.google.com/tasks/reference/rest/v1/tasks#assignmentinfo) (Document, Chat Space).
  */
+@Serializable
 data class AssignmentInfo(
     @SerialName("linkToTask")
     val linkToTask: String,

@@ -27,7 +27,6 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
 /**
  * https://developers.google.com/tasks/reference/rest/v1/tasklists#resource:-tasklist
  *
@@ -38,6 +37,7 @@ import kotlinx.serialization.Serializable
  * @property updatedDate Output only. Last modification time of the task list (as a RFC 3339 timestamp).
  * @property selfLink Output only. URL pointing to this task list. Used to retrieve, update, or delete this task list.
  */
+@Serializable
 data class TaskList(
     @SerialName("kind")
     val kind: ResourceType = ResourceType.TaskList,
