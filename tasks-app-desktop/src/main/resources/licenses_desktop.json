@@ -106,7 +106,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-alpha10",
+            "artifactVersion": "2.7.0-alpha11",
             "description": "Android Room-Common",
             "name": "Room-Common",
             "licenses": [
@@ -123,7 +123,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-alpha10",
+            "artifactVersion": "2.7.0-alpha11",
             "description": "Android Room-Runtime",
             "name": "Room-Runtime",
             "licenses": [
@@ -140,7 +140,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-alpha10",
+            "artifactVersion": "2.5.0-alpha11",
             "description": "The implementation of SQLite library using the bundled SQLite.",
             "name": "SQLite Bundled Integration",
             "licenses": [
@@ -157,7 +157,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-alpha10",
+            "artifactVersion": "2.5.0-alpha11",
             "description": "SQLite API",
             "name": "SQLite",
             "licenses": [
