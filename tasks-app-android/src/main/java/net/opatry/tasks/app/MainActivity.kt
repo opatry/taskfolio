@@ -32,7 +32,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.UserState
@@ -46,6 +49,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 
 class MainActivity : AppCompatActivity() {
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,7 +66,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             TaskfolioTheme {
-                Surface(Modifier.statusBarsPadding()) {
+                Surface(
+                    Modifier
+                        .statusBarsPadding()
+                        .semantics {
+                            testTagsAsResourceId = true
+                        }
+                ) {
                     when (userState) {
                         null -> LoadingPane()
 

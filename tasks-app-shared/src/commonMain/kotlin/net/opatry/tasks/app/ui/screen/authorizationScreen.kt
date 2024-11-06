@@ -39,6 +39,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.opatry.google.auth.GoogleAuthenticator
@@ -59,7 +60,8 @@ fun AuthorizationScreen(
             TopAppBar(
                 title = {},
                 actions = {
-                    TextButton(onClick = onSkip) {
+                    // Warning: this test tag is used by baseline profile tests, keep it synced
+                    TextButton(onClick = onSkip, Modifier.testTag("authorization.skip_button")) {
                         Text(stringResource(Res.string.onboarding_screen_skip))
                     }
                 }
