@@ -23,6 +23,7 @@
 package net.opatry.tasks.app
 
 import android.os.Bundle
+import androidx.activity.compose.ReportDrawn
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -75,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                             }
                             val tasksViewModel = koinViewModel<TaskListsViewModel>()
                             TasksApp(aboutApp, userViewModel, tasksViewModel)
+                            ReportDrawn()
                         }
 
                         UserState.Newcomer -> AuthorizationScreen(
