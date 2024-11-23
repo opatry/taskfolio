@@ -26,8 +26,6 @@ import androidx.benchmark.macro.junit4.BaselineProfileRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.Until
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -54,8 +52,10 @@ class OnboardingBaselineProfileGenerator {
 //            if (iteration == 1 || device.hasObject(authorizationSkipButtonRes)) {
 //                device.findObject(authorizationSkipButtonRes)?.click()
 //            }
-            device.wait(Until.hasObject(By.text("Add task list…")), 5000)
-            device.wait(Until.hasObject(By.text("Mes tâches")), 5000)
+            device.waitForIdle()
+//            device.wait(Until.timeout(5000))
+//            device.wait(Until.hasObject(By.textContains("Add task list")), 5000)
+//            device.wait(Until.hasObject(By.textContains("My tasks")), 5000)
         }
     }
 }
