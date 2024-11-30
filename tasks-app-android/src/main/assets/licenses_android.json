@@ -2066,7 +2066,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-auth",
             "licenses": [
@@ -2080,7 +2080,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-cio",
             "licenses": [
@@ -2094,7 +2094,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-content-negotiation",
             "licenses": [
@@ -2108,7 +2108,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-core",
             "licenses": [
@@ -2122,7 +2122,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-logging",
             "licenses": [
@@ -2136,7 +2136,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-events",
             "licenses": [
@@ -2150,7 +2150,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-http-cio",
             "licenses": [
@@ -2164,7 +2164,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-http",
             "licenses": [
@@ -2178,7 +2178,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-io",
             "licenses": [
@@ -2192,7 +2192,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-network",
             "licenses": [
@@ -2206,7 +2206,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-network-tls",
             "licenses": [
@@ -2220,7 +2220,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization",
             "licenses": [
@@ -2234,7 +2234,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization-kotlinx-json",
             "licenses": [
@@ -2248,7 +2248,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization-kotlinx",
             "licenses": [
@@ -2262,7 +2262,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-sse",
             "licenses": [
@@ -2276,7 +2276,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-utils",
             "licenses": [
@@ -2290,7 +2290,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-websocket-serialization",
             "licenses": [
@@ -2304,7 +2304,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-websockets",
             "licenses": [
