@@ -1191,7 +1191,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.0.21",
+            "artifactVersion": "2.1.0",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "licenses": [

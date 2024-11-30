@@ -2424,7 +2424,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.0.21",
+            "artifactVersion": "2.1.0",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "licenses": [
@@ -2466,7 +2466,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.0.21",
+            "artifactVersion": "2.1.0",
             "description": "Kotlin Test Multiplatform library",
             "name": "Kotlin Test",
             "licenses": [
@@ -2480,7 +2480,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.0.21",
+            "artifactVersion": "2.1.0",
             "description": "Kotlin Test library support for JUnit",
             "name": "Kotlin Test Junit",
             "licenses": [
