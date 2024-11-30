@@ -35,16 +35,22 @@ interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(item: TaskEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAll(items: List<TaskEntity>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(item: TaskEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(items: List<TaskEntity>): List<Long>
 
     @Query("SELECT * FROM task WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): TaskEntity?
 
-    @Query("SELECT * FROM task")
+    @Query("SELECT * FROM task ORDER BY position ASC")
     fun getAllAsFlow(): Flow<List<TaskEntity>>
 
-    @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND remote_id IS NULL")
+    @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND remote_id IS NULL ORDER BY position ASC")
     suspend fun getLocalOnlyTasks(taskListLocalId: Long): List<TaskEntity>
 
     // FIXME should be a pending deletion "flag" until sync is done
@@ -55,7 +61,7 @@ interface TaskDao {
     @Query("DELETE FROM task WHERE local_id IN (:ids)")
     suspend fun deleteTasks(ids: List<Long>)
 
-    @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND is_completed = true")
+    @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND is_completed = true ORDER BY position ASC")
     suspend fun getCompletedTasks(taskListLocalId: Long): List<TaskEntity>
 
     @Query("DELETE FROM task WHERE parent_list_local_id = :taskListId AND remote_id IS NOT NULL AND remote_id NOT IN (:validRemoteIds)")

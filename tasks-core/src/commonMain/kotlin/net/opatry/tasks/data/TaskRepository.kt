@@ -41,6 +41,7 @@ import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import java.math.BigInteger
 
 enum class TaskListSorting {
     Manual,
@@ -153,7 +154,7 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
         result.add(task to level)
         val children = tree[taskId] ?: return
         for (child in children) {
-            traverseTasks(child.remoteId ?: "", level + 1, result) // FIXME local data only?
+            traverseTasks(child.remoteId ?: child.id.toString(), level + 1, result) // FIXME local data only?
         }
     }
 
@@ -170,6 +171,48 @@ fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
     return tasks.sortedBy(TaskEntity::dueDate)
 }
 
+/**
+ * Updates the position of tasks among the provided list of tasks.
+ * The tasks to complete are kept in the same order and their position is recomputed starting from 0.
+ * The completed tasks are sorted last and sorted by completion date.
+ * Position is reset for each list & parent task.
+ */
+fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
+    return buildList {
+        val tasksByList = tasks.groupBy(TaskEntity::parentListLocalId)
+        tasksByList.forEach { (_, tasks) ->
+            tasks.groupBy(TaskEntity::parentTaskLocalId).forEach { (_, subTasks) ->
+                val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
+                val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
+                val todoWithPositions = todo.mapIndexed { index, taskEntity -> taskEntity.copy(position = index.toString().padStart(20, '0')) }
+
+                val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(TaskEntity::position)
+                addAll(sortedSubTasks)
+            }
+        }
+    }
+}
+
+fun computeCompletedTaskPosition(task: TaskEntity): String {
+    val completionDate = task.completionDate
+    require(task.isCompleted && completionDate != null) {
+        "Task must be completed and have a completion date"
+    }
+    // ignore milliseconds, on backend side, Google Tasks API truncates milliseconds
+    val truncatedDate = Instant.fromEpochMilliseconds(completionDate.toEpochMilliseconds() / 1000 * 1000)
+    return truncatedDate.asCompletedTaskPosition()
+}
+
+/**
+ * Converts a completion date as the position of a completed task for Google Tasks sorting logic.
+ * The sorting of completed tasks puts last completed tasks first.
+ */
+fun Instant.asCompletedTaskPosition(): String {
+    val upperBound = BigInteger("9999999999999999999")
+    val sorting = upperBound - this.toEpochMilliseconds().toBigInteger()
+    return sorting.toString().padStart(20, '0')
+}
+
 class TaskRepository(
     private val taskListDao: TaskListDao,
     private val taskDao: TaskDao,
@@ -183,8 +226,8 @@ class TaskRepository(
             entries.map { (list, tasks) ->
                 // FIXME Where should happen the sorting, on SQL side or here or in UI layer?
                 list.asTaskListDataModel(tasks)
+            }
         }
-    }
 
     suspend fun sync() {
         val taskListIds = mutableMapOf<Long, String>()
@@ -223,6 +266,7 @@ class TaskRepository(
             }
             if (remoteTaskList != null) {
                 taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
+                taskListIds[localTaskList.id] = remoteTaskList.id
             }
         }
         taskListIds.forEach { (localListId, remoteListId) ->
@@ -232,23 +276,50 @@ class TaskRepository(
             val remoteTasks = withContext(Dispatchers.IO) {
                 tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
             }
-            remoteTasks.onEach { remoteTask ->
+
+            val taskEntities = remoteTasks.map { remoteTask ->
                 val existingEntity = taskDao.getByRemoteId(remoteTask.id)
-                taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
+                remoteTask.asTaskEntity(localListId, existingEntity?.id)
             }
+            taskDao.upsertAll(taskEntities)
+
             taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
-            taskDao.getLocalOnlyTasks(localListId).onEach { localTask ->
-                val remoteTask = withContext(Dispatchers.IO) {
+
+            val localOnlyTasks = taskDao.getLocalOnlyTasks(localListId)
+            val sortedRootTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == null })
+            var previousTaskId: String? = null
+            val syncedTasks = mutableListOf<TaskEntity>()
+            sortedRootTasks.onEach { localRootTask ->
+                val remoteRootTask = withContext(Dispatchers.IO) {
                     try {
-                        tasksApi.insert(remoteListId, localTask.asTask())
+                        tasksApi.insert(remoteListId, localRootTask.asTask(), null, previousTaskId).also {
+                            syncedTasks.add(it.asTaskEntity(localListId, localRootTask.id))
+                        }
                     } catch (e: Exception) {
                         null
                     }
                 }
-                if (remoteTask != null) {
-                    taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id))
+
+                // don't try syncing sub tasks if root task failed, it would break hierarchy on remote side
+                if (remoteRootTask != null) {
+                    val sortedSubTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == localRootTask.id })
+                    var previousSubTaskId: String? = null
+                    sortedSubTasks.onEach { localSubTask ->
+                        val remoteSubTask = withContext(Dispatchers.IO) {
+                            try {
+                                tasksApi.insert(remoteListId, localSubTask.asTask(), remoteRootTask.id, previousSubTaskId).also {
+                                    syncedTasks.add(it.asTaskEntity(localListId, localSubTask.id))
+                                }
+                            } catch (e: Exception) {
+                                null
+                            }
+                        }
+                        previousSubTaskId = remoteSubTask?.id
+                    }
                 }
+                previousTaskId = remoteRootTask?.id
             }
+            taskDao.upsertAll(syncedTasks)
         }
     }
 
@@ -414,9 +485,10 @@ class TaskRepository(
 
     suspend fun toggleTaskCompletionState(taskId: Long) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            val isNowCompleted = !taskEntity.isCompleted
             taskEntity.copy(
-                isCompleted = !taskEntity.isCompleted,
-                completionDate = if (taskEntity.isCompleted) null else updateTime,
+                isCompleted = isNowCompleted,
+                completionDate = if (isNowCompleted) updateTime else null,
                 lastUpdateDate = updateTime,
             )
         }
