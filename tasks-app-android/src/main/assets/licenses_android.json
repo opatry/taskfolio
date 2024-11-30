@@ -1674,7 +1674,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "33.5.1",
+            "artifactVersion": "33.6.0",
             "description": "",
             "name": "com.google.firebase:firebase-bom",
             "licenses": [

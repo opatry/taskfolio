@@ -68,7 +68,7 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.9.3" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.5.1" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.6.0" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.2.0" }
