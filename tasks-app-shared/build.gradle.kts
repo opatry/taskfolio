@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -100,6 +100,13 @@ kotlin {
             implementation(projects.tasksCore)
 
             implementation(projects.lucideIcons)
+        }
+
+        // FIXME temporary workaround, SQLite bundled metadata is broken between alpha13 and beta01
+        //  explicit Jvm dependency to be removed once beta02 is out
+        //  see https://issuetracker.google.com/issues/396148592
+        jvmMain.dependencies {
+            implementation("androidx.sqlite:sqlite-jvm:${libs.versions.sqlite.get()}")
         }
 
         commonTest.dependencies {

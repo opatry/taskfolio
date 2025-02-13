@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -86,7 +86,7 @@ compose.desktop {
             version = appVersion
             description =
                 "An Android task management app built using Google Tasks API. Developed to demonstrate my skills in Kotlin multiplatform development."
-            copyright = "Copyright (c) 2024 Olivier Patry"
+            copyright = "Copyright (c) 2024-2025 Olivier Patry"
             vendor = "Olivier Patry"
             targetFormats(
                 TargetFormat.Dmg,
