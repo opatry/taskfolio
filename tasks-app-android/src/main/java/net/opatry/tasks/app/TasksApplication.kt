@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -29,23 +29,23 @@ import net.opatry.tasks.app.di.networkModule
 import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksAppModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.androix.startup.KoinStartup.onKoinStartup
+import org.koin.androix.startup.KoinStartup
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.dsl.koinConfiguration
 
 private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
 
-class TasksApplication : Application() {
+@OptIn(KoinExperimentalAPI::class)
+class TasksApplication : Application(), KoinStartup {
 
-    init {
-        @Suppress("OPT_IN_USAGE")
-        onKoinStartup {
-            androidContext(this@TasksApplication)
-            modules(
-                platformModule(),
-                dataModule,
-                authModule(GCP_CLIENT_ID),
-                networkModule,
-                tasksAppModule,
-            )
-        }
+    override fun onKoinStartup() = koinConfiguration {
+        androidContext(this@TasksApplication)
+        modules(
+            platformModule(),
+            dataModule,
+            authModule(GCP_CLIENT_ID),
+            networkModule,
+            tasksAppModule,
+        )
     }
 }
