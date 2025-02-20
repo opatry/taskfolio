@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -25,6 +25,7 @@ package net.opatry.google.tasks
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.compression.compress
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -202,6 +203,7 @@ class HttpTasksApi(
                 parameter("previous", previousTaskId)
             }
             contentType(ContentType.Application.Json)
+            compress("gzip")
             setBody(task)
         }
 
