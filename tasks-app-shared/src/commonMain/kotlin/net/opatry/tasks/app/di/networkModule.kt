@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -24,10 +24,11 @@ package net.opatry.tasks.app.di
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.CurlUserAgent
+import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.URLBuilder
@@ -56,9 +57,17 @@ val networkModule = module {
         val credentialsStorage = get<CredentialsStorage>()
 
         HttpClient(CIO) {
-            CurlUserAgent()
             install(ContentNegotiation) {
                 json()
+            }
+            install(UserAgent) {
+                // it appears Google Tasks require the user agent to contain the "gzip" string
+                // to accept gzip encoding in combination of Accept-Encoding: gzip
+                // https://developers.google.com/tasks/performance#gzip
+                agent = "curl/7.61.0 gzip"
+            }
+            install(ContentEncoding) {
+                gzip()
             }
             install(Auth) {
                 bearer {

@@ -2116,6 +2116,20 @@
             ]
         },
         {
+            "uniqueId": "io.ktor:ktor-client-encoding-jvm",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.0",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-client-encoding",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "io.ktor:ktor-client-logging-jvm",
             "developers": [
                 {
