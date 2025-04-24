@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -191,7 +191,7 @@ class TaskRepository(
         val remoteTaskLists = withContext(Dispatchers.IO) {
             try {
                 taskListsApi.listAll()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
         }
@@ -217,7 +217,7 @@ class TaskRepository(
             val remoteTaskList = withContext(Dispatchers.IO) {
                 try {
                     taskListsApi.insert(TaskList(localTaskList.title))
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             }
@@ -241,7 +241,7 @@ class TaskRepository(
                 val remoteTask = withContext(Dispatchers.IO) {
                     try {
                         tasksApi.insert(remoteListId, localTask.asTask())
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         null
                     }
                 }
@@ -258,7 +258,7 @@ class TaskRepository(
         val taskList = withContext(Dispatchers.IO) {
             try {
                 taskListsApi.insert(TaskList(title = title, updatedDate = now))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
         }
@@ -275,7 +275,7 @@ class TaskRepository(
             withContext(Dispatchers.IO) {
                 try {
                     taskListsApi.delete(taskListEntity.remoteId)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             }
@@ -301,7 +301,7 @@ class TaskRepository(
                             updatedDate = taskListEntity.lastUpdateDate
                         )
                     )
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             }
@@ -321,7 +321,7 @@ class TaskRepository(
                         try {
                             // TODO deal with deleted locally but not remotely yet (no internet)
                             tasksApi.delete(taskList.remoteId, task.remoteId)
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             null
                         }
                     }
@@ -355,7 +355,7 @@ class TaskRepository(
             val task = withContext(Dispatchers.IO) {
                 try {
                     tasksApi.insert(taskListEntity.remoteId, taskEntity.asTask())
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             }
@@ -376,7 +376,7 @@ class TaskRepository(
             withContext(Dispatchers.IO) {
                 try {
                     tasksApi.delete(taskListRemoteId, taskEntity.remoteId)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             }
@@ -405,7 +405,7 @@ class TaskRepository(
                         updatedTaskEntity.remoteId,
                         updatedTaskEntity.asTask()
                     )
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             }
