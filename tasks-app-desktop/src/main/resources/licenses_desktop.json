@@ -38,7 +38,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.4.2",
+            "artifactVersion": "1.5.0",
             "description": "Standalone efficient collections.",
             "name": "collections",
             "licenses": [
@@ -55,7 +55,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle-Common",
             "name": "Lifecycle-Common",
             "licenses": [
@@ -72,7 +72,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle Runtime",
             "name": "Lifecycle Runtime",
             "licenses": [
@@ -89,7 +89,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.5",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -106,7 +106,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-beta01",
+            "artifactVersion": "2.7.1",
             "description": "Android Room-Common",
             "name": "Room-Common",
             "licenses": [
@@ -123,26 +123,9 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-beta01",
+            "artifactVersion": "2.7.1",
             "description": "Android Room-Runtime",
             "name": "Room-Runtime",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.sqlite:sqlite-android",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.5.0-beta01",
-            "description": "SQLite API",
-            "name": "SQLite",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -157,7 +140,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-beta01",
+            "artifactVersion": "2.5.0",
             "description": "The implementation of SQLite library using the bundled SQLite.",
             "name": "SQLite Bundled Integration",
             "licenses": [
@@ -174,7 +157,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-beta01",
+            "artifactVersion": "2.5.0",
             "description": "SQLite API",
             "name": "SQLite",
             "licenses": [
@@ -233,7 +216,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.5.0",
+            "artifactVersion": "12.1.0-rc01",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "licenses": [
@@ -362,7 +345,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -376,7 +359,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -390,7 +373,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -404,7 +387,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -418,7 +401,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-auth",
             "licenses": [
@@ -432,7 +415,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-cio",
             "licenses": [
@@ -446,7 +429,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-content-negotiation",
             "licenses": [
@@ -460,7 +443,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-core",
             "licenses": [
@@ -474,7 +457,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-encoding",
             "licenses": [
@@ -488,7 +471,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-logging",
             "licenses": [
@@ -502,7 +485,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-events",
             "licenses": [
@@ -516,7 +499,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-http-cio",
             "licenses": [
@@ -530,7 +513,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-http",
             "licenses": [
@@ -544,7 +527,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-io",
             "licenses": [
@@ -558,7 +541,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-network",
             "licenses": [
@@ -572,7 +555,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-network-tls",
             "licenses": [
@@ -586,7 +569,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization",
             "licenses": [
@@ -600,7 +583,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization-kotlinx-json",
             "licenses": [
@@ -614,9 +597,65 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization-kotlinx",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-server-cio-jvm",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.2",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-server-cio",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-server-core-jvm",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.2",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-server-core",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-server-html-builder-jvm",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.2",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-server-html-builder",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-server-status-pages-jvm",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.2",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-server-status-pages",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -628,7 +667,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-sse",
             "licenses": [
@@ -642,7 +681,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-utils",
             "licenses": [
@@ -656,7 +695,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-websocket-serialization",
             "licenses": [
@@ -670,7 +709,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-websockets",
             "licenses": [
@@ -704,23 +743,9 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.1.0-alpha02",
+            "artifactVersion": "1.0.1",
             "description": "Provides Bundle in Kotlin Multiplatform projects",
             "name": "androidx.core:core-bundle",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.androidx.core:core-uri-desktop",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.1.0-alpha02",
-            "description": "Provides Uri in Kotlin Multiplatform projects",
-            "name": "androidx.core:core-uri",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -732,7 +757,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.8.4",
+            "artifactVersion": "2.9.0-alpha06",
             "description": "Compose integration with Lifecycle",
             "name": "Lifecycle Runtime Compose",
             "licenses": [
@@ -746,7 +771,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.8.4",
+            "artifactVersion": "2.8.3",
             "description": "Compose integration with Lifecycle ViewModel",
             "name": "Lifecycle ViewModel Compose",
             "licenses": [
@@ -774,7 +799,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.8.0-alpha12",
+            "artifactVersion": "2.9.0-alpha16",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
             "licenses": [
@@ -788,7 +813,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.8.0-alpha12",
+            "artifactVersion": "2.9.0-alpha16",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
             "licenses": [
@@ -802,7 +827,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.8.0-alpha12",
+            "artifactVersion": "2.9.0-alpha16",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
             "licenses": [
@@ -844,7 +869,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Animation engine and animation primitives that are the building blocks of the Compose animation library",
             "name": "Compose Animation Core",
             "licenses": [
@@ -858,7 +883,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose animation library",
             "name": "Compose Animation",
             "licenses": [
@@ -872,7 +897,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Resources for Compose JB",
             "name": "Resources for Compose JB",
             "licenses": [
@@ -886,7 +911,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose Desktop",
             "name": "Compose Desktop",
             "licenses": [
@@ -900,7 +925,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Higher level abstractions of the Compose UI primitives. This library is design system agnostic, providing the high-level building blocks for both application and design-system developers",
             "name": "Compose Foundation",
             "licenses": [
@@ -914,7 +939,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose layout implementations",
             "name": "Compose Layouts",
             "licenses": [
@@ -928,7 +953,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.0.1",
+            "artifactVersion": "1.1.0-beta02",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
@@ -942,7 +967,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.0.1",
+            "artifactVersion": "1.1.0-beta02",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
@@ -956,7 +981,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.0.1",
+            "artifactVersion": "1.1.0-beta02",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
@@ -970,7 +995,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose Material Design Adaptive Navigation Suite Library",
             "name": "Material Adaptive Navigation Suite",
             "licenses": [
@@ -984,7 +1009,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose Material You Design Components library",
             "name": "Compose Material3 Components",
             "licenses": [
@@ -998,7 +1023,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose Material Design Components library",
             "name": "Compose Material Components",
             "licenses": [
@@ -1012,7 +1037,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.6.11",
             "description": "Compose Material Design core icons. This module contains the most commonly used set of Material icons.",
             "name": "Compose Material Icons Core",
             "licenses": [
@@ -1026,7 +1051,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Material ripple used to build interactive components",
             "name": "Compose Material Ripple",
             "licenses": [
@@ -1040,7 +1065,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Tree composition support for code generated by the Compose compiler plugin and corresponding public API",
             "name": "Compose Runtime",
             "licenses": [
@@ -1054,9 +1079,23 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose components that allow saving and restoring the local ui state",
             "name": "Compose Saveable",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.ui:ui-backhandler-desktop",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.0-beta02",
+            "description": "Provides BackHandler in Compose Multiplatform projects",
+            "name": "Compose Multiplatform BackHandler",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -1068,7 +1107,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose UI primitives. This library contains the primitives that form the Compose UI Toolkit, such as drawing, measurement and layout.",
             "name": "Compose UI primitives",
             "licenses": [
@@ -1082,7 +1121,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose classes related to dimensions without units",
             "name": "Compose Geometry",
             "licenses": [
@@ -1096,7 +1135,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose graphics",
             "name": "Compose Graphics",
             "licenses": [
@@ -1110,7 +1149,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose Text primitives and utilities",
             "name": "Compose UI Text",
             "licenses": [
@@ -1124,7 +1163,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose tooling library API. This library provides the API required to declare @Preview composables in user apps.",
             "name": "Compose UI Preview Tooling",
             "licenses": [
@@ -1138,7 +1177,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Compose classes for simple units",
             "name": "Compose Unit",
             "licenses": [
@@ -1152,7 +1191,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Internal Compose utilities used by other modules",
             "name": "Compose Util",
             "licenses": [
@@ -1166,7 +1205,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Kotlin Full Reflection Library",
             "name": "Kotlin Reflect",
             "licenses": [
@@ -1180,7 +1219,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "licenses": [
@@ -1194,7 +1233,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "1.9.24",
+            "artifactVersion": "2.1.10",
             "description": "Kotlin Standard Library JDK 7 extension",
             "name": "Kotlin Stdlib Jdk7",
             "licenses": [
@@ -1208,7 +1247,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "1.9.24",
+            "artifactVersion": "2.1.10",
             "description": "Kotlin Standard Library JDK 8 extension",
             "name": "Kotlin Stdlib Jdk8",
             "licenses": [
@@ -1244,27 +1283,13 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-bom",
-            "developers": [
-                {
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.10.1",
-            "description": "Coroutines support libraries for Kotlin",
-            "name": "kotlinx-coroutines-bom",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
             "developers": [
                 {
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.10.1",
+            "artifactVersion": "1.10.2",
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-core",
             "licenses": [
@@ -1278,7 +1303,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.10.1",
+            "artifactVersion": "1.10.2",
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-slf4j",
             "licenses": [
@@ -1292,7 +1317,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.10.1",
+            "artifactVersion": "1.10.2",
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-swing",
             "licenses": [
@@ -1359,27 +1384,13 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-bom",
-            "developers": [
-                {
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.8.0",
-            "description": "Kotlin multiplatform serialization runtime library",
-            "name": "kotlinx-serialization-bom",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm",
             "developers": [
                 {
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.8.1",
             "description": "Kotlin multiplatform serialization runtime library",
             "name": "kotlinx-serialization-core",
             "licenses": [
@@ -1393,7 +1404,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.8.1",
             "description": "Kotlin multiplatform serialization runtime library",
             "name": "kotlinx-serialization-json-io",
             "licenses": [
@@ -1407,7 +1418,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.8.1",
             "description": "Kotlin multiplatform serialization runtime library",
             "name": "kotlinx-serialization-json",
             "licenses": [
@@ -1421,7 +1432,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "0.8.18",
+            "artifactVersion": "0.9.4",
             "description": "Kotlin Skia bindings",
             "name": "Skiko Awt",
             "licenses": [
@@ -1435,7 +1446,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "0.8.18",
+            "artifactVersion": "0.9.4",
             "description": "Kotlin Skia bindings",
             "name": "Skiko JVM Runtime for MacOS Arm64",
             "licenses": [
@@ -1457,11 +1468,25 @@
             ]
         },
         {
+            "uniqueId": "org.jspecify:jspecify",
+            "developers": [
+                {
+                    "name": "Kevin Bourrillion"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "An artifact of well-named and well-specified annotations to power static analysis checks",
+            "name": "JSpecify annotations",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.slf4j:slf4j-api",
             "developers": [
                 
             ],
-            "artifactVersion": "2.0.16",
+            "artifactVersion": "2.0.17",
             "description": "The slf4j API",
             "name": "SLF4J API Module",
             "licenses": [
@@ -1476,7 +1501,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.0.16",
+            "artifactVersion": "2.0.17",
             "description": "SLF4J NOP Provider",
             "name": "SLF4J NOP Provider",
             "licenses": [

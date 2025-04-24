@@ -7,7 +7,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.11.0-rc01",
             "description": "Provides the base Activity subclass and the relevant hooks to build a composable structure on top.",
             "name": "Activity",
             "licenses": [
@@ -24,7 +24,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.11.0-rc01",
             "description": "Compose integration with Activity",
             "name": "Activity Compose",
             "licenses": [
@@ -41,7 +41,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.10.0",
+            "artifactVersion": "1.11.0-rc01",
             "description": "Kotlin extensions for 'activity' artifact",
             "name": "Activity Kotlin Extensions",
             "licenses": [
@@ -168,7 +168,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.4.4",
+            "artifactVersion": "1.5.0",
             "description": "Standalone efficient collections.",
             "name": "collections",
             "licenses": [
@@ -185,7 +185,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.4.4",
+            "artifactVersion": "1.5.0",
             "description": "Kotlin extensions for 'collection' artifact",
             "name": "Collections Kotlin Extensions",
             "licenses": [
@@ -202,7 +202,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose animation library",
             "name": "Compose Animation",
             "licenses": [
@@ -219,7 +219,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Animation engine and animation primitives that are the building blocks of the Compose animation library",
             "name": "Compose Animation Core",
             "licenses": [
@@ -236,7 +236,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Higher level abstractions of the Compose UI primitives. This library is design system agnostic, providing the high-level building blocks for both application and design-system developers",
             "name": "Compose Foundation",
             "licenses": [
@@ -253,7 +253,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose layout implementations",
             "name": "Compose Layouts",
             "licenses": [
@@ -270,7 +270,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.1.0",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
@@ -287,7 +287,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.1.0",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
@@ -304,7 +304,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.1.0",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
@@ -355,7 +355,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.6.7",
             "description": "Compose Material Design core icons. This module contains the most commonly used set of Material icons.",
             "name": "Compose Material Icons Core",
             "licenses": [
@@ -372,7 +372,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Material ripple used to build interactive components",
             "name": "Compose Material Ripple",
             "licenses": [
@@ -389,7 +389,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Tree composition support for code generated by the Compose compiler plugin and corresponding public API",
             "name": "Compose Runtime",
             "licenses": [
@@ -406,7 +406,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose components that allow saving and restoring the local ui state",
             "name": "Compose Saveable",
             "licenses": [
@@ -423,7 +423,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose UI primitives. This library contains the primitives that form the Compose UI Toolkit, such as drawing, measurement and layout.",
             "name": "Compose UI",
             "licenses": [
@@ -440,7 +440,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose classes related to dimensions without units",
             "name": "Compose Geometry",
             "licenses": [
@@ -457,7 +457,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose graphics",
             "name": "Compose Graphics",
             "licenses": [
@@ -474,7 +474,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose Text primitives and utilities",
             "name": "Compose UI Text",
             "licenses": [
@@ -491,7 +491,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Compose classes for simple units",
             "name": "Compose Unit",
             "licenses": [
@@ -508,7 +508,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.6",
+            "artifactVersion": "1.8.0-rc02",
             "description": "Internal Compose utilities used by other modules",
             "name": "Compose Util",
             "licenses": [
@@ -567,6 +567,23 @@
             }
         },
         {
+            "uniqueId": "androidx.core:core-viewtree",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "Provides ViewTree extensions packaged for use by other core androidx libraries",
+            "name": "androidx.core:core-viewtree",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
             "uniqueId": "androidx.cursoradapter:cursoradapter",
             "developers": [
                 {
@@ -609,60 +626,123 @@
             ]
         },
         {
-            "uniqueId": "androidx.datastore:datastore",
+            "uniqueId": "androidx.datastore:datastore-android",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.1.3",
             "description": "Android DataStore - contains the underlying store used by each serialization method along with components that require an Android dependency",
-            "name": "Android DataStore",
+            "name": "DataStore",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
-            "uniqueId": "androidx.datastore:datastore-core",
+            "uniqueId": "androidx.datastore:datastore-core-android",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.1.3",
             "description": "Android DataStore Core - contains the underlying store used by each serialization method",
-            "name": "Android DataStore Core",
+            "name": "DataStore Core",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
-            "uniqueId": "androidx.datastore:datastore-preferences",
+            "uniqueId": "androidx.datastore:datastore-core-okio-jvm",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.1.3",
+            "description": "Android DataStore Core Okio- contains APIs to use datastore-core in multiplatform via okio",
+            "name": "DataStore Core Okio",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.datastore:datastore-preferences-android",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.1.3",
             "description": "Android Preferences DataStore",
-            "name": "Android Preferences DataStore",
+            "name": "Preferences DataStore",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
-            "uniqueId": "androidx.datastore:datastore-preferences-core",
+            "uniqueId": "androidx.datastore:datastore-preferences-core-jvm",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.0.0",
+            "artifactVersion": "1.1.3",
             "description": "Android Preferences DataStore without the Android Dependencies",
-            "name": "Android Preferences DataStore Core",
+            "name": "Preferences DataStore Core",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.datastore:datastore-preferences-external-protobuf",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.1.3",
+            "description": "Repackaged proto-lite dependency for use by datastore preferences",
+            "name": "Preferences External Protobuf",
+            "licenses": [
+                "BSD-3-Clause"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.datastore:datastore-preferences-proto",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.1.3",
+            "description": "Jarjar the generated proto for use by datastore-preferences.",
+            "name": "Preferences DataStore Proto",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
             "uniqueId": "androidx.drawerlayout:drawerlayout",
@@ -685,9 +765,9 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.3.0",
+            "artifactVersion": "1.4.0",
             "description": "Core library to enable emoji compatibility in Kitkat and newer devices to avoid the empty emoji characters.",
-            "name": "Android Emoji2 Compat",
+            "name": "Emoji2",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -699,9 +779,9 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.3.0",
-            "description": "View helpers for Emoji2",
-            "name": "Android Emoji2 Compat view helpers",
+            "artifactVersion": "1.4.0",
+            "description": "Provide helper classes for Emoji2 views.",
+            "name": "Emoji2 Views Helper",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -792,7 +872,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle-Common for Java 8 Language",
             "name": "Lifecycle-Common for Java 8",
             "licenses": [
@@ -809,26 +889,9 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle-Common",
             "name": "Lifecycle-Common",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.lifecycle:lifecycle-livedata",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.9.0-alpha03",
-            "description": "Android Lifecycle LiveData",
-            "name": "Lifecycle LiveData",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -843,7 +906,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle LiveData Core",
             "name": "Lifecycle LiveData Core",
             "licenses": [
@@ -860,7 +923,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Kotlin extensions for 'livedata-core' artifact",
             "name": "LiveData Core Kotlin Extensions",
             "licenses": [
@@ -877,7 +940,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle Process",
             "name": "Lifecycle Process",
             "licenses": [
@@ -894,7 +957,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle Runtime",
             "name": "Lifecycle Runtime",
             "licenses": [
@@ -911,7 +974,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Compose integration with Lifecycle",
             "name": "Lifecycle Runtime Compose",
             "licenses": [
@@ -928,26 +991,9 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Kotlin extensions for 'lifecycle' artifact",
             "name": "Lifecycle Kotlin Extensions",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.lifecycle:lifecycle-service",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.9.0-alpha03",
-            "description": "Android Lifecycle Service",
-            "name": "Lifecycle Service",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -962,7 +1008,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -979,7 +1025,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -996,7 +1042,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Compose integration with Lifecycle ViewModel",
             "name": "Lifecycle ViewModel Compose",
             "licenses": [
@@ -1013,7 +1059,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Kotlin extensions for 'viewmodel' artifact",
             "name": "Lifecycle ViewModel Kotlin Extensions",
             "licenses": [
@@ -1024,13 +1070,13 @@
             }
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-savedstate",
+            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-savedstate-android",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha03",
+            "artifactVersion": "2.9.0-alpha12",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel with SavedState",
             "licenses": [
@@ -1055,13 +1101,13 @@
             ]
         },
         {
-            "uniqueId": "androidx.navigation:navigation-common",
+            "uniqueId": "androidx.navigation:navigation-common-android",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.4",
+            "artifactVersion": "2.9.0-alpha08",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
             "licenses": [
@@ -1072,30 +1118,13 @@
             }
         },
         {
-            "uniqueId": "androidx.navigation:navigation-common-ktx",
+            "uniqueId": "androidx.navigation:navigation-compose-android",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.4",
-            "description": "Android Navigation-Common-Ktx",
-            "name": "Navigation Common Kotlin Extensions",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.navigation:navigation-compose",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.8.4",
+            "artifactVersion": "2.9.0-alpha08",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
             "licenses": [
@@ -1106,32 +1135,15 @@
             }
         },
         {
-            "uniqueId": "androidx.navigation:navigation-runtime",
+            "uniqueId": "androidx.navigation:navigation-runtime-android",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.8.4",
+            "artifactVersion": "2.9.0-alpha08",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.navigation:navigation-runtime-ktx",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.8.4",
-            "description": "Android Navigation-Runtime-Ktx",
-            "name": "Navigation Runtime Kotlin Extensions",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1177,26 +1189,9 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-beta01",
+            "artifactVersion": "2.7.1",
             "description": "Android Room-Common",
             "name": "Room-Common",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.room:room-ktx",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.7.0-beta01",
-            "description": "Android Room Kotlin Extensions",
-            "name": "Room Kotlin Extensions",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1211,7 +1206,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.7.0-beta01",
+            "artifactVersion": "2.7.1",
             "description": "Android Room-Runtime",
             "name": "Room-Runtime",
             "licenses": [
@@ -1222,18 +1217,21 @@
             }
         },
         {
-            "uniqueId": "androidx.savedstate:savedstate",
+            "uniqueId": "androidx.savedstate:savedstate-android",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.2.1",
+            "artifactVersion": "1.3.0-alpha10",
             "description": "Android Lifecycle Saved State",
             "name": "Saved State",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
             "uniqueId": "androidx.savedstate:savedstate-ktx",
@@ -1242,12 +1240,15 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.2.1",
+            "artifactVersion": "1.3.0-alpha10",
             "description": "Kotlin extensions for 'savedstate' artifact",
             "name": "SavedState Kotlin Extensions",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
             "uniqueId": "androidx.sqlite:sqlite-android",
@@ -1256,7 +1257,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-beta01",
+            "artifactVersion": "2.5.0",
             "description": "SQLite API",
             "name": "SQLite",
             "licenses": [
@@ -1273,7 +1274,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-beta01",
+            "artifactVersion": "2.5.0",
             "description": "The implementation of SQLite library using the bundled SQLite.",
             "name": "SQLite Bundled Integration",
             "licenses": [
@@ -1290,7 +1291,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.5.0-beta01",
+            "artifactVersion": "2.5.0",
             "description": "The implementation of SQLite library using the framework code.",
             "name": "SQLite Framework Integration",
             "licenses": [
@@ -1307,12 +1308,15 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.1.1",
+            "artifactVersion": "1.2.0",
             "description": "Android App Startup Runtime",
-            "name": "Android App Startup Runtime",
+            "name": "Startup Runtime",
             "licenses": [
                 "Apache-2.0"
-            ]
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
             "uniqueId": "androidx.tracing:tracing",
@@ -1425,40 +1429,6 @@
             "artifactVersion": "1.3.0",
             "description": "WindowManager Core Library.",
             "name": "WindowManager Core",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.work:work-runtime",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.9.1",
-            "description": "Android WorkManager runtime library",
-            "name": "WorkManager Runtime",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.work:work-runtime-ktx",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.9.1",
-            "description": "Android WorkManager Kotlin Extensions",
-            "name": "WorkManager Kotlin Extensions",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1670,18 +1640,6 @@
             ]
         },
         {
-            "uniqueId": "com.google.firebase:firebase-bom",
-            "developers": [
-                
-            ],
-            "artifactVersion": "33.9.0",
-            "description": "",
-            "name": "com.google.firebase:firebase-bom",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "com.google.firebase:firebase-common",
             "developers": [
                 
@@ -1734,7 +1692,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "19.4.0",
+            "artifactVersion": "19.4.2",
             "description": "",
             "name": "com.google.firebase:firebase-crashlytics",
             "licenses": [
@@ -1830,7 +1788,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.0.8",
+            "artifactVersion": "2.1.0",
             "description": "",
             "name": "com.google.firebase:firebase-sessions",
             "licenses": [
@@ -1856,7 +1814,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.5.0",
+            "artifactVersion": "12.1.0-rc01",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "licenses": [
@@ -1968,7 +1926,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -1982,7 +1940,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -1996,7 +1954,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -2010,7 +1968,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -2024,7 +1982,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -2038,7 +1996,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -2052,7 +2010,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.2",
+            "artifactVersion": "4.0.4",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -2066,7 +2024,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-auth",
             "licenses": [
@@ -2080,7 +2038,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-cio",
             "licenses": [
@@ -2094,7 +2052,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-content-negotiation",
             "licenses": [
@@ -2108,7 +2066,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-core",
             "licenses": [
@@ -2122,7 +2080,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-encoding",
             "licenses": [
@@ -2136,7 +2094,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-client-logging",
             "licenses": [
@@ -2150,7 +2108,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-events",
             "licenses": [
@@ -2164,7 +2122,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-http-cio",
             "licenses": [
@@ -2178,7 +2136,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-http",
             "licenses": [
@@ -2192,7 +2150,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-io",
             "licenses": [
@@ -2206,7 +2164,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-network",
             "licenses": [
@@ -2220,7 +2178,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-network-tls",
             "licenses": [
@@ -2234,7 +2192,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization",
             "licenses": [
@@ -2248,7 +2206,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization-kotlinx-json",
             "licenses": [
@@ -2262,7 +2220,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-serialization-kotlinx",
             "licenses": [
@@ -2276,7 +2234,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-sse",
             "licenses": [
@@ -2290,7 +2248,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-utils",
             "licenses": [
@@ -2304,7 +2262,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-websocket-serialization",
             "licenses": [
@@ -2318,7 +2276,7 @@
                     "name": "Jetbrains Team"
                 }
             ],
-            "artifactVersion": "3.1.1",
+            "artifactVersion": "3.1.2",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "name": "ktor-websockets",
             "licenses": [
@@ -2382,7 +2340,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.1.0-alpha02",
+            "artifactVersion": "1.0.1",
             "description": "Provides Bundle in Kotlin Multiplatform projects",
             "name": "androidx.core:core-bundle",
             "licenses": [
@@ -2396,37 +2354,9 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.1.0-alpha02",
+            "artifactVersion": "1.0.1",
             "description": "Provides Bundle in Kotlin Multiplatform projects",
             "name": "androidx.core:core-bundle",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.androidx.core:core-uri-android",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.1.0-alpha02",
-            "description": "Provides Uri in Kotlin Multiplatform projects",
-            "name": "androidx.core:core-uri",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.androidx.core:core-uri-android-debug",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.1.0-alpha02",
-            "description": "Provides Uri in Kotlin Multiplatform projects",
-            "name": "androidx.core:core-uri",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -2438,9 +2368,65 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.7.3",
+            "artifactVersion": "1.8.0-beta02",
             "description": "Resources for Compose JB",
             "name": "Resources for Compose JB",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.ui:ui-backhandler-android",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.0-beta02",
+            "description": "Provides BackHandler in Compose Multiplatform projects",
+            "name": "Compose Multiplatform BackHandler",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.ui:ui-backhandler-android-debug",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.0-beta02",
+            "description": "Provides BackHandler in Compose Multiplatform projects",
+            "name": "Compose Multiplatform BackHandler",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-android-extensions-runtime",
+            "developers": [
+                {
+                    "name": "Kotlin Team"
+                }
+            ],
+            "artifactVersion": "1.9.22",
+            "description": "Kotlin Android Extensions Runtime",
+            "name": "Kotlin Android Extensions Runtime",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-parcelize-runtime",
+            "developers": [
+                {
+                    "name": "Kotlin Team"
+                }
+            ],
+            "artifactVersion": "1.9.22",
+            "description": "Runtime library for the Parcelize compiler plugin",
+            "name": "Parcelize Runtime",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -2466,7 +2452,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "licenses": [
@@ -2508,7 +2494,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Kotlin Test Multiplatform library",
             "name": "Kotlin Test",
             "licenses": [
@@ -2522,23 +2508,9 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.1.10",
+            "artifactVersion": "2.1.20",
             "description": "Kotlin Test library support for JUnit",
             "name": "Kotlin Test Junit",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.kotlinx:atomicfu-jvm",
-            "developers": [
-                {
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "0.23.2",
-            "description": "AtomicFU utilities",
-            "name": "atomicfu",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -2564,23 +2536,9 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.10.1",
+            "artifactVersion": "1.10.2",
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-android",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-bom",
-            "developers": [
-                {
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.10.1",
-            "description": "Coroutines support libraries for Kotlin",
-            "name": "kotlinx-coroutines-bom",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -2592,7 +2550,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.10.1",
+            "artifactVersion": "1.10.2",
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-core",
             "licenses": [
@@ -2606,7 +2564,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.10.1",
+            "artifactVersion": "1.10.2",
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-play-services",
             "licenses": [
@@ -2620,7 +2578,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.10.1",
+            "artifactVersion": "1.10.2",
             "description": "Coroutines support libraries for Kotlin",
             "name": "kotlinx-coroutines-slf4j",
             "licenses": [
@@ -2670,27 +2628,13 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-bom",
-            "developers": [
-                {
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.8.0",
-            "description": "Kotlin multiplatform serialization runtime library",
-            "name": "kotlinx-serialization-bom",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm",
             "developers": [
                 {
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.8.1",
             "description": "Kotlin multiplatform serialization runtime library",
             "name": "kotlinx-serialization-core",
             "licenses": [
@@ -2704,7 +2648,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.8.1",
             "description": "Kotlin multiplatform serialization runtime library",
             "name": "kotlinx-serialization-json-io",
             "licenses": [
@@ -2718,7 +2662,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.8.1",
             "description": "Kotlin multiplatform serialization runtime library",
             "name": "kotlinx-serialization-json",
             "licenses": [
@@ -2758,7 +2702,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.0.16",
+            "artifactVersion": "2.0.17",
             "description": "The slf4j API",
             "name": "SLF4J API Module",
             "licenses": [
@@ -2773,7 +2717,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.0.16",
+            "artifactVersion": "2.0.17",
             "description": "SLF4J NOP Provider",
             "name": "SLF4J NOP Provider",
             "licenses": [
