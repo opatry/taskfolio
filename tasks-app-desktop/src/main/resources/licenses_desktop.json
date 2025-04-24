@@ -216,7 +216,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "11.6.3",
+            "artifactVersion": "12.1.0-rc01",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "licenses": [
@@ -1283,20 +1283,6 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-bom",
-            "developers": [
-                {
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.10.2",
-            "description": "Coroutines support libraries for Kotlin",
-            "name": "kotlinx-coroutines-bom",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
             "developers": [
                 {
@@ -1393,20 +1379,6 @@
             "artifactVersion": "0.6.0",
             "description": "IO support for Kotlin",
             "name": "kotlinx-io-core",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-bom",
-            "developers": [
-                {
-                    "name": "JetBrains Team"
-                }
-            ],
-            "artifactVersion": "1.8.1",
-            "description": "Kotlin multiplatform serialization runtime library",
-            "name": "kotlinx-serialization-bom",
             "licenses": [
                 "Apache-2.0"
             ]
