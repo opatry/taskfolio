@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -33,6 +33,8 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.MyBackHandler
@@ -54,8 +56,13 @@ fun TaskListsMasterDetail(
     // rememberListDetailPaneScaffoldNavigator, under the hood uses rememberSaveable with it
     // we use the TaskListUIModel.id as the key to save the state of the navigator
     val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
+    val scope = rememberCoroutineScope()
 
-    MyBackHandler(navigator::canNavigateBack, navigator::navigateBack)
+    MyBackHandler(navigator::canNavigateBack) {
+        scope.launch {
+            navigator.navigateBack()
+        }
+    }
 
     ListDetailPaneScaffold(
         directive = navigator.scaffoldDirective,
@@ -76,10 +83,12 @@ fun TaskListsMasterDetail(
                     else -> Row {
                         TaskListsColumn(
                             list,
-                            selectedItem = list.find { it.id == navigator.currentDestination?.content },
+                            selectedItem = list.find { it.id == navigator.currentDestination?.contentKey },
                             onNewTaskList = { onNewTaskList("") },
                             onItemClick = { taskList ->
-                                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id)
+                                scope.launch {
+                                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id)
+                                }
                             }
                         )
 
@@ -93,14 +102,16 @@ fun TaskListsMasterDetail(
         detailPane = {
             AnimatedPane {
                 val list = taskLists
-                val selectedList = list?.find { it.id == navigator.currentDestination?.content }
+                val selectedList = list?.find { it.id == navigator.currentDestination?.contentKey }
                 when {
                     list == null -> LoadingPane()
                     selectedList == null -> NoTaskListSelectedEmptyState()
                     else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
-                        when (targetedTaskList) {
-                            null -> navigator.navigateBack()
-                            else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id)
+                        scope.launch {
+                            when (targetedTaskList) {
+                                null -> navigator.navigateBack()
+                                else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id)
+                            }
                         }
                     }
                 }
