@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -28,8 +28,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.isSuccess
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
@@ -68,8 +68,7 @@ class UserViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UserState?>(null)
-    val state: Flow<UserState?>
-        get() = _state
+    val state = _state.asStateFlow()
 
     private suspend fun fetchUserInfo(): UserInfo? {
         return try {
