@@ -1,7 +1,7 @@
 {
     "libraries": [
         {
-            "uniqueId": "androidx.annotation:annotation-jvm",
+            "uniqueId": "androidx.annotation:annotation",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -32,7 +32,7 @@
             ]
         },
         {
-            "uniqueId": "androidx.collection:collection-jvm",
+            "uniqueId": "androidx.collection:collection",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -49,13 +49,13 @@
             }
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-common-jvm",
+            "uniqueId": "androidx.lifecycle:lifecycle-common",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.8.5",
             "description": "Android Lifecycle-Common",
             "name": "Lifecycle-Common",
             "licenses": [
@@ -66,7 +66,7 @@
             }
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-runtime-desktop",
+            "uniqueId": "androidx.lifecycle:lifecycle-runtime",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -83,13 +83,13 @@
             }
         },
         {
-            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-desktop",
+            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.8.5",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -100,7 +100,7 @@
             }
         },
         {
-            "uniqueId": "androidx.room:room-common-jvm",
+            "uniqueId": "androidx.room:room-common",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -117,7 +117,7 @@
             }
         },
         {
-            "uniqueId": "androidx.room:room-runtime-jvm",
+            "uniqueId": "androidx.room:room-runtime",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -134,24 +134,7 @@
             }
         },
         {
-            "uniqueId": "androidx.sqlite:sqlite-bundled-jvm",
-            "developers": [
-                {
-                    "name": "The Android Open Source Project"
-                }
-            ],
-            "artifactVersion": "2.5.0",
-            "description": "The implementation of SQLite library using the bundled SQLite.",
-            "name": "SQLite Bundled Integration",
-            "licenses": [
-                "Apache-2.0"
-            ],
-            "organization": {
-                "name": "The Android Open Source Project"
-            }
-        },
-        {
-            "uniqueId": "androidx.sqlite:sqlite-jvm",
+            "uniqueId": "androidx.sqlite:sqlite",
             "developers": [
                 {
                     "name": "The Android Open Source Project"
@@ -168,7 +151,24 @@
             }
         },
         {
-            "uniqueId": "co.touchlab:stately-concurrency-jvm",
+            "uniqueId": "androidx.sqlite:sqlite-bundled",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.5.0",
+            "description": "The implementation of SQLite library using the bundled SQLite.",
+            "name": "SQLite Bundled Integration",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "co.touchlab:stately-concurrency",
             "developers": [
                 {
                     "name": "Kevin Galligan"
@@ -182,41 +182,13 @@
             ]
         },
         {
-            "uniqueId": "co.touchlab:stately-concurrent-collections-jvm",
-            "developers": [
-                {
-                    "name": "Kevin Galligan"
-                }
-            ],
-            "artifactVersion": "2.1.0",
-            "description": "Multithreaded Kotlin Multiplatform Utilities",
-            "name": "Stately",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "co.touchlab:stately-strict-jvm",
-            "developers": [
-                {
-                    "name": "Kevin Galligan"
-                }
-            ],
-            "artifactVersion": "2.1.0",
-            "description": "Multithreaded Kotlin Multiplatform Utilities",
-            "name": "Stately",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "com.mikepenz:aboutlibraries-core-jvm",
+            "uniqueId": "com.mikepenz:aboutlibraries-core",
             "developers": [
                 {
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "12.1.0-rc01",
+            "artifactVersion": "12.1.0-rc02",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "licenses": [
@@ -224,7 +196,7 @@
             ]
         },
         {
-            "uniqueId": "com.squareup.okio:okio-jvm",
+            "uniqueId": "com.squareup.okio:okio",
             "developers": [
                 {
                     "name": "Square, Inc."
@@ -255,49 +227,7 @@
             }
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-compose-core-jvm",
-            "developers": [
-                {
-                    "name": "Coil Contributors"
-                }
-            ],
-            "artifactVersion": "3.1.0",
-            "description": "An image loading library for Android and Compose Multiplatform.",
-            "name": "coil-compose-core",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.coil-kt.coil3:coil-compose-jvm",
-            "developers": [
-                {
-                    "name": "Coil Contributors"
-                }
-            ],
-            "artifactVersion": "3.1.0",
-            "description": "An image loading library for Android and Compose Multiplatform.",
-            "name": "coil-compose",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.coil-kt.coil3:coil-core-jvm",
-            "developers": [
-                {
-                    "name": "Coil Contributors"
-                }
-            ],
-            "artifactVersion": "3.1.0",
-            "description": "An image loading library for Android and Compose Multiplatform.",
-            "name": "coil-core",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.coil-kt.coil3:coil-jvm",
+            "uniqueId": "io.coil-kt.coil3:coil",
             "developers": [
                 {
                     "name": "Coil Contributors"
@@ -311,7 +241,49 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-network-core-jvm",
+            "uniqueId": "io.coil-kt.coil3:coil-compose",
+            "developers": [
+                {
+                    "name": "Coil Contributors"
+                }
+            ],
+            "artifactVersion": "3.1.0",
+            "description": "An image loading library for Android and Compose Multiplatform.",
+            "name": "coil-compose",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.coil-kt.coil3:coil-compose-core",
+            "developers": [
+                {
+                    "name": "Coil Contributors"
+                }
+            ],
+            "artifactVersion": "3.1.0",
+            "description": "An image loading library for Android and Compose Multiplatform.",
+            "name": "coil-compose-core",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.coil-kt.coil3:coil-core",
+            "developers": [
+                {
+                    "name": "Coil Contributors"
+                }
+            ],
+            "artifactVersion": "3.1.0",
+            "description": "An image loading library for Android and Compose Multiplatform.",
+            "name": "coil-core",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.coil-kt.coil3:coil-network-core",
             "developers": [
                 {
                     "name": "Coil Contributors"
@@ -325,7 +297,7 @@
             ]
         },
         {
-            "uniqueId": "io.coil-kt.coil3:coil-network-ktor3-jvm",
+            "uniqueId": "io.coil-kt.coil3:coil-network-ktor3",
             "developers": [
                 {
                     "name": "Coil Contributors"
@@ -339,7 +311,7 @@
             ]
         },
         {
-            "uniqueId": "io.insert-koin:koin-compose-jvm",
+            "uniqueId": "io.insert-koin:koin-core",
             "developers": [
                 {
                     "name": "Arnaud Giuliani"
@@ -353,49 +325,7 @@
             ]
         },
         {
-            "uniqueId": "io.insert-koin:koin-compose-viewmodel-jvm",
-            "developers": [
-                {
-                    "name": "Arnaud Giuliani"
-                }
-            ],
-            "artifactVersion": "4.0.4",
-            "description": "KOIN - Kotlin simple Dependency Injection Framework",
-            "name": "Koin",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.insert-koin:koin-core-jvm",
-            "developers": [
-                {
-                    "name": "Arnaud Giuliani"
-                }
-            ],
-            "artifactVersion": "4.0.4",
-            "description": "KOIN - Kotlin simple Dependency Injection Framework",
-            "name": "Koin",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.insert-koin:koin-core-viewmodel-jvm",
-            "developers": [
-                {
-                    "name": "Arnaud Giuliani"
-                }
-            ],
-            "artifactVersion": "4.0.4",
-            "description": "KOIN - Kotlin simple Dependency Injection Framework",
-            "name": "Koin",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.ktor:ktor-client-auth-jvm",
+            "uniqueId": "io.ktor:ktor-client-auth",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -409,7 +339,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-cio-jvm",
+            "uniqueId": "io.ktor:ktor-client-cio",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -423,7 +353,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-content-negotiation-jvm",
+            "uniqueId": "io.ktor:ktor-client-content-negotiation",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -437,7 +367,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-core-jvm",
+            "uniqueId": "io.ktor:ktor-client-core",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -451,7 +381,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-encoding-jvm",
+            "uniqueId": "io.ktor:ktor-client-encoding",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -465,7 +395,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-client-logging-jvm",
+            "uniqueId": "io.ktor:ktor-client-logging",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -479,7 +409,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-events-jvm",
+            "uniqueId": "io.ktor:ktor-events",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -493,21 +423,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-http-cio-jvm",
-            "developers": [
-                {
-                    "name": "Jetbrains Team"
-                }
-            ],
-            "artifactVersion": "3.1.2",
-            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
-            "name": "ktor-http-cio",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.ktor:ktor-http-jvm",
+            "uniqueId": "io.ktor:ktor-http",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -521,7 +437,21 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-io-jvm",
+            "uniqueId": "io.ktor:ktor-http-cio",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.2",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-http-cio",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-io",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -535,7 +465,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-network-jvm",
+            "uniqueId": "io.ktor:ktor-network",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -549,7 +479,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-network-tls-jvm",
+            "uniqueId": "io.ktor:ktor-network-tls",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -563,7 +493,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-serialization-jvm",
+            "uniqueId": "io.ktor:ktor-serialization",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -577,21 +507,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-serialization-kotlinx-json-jvm",
-            "developers": [
-                {
-                    "name": "Jetbrains Team"
-                }
-            ],
-            "artifactVersion": "3.1.2",
-            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
-            "name": "ktor-serialization-kotlinx-json",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "io.ktor:ktor-serialization-kotlinx-jvm",
+            "uniqueId": "io.ktor:ktor-serialization-kotlinx",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -605,7 +521,21 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-server-cio-jvm",
+            "uniqueId": "io.ktor:ktor-serialization-kotlinx-json",
+            "developers": [
+                {
+                    "name": "Jetbrains Team"
+                }
+            ],
+            "artifactVersion": "3.1.2",
+            "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
+            "name": "ktor-serialization-kotlinx-json",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.ktor:ktor-server-cio",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -633,7 +563,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-server-html-builder-jvm",
+            "uniqueId": "io.ktor:ktor-server-html-builder",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -647,7 +577,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-server-status-pages-jvm",
+            "uniqueId": "io.ktor:ktor-server-status-pages",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -661,7 +591,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-sse-jvm",
+            "uniqueId": "io.ktor:ktor-sse",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -675,7 +605,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-utils-jvm",
+            "uniqueId": "io.ktor:ktor-utils",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -689,7 +619,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-websocket-serialization-jvm",
+            "uniqueId": "io.ktor:ktor-websocket-serialization",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -703,7 +633,7 @@
             ]
         },
         {
-            "uniqueId": "io.ktor:ktor-websockets-jvm",
+            "uniqueId": "io.ktor:ktor-websockets",
             "developers": [
                 {
                     "name": "Jetbrains Team"
@@ -720,10 +650,13 @@
             "uniqueId": "org.fusesource.jansi:jansi",
             "developers": [
                 {
-                    "name": "Hiram Chirino"
+                    "name": "FuseSource Development Team"
                 },
                 {
                     "name": "Guillaume Nodet"
+                },
+                {
+                    "name": "Hiram Chirino"
                 }
             ],
             "artifactVersion": "2.4.1",
@@ -737,7 +670,7 @@
             }
         },
         {
-            "uniqueId": "org.jetbrains.androidx.core:core-bundle-desktop",
+            "uniqueId": "org.jetbrains.androidx.core:core-bundle",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -751,7 +684,35 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose-desktop",
+            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-common",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "2.8.4",
+            "description": "Android Lifecycle-Common",
+            "name": "Lifecycle-Common",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-runtime",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "2.9.0-alpha06",
+            "description": "Android Lifecycle Runtime",
+            "name": "Lifecycle Runtime",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -765,7 +726,21 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose-desktop",
+            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "2.8.3",
+            "description": "Android Lifecycle ViewModel",
+            "name": "Lifecycle ViewModel",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -779,7 +754,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate-desktop",
+            "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -793,7 +768,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.navigation:navigation-common-desktop",
+            "uniqueId": "org.jetbrains.androidx.navigation:navigation-common",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -807,7 +782,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.navigation:navigation-compose-desktop",
+            "uniqueId": "org.jetbrains.androidx.navigation:navigation-compose",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -821,7 +796,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.navigation:navigation-runtime-desktop",
+            "uniqueId": "org.jetbrains.androidx.navigation:navigation-runtime",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -835,7 +810,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.savedstate:savedstate-desktop",
+            "uniqueId": "org.jetbrains.androidx.savedstate:savedstate",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -849,7 +824,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.androidx.window:window-core-desktop",
+            "uniqueId": "org.jetbrains.androidx.window:window-core",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -863,21 +838,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.animation:animation-core-desktop",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.8.0-beta02",
-            "description": "Animation engine and animation primitives that are the building blocks of the Compose animation library",
-            "name": "Compose Animation Core",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.compose.animation:animation-desktop",
+            "uniqueId": "org.jetbrains.compose.animation:animation",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -891,7 +852,49 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.components:components-resources-desktop",
+            "uniqueId": "org.jetbrains.compose.animation:animation-core",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.0-beta02",
+            "description": "Animation engine and animation primitives that are the building blocks of the Compose animation library",
+            "name": "Compose Animation Core",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.annotation-internal:annotation",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.6.11",
+            "description": "Provides source annotations for tooling and readability.",
+            "name": "Annotation",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.collection-internal:collection",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.0-beta02",
+            "description": "Standalone efficient collections.",
+            "name": "collections",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.components:components-resources",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -905,7 +908,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.desktop:desktop-jvm",
+            "uniqueId": "org.jetbrains.compose.desktop:desktop-jvm-macos-arm64",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -919,7 +922,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.foundation:foundation-desktop",
+            "uniqueId": "org.jetbrains.compose.foundation:foundation",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -933,7 +936,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.foundation:foundation-layout-desktop",
+            "uniqueId": "org.jetbrains.compose.foundation:foundation-layout",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -947,7 +950,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.material3.adaptive:adaptive-desktop",
+            "uniqueId": "org.jetbrains.compose.material3.adaptive:adaptive",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -961,49 +964,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.material3.adaptive:adaptive-layout-desktop",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.1.0-beta02",
-            "description": "Compose Material Design Adaptive Library",
-            "name": "Material Adaptive",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.compose.material3.adaptive:adaptive-navigation-desktop",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.1.0-beta02",
-            "description": "Compose Material Design Adaptive Library",
-            "name": "Material Adaptive",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.compose.material3:material3-adaptive-navigation-suite-desktop",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.8.0-beta02",
-            "description": "Compose Material Design Adaptive Navigation Suite Library",
-            "name": "Material Adaptive Navigation Suite",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.compose.material3:material3-desktop",
+            "uniqueId": "org.jetbrains.compose.material3:material3",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1017,7 +978,21 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.material:material-desktop",
+            "uniqueId": "org.jetbrains.compose.material3:material3-adaptive-navigation-suite",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.0-beta02",
+            "description": "Compose Material Design Adaptive Navigation Suite Library",
+            "name": "Material Adaptive Navigation Suite",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.material:material",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1031,7 +1006,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.material:material-icons-core-desktop",
+            "uniqueId": "org.jetbrains.compose.material:material-icons-core",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1045,7 +1020,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.material:material-ripple-desktop",
+            "uniqueId": "org.jetbrains.compose.material:material-ripple",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1059,7 +1034,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.runtime:runtime-desktop",
+            "uniqueId": "org.jetbrains.compose.runtime:runtime",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1073,7 +1048,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.runtime:runtime-saveable-desktop",
+            "uniqueId": "org.jetbrains.compose.runtime:runtime-saveable",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1087,21 +1062,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-backhandler-desktop",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.8.0-beta02",
-            "description": "Provides BackHandler in Compose Multiplatform projects",
-            "name": "Compose Multiplatform BackHandler",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.compose.ui:ui-desktop",
+            "uniqueId": "org.jetbrains.compose.ui:ui",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1115,7 +1076,21 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-geometry-desktop",
+            "uniqueId": "org.jetbrains.compose.ui:ui-backhandler",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.0-beta02",
+            "description": "Provides BackHandler in Compose Multiplatform projects",
+            "name": "Compose Multiplatform BackHandler",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.ui:ui-geometry",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1129,7 +1104,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-graphics-desktop",
+            "uniqueId": "org.jetbrains.compose.ui:ui-graphics",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1143,7 +1118,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-text-desktop",
+            "uniqueId": "org.jetbrains.compose.ui:ui-text",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1157,7 +1132,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-tooling-preview-desktop",
+            "uniqueId": "org.jetbrains.compose.ui:ui-tooling-preview",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1171,7 +1146,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-unit-desktop",
+            "uniqueId": "org.jetbrains.compose.ui:ui-unit",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1185,7 +1160,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-util-desktop",
+            "uniqueId": "org.jetbrains.compose.ui:ui-util",
             "developers": [
                 {
                     "name": "Compose Multiplatform Team"
@@ -1227,6 +1202,20 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-common",
+            "developers": [
+                {
+                    "name": "Kotlin Team"
+                }
+            ],
+            "artifactVersion": "2.1.20",
+            "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
+            "name": "Kotlin Stdlib Common",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
             "developers": [
                 {
@@ -1255,7 +1244,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:atomicfu-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:atomicfu",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1269,7 +1258,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-collections-immutable",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1283,7 +1272,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-coroutines-core",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1325,7 +1314,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-datetime-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-datetime",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1339,7 +1328,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-html-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-html",
             "developers": [
                 {
                     "name": "Sergey Mashkov"
@@ -1356,7 +1345,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-bytestring",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1370,7 +1359,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-core-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-io-core",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1384,7 +1373,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-core",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1398,7 +1387,7 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-json-io-jvm",
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-serialization-json-io",
             "developers": [
                 {
                     "name": "JetBrains Team"
@@ -1421,6 +1410,20 @@
             "artifactVersion": "1.8.1",
             "description": "Kotlin multiplatform serialization runtime library",
             "name": "kotlinx-serialization-json",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.skiko:skiko",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "0.9.4",
+            "description": "Kotlin Skia bindings",
+            "name": "Skiko MPP",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -1484,7 +1487,9 @@
         {
             "uniqueId": "org.slf4j:slf4j-api",
             "developers": [
-                
+                {
+                    "name": "Ceki Gulcu"
+                }
             ],
             "artifactVersion": "2.0.17",
             "description": "The slf4j API",
@@ -1499,7 +1504,9 @@
         {
             "uniqueId": "org.slf4j:slf4j-nop",
             "developers": [
-                
+                {
+                    "name": "Ceki Gulcu"
+                }
             ],
             "artifactVersion": "2.0.17",
             "description": "SLF4J NOP Provider",
