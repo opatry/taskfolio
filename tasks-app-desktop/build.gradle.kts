@@ -153,21 +153,21 @@ aboutLibraries {
         fetchRemoteFunding = false
         // no need of BOM
         includePlatform = false
-        android {
-            registerAndroidTasks = false
-        }
-        export {
-            outputPath = file("${projectDir}/src/main/resources/licenses_desktop.json")
-            excludeFields = setOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
-            prettyPrint = true
-        }
-        license {
-            strictMode = StrictMode.FAIL
-            allowedLicenses = setOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
-        }
-        library {
-            duplicationMode = DuplicateMode.MERGE
-            duplicationRule = DuplicateRule.SIMPLE
-        }
+    }
+    android {
+        registerAndroidTasks = false
+    }
+    export {
+        outputPath = file("${projectDir}/src/main/resources/licenses_desktop.json")
+        excludeFields = setOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
+        prettyPrint = true
+    }
+    license {
+        strictMode = StrictMode.FAIL
+        allowedLicenses = setOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
+    }
+    library {
+        duplicationMode = DuplicateMode.MERGE
+        duplicationRule = DuplicateRule.SIMPLE
     }
 }
