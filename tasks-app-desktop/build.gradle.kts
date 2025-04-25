@@ -144,16 +144,15 @@ compose.desktop {
 
 aboutLibraries {
     // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
-    // - `./gradlew :tasks-app-desktop:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/resources`
+    // - `./gradlew :tasks-app-desktop:exportLibraryDefinitions`
     // - the resulting file can for example be added as part of the SCM
     collect {
-        // Define the path configuration files are located in. E.g. additional libraries, licenses to add to the target .json
-        // Warning: Do not use the parent folder of a module as path (see https://github.com/mikepenz/AboutLibraries/issues/936)
         configPath = file("$rootDir/license_config")
         offlineMode = true
         fetchRemoteLicense = true
         fetchRemoteFunding = false
-        includePlatform = true
+        // no need of BOM
+        includePlatform = false
         android {
             registerAndroidTasks = false
         }
