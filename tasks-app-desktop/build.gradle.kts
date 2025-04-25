@@ -146,19 +146,29 @@ aboutLibraries {
     // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
     // - `./gradlew :tasks-app-desktop:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/resources`
     // - the resulting file can for example be added as part of the SCM
-    registerAndroidTasks = false
-    outputFileName = "licenses_desktop.json"
-    // Define the path configuration files are located in. E.g. additional libraries, licenses to add to the target .json
-    // Warning: Do not use the parent folder of a module as path (see https://github.com/mikepenz/AboutLibraries/issues/936)
-    configPath = "license_config"
-    offlineMode = true
-    fetchRemoteLicense = true
-    fetchRemoteFunding = false
-    excludeFields = arrayOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
-    includePlatform = true
-    strictMode = StrictMode.FAIL
-    allowedLicenses = arrayOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
-    duplicationMode = DuplicateMode.LINK
-    duplicationRule = DuplicateRule.SIMPLE
-    prettyPrint = true
+    collect {
+        // Define the path configuration files are located in. E.g. additional libraries, licenses to add to the target .json
+        // Warning: Do not use the parent folder of a module as path (see https://github.com/mikepenz/AboutLibraries/issues/936)
+        configPath = file("$rootDir/license_config")
+        offlineMode = true
+        fetchRemoteLicense = true
+        fetchRemoteFunding = false
+        includePlatform = true
+        android {
+            registerAndroidTasks = false
+        }
+        export {
+            outputPath = file("${projectDir}/src/main/resources/licenses_desktop.json")
+            excludeFields = setOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
+            prettyPrint = true
+        }
+        license {
+            strictMode = StrictMode.FAIL
+            allowedLicenses = setOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
+        }
+        library {
+            duplicationMode = DuplicateMode.LINK
+            duplicationRule = DuplicateRule.SIMPLE
+        }
+    }
 }
