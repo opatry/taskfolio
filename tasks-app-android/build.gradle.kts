@@ -192,14 +192,14 @@ aboutLibraries {
             outputPath = file("${projectDir}/src/main/assets/licenses_android.json")
             excludeFields = setOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
             prettyPrint = true
+            // see available variants: ./gradlew tasks-app-android:outgoingVariants | grep Variant
+            exportVariant = "storeRelease"
         }
         license {
             strictMode = StrictMode.FAIL
             allowedLicenses = setOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
         }
         library {
-            // see available variants: ./gradlew tasks-app-android:outgoingVariants | grep Variant
-            filterVariants = setOf("storeRelease")
             duplicationMode = DuplicateMode.LINK
             duplicationRule = DuplicateRule.SIMPLE
         }
