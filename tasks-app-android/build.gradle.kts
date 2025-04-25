@@ -200,7 +200,7 @@ aboutLibraries {
             allowedLicenses = setOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
         }
         library {
-            duplicationMode = DuplicateMode.LINK
+            duplicationMode = DuplicateMode.MERGE
             duplicationRule = DuplicateRule.SIMPLE
         }
     }
