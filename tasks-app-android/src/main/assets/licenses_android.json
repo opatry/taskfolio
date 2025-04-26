@@ -1615,7 +1615,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "19.4.2",
+            "artifactVersion": "19.4.3",
             "description": "",
             "name": "com.google.firebase:firebase-crashlytics",
             "licenses": [
@@ -1711,7 +1711,7 @@
             "developers": [
                 
             ],
-            "artifactVersion": "2.1.0",
+            "artifactVersion": "2.1.1",
             "description": "",
             "name": "com.google.firebase:firebase-sessions",
             "licenses": [
