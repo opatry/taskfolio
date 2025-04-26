@@ -159,12 +159,12 @@ aboutLibraries {
     }
     export {
         outputPath = file("${projectDir}/src/main/resources/licenses_desktop.json")
-        excludeFields = setOf("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
+        excludeFields.addAll("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
         prettyPrint = true
     }
     license {
         strictMode = StrictMode.FAIL
-        allowedLicenses = setOf("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
+        allowedLicenses.addAll("Apache-2.0", "asdkl", "MIT", "EPL-1.0", "BSD-3-Clause")
     }
     library {
         duplicationMode = DuplicateMode.MERGE
