@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -41,8 +41,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -63,6 +61,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.component.MyBackHandler
+import net.opatry.tasks.app.ui.icon.CheckCircle
+import net.opatry.tasks.app.ui.icon.MaterialSymbols
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.about_screen_app_version_subtitle
 import net.opatry.tasks.resources.about_screen_credits_item
@@ -177,7 +177,7 @@ private fun AppIcon() {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            Icons.Outlined.CheckCircle,
+            MaterialSymbols.CheckCircle,
             null,
             Modifier.fillMaxSize(.7f),
             tint = Color(0xFF81FFDE)
