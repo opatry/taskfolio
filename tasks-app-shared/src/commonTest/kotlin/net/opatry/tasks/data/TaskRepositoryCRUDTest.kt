@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -29,6 +29,7 @@ import net.opatry.tasks.data.util.runTaskRepositoryTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 private suspend fun TaskRepository.createAndGetTaskList(title: String): TaskListDataModel {
@@ -57,8 +58,9 @@ class TaskRepositoryCRUDTest {
         repository.createTaskList("My tasks")
 
         val taskLists = repository.getTaskLists().firstOrNull()
-        assertEquals(1, taskLists?.size)
-        assertEquals("My tasks", taskLists?.first()?.title)
+        assertNotNull(taskLists)
+        assertEquals(1, taskLists.size)
+        assertEquals("My tasks", taskLists.first().title)
     }
 
     @Test
@@ -67,7 +69,8 @@ class TaskRepositoryCRUDTest {
 
         repository.renameTaskList(taskList.id, "My renamed list")
         val taskListRenamed = repository.getTaskLists().firstOrNull()?.firstOrNull()
-        assertEquals("My renamed list", taskListRenamed?.title, "Updated name is invalid")
+        assertNotNull(taskListRenamed)
+        assertEquals("My renamed list", taskListRenamed.title, "Updated name is invalid")
     }
 
     @Test
@@ -76,7 +79,8 @@ class TaskRepositoryCRUDTest {
 
         repository.deleteTaskList(taskList.id)
         val taskLists = repository.getTaskLists().firstOrNull()
-        assertEquals(0, taskLists?.size, "No task list expected")
+        assertNotNull(taskLists)
+        assertEquals(0, taskLists.size, "No task list expected")
     }
 
     @Test
@@ -85,9 +89,10 @@ class TaskRepositoryCRUDTest {
 
         repository.createTask(taskList.id, "My task")
         val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
-        assertEquals(1, tasks?.size)
-        assertEquals("My task", tasks?.first()?.title)
-        assertFalse(tasks?.first()?.isCompleted ?: true)
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals("My task", tasks.first().title)
+        assertFalse(tasks.first().isCompleted)
     }
 
     @Test
@@ -96,7 +101,9 @@ class TaskRepositoryCRUDTest {
 
         repository.updateTaskTitle(task.id, "My renamed task")
         val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
-        assertEquals("My renamed task", tasks?.first()?.title)
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals("My renamed task", tasks.first().title)
     }
 
     @Test
@@ -105,7 +112,9 @@ class TaskRepositoryCRUDTest {
 
         repository.updateTaskNotes(task.id, "These are some notes")
         val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
-        assertEquals("These are some notes", tasks?.first()?.notes)
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals("These are some notes", tasks.first().notes)
     }
 
     @Test
@@ -114,7 +123,9 @@ class TaskRepositoryCRUDTest {
 
         repository.toggleTaskCompletionState(task.id)
         val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
-        assertTrue(tasks?.first()?.isCompleted ?: false)
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertTrue(tasks.first().isCompleted)
     }
 
     @Test
@@ -123,6 +134,7 @@ class TaskRepositoryCRUDTest {
 
         repository.deleteTask(task.id)
         val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
-        assertEquals(0, tasks?.size, "Task should have been deleted")
+        assertNotNull(tasks)
+        assertEquals(0, tasks.size, "Task should have been deleted")
     }
 }

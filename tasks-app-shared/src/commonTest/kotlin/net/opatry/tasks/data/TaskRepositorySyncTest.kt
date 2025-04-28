@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -51,16 +51,17 @@ class TaskRepositorySyncTest {
             assertContentEquals(listOf("list", "list"), tasksApi.requests)
 
             val taskLists = repository.getTaskLists().firstOrNull()
-            assertEquals(2, taskLists?.size)
-            assertContentEquals(listOf("My tasks", "Other tasks"), taskLists?.map(TaskListDataModel::title))
+            assertNotNull(taskLists)
+            assertEquals(2, taskLists.size)
+            assertContentEquals(listOf("My tasks", "Other tasks"), taskLists.map(TaskListDataModel::title))
 
-            val firstTaskListTasks = taskLists?.get(0)?.tasks
-            assertEquals(1, firstTaskListTasks?.size)
-            assertEquals("First task TODO", firstTaskListTasks?.firstOrNull()?.title)
+            val firstTaskListTasks = taskLists[0].tasks
+            assertEquals(1, firstTaskListTasks.size)
+            assertEquals("First task TODO", firstTaskListTasks.firstOrNull()?.title)
 
-            val secondTaskListTasks = taskLists?.get(1)?.tasks
-            assertEquals(1, secondTaskListTasks?.size)
-            assertEquals("Another task", secondTaskListTasks?.firstOrNull()?.title)
+            val secondTaskListTasks = taskLists[1].tasks
+            assertEquals(1, secondTaskListTasks.size)
+            assertEquals("Another task", secondTaskListTasks.firstOrNull()?.title)
         }
     }
 
