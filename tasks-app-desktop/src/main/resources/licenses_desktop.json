@@ -844,7 +844,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose animation library",
             "name": "Compose Animation",
             "licenses": [
@@ -858,7 +858,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Animation engine and animation primitives that are the building blocks of the Compose animation library",
             "name": "Compose Animation Core",
             "licenses": [
@@ -886,7 +886,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Standalone efficient collections.",
             "name": "collections",
             "licenses": [
@@ -900,7 +900,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Resources for Compose JB",
             "name": "Resources for Compose JB",
             "licenses": [
@@ -914,7 +914,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose Desktop",
             "name": "Compose Desktop",
             "licenses": [
@@ -928,7 +928,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Higher level abstractions of the Compose UI primitives. This library is design system agnostic, providing the high-level building blocks for both application and design-system developers",
             "name": "Compose Foundation",
             "licenses": [
@@ -942,7 +942,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose layout implementations",
             "name": "Compose Layouts",
             "licenses": [
@@ -956,7 +956,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.1.0-beta02",
+            "artifactVersion": "1.1.0-rc01",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
@@ -970,7 +970,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose Material You Design Components library",
             "name": "Compose Material3 Components",
             "licenses": [
@@ -984,7 +984,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose Material Design Adaptive Navigation Suite Library",
             "name": "Material Adaptive Navigation Suite",
             "licenses": [
@@ -998,23 +998,9 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose Material Design Components library",
             "name": "Compose Material Components",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.compose.material:material-icons-core",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.6.11",
-            "description": "Compose Material Design core icons. This module contains the most commonly used set of Material icons.",
-            "name": "Compose Material Icons Core",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -1026,7 +1012,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Material ripple used to build interactive components",
             "name": "Compose Material Ripple",
             "licenses": [
@@ -1040,7 +1026,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Tree composition support for code generated by the Compose compiler plugin and corresponding public API",
             "name": "Compose Runtime",
             "licenses": [
@@ -1054,7 +1040,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose components that allow saving and restoring the local ui state",
             "name": "Compose Saveable",
             "licenses": [
@@ -1068,7 +1054,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose UI primitives. This library contains the primitives that form the Compose UI Toolkit, such as drawing, measurement and layout.",
             "name": "Compose UI primitives",
             "licenses": [
@@ -1082,7 +1068,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Provides BackHandler in Compose Multiplatform projects",
             "name": "Compose Multiplatform BackHandler",
             "licenses": [
@@ -1096,7 +1082,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose classes related to dimensions without units",
             "name": "Compose Geometry",
             "licenses": [
@@ -1110,7 +1096,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose graphics",
             "name": "Compose Graphics",
             "licenses": [
@@ -1124,7 +1110,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose Text primitives and utilities",
             "name": "Compose UI Text",
             "licenses": [
@@ -1138,7 +1124,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose tooling library API. This library provides the API required to declare @Preview composables in user apps.",
             "name": "Compose UI Preview Tooling",
             "licenses": [
@@ -1152,7 +1138,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Compose classes for simple units",
             "name": "Compose Unit",
             "licenses": [
@@ -1166,7 +1152,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.8.0-beta02",
+            "artifactVersion": "1.8.0-rc01",
             "description": "Internal Compose utilities used by other modules",
             "name": "Compose Util",
             "licenses": [
@@ -1197,20 +1183,6 @@
             "artifactVersion": "2.1.20",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-common",
-            "developers": [
-                {
-                    "name": "Kotlin Team"
-                }
-            ],
-            "artifactVersion": "2.1.20",
-            "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
-            "name": "Kotlin Stdlib Common",
             "licenses": [
                 "Apache-2.0"
             ]
