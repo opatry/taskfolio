@@ -11,7 +11,7 @@ cd "${origin}/.."
 
 for module in "tasks-app-desktop" "tasks-app-android"; do
   step "Updating credits for ${GREEN_BOLD}:${module}${RESET}"
-  rm -rf "${module}/build/resources/main/"licences_*.json
+  find "${module}" -name "licenses*.json" -delete
   ./gradlew ":${module}:exportLibraryDefinitions"
   step_done
 done
