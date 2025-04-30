@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -28,17 +28,19 @@ import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.TaskList
 import java.net.ConnectException
-import java.util.concurrent.atomic.AtomicLong
+import kotlin.concurrent.atomics.AtomicLong
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
+@OptIn(ExperimentalAtomicApi::class)
 class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
-    private val taskListId = AtomicLong()
+    private val taskListId = AtomicLong(0)
     private val storage = mutableMapOf<String, TaskList>()
 
     init {
         storage += initialTaskLists.map { title ->
             TaskList(
                 kind = ResourceType.TaskList,
-                id = taskListId.incrementAndGet().toString(),
+                id = taskListId.addAndFetch(1).toString(),
                 etag = "etag",
                 title = title,
                 updatedDate = Clock.System.now(),
@@ -78,7 +80,7 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
         return handleRequest("insert") {
             val newTaskList = TaskList(
                 kind = ResourceType.TaskList,
-                id = taskListId.incrementAndGet().toString(),
+                id = taskListId.addAndFetch(1).toString(),
                 etag = "etag",
                 title = taskList.title,
                 updatedDate = Clock.System.now(),
