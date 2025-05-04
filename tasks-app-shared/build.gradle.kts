@@ -102,13 +102,6 @@ kotlin {
             implementation(projects.lucideIcons)
         }
 
-        // FIXME temporary workaround, SQLite bundled metadata is broken between alpha13 and beta01
-        //  explicit Jvm dependency to be removed once beta02 is out
-        //  see https://issuetracker.google.com/issues/396148592
-        jvmMain.dependencies {
-            implementation("androidx.sqlite:sqlite-jvm:${libs.versions.sqlite.get()}")
-        }
-
         commonTest.dependencies {
             implementation(kotlin("test"))
 
