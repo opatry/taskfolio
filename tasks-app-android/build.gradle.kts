@@ -136,7 +136,7 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.android) {
-        because("requires Dispatchers.Main & co at runtime for Jvm")
+        because("requires Dispatchers.Main & co at runtime for Android")
         // java.lang.IllegalStateException: Module with the Main dispatcher is missing. Add dependency providing the Main dispatcher, e.g. 'kotlinx-coroutines-android' and ensure it has the same version as 'kotlinx-coroutines-core'
         // see also https://github.com/JetBrains/compose-jb/releases/tag/v1.1.1
     }
