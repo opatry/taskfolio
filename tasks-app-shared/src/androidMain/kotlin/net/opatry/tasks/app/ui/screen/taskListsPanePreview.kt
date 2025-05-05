@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -20,38 +20,43 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.tooling
+package net.opatry.tasks.app.ui.screen
 
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import net.opatry.tasks.app.ui.theme.TaskfolioTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
-@Retention(AnnotationRetention.BINARY)
-@Target(
-    AnnotationTarget.ANNOTATION_CLASS,
-    AnnotationTarget.FUNCTION
-)
-//@Preview(
-//    name = "Light",
-//    widthDp = 400,
-//    heightDp = 600,
-//    showBackground = true,
-//    uiMode = UI_MODE_NIGHT_NO or UI_MODE_TYPE_NORMAL,
-//    device = Devices.NEXUS_6)
-//@Preview(
-//    name = "Night",
-//    widthDp = 400,
-//    heightDp = 600,
-//    showBackground = true,
-//    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
-//    device = Devices.NEXUS_6)
-annotation class TaskfolioPreview
 
 @Composable
-fun TaskfolioThemedPreview(content: @Composable () -> Unit) {
-    TaskfolioTheme {
-        Surface {
-            content()
+private fun TaskListRowScaffold(
+    title: String = "My task list",
+    isSelected: Boolean = false
+) {
+    TaskListRow(
+        TaskListUIModel(
+            id = 0L,
+            title = title,
+            "TODO DATE",
+        ),
+        isSelected = isSelected,
+        onClick = {}
+    )
+}
+
+@PreviewLightDark
+@Composable
+private fun TaskRowValuesPreview() {
+    TaskfolioThemedPreview {
+        Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TaskListRowScaffold("This is a task list with a very very very long name")
+            TaskListRowScaffold("My selected task list", isSelected = true)
+            TaskListRowScaffold()
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -36,6 +36,7 @@ import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
@@ -77,10 +78,9 @@ class MainActivity : AppCompatActivity() {
                             TasksApp(aboutApp, userViewModel, tasksViewModel)
                         }
 
-                        UserState.Newcomer -> AuthorizationScreen(
-                            onSkip = userViewModel::skipSignIn,
-                            onSuccess = userViewModel::signIn,
-                        )
+                        UserState.Newcomer -> AuthorizationScreen(userViewModel::skipSignIn) {
+                            AuthorizeGoogleTasksButton(onSuccess = userViewModel::signIn)
+                        }
                     }
                 }
             }

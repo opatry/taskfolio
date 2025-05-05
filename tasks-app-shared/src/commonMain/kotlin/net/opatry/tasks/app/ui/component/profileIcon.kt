@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -56,6 +55,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import coil3.compose.AsyncImage
+import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.tasks.app.ui.UserState
 import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.resources.Res
@@ -67,17 +67,46 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ProfileIcon(viewModel: UserViewModel) {
     val userState by viewModel.state.collectAsState(null)
-
     var showUserMenu by remember { mutableStateOf(false) }
 
+    ProfileIcon(
+        userState = userState,
+        showUserMenu = showUserMenu,
+        onExpand = {
+            showUserMenu = true
+        },
+        onCollapse = {
+            showUserMenu = false
+        },
+        onSignIn = {
+            viewModel.signIn(it)
+            showUserMenu = false
+        },
+        onSignOut = {
+            viewModel.signOut()
+            showUserMenu = false
+        },
+    )
+}
+
+@Composable
+fun ProfileIcon(
+    userState: UserState?,
+    showUserMenu: Boolean = false,
+    onExpand: () -> Unit = {},
+    onCollapse: () -> Unit = {},
+    onSignIn: (GoogleAuthenticator.OAuthToken) -> Unit = {},
+    onSignOut: () -> Unit = {},
+) {
+
     IconButton(
-        onClick = { showUserMenu = true },
+        onClick = onExpand,
         enabled = !showUserMenu && userState != null
     ) {
         Crossfade(targetState = userState, label = "avatar_crossfade") { state ->
             Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
                 when (state) {
-                    null -> CircularProgressIndicator(strokeWidth = 1.dp, color = LocalContentColor.current)
+                    null -> LoadingIndicator(color = LocalContentColor.current)
                     is UserState.Newcomer,
                     is UserState.Unsigned -> Icon(LucideIcons.CircleUserRound, null)
 
@@ -99,7 +128,7 @@ fun ProfileIcon(viewModel: UserViewModel) {
                 AnimatedVisibility(showUserMenu) {
                     // FIXME sticks to window right edge, how to offset it on the left?
                     //  negative offset doesn't work, alignment doesn't help either
-                    Popup(onDismissRequest = { showUserMenu = false }) {
+                    Popup(onDismissRequest = onCollapse) {
                         Surface(
                             shape = MaterialTheme.shapes.medium,
                             shadowElevation = 4.dp
@@ -121,10 +150,7 @@ fun ProfileIcon(viewModel: UserViewModel) {
 
                                         Spacer(Modifier.size(8.dp))
                                         Button(
-                                            onClick = {
-                                                viewModel.signOut()
-                                                showUserMenu = false
-                                            },
+                                            onClick = onSignOut,
                                             modifier = Modifier.align(Alignment.CenterHorizontally)
                                         ) {
                                             // TODO confirmation dialog?
@@ -141,10 +167,7 @@ fun ProfileIcon(viewModel: UserViewModel) {
                                         Spacer(Modifier.size(8.dp))
                                         AuthorizeGoogleTasksButton(
                                             Modifier.align(Alignment.CenterHorizontally),
-                                            onSuccess = { token ->
-                                                viewModel.signIn(token)
-                                                showUserMenu = false
-                                            }
+                                            onSuccess = onSignIn,
                                         )
                                     }
 

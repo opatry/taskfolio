@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -25,11 +25,9 @@ package net.opatry.tasks.app.ui.screen
 import ArrowLeft
 import LucideIcons
 import SquareArrowOutUpRight
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -57,7 +55,6 @@ import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Developer
 import com.mikepenz.aboutlibraries.entity.Library
-import com.mikepenz.aboutlibraries.entity.License
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.opatry.tasks.resources.Res
@@ -97,12 +94,15 @@ fun CreditsScreenTopAppBar(onBack: () -> Unit) {
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CreditsScreenContent(librariesJsonProvider: suspend () -> String, modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
-
     val aboutLibraries by rememberLibraries(librariesJsonProvider)
+    CreditsScreenContent(aboutLibraries, modifier, uriHandler::openUri)
+}
+
+@Composable
+fun CreditsScreenContent(aboutLibraries: Libs?, modifier: Modifier = Modifier, onLicenseClick: (String) -> Unit) {
     val libraryGroups by remember(aboutLibraries) {
         derivedStateOf {
             aboutLibraries?.libraries
@@ -125,14 +125,14 @@ fun CreditsScreenContent(librariesJsonProvider: suspend () -> String, modifier: 
                 LibraryAuthorsRow(authors ?: stringResource(Res.string.credits_screen_license_unknown_authors))
             }
             items(libs, Library::uniqueId) { lib ->
-                LibraryRow(lib, uriHandler::openUri)
+                LibraryRow(lib, onLicenseClick)
             }
         }
     }
 }
 
 @Composable
-private fun LibraryAuthorsRow(authors: String) {
+internal fun LibraryAuthorsRow(authors: String) {
     Text(
         authors,
         modifier = Modifier
@@ -144,9 +144,8 @@ private fun LibraryAuthorsRow(authors: String) {
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun LibraryRow(lib: Library, onLicenseClick: (String) -> Unit) {
+internal fun LibraryRow(lib: Library, onLicenseClick: (String) -> Unit) {
     ListItem(
         headlineContent = { Text(lib.name) },
         supportingContent = {
@@ -160,7 +159,7 @@ private fun LibraryRow(lib: Library, onLicenseClick: (String) -> Unit) {
                 }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     lib.licenses.forEach { license ->
-                        LicenseChip(license) {
+                        LicenseChip(license.name) {
                             license.url?.let { onLicenseClick(it) }
                         }
                     }
@@ -176,12 +175,12 @@ private fun LibraryRow(lib: Library, onLicenseClick: (String) -> Unit) {
 }
 
 @Composable
-private fun LicenseChip(license: License, onClick: () -> Unit) {
+internal fun LicenseChip(licenseName: String, onClick: () -> Unit) {
     AssistChip(
         onClick = onClick,
         label = {
             Text(
-                license.name,
+                licenseName,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.secondary
             )

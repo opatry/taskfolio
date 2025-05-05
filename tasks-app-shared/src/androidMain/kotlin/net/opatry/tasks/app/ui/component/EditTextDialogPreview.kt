@@ -22,18 +22,24 @@
 
 package net.opatry.tasks.app.ui.component
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
-
+@PreviewLightDark
 @Composable
-fun LoadingPane() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        LoadingIndicator(Modifier.size(24.dp))
+private fun EditTextDialogPreview() {
+    TaskfolioThemedPreview(Modifier.size(500.dp, 300.dp)) {
+        EditTextDialog(
+            onDismissRequest = {},
+            validateLabel = "OK",
+            onValidate = {},
+            dialogTitle = "My property",
+            initialText = "My value",
+            allowBlank = true,
+        )
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -30,9 +30,9 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,12 +44,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.TasksScopes
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.onboarding_screen_authorize_cta
 import org.jetbrains.compose.resources.stringResource
@@ -59,8 +61,8 @@ import org.koin.compose.koinInject
 @Composable
 actual fun AuthorizeGoogleTasksButton(
     modifier: Modifier,
-    onSuccess: (GoogleAuthenticator.OAuthToken
-) -> Unit) {
+    onSuccess: (GoogleAuthenticator.OAuthToken) -> Unit
+) {
     val coroutineScope = rememberCoroutineScope()
 
     val context = LocalContext.current
@@ -96,39 +98,48 @@ actual fun AuthorizeGoogleTasksButton(
         }
     }
 
+    AuthorizeButton(modifier, ongoingAuth, error) {
+        ongoingAuth = true
+        coroutineScope.launch {
+            runAuthFlow(
+                authenticator,
+                null,
+                onAuth = { result ->
+                    val pendingIntent = result.pendingIntent
+                    if (pendingIntent != null) {
+                        startForResult.launch(IntentSenderRequest.Builder(pendingIntent).build())
+                    } else {
+                        error = "No pending intent in auth result"
+                        ongoingAuth = false
+                    }
+                },
+                onSuccess = onSuccess,
+                onError = { e ->
+                    error = e.message
+                    ongoingAuth = false
+                }
+            )
+        }
+    }
+}
+
+@Composable
+internal fun AuthorizeButton(
+    modifier: Modifier,
+    ongoingAuth: Boolean,
+    error: String?,
+    onClick: () -> Unit
+) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Button(
-            onClick = {
-                ongoingAuth = true
-                coroutineScope.launch {
-                    runAuthFlow(
-                        authenticator,
-                        null,
-                        onAuth = { result ->
-                            val pendingIntent = result.pendingIntent
-                            if (pendingIntent != null) {
-                                startForResult.launch(IntentSenderRequest.Builder(pendingIntent).build())
-                            } else {
-                                error = "No pending intent in auth result"
-                                ongoingAuth = false
-                            }
-                        },
-                        onSuccess = onSuccess,
-                        onError = { e ->
-                            error = e.message
-                            ongoingAuth = false
-                        }
-                    )
-                }
-            },
+            onClick = onClick,
             enabled = !ongoingAuth
         ) {
             Box(modifier, contentAlignment = Alignment.Center) {
                 AnimatedContent(ongoingAuth, label = "authorize_button_content") { ongoing ->
-                    if (ongoing) {
-                        CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
-                    } else {
-                        Text(stringResource(Res.string.onboarding_screen_authorize_cta))
+                    when {
+                        ongoing -> LoadingIndicator(Modifier.size(24.dp))
+                        else -> Text(stringResource(Res.string.onboarding_screen_authorize_cta))
                     }
                 }
             }
@@ -164,5 +175,44 @@ suspend fun runAuthFlow(
         }
     } catch (e: Exception) {
         onError(e)
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun ButtonUIPreview() {
+    TaskfolioThemedPreview {
+        AuthorizeButton(
+            modifier = Modifier.padding(16.dp),
+            ongoingAuth = false,
+            error = null,
+            onClick = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun ButtonUIErrorPreview() {
+    TaskfolioThemedPreview {
+        AuthorizeButton(
+            modifier = Modifier.padding(16.dp),
+            ongoingAuth = false,
+            error = "Something went wrong",
+            onClick = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun ButtonUILoadingPreview() {
+    TaskfolioThemedPreview {
+        AuthorizeButton(
+            modifier = Modifier.padding(16.dp),
+            ongoingAuth = true,
+            error = null,
+            onClick = {},
+        )
     }
 }

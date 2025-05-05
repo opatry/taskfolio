@@ -22,18 +22,30 @@
 
 package net.opatry.tasks.app.ui.component
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import LucideIcons
+import Pen
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
-
+@PreviewLightDark
 @Composable
-fun LoadingPane() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        LoadingIndicator(Modifier.size(24.dp))
+private fun RowWithIconPreview() {
+    TaskfolioThemedPreview {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            RowWithIcon("Edit", LucideIcons.Pen)
+            RowWithIcon("Hide")
+        }
     }
 }
