@@ -20,20 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.component
+package net.opatry.tasks.app.ui.screen
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import net.opatry.tasks.app.ui.component.AuthorizeButton
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
-
+@PreviewLightDark
 @Composable
-fun LoadingPane() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        LoadingIndicator(Modifier.size(24.dp))
+private fun AuthorizationScreenPreview() {
+    TaskfolioThemedPreview {
+        AuthorizationScreen(onSkip = {}) {
+            AuthorizeButton(
+                modifier = Modifier,
+                ongoingAuth = false,
+                error = "Maybe some error",
+                onClick = {},
+            )
+        }
     }
 }

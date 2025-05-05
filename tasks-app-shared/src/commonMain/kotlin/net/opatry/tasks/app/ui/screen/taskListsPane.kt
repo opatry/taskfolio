@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -25,11 +25,9 @@ package net.opatry.tasks.app.ui.screen
 import CircleFadingPlus
 import LucideIcons
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -54,8 +52,6 @@ import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.TASK_LIST_ROW
-import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
-import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_add_task_list_cta
 import org.jetbrains.compose.resources.stringResource
@@ -66,7 +62,6 @@ object TaskListsPaneTestTag {
     const val TASK_LIST_ROW = "TASK_LIST_ROW"
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TaskListsColumn(
     taskLists: List<TaskListUIModel>,
@@ -133,32 +128,5 @@ fun TaskListRow(
                 containerColor = cellBackground
             )
         )
-    }
-}
-
-@Composable
-private fun TaskListRowScaffold(
-    title: String = "My task list",
-    isSelected: Boolean = false
-) {
-    TaskListRow(
-        TaskListUIModel(
-            id = 0L,
-            title = title,
-            "TODO DATE",
-        ),
-        isSelected = isSelected,
-        onClick = {}
-    )
-}
-
-@TaskfolioPreview
-@Composable
-private fun TaskRowValuesPreview() {
-    TaskfolioThemedPreview {
-        Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            TaskListRowScaffold("This is a task list with a very very very long name")
-            TaskListRowScaffold(isSelected = true)
-        }
     }
 }

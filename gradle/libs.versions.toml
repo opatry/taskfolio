@@ -10,6 +10,7 @@ coroutines = "1.10.2"
 ktor = "3.1.2"
 activity-compose = "1.11.0-rc01"
 compose-plugin = "1.8.0-rc01"
+compose-ui-preview = "1.8.0"
 compose-m3-adaptive = "1.1.0-rc01"
 room = "2.7.1"
 sqlite = "2.5.0"
@@ -78,6 +79,9 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "about-libraries" }
 
 androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
+
+androidx-ui-tooling-preview-android = { module = "androidx.compose.ui:ui-tooling-preview-android", version.ref = "compose-ui-preview" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-ui-preview" }
 
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]

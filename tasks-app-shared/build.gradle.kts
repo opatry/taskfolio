@@ -57,6 +57,10 @@ kotlin {
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.play.services.auth)
+
+            // FIXME debug deps?
+            implementation(libs.androidx.ui.tooling.preview.android)
+            implementation(libs.androidx.ui.tooling)
         }
 
         jvmMain.dependencies {
@@ -74,6 +78,8 @@ kotlin {
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+
+            implementation(compose.preview)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

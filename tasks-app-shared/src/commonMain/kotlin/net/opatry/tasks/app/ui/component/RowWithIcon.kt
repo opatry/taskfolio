@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -22,10 +22,7 @@
 
 package net.opatry.tasks.app.ui.component
 
-import LucideIcons
-import Pen
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -37,8 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
-import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 
 @Composable
@@ -61,17 +56,5 @@ fun RowWithIcon(icon: (@Composable () -> Unit)? = null, spacerSize: Dp = 24.dp, 
             Spacer(Modifier.size(spacerSize))
         }
         content()
-    }
-}
-
-
-@TaskfolioPreview
-@Composable
-private fun RowWithIconPreview() {
-    TaskfolioThemedPreview {
-        Column {
-            RowWithIcon("Edit", LucideIcons.Pen)
-            RowWithIcon("Hide")
-        }
     }
 }

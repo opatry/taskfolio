@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -101,7 +101,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -110,8 +109,6 @@ import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import net.opatry.tasks.app.ui.TaskListsViewModel
@@ -139,8 +136,6 @@ import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_MENU_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_NOTES
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
-import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
-import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
@@ -917,54 +912,6 @@ internal fun CompletedTaskRow(
 
         IconButton(onClick = { onAction(TaskAction.Delete) }, Modifier.testTag(COMPLETED_TASK_DELETE_ICON)) {
             Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
-        }
-    }
-}
-
-@Composable
-private fun TaskRowScaffold(
-    title: String = "My task",
-    notes: String = "",
-    dueDate: LocalDate? = Clock.System.todayIn(TimeZone.currentSystemDefault()),
-    isCompleted: Boolean = false
-) {
-    RemainingTaskRow(
-        emptyList(),
-        TaskUIModel(
-            id = 0L,
-            title = title,
-            notes = notes,
-            dueDate = dueDate,
-            isCompleted = isCompleted
-        )
-    ) {}
-}
-
-@TaskfolioPreview
-@Composable
-private fun TaskRowDatesPreview() {
-    TaskfolioThemedPreview {
-        Column {
-            TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(180, DateTimeUnit.DAY))
-            TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(3, DateTimeUnit.DAY))
-            TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(1, DateTimeUnit.DAY))
-            TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()))
-            TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(1, DateTimeUnit.DAY))
-            TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(10, DateTimeUnit.DAY))
-            TaskRowScaffold(dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(500, DateTimeUnit.DAY))
-        }
-    }
-}
-
-@TaskfolioPreview
-@Composable
-private fun TaskRowValuesPreview() {
-    TaskfolioThemedPreview {
-        Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            TaskRowScaffold(dueDate = null)
-            TaskRowScaffold(notes = "This is some details")
-            TaskRowScaffold(notes = "This is some details about the task\nsdfsdfsd sdfsdf sdf sdfsd f\ns fsdfsd fsdfdsf f\n", dueDate = null)
-            TaskRowScaffold(title = "My completed task", notes = "This is some details", isCompleted = true)
         }
     }
 }

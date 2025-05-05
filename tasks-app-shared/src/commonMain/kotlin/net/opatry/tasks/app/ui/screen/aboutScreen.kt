@@ -93,18 +93,19 @@ fun AboutScreen(aboutApp: AboutApp) {
         currentDestination = AboutScreenDestination.About
     }
 
-    Scaffold(topBar = {
-        when (currentDestination) {
-            AboutScreenDestination.Credits -> CreditsScreenTopAppBar {
-                currentDestination = AboutScreenDestination.About
+    Scaffold(
+        topBar = {
+            when (currentDestination) {
+                AboutScreenDestination.About -> AboutScreenTopAppBar(aboutApp.name, aboutApp.version)
+                AboutScreenDestination.Credits -> CreditsScreenTopAppBar {
+                    currentDestination = AboutScreenDestination.About
+                }
             }
-
-            AboutScreenDestination.About -> AboutScreenTopAppBar(aboutApp.name, aboutApp.version)
         }
-    }) { innerPadding ->
+    ) { innerPadding ->
         Box(Modifier.padding(innerPadding)) {
             when (currentDestination) {
-                AboutScreenDestination.About -> AboutScreenContent(aboutApp) { destination ->
+                AboutScreenDestination.About -> AboutScreenContent { destination ->
                     currentDestination = destination
                 }
 
@@ -119,7 +120,7 @@ private const val TASKFOLIO_GITHUB_URL = "https://github.com/opatry/taskfolio"
 private const val TASKFOLIO_PRIVACY_POLICY_URL = "https://opatry.github.io/taskfolio/privacy-policy"
 
 @Composable
-fun AboutScreenContent(aboutApp: AboutApp, onNavigate: (AboutScreenDestination) -> Unit) {
+fun AboutScreenContent(onNavigate: (AboutScreenDestination) -> Unit) {
     val uriHandler = LocalUriHandler.current
 
     LazyColumn {

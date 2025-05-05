@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -87,7 +86,7 @@ actual fun AuthorizeGoogleTasksButton(
             Box(modifier, contentAlignment = Alignment.Center) {
                 AnimatedContent(ongoingAuth, label = "authorize_button_content") { ongoing ->
                     if (ongoing) {
-                        CircularProgressIndicator(Modifier.size(24.dp), strokeWidth = 1.dp)
+                        LoadingIndicator(Modifier.size(24.dp))
                     } else {
                         Text(stringResource(Res.string.onboarding_screen_authorize_cta))
                     }

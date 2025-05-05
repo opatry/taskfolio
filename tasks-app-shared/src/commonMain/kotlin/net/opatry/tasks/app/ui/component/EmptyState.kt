@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -22,12 +22,8 @@
 
 package net.opatry.tasks.app.ui.component
 
-import CalendarOff
-import CircleOff
-import LucideIcons
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,8 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import net.opatry.tasks.app.ui.tooling.TaskfolioPreview
-import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 
 @Composable
@@ -63,30 +57,5 @@ fun EmptyState(
         if (description != null) {
             Text(description, style = MaterialTheme.typography.bodyMedium)
         }
-    }
-}
-
-@TaskfolioPreview
-@Composable
-private fun EmptyStatePreview() {
-    TaskfolioThemedPreview {
-        EmptyState(
-            icon = LucideIcons.CircleOff,
-            title = "No task",
-            description = "Create a new task to get started",
-            modifier = Modifier.fillMaxSize(),
-        )
-    }
-}
-
-@TaskfolioPreview
-@Composable
-private fun EmptyStateNoDescriptionPreview() {
-    TaskfolioThemedPreview {
-        EmptyState(
-            icon = LucideIcons.CalendarOff,
-            title = "No scheduled task",
-            modifier = Modifier.fillMaxSize(),
-        )
     }
 }
