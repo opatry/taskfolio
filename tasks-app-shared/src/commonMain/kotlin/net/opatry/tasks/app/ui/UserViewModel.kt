@@ -79,7 +79,7 @@ class UserViewModel(
             } else {
                 null
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // most likely no network
             null
         }

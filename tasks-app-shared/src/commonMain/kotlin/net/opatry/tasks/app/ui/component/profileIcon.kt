@@ -43,7 +43,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.tasks.app.ui.UserState
@@ -66,7 +66,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProfileIcon(viewModel: UserViewModel) {
-    val userState by viewModel.state.collectAsState(null)
+    val userState by viewModel.state.collectAsStateWithLifecycle(null)
     var showUserMenu by remember { mutableStateOf(false) }
 
     ProfileIcon(

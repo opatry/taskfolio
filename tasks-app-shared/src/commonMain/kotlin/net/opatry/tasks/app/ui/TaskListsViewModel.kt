@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -105,7 +105,7 @@ class TaskListsViewModel(
                 while (autoRefreshIsEnabled) {
                     try {
                         taskRepository.sync()
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         // most likely no network
                     }
                     if (autoRefreshIsEnabled) {
