@@ -956,7 +956,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.1.0-rc01",
+            "artifactVersion": "1.1.0",
             "description": "Compose Material Design Adaptive Library",
             "name": "Material Adaptive",
             "licenses": [
