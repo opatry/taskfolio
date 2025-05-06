@@ -32,19 +32,17 @@ jobs:
           fetch-depth: 1
 
       # allows Bundler gem installation (used for fastlane gem)
-      - name: 💎 Setup Ruby 3.0
+      - name: 💎 Setup Ruby 3.1
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0
+          ruby-version: 3.1
+          bundler-cache: true
 
       - name: 🐙 Setup Github Pages
         uses: actions/configure-pages@v5
 
       - name: 🧪 Build with Jekyll
         run: |
-              gem install bundler
-              bundle config set --local path .bundler
-              bundle install --jobs "$(nproc)"
               cd website
               bundle exec jekyll build
 
