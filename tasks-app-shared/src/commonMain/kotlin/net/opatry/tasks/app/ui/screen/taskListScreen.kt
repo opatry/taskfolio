@@ -31,9 +31,9 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.component.LoadingPane
@@ -50,7 +50,7 @@ fun TaskListsMasterDetail(
     viewModel: TaskListsViewModel,
     onNewTaskList: (String) -> Unit
 ) {
-    val taskLists by viewModel.taskLists.collectAsState(null)
+    val taskLists by viewModel.taskLists.collectAsStateWithLifecycle(null)
 
     // need to store a saveable (Serializable/Parcelable) object
     // rememberListDetailPaneScaffoldNavigator, under the hood uses rememberSaveable with it
