@@ -1,0 +1,223 @@
+/*
+ * Copyright (c) 2025 Olivier Patry
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package net.opatry.tasks.ui
+
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Instant
+import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.google.profile.UserInfoApi
+import net.opatry.google.profile.model.UserInfo
+import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.TokenCache
+import net.opatry.tasks.app.ui.UserState
+import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.data.UserDao
+import net.opatry.tasks.data.entity.UserEntity
+import net.opatry.test.MainDispatcherRule
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.BDDMockito.then
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.seconds
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(MockitoJUnitRunner::class)
+class UserViewModelTest {
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    @Mock
+    private lateinit var userDao: UserDao
+
+    @Mock
+    private lateinit var credentialsStorage: CredentialsStorage
+
+    @Mock
+    private lateinit var userInfoApi: UserInfoApi
+
+    @Mock
+    private lateinit var clockNow: () -> Instant
+
+    private lateinit var viewModel: UserViewModel
+
+    @BeforeTest
+    fun setUp() {
+        viewModel = UserViewModel(
+            userDao = userDao,
+            credentialsStorage = credentialsStorage,
+            userInfoApi = userInfoApi,
+            clockNow = clockNow,
+        )
+    }
+
+    @Test
+    fun `skipSignIn updates state to Unsigned and inserts unsigned user`() = runTest {
+        viewModel.skipSignIn()
+        advanceUntilIdle()
+
+        then(userDao).should().insert(
+            UserEntity(
+                remoteId = null,
+                name = "",
+                isSignedIn = false,
+            )
+        )
+        assertEquals(UserState.Unsigned, viewModel.state.value)
+    }
+
+    @Test
+    fun `signIn stores token and updates state on successful user info fetch`() = runTest {
+        `when`(clockNow.invoke())
+            .thenReturn(Instant.fromEpochMilliseconds(42L))
+        `when`(userInfoApi.getUserInfo()).thenReturn(
+            UserInfo(
+                id = "remoteId",
+                name = "name",
+                email = "email",
+                picture = "avatarUrl",
+            )
+        )
+
+        viewModel.signIn(
+            GoogleAuthenticator.OAuthToken(
+                accessToken = "accessToken",
+                expiresIn = 10L,
+                idToken = "idToken",
+                refreshToken = "refreshToken",
+                scope = "scope",
+                tokenType = GoogleAuthenticator.OAuthToken.TokenType.Bearer,
+            )
+        )
+        advanceUntilIdle()
+
+        then(credentialsStorage).should().store(
+            TokenCache(
+                accessToken = "accessToken",
+                refreshToken = "refreshToken",
+                expirationTimeMillis = 42L + 10L.seconds.inWholeMilliseconds,
+            )
+        )
+        then(userDao).should().setSignedInUser(
+            UserEntity(
+                remoteId = "remoteId",
+                name = "name",
+                email = "email",
+                avatarUrl = "avatarUrl",
+                isSignedIn = true,
+            )
+        )
+        assertEquals(
+            UserState.SignedIn(
+                name = "name",
+                email = "email",
+                avatarUrl = "avatarUrl",
+            ),
+            viewModel.state.value
+        )
+    }
+
+    @Test
+    fun `signIn stores token but updates state to Unsigned on failed user info fetch`() = runTest {
+        `when`(clockNow.invoke())
+            .thenReturn(Instant.fromEpochMilliseconds(42L))
+        `when`(userInfoApi.getUserInfo()).thenThrow(RuntimeException("Network error"))
+
+        viewModel.signIn(
+            GoogleAuthenticator.OAuthToken(
+                accessToken = "accessToken",
+                expiresIn = 10L,
+                idToken = "idToken",
+                refreshToken = "refreshToken",
+                scope = "scope",
+                tokenType = GoogleAuthenticator.OAuthToken.TokenType.Bearer,
+            )
+        )
+        advanceUntilIdle()
+
+        then(credentialsStorage).should().store(
+            TokenCache(
+                accessToken = "accessToken",
+                refreshToken = "refreshToken",
+                expirationTimeMillis = 42L + 10L.seconds.inWholeMilliseconds,
+            )
+        )
+        assertEquals(UserState.Unsigned, viewModel.state.value)
+    }
+
+    @Test
+    fun `signOut clears token clears signed in status and updates state to Unsigned`() = runTest {
+        viewModel.signOut()
+        advanceUntilIdle()
+
+        then(credentialsStorage).should().store(TokenCache())
+        then(userDao).should().clearAllSignedInStatus()
+        assertEquals(UserState.Unsigned, viewModel.state.value)
+    }
+
+    @Test
+    fun `refreshUserState updates state to Newcomer when no current user exists`() = runTest {
+        `when`(userDao.getCurrentUser()).thenReturn(null)
+
+        viewModel.refreshUserState()
+        advanceUntilIdle()
+
+        assertEquals(UserState.Newcomer, viewModel.state.value)
+    }
+
+    @Test
+    fun `refreshUserState updates state to Unsigned when current user has no remote ID`() = runTest {
+        `when`(userDao.getCurrentUser()).thenReturn(
+            UserEntity(
+                remoteId = null,
+                name = "name",
+            )
+        )
+
+        viewModel.refreshUserState()
+        advanceUntilIdle()
+
+        assertEquals(UserState.Unsigned, viewModel.state.value)
+    }
+
+    @Test
+    fun `refreshUserState updates state to SignedIn when current user has a remote ID`() = runTest {
+        `when`(userDao.getCurrentUser()).thenReturn(
+            UserEntity(
+                remoteId = "remoteId",
+                name = "name",
+            )
+        )
+
+        viewModel.refreshUserState()
+        advanceUntilIdle()
+
+        assertEquals(UserState.SignedIn("name"), viewModel.state.value)
+    }
+}
