@@ -24,15 +24,12 @@ package net.opatry.tasks.app.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
@@ -64,7 +61,7 @@ private fun UserInfo.asUserEntity(isSignedIn: Boolean): UserEntity {
 class UserViewModel(
     private val userDao: UserDao,
     private val credentialsStorage: CredentialsStorage,
-    private val httpClient: HttpClient,
+    private val userInfoApi: UserInfoApi,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UserState?>(null)
@@ -72,13 +69,7 @@ class UserViewModel(
 
     private suspend fun fetchUserInfo(): UserInfo? {
         return try {
-            val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
-
-            if (response.status.isSuccess()) {
-                response.body()
-            } else {
-                null
-            }
+            userInfoApi.getUserInfo()
         } catch (_: Exception) {
             // most likely no network
             null

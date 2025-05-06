@@ -20,31 +20,26 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.google.profile
 
-import net.opatry.google.profile.HttpUserInfoApi
-import net.opatry.google.profile.UserInfoApi
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.UserViewModel
-import net.opatry.tasks.data.TaskRepository
-import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModel
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
+import net.opatry.google.profile.model.UserInfo
 
+class HttpUserInfoApi(
+    private val httpClient: HttpClient,
+) : UserInfoApi {
+    override suspend fun getUserInfo(): UserInfo {
+        val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
 
-val tasksAppModule = module {
-    singleOf(::TaskRepository)
-
-    viewModel {
-        TaskListsViewModel(get())
-    }
-
-    single<UserInfoApi> {
-        HttpUserInfoApi(get(named(HttpClientName.Tasks)))
-    }
-
-    viewModel {
-        UserViewModel(get(), get(), get())
+        return if (response.status.isSuccess()) {
+            response.body()
+        } else {
+            throw ClientRequestException(response, response.bodyAsText())
+        }
     }
 }
