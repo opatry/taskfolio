@@ -72,7 +72,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle Runtime",
             "name": "Lifecycle Runtime",
             "licenses": [
@@ -92,6 +92,23 @@
             "artifactVersion": "2.8.5",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-savedstate",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.9.0-beta01",
+            "description": "Android Lifecycle ViewModel",
+            "name": "Lifecycle ViewModel with SavedState",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -126,6 +143,23 @@
             "artifactVersion": "2.7.1",
             "description": "Android Room-Runtime",
             "name": "Room-Runtime",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.savedstate:savedstate",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.3.0-beta01",
+            "description": "Android Lifecycle Saved State",
+            "name": "Saved State",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -704,7 +738,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle Runtime",
             "name": "Lifecycle Runtime",
             "licenses": [
@@ -718,7 +752,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Lifecycle",
             "name": "Lifecycle Runtime Compose",
             "licenses": [
@@ -774,7 +808,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha16",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
             "licenses": [
@@ -788,7 +822,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha16",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
             "licenses": [
@@ -802,7 +836,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha16",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
             "licenses": [
@@ -819,6 +853,20 @@
             "artifactVersion": "1.2.2",
             "description": "Android Lifecycle Saved State",
             "name": "Saved State",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.savedstate:savedstate-compose",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.3.0-beta01",
+            "description": "Compose integration with Saved State",
+            "name": "Saved State Compose",
             "licenses": [
                 "Apache-2.0"
             ]

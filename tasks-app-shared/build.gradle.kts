@@ -93,6 +93,7 @@ kotlin {
             implementation(libs.compose.m3.adaptive.navigation)
             implementation(libs.bundles.coil)
 
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.jetbrains.lifecycle.viewmodel.compose)
             implementation(libs.jetbrains.navigation.compose)
 

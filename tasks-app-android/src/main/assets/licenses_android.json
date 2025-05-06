@@ -906,7 +906,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle-Common",
             "name": "Lifecycle-Common",
             "licenses": [
@@ -923,7 +923,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle-Common for Java 8 Language",
             "name": "Lifecycle-Common for Java 8",
             "licenses": [
@@ -940,7 +940,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle LiveData Core",
             "name": "Lifecycle LiveData Core",
             "licenses": [
@@ -957,7 +957,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Kotlin extensions for 'livedata-core' artifact",
             "name": "LiveData Core Kotlin Extensions",
             "licenses": [
@@ -974,7 +974,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle Process",
             "name": "Lifecycle Process",
             "licenses": [
@@ -991,7 +991,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle Runtime",
             "name": "Lifecycle Runtime",
             "licenses": [
@@ -1008,7 +1008,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Lifecycle",
             "name": "Lifecycle Runtime Compose",
             "licenses": [
@@ -1025,7 +1025,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Kotlin extensions for 'lifecycle' artifact",
             "name": "Lifecycle Kotlin Extensions",
             "licenses": [
@@ -1042,7 +1042,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -1059,7 +1059,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Lifecycle ViewModel",
             "name": "Lifecycle ViewModel Compose",
             "licenses": [
@@ -1076,7 +1076,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Kotlin extensions for 'viewmodel' artifact",
             "name": "Lifecycle ViewModel Kotlin Extensions",
             "licenses": [
@@ -1093,7 +1093,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha12",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel with SavedState",
             "licenses": [
@@ -1124,7 +1124,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha08",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
             "licenses": [
@@ -1141,7 +1141,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha08",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
             "licenses": [
@@ -1158,7 +1158,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha08",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
             "licenses": [
@@ -1240,9 +1240,26 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.3.0-alpha10",
+            "artifactVersion": "1.3.0-beta01",
             "description": "Android Lifecycle Saved State",
             "name": "Saved State",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.savedstate:savedstate-compose",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.3.0-beta01",
+            "description": "Compose integration with Saved State",
+            "name": "Saved State Compose",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -1257,7 +1274,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.3.0-alpha10",
+            "artifactVersion": "1.3.0-beta01",
             "description": "Kotlin extensions for 'savedstate' artifact",
             "name": "SavedState Kotlin Extensions",
             "licenses": [
@@ -2225,7 +2242,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle-Common",
             "name": "Lifecycle-Common",
             "licenses": [
@@ -2239,7 +2256,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle Runtime",
             "name": "Lifecycle Runtime",
             "licenses": [
@@ -2253,7 +2270,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Lifecycle",
             "name": "Lifecycle Runtime Compose",
             "licenses": [
@@ -2267,7 +2284,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel",
             "licenses": [
@@ -2281,7 +2298,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Lifecycle ViewModel",
             "name": "Lifecycle ViewModel Compose",
             "licenses": [
@@ -2295,7 +2312,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha06",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Lifecycle ViewModel",
             "name": "Lifecycle ViewModel with SavedState",
             "licenses": [
@@ -2309,7 +2326,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha16",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
             "licenses": [
@@ -2323,7 +2340,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha16",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
             "licenses": [
@@ -2337,7 +2354,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-alpha16",
+            "artifactVersion": "2.9.0-beta01",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
             "licenses": [
@@ -2351,9 +2368,23 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.3.0-alpha06",
+            "artifactVersion": "1.3.0-beta01",
             "description": "Android Lifecycle Saved State",
             "name": "Saved State",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.savedstate:savedstate-compose",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.3.0-beta01",
+            "description": "Compose integration with Saved State",
+            "name": "Saved State Compose",
             "licenses": [
                 "Apache-2.0"
             ]

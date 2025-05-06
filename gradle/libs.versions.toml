@@ -13,6 +13,8 @@ compose-plugin = "1.8.0"
 compose-hot-reload-plugin = "1.0.0-alpha09"
 compose-ui-preview = "1.8.0"
 compose-m3-adaptive = "1.1.0"
+compose-lifecycle = "2.8.4"
+compose-navigation = "2.9.0-beta01"
 room = "2.7.1"
 sqlite = "2.5.0"
 koin = "4.0.4"
@@ -50,8 +52,9 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 
-jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.8.4" }
-jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-alpha16" }
+jetbrains-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
+jetbrains-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
+jetbrains-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
 
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core" }
