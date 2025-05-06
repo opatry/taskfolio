@@ -950,6 +950,34 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-runtime-api",
+            "developers": [
+                {
+                    "name": "JetBrains Team"
+                }
+            ],
+            "artifactVersion": "1.0.0-alpha09",
+            "description": "Compose Hot Reload implementation",
+            "name": "hot-reload-runtime-api",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-runtime-jvm",
+            "developers": [
+                {
+                    "name": "JetBrains Team"
+                }
+            ],
+            "artifactVersion": "1.0.0-alpha09",
+            "description": "Compose Hot Reload implementation",
+            "name": "hot-reload-runtime-jvm",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.compose.material3.adaptive:adaptive",
             "developers": [
                 {

@@ -31,6 +31,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.compose.hot.reload)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.android.library)
 }

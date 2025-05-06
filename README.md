@@ -109,6 +109,22 @@ and store this in `_ci/google-services.json.gpg`.
 The `decrypt_secrets.sh` will take it into account.
 </details>
 
+### Compose hot reload 🔥
+
+<details>
+<summary>See details…</summary>
+It is possible to use [Compose hot reload](https://github.com/JetBrains/compose-hot-reload) on
+desktop app by running the `:tasks-app-desktop:runHot` Gradle task.
+
+You'll see a Compose icon near the top left corner of the window.
+
+![](assets/compose-hot-reload-icon.png)
+
+When clicking on it, it will open a new window with the hot reload status.
+
+![](assets/compose-hot-reload-console.png)
+</details>
+
 ## ⚖️ License
 
 ```
