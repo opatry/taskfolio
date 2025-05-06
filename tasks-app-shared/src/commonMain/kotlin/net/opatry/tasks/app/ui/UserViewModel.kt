@@ -96,14 +96,11 @@ class UserViewModel(
                 )
             )
 
-            val userInfo = fetchUserInfo()
-            if (userInfo != null) {
+            _state.value = fetchUserInfo()?.let { userInfo ->
                 val userEntity = userInfo.asUserEntity(isSignedIn = true)
                 userDao.setSignedInUser(userEntity)
-                _state.value = UserState.SignedIn(userEntity.name, userEntity.email, userEntity.avatarUrl)
-            } else {
-                _state.value = UserState.Unsigned
-            }
+                UserState.SignedIn(userEntity.name, userEntity.email, userEntity.avatarUrl)
+            } ?: UserState.Unsigned
         }
     }
 
