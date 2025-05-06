@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui
+package net.opatry.tasks.ui.component
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
@@ -31,6 +31,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.screen.toColor
+import net.opatry.tasks.ui.screen.today
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

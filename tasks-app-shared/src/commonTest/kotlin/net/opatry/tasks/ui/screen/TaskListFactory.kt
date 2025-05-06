@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui
+package net.opatry.tasks.ui.screen
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
