@@ -19,7 +19,7 @@ room = "2.7.1"
 sqlite = "2.5.0"
 koin = "4.0.4"
 coil = "3.1.0"
-about-libraries = "12.1.1"
+about-libraries = "12.1.2"
 mockito = "5.17.0"
 
 [libraries]
