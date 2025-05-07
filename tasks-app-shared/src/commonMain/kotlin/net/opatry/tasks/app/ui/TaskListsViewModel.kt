@@ -100,7 +100,7 @@ class TaskListsViewModel(
     private var autoRefreshIsEnabled: Boolean = false
 
     fun enableAutoRefresh(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch {
             autoRefreshIsEnabled = enabled
             withContext(Dispatchers.Default) {
                 while (autoRefreshIsEnabled) {
