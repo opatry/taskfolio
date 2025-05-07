@@ -20,31 +20,10 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.google.profile
 
-import net.opatry.google.profile.HttpUserInfoApi
-import net.opatry.google.profile.UserInfoApi
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.UserViewModel
-import net.opatry.tasks.data.TaskRepository
-import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModel
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import net.opatry.google.profile.model.UserInfo
 
-
-val tasksAppModule = module {
-    singleOf(::TaskRepository)
-
-    viewModel {
-        TaskListsViewModel(get())
-    }
-
-    single<UserInfoApi> {
-        HttpUserInfoApi(get(named(HttpClientName.Tasks)))
-    }
-
-    viewModel {
-        UserViewModel(get(), get(), get())
-    }
+interface UserInfoApi {
+    suspend fun getUserInfo(): UserInfo
 }

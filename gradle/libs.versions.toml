@@ -20,6 +20,7 @@ sqlite = "2.5.0"
 koin = "4.0.4"
 coil = "3.1.0"
 about-libraries = "12.1.1"
+mockito = "5.17.0"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -84,6 +85,7 @@ about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.re
 
 androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
 
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 androidx-ui-tooling-preview-android = { module = "androidx.compose.ui:ui-tooling-preview-android", version.ref = "compose-ui-preview" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-ui-preview" }
 
@@ -100,6 +102,10 @@ ktor-client = [
 ]
 
 coil = ["coil-compose", "coil-network"]
+
+mockito = [
+    "mockito-core",
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

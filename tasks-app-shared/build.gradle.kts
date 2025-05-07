@@ -120,6 +120,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.testing)
+
+            implementation(libs.bundles.mockito)
         }
 
         jvmTest.dependencies {

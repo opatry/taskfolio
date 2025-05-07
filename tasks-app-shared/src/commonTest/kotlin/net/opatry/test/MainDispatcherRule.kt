@@ -20,31 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.test
 
-import net.opatry.google.profile.HttpUserInfoApi
-import net.opatry.google.profile.UserInfoApi
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.UserViewModel
-import net.opatry.tasks.data.TaskRepository
-import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModel
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
 
 
-val tasksAppModule = module {
-    singleOf(::TaskRepository)
-
-    viewModel {
-        TaskListsViewModel(get())
+@OptIn(ExperimentalCoroutinesApi::class)
+class MainDispatcherRule(
+    val testDispatcher: TestDispatcher = StandardTestDispatcher(),
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        Dispatchers.setMain(testDispatcher)
     }
 
-    single<UserInfoApi> {
-        HttpUserInfoApi(get(named(HttpClientName.Tasks)))
-    }
-
-    viewModel {
-        UserViewModel(get(), get(), get())
+    override fun finished(description: Description) {
+        Dispatchers.resetMain()
     }
 }

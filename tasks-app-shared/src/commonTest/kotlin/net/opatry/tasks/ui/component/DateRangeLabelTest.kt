@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui
+package net.opatry.tasks.ui.component
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.runComposeUiTest
@@ -35,6 +35,7 @@ import net.opatry.tasks.resources.task_due_date_label_today
 import net.opatry.tasks.resources.task_due_date_label_tomorrow
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
 import net.opatry.tasks.resources.task_due_date_label_yesterday
+import net.opatry.tasks.ui.screen.today
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Ignore

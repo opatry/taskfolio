@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -24,14 +24,10 @@ package net.opatry.tasks.app.di
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
+import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
-import net.opatry.tasks.app.di.authModule
-import net.opatry.tasks.app.di.dataModule
-import net.opatry.tasks.app.di.networkModule
-import net.opatry.tasks.app.di.platformModule
-import net.opatry.tasks.app.di.tasksAppModule
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.data.TaskDao
@@ -64,6 +60,7 @@ class AndroidDITest {
             injections = injectedParameters(
                 definition<HttpClient>(HttpClientEngine::class, HttpClientConfig::class),
                 definition<TaskListsViewModel>(Duration::class),
+                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
             )
         )
     }
@@ -98,7 +95,7 @@ class AndroidDITest {
             injections = injectedParameters(
                 definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class),
                 definition<TaskListsViewModel>(Duration::class),
-                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, HttpClient::class),
+                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
             )
         )
     }
