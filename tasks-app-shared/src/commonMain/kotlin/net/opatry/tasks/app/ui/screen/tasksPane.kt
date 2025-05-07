@@ -237,9 +237,9 @@ fun TaskListDetail(
                 taskOfInterest = null
                 showUndoTaskDeletionSnackbar = false
                 when (result) {
-                    SnackbarResult.Dismissed -> viewModel.confirmTaskDeletion(task)
+                    SnackbarResult.Dismissed -> viewModel.confirmTaskDeletion(task.id)
                     SnackbarResult.ActionPerformed -> {
-                        viewModel.restoreTask(task)
+                        viewModel.restoreTask(task.id)
                         snackbarHostState.showSnackbar(taskRestoredMessage, duration = SnackbarDuration.Short)
                     }
                 }
@@ -262,8 +262,8 @@ fun TaskListDetail(
                         showTaskListActions = false
                         when (action) {
                             TaskListMenuAction.Dismiss -> Unit
-                            TaskListMenuAction.SortManual -> viewModel.sortBy(taskList, TaskListSorting.Manual)
-                            TaskListMenuAction.SortDate -> viewModel.sortBy(taskList, TaskListSorting.DueDate)
+                            TaskListMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
+                            TaskListMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
                             TaskListMenuAction.Rename -> showRenameTaskListDialog = true
                             TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
                             TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
@@ -296,7 +296,7 @@ fun TaskListDetail(
                 TasksColumn(
                     taskLists,
                     taskList,
-                    onToggleCompletionState = viewModel::toggleTaskCompletionState,
+                    onToggleCompletionState = { viewModel.toggleTaskCompletionState(it.id) },
                     onEditTask = {
                         taskOfInterest = it
                         showEditTaskSheet = true
@@ -309,10 +309,10 @@ fun TaskListDetail(
                         taskOfInterest = it
                         showNewTaskSheet = true
                     },
-                    onUnindent = viewModel::unindentTask,
-                    onIndent = viewModel::indentTask,
-                    onMoveToTop = viewModel::moveToTop,
-                    onMoveToList = viewModel::moveToList,
+                    onUnindent = { viewModel.unindentTask(it.id) },
+                    onIndent = { viewModel.indentTask(it.id) },
+                    onMoveToTop = { viewModel.moveToTop(it.id) },
+                    onMoveToList = { task, taskList -> viewModel.moveToList(task.id, taskList.id) },
                     onMoveToNewList = {
                         taskOfInterest = it
                         showNewTaskListAlert = true
@@ -320,7 +320,7 @@ fun TaskListDetail(
                     onDeleteTask = {
                         taskOfInterest = it
                         showUndoTaskDeletionSnackbar = true
-                        viewModel.deleteTask(it)
+                        viewModel.deleteTask(it.id)
                     },
                 )
             }
@@ -332,7 +332,7 @@ fun TaskListDetail(
             onDismissRequest = { showRenameTaskListDialog = false },
             onValidate = { newTitle ->
                 showRenameTaskListDialog = false
-                viewModel.renameTaskList(taskList, newTitle)
+                viewModel.renameTaskList(taskList.id, newTitle)
             },
             validateLabel = stringResource(Res.string.task_list_pane_rename_dialog_cta),
             dialogTitle = stringResource(Res.string.task_list_pane_rename_dialog_title),
@@ -358,7 +358,7 @@ fun TaskListDetail(
             confirmButton = {
                 Button(onClick = {
                     showClearTaskListCompletedTasksDialog = false
-                    viewModel.clearTaskListCompletedTasks(taskList)
+                    viewModel.clearTaskListCompletedTasks(taskList.id)
                 }) {
                     Text(stringResource(Res.string.task_list_pane_clear_completed_confirm_dialog_confirm))
                 }
@@ -383,7 +383,7 @@ fun TaskListDetail(
             confirmButton = {
                 Button(onClick = {
                     showDeleteTaskListDialog = false
-                    viewModel.deleteTaskList(taskList)
+                    viewModel.deleteTaskList(taskList.id)
                     onNavigateTo(null)
                 }) {
                     Text(stringResource(Res.string.task_list_pane_delete_list_confirm_dialog_confirm))
@@ -539,12 +539,12 @@ fun TaskListDetail(
                                 showEditTaskSheet = false
 
                                 // TODO deal with due date and nested alert dialogs
-                                viewModel.updateTask(targetList, requireNotNull(task), newTitle, newNotes, task.dueDate /*FIXME*/)
+                                viewModel.updateTask(targetList.id, requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
                             } else if (showNewTaskSheet) {
                                 showNewTaskSheet = false
 
                                 onNavigateTo(targetList)
-                                viewModel.createTask(targetList, newTitle, newNotes, null /*TODO*/)
+                                viewModel.createTask(targetList.id, newTitle, newNotes, null /*TODO*/)
                             }
                         },
                         enabled = newTitle.isNotBlank()
@@ -580,7 +580,7 @@ fun TaskListDetail(
                             ?.let(Instant::fromEpochMilliseconds)
                             ?.toLocalDateTime(TimeZone.currentSystemDefault())
                             ?.date
-                        viewModel.updateTaskDueDate(task, dueDate = newDate)
+                        viewModel.updateTaskDueDate(task.id, dueDate = newDate)
                     }) {
                         Text(stringResource(Res.string.task_due_date_update_cta))
                     }

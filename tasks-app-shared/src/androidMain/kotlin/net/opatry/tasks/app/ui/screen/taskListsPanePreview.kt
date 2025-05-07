@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.model.TaskListId
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
@@ -40,7 +41,7 @@ private fun TaskListRowScaffold(
 ) {
     TaskListRow(
         TaskListUIModel(
-            id = 0L,
+            id = TaskListId(0L),
             title = title,
             "TODO DATE",
         ),

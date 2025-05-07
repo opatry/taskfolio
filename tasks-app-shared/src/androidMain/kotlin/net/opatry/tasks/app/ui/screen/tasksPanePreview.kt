@@ -36,6 +36,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
+import net.opatry.tasks.app.ui.model.TaskId
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
@@ -50,7 +51,7 @@ private fun TaskRowScaffold(
     RemainingTaskRow(
         emptyList(),
         TaskUIModel(
-            id = 0L,
+            id = TaskId(0L),
             title = title,
             notes = notes,
             dueDate = dueDate,

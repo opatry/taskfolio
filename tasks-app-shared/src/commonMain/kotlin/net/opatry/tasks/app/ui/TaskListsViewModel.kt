@@ -38,6 +38,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.app.ui.model.DateRange
+import net.opatry.tasks.app.ui.model.TaskId
+import net.opatry.tasks.app.ui.model.TaskListId
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.model.compareTo
@@ -66,7 +68,7 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
     }
 
     return TaskListUIModel(
-        id = id,
+        id = TaskListId(id),
         title = title,
         lastUpdate = lastUpdate.toString(),
         remainingTasks = taskGroups.toMap(),
@@ -77,7 +79,7 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
 
 private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
     return TaskUIModel(
-        id = id,
+        id = TaskId(id),
         title = title,
         notes = notes,
         dueDate = dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
@@ -127,32 +129,21 @@ class TaskListsViewModel(
         }
     }
 
-    fun deleteTaskList(taskList: TaskListUIModel) {
+    fun deleteTaskList(taskListId: TaskListId) {
         viewModelScope.launch {
             try {
-                taskRepository.deleteTaskList(taskList.id)
+                taskRepository.deleteTaskList(taskListId.value)
             } catch (e: Exception) {
-                println("Error while deleting task list (${taskList.id}): $e")
+                println("Error while deleting task list (${taskListId}): $e")
                 // TODO error handling
             }
         }
     }
 
-    fun renameTaskList(taskList: TaskListUIModel, newTitle: String) {
+    fun renameTaskList(taskListId: TaskListId, newTitle: String) {
         viewModelScope.launch {
             try {
-                taskRepository.renameTaskList(taskList.id, newTitle.trim())
-            } catch (e: Exception) {
-                println("Error creating task: $e")
-                // TODO error handling
-            }
-        }
-    }
-
-    fun clearTaskListCompletedTasks(taskList: TaskListUIModel) {
-        viewModelScope.launch {
-            try {
-                taskRepository.clearTaskListCompletedTasks(taskList.id)
+                taskRepository.renameTaskList(taskListId.value, newTitle.trim())
             } catch (e: Exception) {
                 println("Error creating task: $e")
                 // TODO error handling
@@ -160,10 +151,21 @@ class TaskListsViewModel(
         }
     }
 
-    fun sortBy(taskList: TaskListUIModel, sorting: TaskListSorting) {
+    fun clearTaskListCompletedTasks(taskListId: TaskListId) {
         viewModelScope.launch {
             try {
-                taskRepository.sortTasksBy(taskList.id, sorting)
+                taskRepository.clearTaskListCompletedTasks(taskListId.value)
+            } catch (e: Exception) {
+                println("Error creating task: $e")
+                // TODO error handling
+            }
+        }
+    }
+
+    fun sortBy(taskListId: TaskListId, sorting: TaskListSorting) {
+        viewModelScope.launch {
+            try {
+                taskRepository.sortTasksBy(taskListId.value, sorting)
             } catch (e: Exception) {
                 println("Error while sorting task list: $e")
                 // TODO error handling
@@ -171,10 +173,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun createTask(taskList: TaskListUIModel, title: String, notes: String = "", dueDate: LocalDate? = null) {
+    fun createTask(taskListId: TaskListId, title: String, notes: String = "", dueDate: LocalDate? = null) {
         viewModelScope.launch {
             try {
-                taskRepository.createTask(taskList.id, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
+                taskRepository.createTask(taskListId.value, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
                 println("Error while creating task: $e")
                 // TODO error handling
@@ -182,10 +184,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun deleteTask(task: TaskUIModel) {
+    fun deleteTask(taskId: TaskId) {
         viewModelScope.launch {
             try {
-                taskRepository.deleteTask(task.id)
+                taskRepository.deleteTask(taskId.value)
             } catch (e: Exception) {
                 println("Error while deleting task: $e")
                 // TODO error handling
@@ -193,14 +195,14 @@ class TaskListsViewModel(
         }
     }
 
-    fun confirmTaskDeletion(task: TaskUIModel) {
+    fun confirmTaskDeletion(taskId: TaskId) {
         // TODO(?) purge pending deletion?
     }
 
-    fun restoreTask(task: TaskUIModel) {
+    fun restoreTask(taskId: TaskId) {
         viewModelScope.launch {
             try {
-                taskRepository.restoreTask(task.id)
+                taskRepository.restoreTask(taskId.value)
             } catch (e: Exception) {
                 println("Error while restoring task: $e")
                 // TODO error handling
@@ -208,10 +210,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun toggleTaskCompletionState(task: TaskUIModel) {
+    fun toggleTaskCompletionState(taskId: TaskId) {
         viewModelScope.launch {
             try {
-                taskRepository.toggleTaskCompletionState(task.id)
+                taskRepository.toggleTaskCompletionState(taskId.value)
             } catch (e: Exception) {
                 println("Error while toggling task: $e")
                 // TODO error handling
@@ -219,12 +221,12 @@ class TaskListsViewModel(
         }
     }
 
-    fun updateTask(targetTaskList: TaskListUIModel, task: TaskUIModel, title: String, notes: String, dueDate: LocalDate?) {
+    fun updateTask(targetTaskListId: TaskListId, taskId: TaskId, title: String, notes: String, dueDate: LocalDate?) {
         viewModelScope.launch {
             try {
                 taskRepository.updateTask(
-                    targetTaskList.id,
-                    task.id,
+                    targetTaskListId.value,
+                    taskId.value,
                     title.trim(),
                     notes.trim(),
                     dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())
@@ -236,10 +238,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun updateTaskTitle(task: TaskUIModel, title: String) {
+    fun updateTaskTitle(taskId: TaskId, title: String) {
         viewModelScope.launch {
             try {
-                taskRepository.updateTaskTitle(task.id, title.trim())
+                taskRepository.updateTaskTitle(taskId.value, title.trim())
             } catch (e: Exception) {
                 println("Error while updating task title: $e")
                 // TODO error handling
@@ -247,10 +249,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun updateTaskNotes(task: TaskUIModel, notes: String) {
+    fun updateTaskNotes(taskId: TaskId, notes: String) {
         viewModelScope.launch {
             try {
-                taskRepository.updateTaskNotes(task.id, notes.trim())
+                taskRepository.updateTaskNotes(taskId.value, notes.trim())
             } catch (e: Exception) {
                 println("Error while updating task notes: $e")
                 // TODO error handling
@@ -258,10 +260,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun updateTaskDueDate(task: TaskUIModel, dueDate: LocalDate?) {
+    fun updateTaskDueDate(taskId: TaskId, dueDate: LocalDate?) {
         viewModelScope.launch {
             try {
-                taskRepository.updateTaskDueDate(task.id, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
+                taskRepository.updateTaskDueDate(taskId.value, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
                 println("Error while updating task due date: $e")
                 // TODO error handling
@@ -269,10 +271,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun unindentTask(task: TaskUIModel) {
+    fun unindentTask(taskId: TaskId) {
         viewModelScope.launch {
             try {
-                taskRepository.unindentTask(task.id)
+                taskRepository.unindentTask(taskId.value)
             } catch (e: Exception) {
                 println("Error while indenting task: $e")
                 // TODO error handling
@@ -280,10 +282,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun indentTask(task: TaskUIModel) {
+    fun indentTask(taskId: TaskId) {
         viewModelScope.launch {
             try {
-                taskRepository.indentTask(task.id)
+                taskRepository.indentTask(taskId.value)
             } catch (e: Exception) {
                 println("Error while indenting task: $e")
                 // TODO error handling
@@ -291,10 +293,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun moveToTop(task: TaskUIModel) {
+    fun moveToTop(taskId: TaskId) {
         viewModelScope.launch {
             try {
-                taskRepository.moveToTop(task.id)
+                taskRepository.moveToTop(taskId.value)
             } catch (e: Exception) {
                 println("Error while moving task: $e")
                 // TODO error handling
@@ -302,10 +304,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun moveToList(task: TaskUIModel, targetTaskList: TaskListUIModel) {
+    fun moveToList(taskId: TaskId, targetTaskListId: TaskListId) {
         viewModelScope.launch {
             try {
-                taskRepository.moveToList(task.id, targetTaskList.id)
+                taskRepository.moveToList(taskId.value, targetTaskListId.value)
             } catch (e: Exception) {
                 println("Error while moving task: $e")
                 // TODO error handling
@@ -313,10 +315,10 @@ class TaskListsViewModel(
         }
     }
 
-    fun moveToNewList(task: TaskUIModel, targetTaskListTitle: String) {
+    fun moveToNewList(taskId: TaskId, targetTaskListTitle: String) {
         viewModelScope.launch {
             try {
-                taskRepository.moveToNewList(task.id, targetTaskListTitle.trim())
+                taskRepository.moveToNewList(taskId.value, targetTaskListTitle.trim())
             } catch (e: Exception) {
                 println("Error while moving task: $e")
                 // TODO error handling

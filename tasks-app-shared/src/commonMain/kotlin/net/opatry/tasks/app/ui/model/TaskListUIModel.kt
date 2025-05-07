@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,11 @@ package net.opatry.tasks.app.ui.model
 import net.opatry.tasks.data.TaskListSorting
 
 
+@JvmInline
+value class TaskListId(val value: Long)
+
 data class TaskListUIModel(
-    val id: Long,
+    val id: TaskListId,
     val title: String,
     val lastUpdate: String,
     val remainingTasks: Map<DateRange?, List<TaskUIModel>> = emptyMap(),

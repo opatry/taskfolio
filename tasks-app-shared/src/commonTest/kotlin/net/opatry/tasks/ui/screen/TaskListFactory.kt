@@ -27,6 +27,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.char
 import kotlinx.datetime.todayIn
+import net.opatry.tasks.app.ui.model.TaskId
+import net.opatry.tasks.app.ui.model.TaskListId
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
 
@@ -39,7 +41,7 @@ fun createTaskList(
     remainingTaskCount: Int = 0,
     completedTaskCount: Int = 0,
 ) = TaskListUIModel(
-    id = TASK_LIST_ID++,
+    id = TaskListId(TASK_LIST_ID++),
     title = "Task List",
     lastUpdate = LocalDate.Format { year(); char('-'); monthNumber(); char('-'); dayOfMonth() }.format(today),
     remainingTasks = mapOf(null to List(remainingTaskCount) { createTask() }),
@@ -52,7 +54,7 @@ fun createTask(
     dueDate: LocalDate = today,
     isCompleted: Boolean = false,
 ) = TaskUIModel(
-    id = TASK_ID++,
+    id = TaskId(TASK_ID++),
     title = title,
     dueDate = dueDate,
     isCompleted = isCompleted,
