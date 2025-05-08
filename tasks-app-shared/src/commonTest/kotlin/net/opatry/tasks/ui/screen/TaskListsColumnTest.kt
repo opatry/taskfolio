@@ -34,6 +34,7 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import net.opatry.tasks.app.ui.model.TaskListId
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.screen.TaskListsColumn
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
@@ -61,7 +62,7 @@ class TaskListsColumnTest {
 
     @Test
     fun TaskListsColumn_TaskListSelection() = runComposeUiTest {
-        val taskList = TaskListUIModel(1, "Task list 1", "2024-10-16")
+        val taskList = TaskListUIModel(TaskListId(1), "Task list 1")
         var selectedList: TaskListUIModel? = null
         setContent {
             TaskListsColumn(listOf(taskList), selectedItem = null, onNewTaskList = {}, onItemClick = { selectedList = it })
@@ -77,8 +78,8 @@ class TaskListsColumnTest {
 
     @Test
     fun TaskListsColumn_SelectedTaskList() = runComposeUiTest {
-        val taskList1 = TaskListUIModel(1, "Task list 1", "2024-10-16")
-        val taskList2 = TaskListUIModel(2, "Task list 2", "2024-10-16")
+        val taskList1 = TaskListUIModel(TaskListId(1), "Task list 1")
+        val taskList2 = TaskListUIModel(TaskListId(2), "Task list 2")
         setContent {
             TaskListsColumn(listOf(taskList1, taskList2), selectedItem = taskList1, onNewTaskList = {}, onItemClick = {})
         }

@@ -20,30 +20,11 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.model
+package net.opatry
 
-import net.opatry.tasks.data.TaskListSorting
-
-
-@JvmInline
-value class TaskListId(val value: Long)
-
-data class TaskListUIModel(
-    val id: TaskListId,
-    val title: String,
-    val remainingTasks: Map<DateRange?, List<TaskUIModel>> = emptyMap(),
-    val completedTasks: List<TaskUIModel> = emptyList(),
-    val sorting: TaskListSorting = TaskListSorting.Manual,
-) {
-    fun containsTask(task: TaskUIModel, includeCompleted: Boolean = false): Boolean {
-        return allRemainingTasks.contains(task)
-                || (includeCompleted && completedTasks.contains(task))
-    }
-
-    val allRemainingTasks: List<TaskUIModel>
-        get() = remainingTasks.values.flatten()
-    val isEmpty: Boolean = allRemainingTasks.isEmpty() && completedTasks.isEmpty()
-    val hasCompletedTasks: Boolean = completedTasks.isNotEmpty()
-    val isEmptyRemainingTasksVisible: Boolean = allRemainingTasks.isEmpty() && hasCompletedTasks
-    val canDelete: Boolean = true // FIXME default list can't be deleted, how to know it?
+interface Logger {
+    fun logInfo(message: String)
+    fun logError(message: String)
+    fun logError(message: String, e: Exception)
+    fun logError(e: Exception)
 }

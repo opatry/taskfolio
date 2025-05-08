@@ -22,6 +22,8 @@
 
 package net.opatry.tasks.app.di
 
+import net.opatry.Logger
+import net.opatry.PrintLogger
 import net.opatry.google.profile.HttpUserInfoApi
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.tasks.app.ui.TaskListsViewModel
@@ -36,8 +38,15 @@ import org.koin.dsl.module
 val tasksAppModule = module {
     singleOf(::TaskRepository)
 
+    // TODO replace with a more sophisticated logger (standard & KMP compatible ideally)
+    //  On Android, should also log in Firebase Crashlytics
+    //  see #118
+    single<Logger> {
+        PrintLogger()
+    }
+
     viewModel {
-        TaskListsViewModel(get())
+        TaskListsViewModel(get(), get())
     }
 
     single<UserInfoApi> {

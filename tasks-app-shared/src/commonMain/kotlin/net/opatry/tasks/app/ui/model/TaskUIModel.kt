@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -51,8 +51,11 @@ operator fun DateRange.compareTo(other: DateRange): Int {
     }
 }
 
+@JvmInline
+value class TaskId(val value: Long)
+
 data class TaskUIModel(
-    val id: Long,
+    val id: TaskId,
     val title: String,
     val dueDate: LocalDate? = null,
     val completionDate: LocalDate? = null,

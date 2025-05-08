@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.model.TaskListId
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
@@ -54,9 +55,8 @@ private fun TaskListMenuPreview() {
                 Icon(LucideIcons.EllipsisVertical, null)
                 TaskListMenu(
                     taskList = TaskListUIModel(
-                        id = 0L,
+                        id = TaskListId(0L),
                         title = "My task list",
-                        lastUpdate = "TODO DATE",
                     ),
                     expanded = true,
                     onAction = {}

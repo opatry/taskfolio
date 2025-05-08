@@ -20,30 +20,32 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.model
+package net.opatry
 
-import net.opatry.tasks.data.TaskListSorting
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
-
-@JvmInline
-value class TaskListId(val value: Long)
-
-data class TaskListUIModel(
-    val id: TaskListId,
-    val title: String,
-    val remainingTasks: Map<DateRange?, List<TaskUIModel>> = emptyMap(),
-    val completedTasks: List<TaskUIModel> = emptyList(),
-    val sorting: TaskListSorting = TaskListSorting.Manual,
-) {
-    fun containsTask(task: TaskUIModel, includeCompleted: Boolean = false): Boolean {
-        return allRemainingTasks.contains(task)
-                || (includeCompleted && completedTasks.contains(task))
+class PrintLogger(
+    private val clockNow: () -> Instant = Clock.System::now,
+) : Logger {
+    private fun log(level: String, message: String) {
+        println("[${clockNow()}][$level] $message")
     }
 
-    val allRemainingTasks: List<TaskUIModel>
-        get() = remainingTasks.values.flatten()
-    val isEmpty: Boolean = allRemainingTasks.isEmpty() && completedTasks.isEmpty()
-    val hasCompletedTasks: Boolean = completedTasks.isNotEmpty()
-    val isEmptyRemainingTasksVisible: Boolean = allRemainingTasks.isEmpty() && hasCompletedTasks
-    val canDelete: Boolean = true // FIXME default list can't be deleted, how to know it?
+    override fun logInfo(message: String) {
+        log("info", message)
+    }
+
+    override fun logError(message: String) {
+        log("error", message)
+    }
+
+    override fun logError(message: String, e: Exception) {
+        logError(message)
+        e.printStackTrace()
+    }
+
+    override fun logError(e: Exception) {
+        logError(e.message ?: "", e)
+    }
 }

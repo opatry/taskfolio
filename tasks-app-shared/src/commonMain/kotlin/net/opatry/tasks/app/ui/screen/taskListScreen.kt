@@ -83,11 +83,11 @@ fun TaskListsMasterDetail(
                     else -> Row {
                         TaskListsColumn(
                             list,
-                            selectedItem = list.find { it.id == navigator.currentDestination?.contentKey },
+                            selectedItem = list.find { it.id.value == navigator.currentDestination?.contentKey },
                             onNewTaskList = { onNewTaskList("") },
                             onItemClick = { taskList ->
                                 scope.launch {
-                                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id)
+                                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id.value)
                                 }
                             }
                         )
@@ -102,7 +102,7 @@ fun TaskListsMasterDetail(
         detailPane = {
             AnimatedPane {
                 val list = taskLists
-                val selectedList = list?.find { it.id == navigator.currentDestination?.contentKey }
+                val selectedList = list?.find { it.id.value == navigator.currentDestination?.contentKey }
                 when {
                     list == null -> LoadingPane()
                     selectedList == null -> NoTaskListSelectedEmptyState()
@@ -110,7 +110,7 @@ fun TaskListsMasterDetail(
                         scope.launch {
                             when (targetedTaskList) {
                                 null -> navigator.navigateBack()
-                                else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id)
+                                else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id.value)
                             }
                         }
                     }
