@@ -28,6 +28,7 @@ import io.ktor.client.plugins.CurlUserAgent
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -81,6 +82,7 @@ val networkModule = module {
                     }
                 }
             }
+            install(HttpCache)
             install(Auth) {
                 bearer {
                     // TODO handle 401 (clear storage)
