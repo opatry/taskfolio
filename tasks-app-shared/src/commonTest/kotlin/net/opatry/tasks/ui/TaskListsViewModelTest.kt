@@ -31,6 +31,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import net.opatry.Logger
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.model.TaskId
 import net.opatry.tasks.app.ui.model.TaskListId
@@ -40,6 +41,7 @@ import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.test.MainDispatcherRule
 import org.junit.Rule
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -64,6 +66,9 @@ class TaskListsViewModelTest {
     @Mock
     private lateinit var taskRepository: TaskRepository
 
+    @Mock
+    private lateinit var logger: Logger
+
     private lateinit var viewModel: TaskListsViewModel
 
     @BeforeTest
@@ -71,7 +76,7 @@ class TaskListsViewModelTest {
         `when`(taskRepository.getTaskLists()).thenReturn(taskListsFlow)
 
         // ViewModel must be created **AFTER** `taskRepository.getTaskLists()` is mocked
-        viewModel = TaskListsViewModel(taskRepository)
+        viewModel = TaskListsViewModel(logger, taskRepository)
     }
 
     @Test
@@ -83,6 +88,18 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `createTaskList failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.createTaskList("tasks"))
+            .thenThrow(e)
+
+        viewModel.createTaskList("tasks")
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while creating task list", e)
+    }
+
+    @Test
     fun `createTask should update repository`() = runTest {
         val taskListId = TaskListId(100)
 
@@ -90,6 +107,18 @@ class TaskListsViewModelTest {
         advanceUntilIdle()
 
         then(taskRepository).should().createTask(100, "task")
+    }
+
+    @Test
+    fun `createTask failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.createTask(100, "task"))
+            .thenThrow(e)
+
+        viewModel.createTask(TaskListId(100), "task")
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while creating task (TaskListId(value=100))", e)
     }
 
     @Test
@@ -111,11 +140,35 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `deleteTask failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.deleteTask(100))
+            .thenThrow(e)
+
+        viewModel.deleteTask(TaskId(100))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while deleting task (TaskId(value=100))", e)
+    }
+
+    @Test
     fun `deleteTaskList should update repository`() = runTest {
         viewModel.deleteTaskList(TaskListId(1))
         advanceUntilIdle()
 
         then(taskRepository).should().deleteTaskList(1)
+    }
+
+    @Test
+    fun `deleteTaskList failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.deleteTaskList(1))
+            .thenThrow(e)
+
+        viewModel.deleteTaskList(TaskListId(1))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while deleting task list (TaskListId(value=1))", e)
     }
 
     @Test
@@ -127,11 +180,35 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `renameTaskList failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.renameTaskList(1, "newTitle"))
+            .thenThrow(e)
+
+        viewModel.renameTaskList(TaskListId(1), "newTitle")
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while renaming task list (TaskListId(value=1))", e)
+    }
+
+    @Test
     fun `clearTaskListCompletedTasks should update repository`() = runTest {
         viewModel.clearTaskListCompletedTasks(TaskListId(1))
         advanceUntilIdle()
 
         then(taskRepository).should().clearTaskListCompletedTasks(1)
+    }
+
+    @Test
+    fun `clearTaskListCompletedTasks failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.clearTaskListCompletedTasks(1))
+            .thenThrow(e)
+
+        viewModel.clearTaskListCompletedTasks(TaskListId(1))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while clearing completed tasks (TaskListId(value=1))", e)
     }
 
     @Test
@@ -145,6 +222,20 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `sortBy(DueDate) failure when calling repository should log error`() = runTest {
+        val sorting = TaskListSorting.DueDate
+        val e = mock(RuntimeException::class.java)
+
+        `when`(taskRepository.sortTasksBy(1, sorting))
+            .thenThrow(e)
+
+        viewModel.sortBy(TaskListId(1), sorting)
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while sorting task list (TaskListId(value=1)) by DueDate", e)
+    }
+
+    @Test
     fun `sortBy(Manual) should update repository by DueDate`() = runTest {
         val sorting = TaskListSorting.Manual
 
@@ -155,11 +246,37 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `sortBy(Manual) failure when calling repository should log error`() = runTest {
+        val sorting = TaskListSorting.Manual
+        val e = mock(RuntimeException::class.java)
+
+        `when`(taskRepository.sortTasksBy(1, sorting))
+            .thenThrow(e)
+
+        viewModel.sortBy(TaskListId(1), sorting)
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while sorting task list (TaskListId(value=1)) by Manual", e)
+    }
+
+    @Test
     fun `toggleTaskCompletionState should update repository`() = runTest {
         viewModel.toggleTaskCompletionState(TaskId(100))
         advanceUntilIdle()
 
         then(taskRepository).should().toggleTaskCompletionState(100)
+    }
+
+    @Test
+    fun `toggleTaskCompletionState failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.toggleTaskCompletionState(100))
+            .thenThrow(e)
+
+        viewModel.toggleTaskCompletionState(TaskId(100))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while toggling task completion state (TaskId(value=100))", e)
     }
 
     @Test
@@ -188,6 +305,18 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `updateTask failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.updateTask(1, 100, "", "", null))
+            .thenThrow(e)
+
+        viewModel.updateTask(TaskListId(1), TaskId(100), "", "", null)
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while updating task (TaskId(value=100))", e)
+    }
+
+    @Test
     fun `updateTaskTitle should update repository`() = runTest {
         viewModel.updateTaskTitle(TaskId(100), "title2")
         advanceUntilIdle()
@@ -196,11 +325,35 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `updateTaskTitle failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.updateTaskTitle(100, "title2"))
+            .thenThrow(e)
+
+        viewModel.updateTaskTitle(TaskId(100), "title2")
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while updating task title (TaskId(value=100))", e)
+    }
+
+    @Test
     fun `updateTaskNotes should update repository`() = runTest {
         viewModel.updateTaskNotes(TaskId(100), "notes2")
         advanceUntilIdle()
 
         then(taskRepository).should().updateTaskNotes(100, "notes2")
+    }
+
+    @Test
+    fun `updateTaskNotes failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.updateTaskNotes(100, "notes2"))
+            .thenThrow(e)
+
+        viewModel.updateTaskNotes(TaskId(100), "notes2")
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while updating task notes (TaskId(value=100))", e)
     }
 
     @Test
@@ -213,11 +366,36 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `updateTaskDueDate failure when calling repository should log error`() = runTest {
+        val (dueDate, instant) = buildMoments()
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.updateTaskDueDate(100, instant))
+            .thenThrow(e)
+
+        viewModel.updateTaskDueDate(TaskId(100), dueDate)
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while updating task due date (TaskId(value=100))", e)
+    }
+
+    @Test
     fun `unindentTask should update repository`() = runTest {
         viewModel.unindentTask(TaskId(100))
         advanceUntilIdle()
 
         then(taskRepository).should().unindentTask(100)
+    }
+
+    @Test
+    fun `unindentTask failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.unindentTask(100))
+            .thenThrow(e)
+
+        viewModel.unindentTask(TaskId(100))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while unindenting task (TaskId(value=100))", e)
     }
 
     @Test
@@ -229,11 +407,35 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `indentTask failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.indentTask(100))
+            .thenThrow(e)
+
+        viewModel.indentTask(TaskId(100))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while indenting task (TaskId(value=100))", e)
+    }
+
+    @Test
     fun `moveToTop should update repository`() = runTest {
         viewModel.moveToTop(TaskId(100))
         advanceUntilIdle()
 
         then(taskRepository).should().moveToTop(100)
+    }
+
+    @Test
+    fun `moveToTop failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.moveToTop(100))
+            .thenThrow(e)
+
+        viewModel.moveToTop(TaskId(100))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while moving task to top (TaskId(value=100))", e)
     }
 
     @Test
@@ -245,11 +447,35 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `moveToList failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.moveToList(100, 3))
+            .thenThrow(e)
+
+        viewModel.moveToList(TaskId(100), TaskListId(3))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while moving task to list (TaskId(value=100))", e)
+    }
+
+    @Test
     fun `moveToNewList should update repository`() = runTest {
         viewModel.moveToNewList(TaskId(100), "newList")
         advanceUntilIdle()
 
         then(taskRepository).should().moveToNewList(100, "newList")
+    }
+
+    @Test
+    fun `moveToNewList failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.moveToNewList(100, "newList"))
+            .thenThrow(e)
+
+        viewModel.moveToNewList(TaskId(100), "newList")
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while moving task to new list (TaskId(value=100))", e)
     }
 
     @Test
@@ -261,11 +487,35 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `restoreTask failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.restoreTask(100))
+            .thenThrow(e)
+
+        viewModel.restoreTask(TaskId(100))
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while restoring task (TaskId(value=100))", e)
+    }
+
+    @Test
     fun `updateTaskDueDate with null should update repository`() = runTest {
         viewModel.updateTaskDueDate(TaskId(100), null)
         advanceUntilIdle()
 
         then(taskRepository).should().updateTaskDueDate(100, null)
+    }
+
+    @Test
+    fun `updateTaskDueDate with null failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.updateTaskDueDate(100, null))
+            .thenThrow(e)
+
+        viewModel.updateTaskDueDate(TaskId(100), null)
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while updating task due date (TaskId(value=100))", e)
     }
 
     @Test
@@ -276,5 +526,18 @@ class TaskListsViewModelTest {
         advanceUntilIdle()
 
         then(taskRepository).should().updateTaskDueDate(100, instant)
+    }
+
+    @Test
+    fun `updateTaskDueDate with date failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        val (dueDate, instant) = buildMoments()
+        `when`(taskRepository.updateTaskDueDate(100, instant))
+            .thenThrow(e)
+
+        viewModel.updateTaskDueDate(TaskId(100), dueDate)
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while updating task due date (TaskId(value=100))", e)
     }
 }

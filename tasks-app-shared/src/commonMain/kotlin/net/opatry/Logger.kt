@@ -20,40 +20,11 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry
 
-import net.opatry.Logger
-import net.opatry.PrintLogger
-import net.opatry.google.profile.HttpUserInfoApi
-import net.opatry.google.profile.UserInfoApi
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.UserViewModel
-import net.opatry.tasks.data.TaskRepository
-import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModel
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
-
-
-val tasksAppModule = module {
-    singleOf(::TaskRepository)
-
-    // TODO replace with a more sophisticated logger (standard & KMP compatible ideally)
-    //  On Android, should also log in Firebase Crashlytics
-    //  see #118
-    single<Logger> {
-        PrintLogger()
-    }
-
-    viewModel {
-        TaskListsViewModel(get(), get())
-    }
-
-    single<UserInfoApi> {
-        HttpUserInfoApi(get(named(HttpClientName.Tasks)))
-    }
-
-    viewModel {
-        UserViewModel(get(), get(), get())
-    }
+interface Logger {
+    fun logInfo(message: String)
+    fun logError(message: String)
+    fun logError(message: String, e: Exception)
+    fun logError(e: Exception)
 }

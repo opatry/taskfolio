@@ -37,6 +37,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import net.opatry.Logger
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskId
 import net.opatry.tasks.app.ui.model.TaskListId
@@ -89,6 +90,7 @@ private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
 }
 
 class TaskListsViewModel(
+    private val logger: Logger,
     private val taskRepository: TaskRepository,
     private val autoRefreshPeriod: Duration = 10.seconds
 ) : ViewModel() {
@@ -106,8 +108,9 @@ class TaskListsViewModel(
                 while (autoRefreshIsEnabled) {
                     try {
                         taskRepository.sync()
-                    } catch (_: Exception) {
+                    } catch (e: Exception) {
                         // most likely no network
+                        logger.logError("Error while syncing", e)
                     }
                     if (autoRefreshIsEnabled) {
                         delay(autoRefreshPeriod)
@@ -122,8 +125,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.createTaskList(title)
             } catch (e: Exception) {
-                println("Error creating task list: $e")
-                // TODO error handling
+                logger.logError("Error while creating task list", e)
             }
         }
     }
@@ -133,8 +135,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.deleteTaskList(taskListId.value)
             } catch (e: Exception) {
-                println("Error while deleting task list (${taskListId}): $e")
-                // TODO error handling
+                logger.logError("Error while deleting task list (${taskListId})", e)
             }
         }
     }
@@ -144,8 +145,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.renameTaskList(taskListId.value, newTitle.trim())
             } catch (e: Exception) {
-                println("Error creating task: $e")
-                // TODO error handling
+                logger.logError("Error while renaming task list ($taskListId)", e)
             }
         }
     }
@@ -155,8 +155,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.clearTaskListCompletedTasks(taskListId.value)
             } catch (e: Exception) {
-                println("Error creating task: $e")
-                // TODO error handling
+                logger.logError("Error while clearing completed tasks ($taskListId)", e)
             }
         }
     }
@@ -166,8 +165,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.sortTasksBy(taskListId.value, sorting)
             } catch (e: Exception) {
-                println("Error while sorting task list: $e")
-                // TODO error handling
+                logger.logError("Error while sorting task list ($taskListId) by $sorting", e)
             }
         }
     }
@@ -177,8 +175,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.createTask(taskListId.value, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
-                println("Error while creating task: $e")
-                // TODO error handling
+                logger.logError("Error while creating task ($taskListId)", e)
             }
         }
     }
@@ -188,8 +185,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.deleteTask(taskId.value)
             } catch (e: Exception) {
-                println("Error while deleting task: $e")
-                // TODO error handling
+                logger.logError("Error while deleting task ($taskId)", e)
             }
         }
     }
@@ -203,8 +199,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.restoreTask(taskId.value)
             } catch (e: Exception) {
-                println("Error while restoring task: $e")
-                // TODO error handling
+                logger.logError("Error while restoring task ($taskId)", e)
             }
         }
     }
@@ -214,8 +209,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.toggleTaskCompletionState(taskId.value)
             } catch (e: Exception) {
-                println("Error while toggling task: $e")
-                // TODO error handling
+                logger.logError("Error while toggling task completion state ($taskId)", e)
             }
         }
     }
@@ -231,8 +225,7 @@ class TaskListsViewModel(
                     dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())
                 )
             } catch (e: Exception) {
-                println("Error while updating task: $e")
-                // TODO error handling
+                logger.logError("Error while updating task ($taskId)", e)
             }
         }
     }
@@ -242,8 +235,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.updateTaskTitle(taskId.value, title.trim())
             } catch (e: Exception) {
-                println("Error while updating task title: $e")
-                // TODO error handling
+                logger.logError("Error while updating task title ($taskId)", e)
             }
         }
     }
@@ -253,8 +245,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.updateTaskNotes(taskId.value, notes.trim())
             } catch (e: Exception) {
-                println("Error while updating task notes: $e")
-                // TODO error handling
+                logger.logError("Error while updating task notes ($taskId)", e)
             }
         }
     }
@@ -264,8 +255,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.updateTaskDueDate(taskId.value, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
-                println("Error while updating task due date: $e")
-                // TODO error handling
+                logger.logError("Error while updating task due date ($taskId)", e)
             }
         }
     }
@@ -275,8 +265,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.unindentTask(taskId.value)
             } catch (e: Exception) {
-                println("Error while indenting task: $e")
-                // TODO error handling
+                logger.logError("Error while unindenting task ($taskId)", e)
             }
         }
     }
@@ -286,8 +275,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.indentTask(taskId.value)
             } catch (e: Exception) {
-                println("Error while indenting task: $e")
-                // TODO error handling
+                logger.logError("Error while indenting task ($taskId)", e)
             }
         }
     }
@@ -297,8 +285,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.moveToTop(taskId.value)
             } catch (e: Exception) {
-                println("Error while moving task: $e")
-                // TODO error handling
+                logger.logError("Error while moving task to top ($taskId)", e)
             }
         }
     }
@@ -308,8 +295,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.moveToList(taskId.value, targetTaskListId.value)
             } catch (e: Exception) {
-                println("Error while moving task: $e")
-                // TODO error handling
+                logger.logError("Error while moving task to list ($taskId)", e)
             }
         }
     }
@@ -319,8 +305,7 @@ class TaskListsViewModel(
             try {
                 taskRepository.moveToNewList(taskId.value, targetTaskListTitle.trim())
             } catch (e: Exception) {
-                println("Error while moving task: $e")
-                // TODO error handling
+                logger.logError("Error while moving task to new list ($taskId)", e)
             }
         }
     }
