@@ -24,6 +24,8 @@ package net.opatry.tasks.ui
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
@@ -33,10 +35,14 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import net.opatry.Logger
 import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskId
 import net.opatry.tasks.app.ui.model.TaskListId
+import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.data.TaskRepository
+import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.test.MainDispatcherRule
 import org.junit.Rule
@@ -48,6 +54,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 private fun buildMoments(dateStr: String = "2024-10-16"): Pair<LocalDate, Instant> {
     val date = LocalDate.parse(dateStr)
@@ -77,6 +84,122 @@ class TaskListsViewModelTest {
 
         // ViewModel must be created **AFTER** `taskRepository.getTaskLists()` is mocked
         viewModel = TaskListsViewModel(logger, taskRepository)
+    }
+
+    @Test
+    fun `collecting task lists should be notified of new task list properly ordered when created in repository`() = runTest {
+        // FIXME extracting a mockable UiModel mapper would simplify test
+        //  and delegate the complex mapping of task lists testing to the mapper
+        //  see #116
+        val collectedTaskLists = mutableListOf<List<TaskListUIModel>>()
+        val collectorJob = launch(coroutineContext) {
+            viewModel.taskLists.toList(collectedTaskLists)
+        }
+        advanceUntilIdle()
+
+        val pastInstant = LocalDateTime.parse("1999-12-31T00:00:00").toInstant(TimeZone.currentSystemDefault())
+        val futureInstant = LocalDateTime.parse("2999-12-31T00:00:00").toInstant(TimeZone.currentSystemDefault())
+        val updateInstant = LocalDateTime.parse("2024-10-16T00:00:00").toInstant(TimeZone.currentSystemDefault())
+        taskListsFlow.emit(
+            listOf(
+                TaskListDataModel(
+                    id = 1,
+                    title = "list1",
+                    lastUpdate = updateInstant,
+                    tasks = listOf(
+                        TaskDataModel(
+                            id = 101,
+                            title = "task1",
+                            notes = "notes1",
+                            isCompleted = false,
+                            dueDate = futureInstant,
+                            lastUpdateDate = updateInstant,
+                            completionDate = null,
+                            position = "1",
+                            indent = 0,
+                        ),
+                        TaskDataModel(
+                            id = 102,
+                            title = "task2",
+                            notes = "notes2",
+                            isCompleted = false,
+                            dueDate = pastInstant,
+                            lastUpdateDate = updateInstant,
+                            completionDate = null,
+                            position = "2",
+                            indent = 0,
+                        ),
+                        TaskDataModel(
+                            id = 103,
+                            title = "task3",
+                            notes = "notes3",
+                            isCompleted = true,
+                            dueDate = null,
+                            lastUpdateDate = updateInstant,
+                            completionDate = updateInstant,
+                            position = "3",
+                            indent = 0,
+                        ),
+                    ),
+                    sorting = TaskListSorting.DueDate,
+                )
+            )
+        )
+        advanceUntilIdle()
+
+        assertEquals(1, collectedTaskLists.size)
+        val taskLists = collectedTaskLists.last()
+        assertEquals(1, taskLists.size)
+        val taskList = taskLists.last()
+        assertEquals(TaskListId(1), taskList.id)
+        assertEquals("list1", taskList.title)
+        assertEquals(
+            mapOf<DateRange?, List<TaskUIModel>>(
+                DateRange.Overdue(date = LocalDate(1970, 1, 1), numberOfDays = -1) to listOf(
+                    TaskUIModel(
+                        id = TaskId(value = 102),
+                        title = "task2",
+                        dueDate = LocalDate(1999, 12, 31),
+                        completionDate = null,
+                        notes = "notes2",
+                        isCompleted = false,
+                        position = "2",
+                        indent = 0
+                    )
+                ),
+                DateRange.Later(date = LocalDate(2999, 12, 31), numberOfDays = 355983) to listOf(
+                    TaskUIModel(
+                        id = TaskId(value = 101),
+                        title = "task1",
+                        dueDate = LocalDate(2999, 12, 31),
+                        completionDate = null,
+                        notes = "notes1",
+                        isCompleted = false,
+                        position = "1",
+                        indent = 0
+                    )
+                ),
+
+                ),
+            taskList.remainingTasks
+        )
+        assertEquals(
+            listOf(
+                TaskUIModel(
+                    id = TaskId(value = 103),
+                    title = "task3",
+                    dueDate = null,
+                    completionDate = null,
+                    notes = "notes3",
+                    isCompleted = true,
+                    position = "3",
+                    indent = 0
+                )
+            ),
+            taskList.completedTasks
+        )
+
+        collectorJob.cancel()
     }
 
     @Test
