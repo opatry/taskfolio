@@ -70,7 +70,6 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
     return TaskListUIModel(
         id = TaskListId(id),
         title = title,
-        lastUpdate = lastUpdate.toString(),
         remainingTasks = taskGroups.toMap(),
         completedTasks = completedTasks,
         sorting = sorting,

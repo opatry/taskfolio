@@ -43,7 +43,6 @@ private fun TaskListRowScaffold(
         TaskListUIModel(
             id = TaskListId(0L),
             title = title,
-            "TODO DATE",
         ),
         isSelected = isSelected,
         onClick = {}

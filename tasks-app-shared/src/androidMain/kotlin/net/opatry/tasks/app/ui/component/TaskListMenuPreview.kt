@@ -57,7 +57,6 @@ private fun TaskListMenuPreview() {
                     taskList = TaskListUIModel(
                         id = TaskListId(0L),
                         title = "My task list",
-                        lastUpdate = "TODO DATE",
                     ),
                     expanded = true,
                     onAction = {}

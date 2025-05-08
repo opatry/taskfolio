@@ -62,7 +62,7 @@ class TaskListsColumnTest {
 
     @Test
     fun TaskListsColumn_TaskListSelection() = runComposeUiTest {
-        val taskList = TaskListUIModel(TaskListId(1), "Task list 1", "2024-10-16")
+        val taskList = TaskListUIModel(TaskListId(1), "Task list 1")
         var selectedList: TaskListUIModel? = null
         setContent {
             TaskListsColumn(listOf(taskList), selectedItem = null, onNewTaskList = {}, onItemClick = { selectedList = it })
@@ -78,8 +78,8 @@ class TaskListsColumnTest {
 
     @Test
     fun TaskListsColumn_SelectedTaskList() = runComposeUiTest {
-        val taskList1 = TaskListUIModel(TaskListId(1), "Task list 1", "2024-10-16")
-        val taskList2 = TaskListUIModel(TaskListId(2), "Task list 2", "2024-10-16")
+        val taskList1 = TaskListUIModel(TaskListId(1), "Task list 1")
+        val taskList2 = TaskListUIModel(TaskListId(2), "Task list 2")
         setContent {
             TaskListsColumn(listOf(taskList1, taskList2), selectedItem = taskList1, onNewTaskList = {}, onItemClick = {})
         }

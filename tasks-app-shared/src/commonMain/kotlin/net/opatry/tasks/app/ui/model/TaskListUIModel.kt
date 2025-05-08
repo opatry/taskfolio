@@ -31,7 +31,6 @@ value class TaskListId(val value: Long)
 data class TaskListUIModel(
     val id: TaskListId,
     val title: String,
-    val lastUpdate: String,
     val remainingTasks: Map<DateRange?, List<TaskUIModel>> = emptyMap(),
     val completedTasks: List<TaskUIModel> = emptyList(),
     val sorting: TaskListSorting = TaskListSorting.Manual,
