@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2024 Olivier Patry
+  Copyright (c) 2025 Olivier Patry
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -71,6 +71,20 @@
     <string name="task_list_pane_completed_section_title_with_count">Completed (%1$s)</string>
     <string name="task_list_pane_delete_task_icon_content_desc">Delete task</string>
     <string name="task_list_pane_task_options_icon_content_desc">Task options</string>
+
+    <string name="task_event_error_task_create">An error occurred while creating task</string>
+    <string name="task_event_error_task_delete">An error occurred while deleting task</string>
+    <string name="task_event_error_task_unindent">An error occurred while unindenting task</string>
+    <string name="task_event_error_task_indent">An error occurred while indenting task</string>
+    <string name="task_event_error_task_move">An error occurred while moving task</string>
+    <string name="task_event_error_task_restore">An error occurred while restoring task</string>
+    <string name="task_event_error_task_update">An error occurred while updating task</string>
+
+    <string name="task_event_error_tasklist_create">An error occurred while creating task list</string>
+    <string name="task_event_error_tasklist_delete">An error occurred while deleting task list</string>
+    <string name="task_event_error_tasklist_rename">An error occurred while renaming task list</string>
+    <string name="task_event_error_tasklist_clear_completed">An error occurred while clearing completed tasks</string>
+    <string name="task_event_error_tasklist_sort">An error occurred while sorting tasks</string>
 
     <plurals name="task_due_date_label_days_ago">
         <item quantity="zero">Today</item>

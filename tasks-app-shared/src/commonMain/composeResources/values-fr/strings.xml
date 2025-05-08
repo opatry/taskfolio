@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2024 Olivier Patry
+  Copyright (c) 2025 Olivier Patry
 
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files (the "Software"),
@@ -71,6 +71,18 @@
     <string name="task_list_pane_completed_section_title_with_count">Terminées (%1$s)</string>
     <string name="task_list_pane_delete_task_icon_content_desc">Supprimer la tâche</string>
     <string name="task_list_pane_task_options_icon_content_desc">Options de la tâche</string>
+    <string name="task_event_error_task_create">Une erreur est survenue lors de la création de la tâche</string>
+    <string name="task_event_error_task_delete">Une erreur est survenue lors de la suppression de la tâche</string>
+    <string name="task_event_error_task_unindent">Une erreur est survenue lors de la désindentation de la tâche</string>
+    <string name="task_event_error_task_indent">Une erreur est survenue lors de l'indentation de la tâche</string>
+    <string name="task_event_error_task_move">Une erreur est survenue lors du déplacement de la tâche</string>
+    <string name="task_event_error_task_restore">Une erreur est survenue lors de la restauration de la tâche</string>
+    <string name="task_event_error_task_update">Une erreur est survenue lors de la mise à jour de la tâche</string>
+    <string name="task_event_error_tasklist_create">Une erreur est survenue lors de la création de la liste de tâches</string>
+    <string name="task_event_error_tasklist_delete">Une erreur est survenue lors de la suppression de la liste de tâches</string>
+    <string name="task_event_error_tasklist_rename">Une erreur est survenue lors du renommage de la liste de tâches</string>
+    <string name="task_event_error_tasklist_clear_completed">Une erreur est survenue lors de la suppression des tâches terminées</string>
+    <string name="task_event_error_tasklist_sort">Une erreur est survenue lors du tri des tâches</string>
     <plurals name="task_due_date_label_days_ago">
         <item quantity="zero">Aujourd'hui</item>
         <item quantity="one">Hier</item>

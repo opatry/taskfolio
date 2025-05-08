@@ -28,7 +28,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
@@ -99,6 +101,9 @@ class TaskListsViewModel(
         allLists.map(TaskListDataModel::asTaskListUIModel)
     }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
+    private val _eventFlow = MutableSharedFlow<TaskEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     private var autoRefreshIsEnabled: Boolean = false
 
     fun enableAutoRefresh(enabled: Boolean) {
@@ -111,6 +116,8 @@ class TaskListsViewModel(
                     } catch (e: Exception) {
                         // most likely no network
                         logger.logError("Error while syncing", e)
+                        // For now, do not notify user, it might flood the UI if network is unreachable
+                        // see #114 + #115
                     }
                     if (autoRefreshIsEnabled) {
                         delay(autoRefreshPeriod)
@@ -126,6 +133,7 @@ class TaskListsViewModel(
                 taskRepository.createTaskList(title)
             } catch (e: Exception) {
                 logger.logError("Error while creating task list", e)
+                _eventFlow.emit(TaskEvent.Error.TaskList.Create)
             }
         }
     }
@@ -136,6 +144,7 @@ class TaskListsViewModel(
                 taskRepository.deleteTaskList(taskListId.value)
             } catch (e: Exception) {
                 logger.logError("Error while deleting task list (${taskListId})", e)
+                _eventFlow.emit(TaskEvent.Error.TaskList.Delete)
             }
         }
     }
@@ -146,6 +155,7 @@ class TaskListsViewModel(
                 taskRepository.renameTaskList(taskListId.value, newTitle.trim())
             } catch (e: Exception) {
                 logger.logError("Error while renaming task list ($taskListId)", e)
+                _eventFlow.emit(TaskEvent.Error.TaskList.Rename)
             }
         }
     }
@@ -156,6 +166,7 @@ class TaskListsViewModel(
                 taskRepository.clearTaskListCompletedTasks(taskListId.value)
             } catch (e: Exception) {
                 logger.logError("Error while clearing completed tasks ($taskListId)", e)
+                _eventFlow.emit(TaskEvent.Error.TaskList.ClearCompletedTasks)
             }
         }
     }
@@ -166,6 +177,7 @@ class TaskListsViewModel(
                 taskRepository.sortTasksBy(taskListId.value, sorting)
             } catch (e: Exception) {
                 logger.logError("Error while sorting task list ($taskListId) by $sorting", e)
+                _eventFlow.emit(TaskEvent.Error.TaskList.Sort)
             }
         }
     }
@@ -176,6 +188,7 @@ class TaskListsViewModel(
                 taskRepository.createTask(taskListId.value, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
                 logger.logError("Error while creating task ($taskListId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Create)
             }
         }
     }
@@ -186,6 +199,7 @@ class TaskListsViewModel(
                 taskRepository.deleteTask(taskId.value)
             } catch (e: Exception) {
                 logger.logError("Error while deleting task ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Delete)
             }
         }
     }
@@ -200,6 +214,7 @@ class TaskListsViewModel(
                 taskRepository.restoreTask(taskId.value)
             } catch (e: Exception) {
                 logger.logError("Error while restoring task ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Restore)
             }
         }
     }
@@ -210,6 +225,7 @@ class TaskListsViewModel(
                 taskRepository.toggleTaskCompletionState(taskId.value)
             } catch (e: Exception) {
                 logger.logError("Error while toggling task completion state ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.ToggleCompletionState)
             }
         }
     }
@@ -226,6 +242,7 @@ class TaskListsViewModel(
                 )
             } catch (e: Exception) {
                 logger.logError("Error while updating task ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Update)
             }
         }
     }
@@ -236,6 +253,7 @@ class TaskListsViewModel(
                 taskRepository.updateTaskTitle(taskId.value, title.trim())
             } catch (e: Exception) {
                 logger.logError("Error while updating task title ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Update)
             }
         }
     }
@@ -246,6 +264,7 @@ class TaskListsViewModel(
                 taskRepository.updateTaskNotes(taskId.value, notes.trim())
             } catch (e: Exception) {
                 logger.logError("Error while updating task notes ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Update)
             }
         }
     }
@@ -256,6 +275,7 @@ class TaskListsViewModel(
                 taskRepository.updateTaskDueDate(taskId.value, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
                 logger.logError("Error while updating task due date ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Update)
             }
         }
     }
@@ -266,6 +286,7 @@ class TaskListsViewModel(
                 taskRepository.unindentTask(taskId.value)
             } catch (e: Exception) {
                 logger.logError("Error while unindenting task ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Unindent)
             }
         }
     }
@@ -276,6 +297,7 @@ class TaskListsViewModel(
                 taskRepository.indentTask(taskId.value)
             } catch (e: Exception) {
                 logger.logError("Error while indenting task ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Indent)
             }
         }
     }
@@ -286,6 +308,7 @@ class TaskListsViewModel(
                 taskRepository.moveToTop(taskId.value)
             } catch (e: Exception) {
                 logger.logError("Error while moving task to top ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Move)
             }
         }
     }
@@ -296,6 +319,7 @@ class TaskListsViewModel(
                 taskRepository.moveToList(taskId.value, targetTaskListId.value)
             } catch (e: Exception) {
                 logger.logError("Error while moving task to list ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Move)
             }
         }
     }
@@ -306,6 +330,7 @@ class TaskListsViewModel(
                 taskRepository.moveToNewList(taskId.value, targetTaskListTitle.trim())
             } catch (e: Exception) {
                 logger.logError("Error while moving task to new list ($taskId)", e)
+                _eventFlow.emit(TaskEvent.Error.Task.Move)
             }
         }
     }
