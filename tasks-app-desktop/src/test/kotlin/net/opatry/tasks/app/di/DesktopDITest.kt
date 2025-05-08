@@ -24,6 +24,7 @@ package net.opatry.tasks.app.di
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
+import net.opatry.Logger
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
@@ -51,6 +52,7 @@ class DesktopDITest {
     fun `verify all modules`() {
         val allModules = module {
             includes(
+                loggingModule,
                 platformModule(),
                 dataModule,
                 authModule("some_id"),
@@ -66,6 +68,11 @@ class DesktopDITest {
                 definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
             )
         )
+    }
+
+    @Test
+    fun `verify logging module`() {
+        loggingModule.verify()
     }
 
     @Test
@@ -101,7 +108,7 @@ class DesktopDITest {
         tasksAppModule.verify(
             injections = injectedParameters(
                 definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class),
-                definition<TaskListsViewModel>(Duration::class),
+                definition<TaskListsViewModel>(Duration::class, Logger::class),
                 definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
             )
         )

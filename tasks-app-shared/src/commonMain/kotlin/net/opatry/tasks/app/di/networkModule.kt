@@ -31,6 +31,9 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.URLBuilder
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
@@ -46,6 +49,7 @@ import net.opatry.tasks.TokenCache
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.time.Duration.Companion.seconds
+import net.opatry.Logger as TaskfolioLogger
 
 
 enum class HttpClientName {
@@ -67,6 +71,15 @@ val networkModule = module {
             }
             install(ContentEncoding) {
                 gzip()
+            }
+            install(Logging) {
+                level = LogLevel.INFO
+                logger = object : Logger {
+                    val taskfolioLogger = get<TaskfolioLogger>()
+                    override fun log(message: String) {
+                        taskfolioLogger.logInfo(message)
+                    }
+                }
             }
             install(Auth) {
                 bearer {

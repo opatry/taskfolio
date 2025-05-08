@@ -25,6 +25,7 @@ package net.opatry.tasks.app
 import android.app.Application
 import net.opatry.tasks.app.di.authModule
 import net.opatry.tasks.app.di.dataModule
+import net.opatry.tasks.app.di.loggingModule
 import net.opatry.tasks.app.di.networkModule
 import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksAppModule
@@ -41,6 +42,7 @@ class TasksApplication : Application(), KoinStartup {
     override fun onKoinStartup() = koinConfiguration {
         androidContext(this@TasksApplication)
         modules(
+            loggingModule,
             platformModule(),
             dataModule,
             authModule(GCP_CLIENT_ID),
