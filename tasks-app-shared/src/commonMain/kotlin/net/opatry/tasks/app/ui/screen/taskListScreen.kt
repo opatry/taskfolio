@@ -23,6 +23,9 @@
 package net.opatry.tasks.app.ui.screen
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
@@ -31,11 +34,17 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.asLabel
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
@@ -57,6 +66,25 @@ fun TaskListsMasterDetail(
     // we use the TaskListUIModel.id as the key to save the state of the navigator
     val navigator = rememberListDetailPaneScaffoldNavigator<Long>()
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    var errorEvent by remember { mutableStateOf<TaskEvent.Error?>(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            // Only display error for now
+            if (event is TaskEvent.Error) {
+                errorEvent = event
+            }
+        }
+    }
+
+    errorEvent?.let { event ->
+        val errorString = stringResource(event.asLabel)
+        LaunchedEffect(errorString) {
+            snackbarHostState.showSnackbar(errorString)
+            errorEvent = null
+        }
+    }
 
     MyBackHandler(navigator::canNavigateBack) {
         scope.launch {
@@ -64,58 +92,64 @@ fun TaskListsMasterDetail(
         }
     }
 
-    ListDetailPaneScaffold(
-        directive = navigator.scaffoldDirective,
-        value = navigator.scaffoldValue,
-        listPane = {
-            val list = taskLists
-            AnimatedPane {
-                when {
-                    list == null -> LoadingPane()
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) {
+        ListDetailPaneScaffold(
+            directive = navigator.scaffoldDirective,
+            value = navigator.scaffoldValue,
+            listPane = {
+                val list = taskLists
+                AnimatedPane {
+                    when {
+                        list == null -> LoadingPane()
 
-                    list.isEmpty() -> {
-                        val newTaskListName = stringResource(Res.string.task_lists_screen_default_task_list_title)
-                        NoTaskListEmptyState {
-                            onNewTaskList(newTaskListName)
+                        list.isEmpty() -> {
+                            val newTaskListName = stringResource(Res.string.task_lists_screen_default_task_list_title)
+                            NoTaskListEmptyState {
+                                onNewTaskList(newTaskListName)
+                            }
+                        }
+
+                        else -> Row {
+                            TaskListsColumn(
+                                list,
+                                selectedItem = list.find { it.id.value == navigator.currentDestination?.contentKey },
+                                onNewTaskList = { onNewTaskList("") },
+                                onItemClick = { taskList ->
+                                    scope.launch {
+                                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id.value)
+                                    }
+                                }
+                            )
+
+                            if (navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded) {
+                                VerticalDivider()
+                            }
                         }
                     }
-
-                    else -> Row {
-                        TaskListsColumn(
-                            list,
-                            selectedItem = list.find { it.id.value == navigator.currentDestination?.contentKey },
-                            onNewTaskList = { onNewTaskList("") },
-                            onItemClick = { taskList ->
-                                scope.launch {
-                                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id.value)
+                }
+            },
+            detailPane = {
+                AnimatedPane {
+                    val list = taskLists
+                    val selectedList = list?.find { it.id.value == navigator.currentDestination?.contentKey }
+                    when {
+                        list == null -> LoadingPane()
+                        selectedList == null -> NoTaskListSelectedEmptyState()
+                        else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
+                            scope.launch {
+                                when (targetedTaskList) {
+                                    null -> navigator.navigateBack()
+                                    else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id.value)
                                 }
                             }
-                        )
-
-                        if (navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded) {
-                            VerticalDivider()
                         }
                     }
                 }
             }
-        },
-        detailPane = {
-            AnimatedPane {
-                val list = taskLists
-                val selectedList = list?.find { it.id.value == navigator.currentDestination?.contentKey }
-                when {
-                    list == null -> LoadingPane()
-                    selectedList == null -> NoTaskListSelectedEmptyState()
-                    else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
-                        scope.launch {
-                            when (targetedTaskList) {
-                                null -> navigator.navigateBack()
-                                else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id.value)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    )
+        )
+    }
 }
