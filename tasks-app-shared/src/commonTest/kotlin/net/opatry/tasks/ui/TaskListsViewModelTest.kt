@@ -34,6 +34,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import net.opatry.Logger
+import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskId
@@ -216,10 +217,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.createTaskList("tasks"))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.createTaskList("tasks")
         advanceUntilIdle()
 
         then(logger).should().logError("Error while creating task list", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.TaskList.Create, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -238,10 +248,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.createTask(100, "task"))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.createTask(TaskListId(100), "task")
         advanceUntilIdle()
 
         then(logger).should().logError("Error while creating task (TaskListId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Create, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -268,10 +287,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.deleteTask(100))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.deleteTask(TaskId(100))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while deleting task (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Delete, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -288,10 +316,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.deleteTaskList(1))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.deleteTaskList(TaskListId(1))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while deleting task list (TaskListId(value=1))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.TaskList.Delete, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -308,10 +345,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.renameTaskList(1, "newTitle"))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.renameTaskList(TaskListId(1), "newTitle")
         advanceUntilIdle()
 
         then(logger).should().logError("Error while renaming task list (TaskListId(value=1))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.TaskList.Rename, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -328,10 +374,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.clearTaskListCompletedTasks(1))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.clearTaskListCompletedTasks(TaskListId(1))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while clearing completed tasks (TaskListId(value=1))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.TaskList.ClearCompletedTasks, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -348,14 +403,22 @@ class TaskListsViewModelTest {
     fun `sortBy(DueDate) failure when calling repository should log error`() = runTest {
         val sorting = TaskListSorting.DueDate
         val e = mock(RuntimeException::class.java)
-
         `when`(taskRepository.sortTasksBy(1, sorting))
             .thenThrow(e)
+
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
 
         viewModel.sortBy(TaskListId(1), sorting)
         advanceUntilIdle()
 
         then(logger).should().logError("Error while sorting task list (TaskListId(value=1)) by DueDate", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.TaskList.Sort, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -372,14 +435,22 @@ class TaskListsViewModelTest {
     fun `sortBy(Manual) failure when calling repository should log error`() = runTest {
         val sorting = TaskListSorting.Manual
         val e = mock(RuntimeException::class.java)
-
         `when`(taskRepository.sortTasksBy(1, sorting))
             .thenThrow(e)
+
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
 
         viewModel.sortBy(TaskListId(1), sorting)
         advanceUntilIdle()
 
         then(logger).should().logError("Error while sorting task list (TaskListId(value=1)) by Manual", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.TaskList.Sort, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -396,10 +467,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.toggleTaskCompletionState(100))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.toggleTaskCompletionState(TaskId(100))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while toggling task completion state (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.ToggleCompletionState, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -433,10 +513,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.updateTask(1, 100, "", "", null))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.updateTask(TaskListId(1), TaskId(100), "", "", null)
         advanceUntilIdle()
 
         then(logger).should().logError("Error while updating task (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Update, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -453,10 +542,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.updateTaskTitle(100, "title2"))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.updateTaskTitle(TaskId(100), "title2")
         advanceUntilIdle()
 
         then(logger).should().logError("Error while updating task title (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Update, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -473,10 +571,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.updateTaskNotes(100, "notes2"))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.updateTaskNotes(TaskId(100), "notes2")
         advanceUntilIdle()
 
         then(logger).should().logError("Error while updating task notes (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Update, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -495,10 +602,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.updateTaskDueDate(100, instant))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.updateTaskDueDate(TaskId(100), dueDate)
         advanceUntilIdle()
 
         then(logger).should().logError("Error while updating task due date (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Update, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -515,10 +631,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.unindentTask(100))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.unindentTask(TaskId(100))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while unindenting task (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Unindent, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -535,10 +660,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.indentTask(100))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.indentTask(TaskId(100))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while indenting task (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Indent, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -555,10 +689,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.moveToTop(100))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.moveToTop(TaskId(100))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while moving task to top (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Move, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -575,10 +718,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.moveToList(100, 3))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.moveToList(TaskId(100), TaskListId(3))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while moving task to list (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Move, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -595,10 +747,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.moveToNewList(100, "newList"))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.moveToNewList(TaskId(100), "newList")
         advanceUntilIdle()
 
         then(logger).should().logError("Error while moving task to new list (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Move, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -615,10 +776,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.restoreTask(100))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.restoreTask(TaskId(100))
         advanceUntilIdle()
 
         then(logger).should().logError("Error while restoring task (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Restore, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -635,10 +805,19 @@ class TaskListsViewModelTest {
         `when`(taskRepository.updateTaskDueDate(100, null))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.updateTaskDueDate(TaskId(100), null)
         advanceUntilIdle()
 
         then(logger).should().logError("Error while updating task due date (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Update, events.first())
+
+        eventCollectorJob.cancel()
     }
 
     @Test
@@ -658,9 +837,18 @@ class TaskListsViewModelTest {
         `when`(taskRepository.updateTaskDueDate(100, instant))
             .thenThrow(e)
 
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
         viewModel.updateTaskDueDate(TaskId(100), dueDate)
         advanceUntilIdle()
 
         then(logger).should().logError("Error while updating task due date (TaskId(value=100))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.Update, events.first())
+
+        eventCollectorJob.cancel()
     }
 }
