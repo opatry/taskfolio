@@ -23,6 +23,8 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.ktorfit)
 }
 
 kotlin {
@@ -32,6 +34,8 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
+
+            implementation(libs.ktorfit)
         }
 
         commonTest.dependencies {
