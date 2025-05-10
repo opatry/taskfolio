@@ -28,11 +28,20 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
+import kotlinx.datetime.format
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import net.opatry.Logger
 import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.TaskListsViewModel
@@ -57,7 +66,18 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private fun buildMoments(dateStr: String = "2024-10-16"): Pair<LocalDate, Instant> {
+private val Today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+private val LastWeek = Today - DatePeriod(days = 7)
+private val NextWeek = Today + DatePeriod(days = 7)
+val ISO8601Formatter = LocalDate.Format {
+    year()
+    char('-')
+    monthNumber(Padding.ZERO)
+    char('-')
+    dayOfMonth(Padding.ZERO)
+}
+
+private fun buildMoments(dateStr: String = LastWeek.format(ISO8601Formatter)): Pair<LocalDate, Instant> {
     val date = LocalDate.parse(dateStr)
     val instant = LocalDateTime.parse("${date}T00:00:00").toInstant(TimeZone.currentSystemDefault())
     return date to instant
@@ -98,9 +118,10 @@ class TaskListsViewModelTest {
         }
         advanceUntilIdle()
 
-        val pastInstant = LocalDateTime.parse("1999-12-31T00:00:00").toInstant(TimeZone.currentSystemDefault())
-        val futureInstant = LocalDateTime.parse("2999-12-31T00:00:00").toInstant(TimeZone.currentSystemDefault())
-        val updateInstant = LocalDateTime.parse("2024-10-16T00:00:00").toInstant(TimeZone.currentSystemDefault())
+        val pastInstant = LastWeek.atTime(0, 0, 0).toInstant(TimeZone.currentSystemDefault())
+        val futureInstant = NextWeek.atTime(0, 0, 0).toInstant(TimeZone.currentSystemDefault())
+        val yesterday = Today - DatePeriod(days = 1)
+        val updateInstant = yesterday.atTime(0, 0, 0).toInstant(TimeZone.currentSystemDefault())
         taskListsFlow.emit(
             listOf(
                 TaskListDataModel(
@@ -160,7 +181,7 @@ class TaskListsViewModelTest {
                     TaskUIModel(
                         id = TaskId(value = 102),
                         title = "task2",
-                        dueDate = LocalDate(1999, 12, 31),
+                        dueDate = LastWeek,
                         completionDate = null,
                         notes = "notes2",
                         isCompleted = false,
@@ -168,11 +189,11 @@ class TaskListsViewModelTest {
                         indent = 0
                     )
                 ),
-                DateRange.Later(date = LocalDate(2999, 12, 31), numberOfDays = 355983) to listOf(
+                DateRange.Later(date = NextWeek, numberOfDays = 7) to listOf(
                     TaskUIModel(
                         id = TaskId(value = 101),
                         title = "task1",
-                        dueDate = LocalDate(2999, 12, 31),
+                        dueDate = NextWeek,
                         completionDate = null,
                         notes = "notes1",
                         isCompleted = false,
