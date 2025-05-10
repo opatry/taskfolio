@@ -226,8 +226,8 @@ class TaskRepository(
             entries.map { (list, tasks) ->
                 // FIXME Where should happen the sorting, on SQL side or here or in UI layer?
                 list.asTaskListDataModel(tasks)
+            }
         }
-    }
 
     suspend fun sync() {
         val taskListIds = mutableMapOf<Long, String>()
@@ -266,6 +266,7 @@ class TaskRepository(
             }
             if (remoteTaskList != null) {
                 taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
+                taskListIds[localTaskList.id] = remoteTaskList.id
             }
         }
         taskListIds.forEach { (localListId, remoteListId) ->
@@ -275,23 +276,50 @@ class TaskRepository(
             val remoteTasks = withContext(Dispatchers.IO) {
                 tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
             }
-            remoteTasks.onEach { remoteTask ->
+
+            val taskEntities = remoteTasks.map { remoteTask ->
                 val existingEntity = taskDao.getByRemoteId(remoteTask.id)
-                taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
+                remoteTask.asTaskEntity(localListId, existingEntity?.id)
             }
+            taskDao.upsertAll(taskEntities)
+
             taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
-            taskDao.getLocalOnlyTasks(localListId).onEach { localTask ->
-                val remoteTask = withContext(Dispatchers.IO) {
+
+            val localOnlyTasks = taskDao.getLocalOnlyTasks(localListId)
+            val sortedRootTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == null })
+            var previousTaskId: String? = null
+            val syncedTasks = mutableListOf<TaskEntity>()
+            sortedRootTasks.onEach { localRootTask ->
+                val remoteRootTask = withContext(Dispatchers.IO) {
                     try {
-                        tasksApi.insert(remoteListId, localTask.asTask())
-                    } catch (_: Exception) {
+                        tasksApi.insert(remoteListId, localRootTask.asTask(), null, previousTaskId).also {
+                            syncedTasks.add(it.asTaskEntity(localListId, localRootTask.id))
+                        }
+                    } catch (e: Exception) {
                         null
                     }
                 }
-                if (remoteTask != null) {
-                    taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id))
+
+                // don't try syncing sub tasks if root task failed, it would break hierarchy on remote side
+                if (remoteRootTask != null) {
+                    val sortedSubTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == localRootTask.id })
+                    var previousSubTaskId: String? = null
+                    sortedSubTasks.onEach { localSubTask ->
+                        val remoteSubTask = withContext(Dispatchers.IO) {
+                            try {
+                                tasksApi.insert(remoteListId, localSubTask.asTask(), remoteRootTask.id, previousSubTaskId).also {
+                                    syncedTasks.add(it.asTaskEntity(localListId, localSubTask.id))
+                                }
+                            } catch (e: Exception) {
+                                null
+                            }
+                        }
+                        previousSubTaskId = remoteSubTask?.id
+                    }
                 }
+                previousTaskId = remoteRootTask?.id
             }
+            taskDao.upsertAll(syncedTasks)
         }
     }
 
@@ -457,9 +485,10 @@ class TaskRepository(
 
     suspend fun toggleTaskCompletionState(taskId: Long) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            val isNowCompleted = !taskEntity.isCompleted
             taskEntity.copy(
-                isCompleted = !taskEntity.isCompleted,
-                completionDate = if (taskEntity.isCompleted) null else updateTime,
+                isCompleted = isNowCompleted,
+                completionDate = if (isNowCompleted) updateTime else null,
                 lastUpdateDate = updateTime,
             )
         }

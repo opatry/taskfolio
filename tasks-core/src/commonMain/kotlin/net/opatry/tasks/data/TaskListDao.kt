@@ -35,8 +35,14 @@ interface TaskListDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(item: TaskListEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAll(items: List<TaskListEntity>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(item: TaskListEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(items: List<TaskListEntity>): List<Long>
 
     // FIXME should be a pending deletion "flag" until sync is done
     @Query("DELETE FROM task_list WHERE local_id = :id")
