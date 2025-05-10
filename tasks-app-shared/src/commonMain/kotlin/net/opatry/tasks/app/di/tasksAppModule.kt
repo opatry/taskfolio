@@ -27,14 +27,15 @@ import net.opatry.google.profile.UserInfoApi
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.data.TaskRepository
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 
 val tasksAppModule = module {
-    singleOf(::TaskRepository)
+    single {
+        TaskRepository(get(), get(), get(), get())
+    }
 
     viewModel {
         TaskListsViewModel(get(), get())

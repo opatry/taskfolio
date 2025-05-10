@@ -218,6 +218,7 @@ class TaskRepository(
     private val taskDao: TaskDao,
     private val taskListsApi: TaskListsApi,
     private val tasksApi: TasksApi,
+    private val clockNow: () -> Instant = Clock.System::now,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTaskLists() = taskListDao.getAllTaskListsWithTasksAsFlow()
@@ -295,7 +296,7 @@ class TaskRepository(
     }
 
     suspend fun createTaskList(title: String) {
-        val now = Clock.System.now()
+        val now = clockNow()
         val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
         val taskList = withContext(Dispatchers.IO) {
             try {
@@ -325,7 +326,7 @@ class TaskRepository(
     }
 
     suspend fun renameTaskList(taskListId: Long, newTitle: String) {
-        val now = Clock.System.now()
+        val now = clockNow()
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
             .copy(
                 title = newTitle,
@@ -382,7 +383,7 @@ class TaskRepository(
     }
 
     suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null) {
-        val now = Clock.System.now()
+        val now = clockNow()
         val taskEntity = TaskEntity(
             parentListLocalId = taskListId,
             title = title,
@@ -430,7 +431,7 @@ class TaskRepository(
     }
 
     private suspend fun applyTaskUpdate(taskId: Long, updateLogic: suspend (TaskEntity, Instant) -> TaskEntity?) {
-        val now = Clock.System.now()
+        val now = clockNow()
         val task = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val updatedTaskEntity = updateLogic(task, now) ?: return
 
@@ -505,28 +506,28 @@ class TaskRepository(
 
     suspend fun indentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        val now = clockNow()
     }
 
     suspend fun unindentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        val now = clockNow()
     }
 
     suspend fun moveToTop(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        val now = clockNow()
     }
 
     suspend fun moveToList(taskId: Long, targetListId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val taskListEntity = requireNotNull(taskListDao.getById(targetListId)) { "Invalid task list id $targetListId" }
-        val now = Clock.System.now()
+        val now = clockNow()
     }
 
     suspend fun moveToNewList(taskId: Long, newListTitle: String) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        val now = clockNow()
         // TODO ideally transactional
     }
 }
