@@ -224,10 +224,9 @@ class TaskRepository(
         .distinctUntilChanged()
         .mapLatest { entries ->
             entries.map { (list, tasks) ->
-                // FIXME Where should happen the sorting, on SQL side or here or in UI layer?
                 list.asTaskListDataModel(tasks)
+            }
         }
-    }
 
     suspend fun sync() {
         val taskListIds = mutableMapOf<Long, String>()
