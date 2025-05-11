@@ -576,20 +576,13 @@ class TaskRepository(
         }
     }
 
-    suspend fun moveToList(taskId: Long, targetListId: Long) {
+    suspend fun moveToList(taskId: Long, destinationListId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val taskListEntity = requireNotNull(taskListDao.getById(targetListId)) { "Invalid task list id $targetListId" }
-        val now = clockNow()
-    }
+        val destinationTaskListEntity = requireNotNull(taskListDao.getById(destinationListId)) { "Invalid task list id $destinationListId" }
 
-    suspend fun moveToNewList(taskId: Long, newListTitle: String): Long {
-        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-
-        // TODO ideally transactional
-        val newTaskListId = createTaskList(newListTitle)
         val now = clockNow()
         val updatedTaskEntity = taskEntity.copy(
-            parentListLocalId = newTaskListId,
+            parentListLocalId = destinationListId,
             lastUpdateDate = now,
             position = 0.toTaskPosition(),
         )
@@ -598,7 +591,7 @@ class TaskRepository(
         // TODO should we update original list's remaining tasks' positions?
 
         // FIXME should already be available in entity, quick & dirty workaround
-        val newTaskListRemoteId = taskListDao.getById(newTaskListId)?.remoteId
+        val newTaskListRemoteId = destinationTaskListEntity.remoteId
         val taskListRemoteId = taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && taskEntity.remoteId != null && newTaskListRemoteId != null) {
             val task = withContext(Dispatchers.IO) {
@@ -616,9 +609,17 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
+                taskDao.upsert(task.asTaskEntity(destinationListId, taskId))
             }
         }
+    }
+
+    suspend fun moveToNewList(taskId: Long, newListTitle: String): Long {
+        requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+
+        // TODO ideally transactional
+        val newTaskListId = createTaskList(newListTitle)
+        moveToList(taskId, newTaskListId)
         return newTaskListId
     }
 }
