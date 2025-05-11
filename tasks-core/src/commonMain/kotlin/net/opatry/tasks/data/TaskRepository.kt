@@ -477,6 +477,7 @@ class TaskRepository(
 
     suspend fun toggleTaskCompletionState(taskId: Long) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            // TODO should update position when changed/restored to not completed, what should it be?
             taskEntity.copy(
                 isCompleted = !taskEntity.isCompleted,
                 completionDate = if (taskEntity.isCompleted) null else updateTime,
@@ -536,7 +537,42 @@ class TaskRepository(
 
     suspend fun moveToTop(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        require(!taskEntity.isCompleted) { "Can't move completed tasks" }
         val now = clockNow()
+        val updatedTaskEntity = taskEntity.copy(
+            position = 0.toTaskPosition(),
+            lastUpdateDate = now,
+        )
+        val tasksToUpdate = taskDao.getTasksUpToPosition(taskEntity.parentListLocalId, taskEntity.position)
+            .toMutableList()
+        tasksToUpdate.removeIf { it.id == taskEntity.id }
+        // put the updated task at the beginning of the list to enforce proper ordering
+        tasksToUpdate.add(0, updatedTaskEntity)
+        val updatedTaskEntities = computeTaskPositions(tasksToUpdate)
+        taskDao.upsertAll(updatedTaskEntities)
+
+        // FIXME should already be available in entity, quick & dirty workaround
+        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
+            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
+            val task = withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.move(
+                        taskListId = taskListRemoteId,
+                        taskId = updatedTaskEntity.remoteId,
+                        parentTaskId = null,
+                        previousTaskId = null,
+                        destinationTaskListId = null,
+                    )
+                } catch (_: Exception) {
+                    null
+                }
+            }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
+            }
+        }
     }
 
     suspend fun moveToList(taskId: Long, targetListId: Long) {

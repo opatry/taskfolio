@@ -166,4 +166,20 @@ class TaskRepositoryCRUDTest {
         assertNotNull(tasks)
         assertEquals(0, tasks.size, "Task should have been deleted")
     }
+
+    @Test
+    fun `move task to top`() = runTaskRepositoryTest { repository ->
+        val (taskList, task1) = repository.createAndGetTask("tasks", "t1")
+        val task2 = repository.createAndGetTask(taskList.id, "t2")
+
+        repository.moveToTop(task1.id)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(2, tasks.size)
+        assertEquals(task1.id, tasks[0].id, "last task should now be first")
+        assertEquals("00000000000000000000", tasks[0].position, "position should reflect new order")
+        assertEquals(task2.id, tasks[1].id, "first task should now be last")
+        assertEquals("00000000000000000001", tasks[1].position, "position should reflect new order")
+    }
 }
