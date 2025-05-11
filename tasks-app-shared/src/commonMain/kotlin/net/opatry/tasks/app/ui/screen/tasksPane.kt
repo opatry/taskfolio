@@ -30,14 +30,12 @@ import Circle
 import CircleCheckBig
 import CircleOff
 import EllipsisVertical
-import LayoutList
 import ListPlus
 import LucideIcons
 import NotepadText
 import Plus
 import Trash
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -114,7 +112,6 @@ import kotlinx.datetime.todayIn
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.EmptyState
-import net.opatry.tasks.app.ui.component.MissingScreen
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskListMenu
@@ -175,6 +172,8 @@ import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
 import net.opatry.tasks.resources.task_list_pane_task_restored_snackbar
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
+import net.opatry.tasks.resources.task_menu_move_to_new_list_create_task_list_dialog_confirm
+import net.opatry.tasks.resources.task_menu_move_to_new_list_create_task_list_dialog_title
 import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -592,17 +591,25 @@ fun TaskListDetail(
     }
 
     if (showNewTaskListAlert) {
-        // FIXME should be a dialog
-        ModalBottomSheet(onDismissRequest = {
-            taskOfInterest = null
-            showNewTaskListAlert = false
-        }) {
-            MissingScreen("New task list", LucideIcons.LayoutList)
-        }
+        val task = checkNotNull(taskOfInterest) { "Can't show new task list dialog without task to move" }
+        EditTextDialog(
+            onDismissRequest = {
+                taskOfInterest = null
+                showNewTaskListAlert = false
+            },
+            validateLabel = stringResource(Res.string.task_menu_move_to_new_list_create_task_list_dialog_confirm),
+            onValidate = { title ->
+                taskOfInterest = null
+                showNewTaskListAlert = false
+                viewModel.moveToNewList(task.id, title)
+                // TODO should navigate to the newly created list maybe? How?
+            },
+            dialogTitle = stringResource(Res.string.task_menu_move_to_new_list_create_task_list_dialog_title),
+            allowBlank = false
+        )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TasksColumn(
     taskLists: List<TaskListUIModel>,

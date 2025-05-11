@@ -126,6 +126,8 @@
     <string name="task_menu_move_to">Déplacer vers…</string>
     <string name="task_menu_new_list">Nouvelle liste</string>
     <string name="task_menu_delete">Supprimer</string>
+    <string name="task_menu_move_to_new_list_create_task_list_dialog_title">Nouvelle liste de tâches</string>
+    <string name="task_menu_move_to_new_list_create_task_list_dialog_confirm">Créer</string>
 
     <string name="about_screen_app_version_subtitle">Version %1$s</string>
     <string name="about_screen_website_item">Site web</string>
