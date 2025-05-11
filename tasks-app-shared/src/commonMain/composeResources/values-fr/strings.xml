@@ -72,6 +72,7 @@
     <string name="task_list_pane_delete_task_icon_content_desc">Supprimer la tâche</string>
     <string name="task_list_pane_task_options_icon_content_desc">Options de la tâche</string>
     <string name="task_event_error_task_create">Une erreur est survenue lors de la création de la tâche</string>
+    <string name="task_event_error_task_create_child">Une erreur est survenue lors de la création de la sous-tâche</string>
     <string name="task_event_error_task_delete">Une erreur est survenue lors de la suppression de la tâche</string>
     <string name="task_event_error_task_unindent">Une erreur est survenue lors de la désindentation de la tâche</string>
     <string name="task_event_error_task_indent">Une erreur est survenue lors de l'indentation de la tâche</string>

@@ -205,7 +205,6 @@ class RemainingTaskRowTest {
             .assertDoesNotExist()
     }
 
-    @Ignore("TODO restore once enabled")
     @Test
     fun `when canCreateSubTask=true then ADD_SUBTASK menu should be enabled and trigger AddSubTask action`() = runComposeUiTest {
         val taskList = createTaskList().copy(

@@ -112,7 +112,6 @@ fun TaskMenu(
                 },
                 onClick = { onAction(TaskAction.AddSubTask) },
                 modifier = Modifier.testTag(ADD_SUBTASK),
-                enabled = false // TODO support sub task creation
             )
         }
 

@@ -24,6 +24,7 @@ package net.opatry.tasks.app.ui
 
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_event_error_task_create
+import net.opatry.tasks.resources.task_event_error_task_create_child
 import net.opatry.tasks.resources.task_event_error_task_delete
 import net.opatry.tasks.resources.task_event_error_task_indent
 import net.opatry.tasks.resources.task_event_error_task_move
@@ -41,6 +42,7 @@ import org.jetbrains.compose.resources.StringResource
 val TaskEvent.Error.asLabel: StringResource
     get() = when (this) {
         TaskEvent.Error.Task.Create -> Res.string.task_event_error_task_create
+        TaskEvent.Error.Task.CreateChild -> Res.string.task_event_error_task_create_child
         TaskEvent.Error.Task.Delete -> Res.string.task_event_error_task_delete
         TaskEvent.Error.Task.Unindent -> Res.string.task_event_error_task_unindent
         TaskEvent.Error.Task.Indent -> Res.string.task_event_error_task_indent
