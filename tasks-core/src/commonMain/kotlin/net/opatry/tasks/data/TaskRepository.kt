@@ -173,11 +173,11 @@ fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
 
 /**
  * Updates the position of tasks among the provided list of tasks.
- * The tasks to complete are kept in the same order and their position is recomputed starting from 0.
+ * The tasks to complete are kept in the same order and their position is recomputed starting from `newPositionStart`.
  * The completed tasks are sorted last and sorted by completion date.
  * Position is reset for each list & parent task.
  */
-fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
+fun computeTaskPositions(tasks: List<TaskEntity>, newPositionStart: Int = 0): List<TaskEntity> {
     return buildList {
         val tasksByList = tasks.groupBy(TaskEntity::parentListLocalId)
         tasksByList.forEach { (_, tasks) ->
@@ -185,7 +185,7 @@ fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
                 val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
                 val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
                 val todoWithPositions = todo.mapIndexed { index, taskEntity ->
-                    taskEntity.copy(position = index.toTaskPosition())
+                    taskEntity.copy(position = (newPositionStart + index).toTaskPosition())
                 }
 
                 val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(TaskEntity::position)

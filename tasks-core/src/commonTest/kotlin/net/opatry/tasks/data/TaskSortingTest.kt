@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -181,6 +181,38 @@ class TaskSortingTest {
         assertEquals("00000000000000000000", sortedTasks[1].position)
         assertEquals(2, sortedTasks[2].id)
         assertEquals("00000000000000000001", sortedTasks[2].position)
+    }
+
+    @Test
+    fun `task positions restarts at provided index`() {
+        val tasks = listOf(
+            TaskEntity(
+                id = 0,
+                title = "t1",
+                parentListLocalId = 0,
+                lastUpdateDate = LocalDateTime(2024, 10, 28, 12, 0, 0).toInstant(TimeZone.UTC),
+                isCompleted = false,
+                completionDate = null,
+                position = ""
+            ),
+            TaskEntity(
+                id = 1,
+                title = "t2",
+                parentListLocalId = 0,
+                lastUpdateDate = LocalDateTime(2024, 10, 28, 12, 0, 0).toInstant(TimeZone.UTC),
+                isCompleted = false,
+                completionDate = null,
+                position = ""
+            ),
+        )
+
+        val sortedTasks = computeTaskPositions(tasks, newPositionStart = 42)
+
+        assertEquals(tasks.size, sortedTasks.size)
+        assertEquals(0, sortedTasks[0].id)
+        assertEquals("00000000000000000042", sortedTasks[0].position)
+        assertEquals(1, sortedTasks[1].id)
+        assertEquals("00000000000000000043", sortedTasks[1].position)
     }
 
     @Test
