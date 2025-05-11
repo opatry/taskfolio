@@ -171,6 +171,20 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `delete task should recompute remaining tasks positions`() = runTaskRepositoryTest { repository ->
+        val (taskList, task1) = repository.createAndGetTask("My tasks", "task1")
+        val task2 = repository.createAndGetTask(taskList.id, "task2")
+
+        repository.deleteTask(task2.id)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size, "Task should have been deleted")
+        assertEquals(task1.id, tasks.first().id)
+        assertEquals("00000000000000000000", tasks.first().position, "Task position should have been updated")
+    }
+
+    @Test
     fun `move task to top`() = runTaskRepositoryTest { repository ->
         val (taskList, task1) = repository.createAndGetTask("tasks", "t1")
         val task2 = repository.createAndGetTask(taskList.id, "t2")

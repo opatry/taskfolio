@@ -429,6 +429,13 @@ class TaskRepository(
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         // TODO pending deletion?
         taskDao.deleteTask(taskId)
+
+        val tasksToUpdated = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.position)
+        if (tasksToUpdated.isNotEmpty()) {
+            val updatedTasks = computeTaskPositions(tasksToUpdated, newPositionStart = taskEntity.position.toInt())
+            taskDao.upsertAll(updatedTasks)
+        }
+
         // FIXME should already be available in entity, quick & dirty workaround
         val taskListRemoteId = taskEntity.parentTaskRemoteId
             ?: taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
