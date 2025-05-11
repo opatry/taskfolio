@@ -51,6 +51,10 @@ private suspend fun TaskRepository.createAndGetTask(taskListTitle: String, taskT
     return taskList to createAndGetTask(taskList.id, taskTitle)
 }
 
+private suspend fun TaskRepository.findTaskListById(id: Long): TaskListDataModel? {
+    return getTaskLists().firstOrNull()?.firstOrNull { it.id == id }
+}
+
 class TaskRepositoryCRUDTest {
 
     @Test
@@ -68,7 +72,8 @@ class TaskRepositoryCRUDTest {
         val taskList = repository.createAndGetTaskList("My tasks")
 
         repository.renameTaskList(taskList.id, "My renamed list")
-        val taskListRenamed = repository.getTaskLists().firstOrNull()?.firstOrNull()
+
+        val taskListRenamed = repository.findTaskListById(taskList.id)
         assertNotNull(taskListRenamed)
         assertEquals("My renamed list", taskListRenamed.title, "Updated name is invalid")
     }
@@ -78,6 +83,7 @@ class TaskRepositoryCRUDTest {
         val taskList = repository.createAndGetTaskList("My tasks")
 
         repository.deleteTaskList(taskList.id)
+
         val taskLists = repository.getTaskLists().firstOrNull()
         assertNotNull(taskLists)
         assertEquals(0, taskLists.size, "No task list expected")
@@ -88,7 +94,8 @@ class TaskRepositoryCRUDTest {
         val taskList = repository.createAndGetTaskList("My tasks")
 
         repository.createTask(taskList.id, "My task")
-        val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("My task", tasks.first().title)
@@ -97,10 +104,11 @@ class TaskRepositoryCRUDTest {
 
     @Test
     fun `rename task`() = runTaskRepositoryTest { repository ->
-        val (_, task) = repository.createAndGetTask("My tasks", "My task")
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
         repository.updateTaskTitle(task.id, "My renamed task")
-        val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("My renamed task", tasks.first().title)
@@ -108,10 +116,11 @@ class TaskRepositoryCRUDTest {
 
     @Test
     fun `edit task notes`() = runTaskRepositoryTest { repository ->
-        val (_, task) = repository.createAndGetTask("My tasks", "My task")
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
         repository.updateTaskNotes(task.id, "These are some notes")
-        val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("These are some notes", tasks.first().notes)
@@ -119,10 +128,11 @@ class TaskRepositoryCRUDTest {
 
     @Test
     fun `complete task`() = runTaskRepositoryTest { repository ->
-        val (_, task) = repository.createAndGetTask("My tasks", "My task")
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
         repository.toggleTaskCompletionState(task.id)
-        val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertTrue(tasks.first().isCompleted)
@@ -130,10 +140,11 @@ class TaskRepositoryCRUDTest {
 
     @Test
     fun `delete task`() = runTaskRepositoryTest { repository ->
-        val (_, task) = repository.createAndGetTask("My tasks", "My task")
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
         repository.deleteTask(task.id)
-        val tasks = repository.getTaskLists().firstOrNull()?.firstOrNull()?.tasks
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
         assertEquals(0, tasks.size, "Task should have been deleted")
     }
