@@ -201,6 +201,23 @@ class TaskListsViewModel(
         }
     }
 
+    fun createSubTask(taskListId: TaskListId, parentTaskId: TaskId, title: String, notes: String = "", dueDate: LocalDate? = null) {
+        viewModelScope.launch {
+            try {
+                taskRepository.createTask(
+                    taskListId.value,
+                    parentTaskId.value,
+                    title,
+                    notes,
+                    dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())
+                )
+            } catch (e: Exception) {
+                logger.logError("Error while creating sub task ($taskListId > ${parentTaskId})", e)
+                _eventFlow.emit(TaskEvent.Error.Task.CreateChild)
+            }
+        }
+    }
+
     fun deleteTask(taskId: TaskId) {
         viewModelScope.launch {
             try {
