@@ -30,7 +30,6 @@ import Trash2
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.style.TextOverflow
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.ADD_SUBTASK
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.DELETE
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.INDENT
@@ -160,20 +158,19 @@ fun TaskMenu(
 
         // FIXME not ideal when a lot of list, maybe ask for a dialog or bottom sheet in which to choose?
         //  or using a submenu?
-        val enableMoveTaskList = false // TODO support task move to list
+        val enableMoveTaskList = true // TODO should it be hidden when 1 list only?
         if (enableMoveTaskList) {
             taskLists.forEach { taskList ->
+                val isCurrentList = taskList.id == currentTaskList?.id
                 DropdownMenuItem(
                     text = {
-                        RowWithIcon(icon = if (taskList.id == currentTaskList?.id) {
-                            { Icon(LucideIcons.Check, null) }
-                        } else null
-                        ) {
-                            Text(taskList.title, overflow = TextOverflow.Ellipsis, maxLines = 1)
-                        }
+                        RowWithIcon(
+                            icon = LucideIcons.Check.takeIf { isCurrentList },
+                            text = taskList.title,
+                        )
                     },
                     modifier = Modifier.testTag(MOVE_TO_LIST),
-                    enabled = taskList.id != currentTaskList?.id,
+                    enabled = !isCurrentList,
                     onClick = { onAction(TaskAction.MoveToList(taskList)) }
                 )
             }

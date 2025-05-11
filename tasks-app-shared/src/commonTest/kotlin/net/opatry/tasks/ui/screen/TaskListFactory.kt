@@ -37,11 +37,12 @@ val today: LocalDate
 
 private var TASK_LIST_ID = 0L
 fun createTaskList(
+    title: String = "Task List",
     remainingTaskCount: Int = 0,
     completedTaskCount: Int = 0,
 ) = TaskListUIModel(
     id = TaskListId(TASK_LIST_ID++),
-    title = "Task List",
+    title = title,
     remainingTasks = mapOf(null to List(remainingTaskCount) { createTask() }),
     completedTasks = List(completedTaskCount) { createTask(isCompleted = true) }
 )

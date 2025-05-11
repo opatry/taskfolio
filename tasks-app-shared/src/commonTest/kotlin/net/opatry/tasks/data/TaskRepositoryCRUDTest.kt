@@ -34,15 +34,16 @@ import kotlin.test.assertTrue
 
 private suspend fun TaskRepository.createAndGetTaskList(title: String): TaskListDataModel {
     createTaskList(title)
-    return getTaskLists().firstOrNull()?.firstOrNull() ?: error("Task list not found")
+    return getTaskLists().firstOrNull()?.maxByOrNull(TaskListDataModel::id)?.takeIf { it.title == title }
+        ?: error("Task list not found")
 }
 
 private suspend fun TaskRepository.createAndGetTask(taskListId: Long, taskTitle: String): TaskDataModel {
     createTask(taskListId, taskTitle)
-    return getTaskLists().firstOrNull()
-        ?.firstOrNull { it.id == taskListId }
+    return findTaskListById(taskListId)
         ?.tasks
-        ?.firstOrNull { it.title == taskTitle }
+        ?.maxByOrNull(TaskDataModel::id)
+        ?.takeIf { it.title == taskTitle }
         ?: error("Task not found")
 }
 
@@ -186,6 +187,32 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `move task to list`() = runTaskRepositoryTest { repository ->
+        val (taskList1, task1) = repository.createAndGetTask("list1", "t1")
+        val task2 = repository.createAndGetTask(taskList1.id, "t2")
+        val task3 = repository.createAndGetTask(taskList1.id, "t3")
+        val (taskList2, task4) = repository.createAndGetTask("list2", "t4")
+
+        repository.moveToList(task2.id, taskList2.id)
+
+        val updatedTaskList1 = repository.findTaskListById(taskList1.id)
+        assertNotNull(updatedTaskList1)
+        assertEquals(2, updatedTaskList1.tasks.size)
+        assertEquals(task3.id, updatedTaskList1.tasks[0].id)
+        assertEquals("00000000000000000000", updatedTaskList1.tasks[0].position, "task from first list should have their position updated")
+        assertEquals(task1.id, updatedTaskList1.tasks[1].id)
+        assertEquals("00000000000000000001", updatedTaskList1.tasks[1].position, "task from first list should have their position updated")
+
+        val updatedTaskList2 = repository.findTaskListById(taskList2.id)
+        assertNotNull(updatedTaskList2)
+        assertEquals(2, updatedTaskList2.tasks.size)
+        assertEquals(task2.id, updatedTaskList2.tasks[0].id)
+        assertEquals("00000000000000000000", updatedTaskList2.tasks[0].position, "task should be moved at first position")
+        assertEquals(task4.id, updatedTaskList2.tasks[1].id)
+        assertEquals("00000000000000000001", updatedTaskList2.tasks[1].position, "task from second list should have their position updated")
+    }
+
+    @Test
     fun `move task to new list`() = runTaskRepositoryTest { repository ->
         val (taskList1, task1) = repository.createAndGetTask("list1", "t1")
         val task2 = repository.createAndGetTask(taskList1.id, "t2")
@@ -197,12 +224,13 @@ class TaskRepositoryCRUDTest {
         assertNotNull(updatedTaskList1)
         assertEquals(1, updatedTaskList1.tasks.size)
         assertEquals(task1.id, updatedTaskList1.tasks.first().id)
+        assertEquals("00000000000000000000", updatedTaskList1.tasks.first().position, "task should be moved at first position")
 
         val taskList2 = repository.findTaskListById(taskListId2)
         assertNotNull(taskList2)
         assertEquals(1, taskList2.tasks.size)
         val updatedTask = taskList2.tasks.first()
         assertEquals(task2.id, updatedTask.id)
-        assertEquals("00000000000000000000", updatedTask.position, "task position should be updated to first")
+        assertEquals("00000000000000000000", updatedTask.position, "task should be moved at first position")
     }
 }

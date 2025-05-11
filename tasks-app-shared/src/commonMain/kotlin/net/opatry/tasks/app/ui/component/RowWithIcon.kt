@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -43,7 +44,7 @@ fun RowWithIcon(text: String, icon: ImageVector? = null, spacerSize: Dp = 24.dp)
             { Icon(icon, null) }
         } else null,
         spacerSize,
-        content = { Text(text) }
+        content = { Text(text, overflow = TextOverflow.Ellipsis, maxLines = 1) }
     )
 }
 
