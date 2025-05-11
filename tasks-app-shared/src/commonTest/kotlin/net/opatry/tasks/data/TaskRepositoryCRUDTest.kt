@@ -39,7 +39,7 @@ private suspend fun TaskRepository.createAndGetTaskList(title: String): TaskList
 }
 
 private suspend fun TaskRepository.createAndGetTask(taskListId: Long, taskTitle: String): TaskDataModel {
-    createTask(taskListId, taskTitle)
+    createTask(taskListId, null, taskTitle)
     return findTaskListById(taskListId)
         ?.tasks
         ?.maxByOrNull(TaskDataModel::id)
@@ -95,7 +95,7 @@ class TaskRepositoryCRUDTest {
     fun `create task`() = runTaskRepositoryTest { repository ->
         val taskList = repository.createAndGetTaskList("My tasks")
 
-        val taskId = repository.createTask(taskList.id, "My task")
+        val taskId = repository.createTask(taskList.id, null, "My task")
 
         val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
@@ -109,8 +109,8 @@ class TaskRepositoryCRUDTest {
     fun `create 2 tasks puts the second at start`() = runTaskRepositoryTest { repository ->
         val taskList = repository.createAndGetTaskList("My tasks")
 
-        repository.createTask(taskList.id, "task1")
-        repository.createTask(taskList.id, "task2")
+        repository.createTask(taskList.id, null, "task1")
+        repository.createTask(taskList.id, null, "task2")
 
         val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)

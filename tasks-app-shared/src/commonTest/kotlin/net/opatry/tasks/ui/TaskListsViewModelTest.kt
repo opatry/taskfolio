@@ -269,13 +269,13 @@ class TaskListsViewModelTest {
         viewModel.createTask(taskListId, "task")
         advanceUntilIdle()
 
-        then(taskRepository).should().createTask(100, "task")
+        then(taskRepository).should().createTask(100, null, "task")
     }
 
     @Test
     fun `createTask failure when calling repository should log error`() = runTest {
         val e = mock(RuntimeException::class.java)
-        `when`(taskRepository.createTask(100, "task"))
+        `when`(taskRepository.createTask(100, null, "task"))
             .thenThrow(e)
 
         val events = mutableListOf<TaskEvent>()
@@ -300,7 +300,7 @@ class TaskListsViewModelTest {
         viewModel.createTask(TaskListId(100), "task", "notes", date)
         advanceUntilIdle()
 
-        then(taskRepository).should().createTask(100, "task", "notes", instant)
+        then(taskRepository).should().createTask(100, null, "task", "notes", instant)
     }
 
     @Test

@@ -193,7 +193,7 @@ class TaskListsViewModel(
     fun createTask(taskListId: TaskListId, title: String, notes: String = "", dueDate: LocalDate? = null) {
         viewModelScope.launch {
             try {
-                taskRepository.createTask(taskListId.value, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
+                taskRepository.createTask(taskListId.value, null, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
             } catch (e: Exception) {
                 logger.logError("Error while creating task ($taskListId)", e)
                 _eventFlow.emit(TaskEvent.Error.Task.Create)
