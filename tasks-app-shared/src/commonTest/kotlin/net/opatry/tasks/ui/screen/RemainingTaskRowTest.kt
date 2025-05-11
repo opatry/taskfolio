@@ -360,7 +360,6 @@ class RemainingTaskRowTest {
         assertEquals(TaskAction.Indent, action, "Indent action should have been triggered")
     }
 
-    @Ignore("TODO restore once enabled")
     @Test
     fun `when clicking on MOVE_TO_NEW_LIST menu then should trigger MoveToNewList action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)

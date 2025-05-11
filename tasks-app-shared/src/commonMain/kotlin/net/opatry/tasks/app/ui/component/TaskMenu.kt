@@ -156,7 +156,6 @@ fun TaskMenu(
             },
             onClick = { onAction(TaskAction.MoveToNewList) },
             modifier = Modifier.testTag(MOVE_TO_NEW_LIST),
-            enabled = false, // TODO support task move to list
         )
 
         // FIXME not ideal when a lot of list, maybe ask for a dialog or bottom sheet in which to choose?
