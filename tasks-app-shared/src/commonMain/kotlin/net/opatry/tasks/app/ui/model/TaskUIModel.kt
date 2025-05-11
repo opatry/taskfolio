@@ -58,7 +58,6 @@ data class TaskUIModel(
     val id: TaskId,
     val title: String,
     val dueDate: LocalDate? = null,
-    val completionDate: LocalDate? = null,
     val notes: String = "",
     val isCompleted: Boolean = false,
     val position: String = "", // FIXME for debug?
