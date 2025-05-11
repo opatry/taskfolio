@@ -299,7 +299,7 @@ class TaskRepository(
         }
     }
 
-    suspend fun createTaskList(title: String) {
+    suspend fun createTaskList(title: String): Long {
         val now = clockNow()
         val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
         val taskList = withContext(Dispatchers.IO) {
@@ -312,6 +312,7 @@ class TaskRepository(
         if (taskList != null) {
             taskListDao.upsert(taskList.asTaskListEntity(taskListId, TaskListEntity.Sorting.UserDefined))
         }
+        return taskListId
     }
 
     suspend fun deleteTaskList(taskListId: Long) {
@@ -389,7 +390,7 @@ class TaskRepository(
         taskListDao.sortTasksBy(taskListId, dbSorting)
     }
 
-    suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null) {
+    suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null): Long {
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         val now = clockNow()
         val firstPosition = 0.toTaskPosition()
@@ -422,6 +423,7 @@ class TaskRepository(
                 taskDao.upsert(task.asTaskEntity(taskListId, taskId))
             }
         }
+        return taskId
     }
 
     suspend fun deleteTask(taskId: Long) {

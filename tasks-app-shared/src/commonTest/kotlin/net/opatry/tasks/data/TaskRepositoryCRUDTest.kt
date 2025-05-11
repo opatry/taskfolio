@@ -59,12 +59,13 @@ class TaskRepositoryCRUDTest {
 
     @Test
     fun `create task list`() = runTaskRepositoryTest { repository ->
-        repository.createTaskList("My tasks")
+        val taskListId = repository.createTaskList("My tasks")
 
         val taskLists = repository.getTaskLists().firstOrNull()
         assertNotNull(taskLists)
         assertEquals(1, taskLists.size)
         assertEquals("My tasks", taskLists.first().title)
+        assertEquals(taskListId, taskLists.first().id)
     }
 
     @Test
@@ -93,13 +94,14 @@ class TaskRepositoryCRUDTest {
     fun `create task`() = runTaskRepositoryTest { repository ->
         val taskList = repository.createAndGetTaskList("My tasks")
 
-        repository.createTask(taskList.id, "My task")
+        val taskId = repository.createTask(taskList.id, "My task")
 
         val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("My task", tasks.first().title)
         assertFalse(tasks.first().isCompleted)
+        assertEquals(taskId, tasks.first().id)
     }
 
     @Test
