@@ -82,23 +82,27 @@ fun TaskListMenu(
             onClick = {}
         )
 
+        val isManualSorting = taskList.sorting == TaskListSorting.Manual
         DropdownMenuItem(
             text = {
                 RowWithIcon(
                     stringResource(Res.string.task_list_menu_sort_manual),
-                    LucideIcons.Check.takeIf { taskList.sorting == TaskListSorting.Manual })
+                    LucideIcons.Check.takeIf { isManualSorting }
+                )
             },
-            enabled = taskList.sorting != TaskListSorting.Manual,
+            enabled = !isManualSorting,
             onClick = { onAction(TaskListMenuAction.SortManual) }
         )
 
+        val isDueDateSorting = taskList.sorting == TaskListSorting.DueDate
         DropdownMenuItem(
             text = {
                 RowWithIcon(
                     stringResource(Res.string.task_list_menu_sort_due_date),
-                    LucideIcons.Check.takeIf { taskList.sorting == TaskListSorting.DueDate })
+                    LucideIcons.Check.takeIf { isDueDateSorting }
+                )
             },
-            enabled = taskList.sorting != TaskListSorting.DueDate,
+            enabled = !isDueDateSorting,
             onClick = { onAction(TaskListMenuAction.SortDate) }
         )
 
