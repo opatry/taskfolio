@@ -103,6 +103,24 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `create 2 tasks puts the second at start`() = runTaskRepositoryTest { repository ->
+        val taskList = repository.createAndGetTaskList("My tasks")
+
+        repository.createTask(taskList.id, "task1")
+        repository.createTask(taskList.id, "task2")
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(2, tasks.size)
+        val firstTask = tasks.find { it.position == "00000000000000000000" }
+        assertNotNull(firstTask, "task with position 0 not found")
+        val lastTask = tasks.find { it.position == "00000000000000000001" }
+        assertNotNull(lastTask, "task with position 1 not found")
+        assertEquals("task2", firstTask.title, "first task should be last created")
+        assertEquals("task1", lastTask.title, "last task should be first created")
+    }
+
+    @Test
     fun `rename task`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
