@@ -406,9 +406,8 @@ class TaskRepository(
         )
         val taskId = taskDao.insert(taskEntity)
         if (currentTasks.isNotEmpty()) {
-            currentTasks.add(0, taskEntity)
-            val updatedTasks = computeTaskPositions(currentTasks)
-            taskDao.upsertAll(updatedTasks - taskEntity)
+            val updatedTasks = computeTaskPositions(currentTasks, newPositionStart = 1)
+            taskDao.upsertAll(updatedTasks)
         }
 
         if (taskListEntity.remoteId != null) {
