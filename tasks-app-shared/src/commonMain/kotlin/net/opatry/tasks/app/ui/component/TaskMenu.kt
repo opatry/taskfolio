@@ -104,7 +104,6 @@ fun TaskMenu(
                 },
                 onClick = { onAction(TaskAction.MoveToTop) },
                 modifier = Modifier.testTag(MOVE_TO_TOP),
-                enabled = false // TODO support task move
             )
         }
 

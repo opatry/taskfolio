@@ -51,9 +51,17 @@ fun createTask(
     title: String = "Task",
     dueDate: LocalDate = today,
     isCompleted: Boolean = false,
+    canMoveToTop: Boolean = false,
+    canUnindent: Boolean = false,
+    canIndent: Boolean = false,
+    canCreateSubTask: Boolean = false,
 ) = TaskUIModel(
     id = TaskId(TASK_ID++),
     title = title,
     dueDate = dueDate,
     isCompleted = isCompleted,
+    canMoveToTop = canMoveToTop,
+    canUnindent = canUnindent,
+    canIndent = canIndent,
+    canCreateSubTask = canCreateSubTask,
 )
