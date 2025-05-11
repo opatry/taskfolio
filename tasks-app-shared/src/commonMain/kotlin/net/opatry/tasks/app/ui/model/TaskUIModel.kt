@@ -27,6 +27,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
+import net.opatry.tasks.data.toTaskPosition
 
 sealed class DateRange {
     open val date: LocalDate? = null
@@ -60,7 +61,7 @@ data class TaskUIModel(
     val dueDate: LocalDate? = null,
     val notes: String = "",
     val isCompleted: Boolean = false,
-    val position: String = "", // FIXME for debug?
+    val position: String = 0.toTaskPosition(),
     val indent: Int = 0,
 ) {
     val dateRange: DateRange

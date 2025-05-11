@@ -184,7 +184,9 @@ fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
             tasks.groupBy(TaskEntity::parentTaskLocalId).forEach { (_, subTasks) ->
                 val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
                 val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
-                val todoWithPositions = todo.mapIndexed { index, taskEntity -> taskEntity.copy(position = index.toString().padStart(20, '0')) }
+                val todoWithPositions = todo.mapIndexed { index, taskEntity ->
+                    taskEntity.copy(position = index.toTaskPosition())
+                }
 
                 val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(TaskEntity::position)
                 addAll(sortedSubTasks)
@@ -192,6 +194,8 @@ fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
         }
     }
 }
+
+fun Number.toTaskPosition(): String = this.toString().padStart(20, '0')
 
 fun computeCompletedTaskPosition(task: TaskEntity): String {
     val completionDate = task.completionDate
@@ -210,7 +214,7 @@ fun computeCompletedTaskPosition(task: TaskEntity): String {
 fun Instant.asCompletedTaskPosition(): String {
     val upperBound = BigInteger("9999999999999999999")
     val sorting = upperBound - this.toEpochMilliseconds().toBigInteger()
-    return sorting.toString().padStart(20, '0')
+    return sorting.toTaskPosition()
 }
 
 class TaskRepository(
