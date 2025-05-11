@@ -445,8 +445,8 @@ class TaskRepository(
 
     private suspend fun applyTaskUpdate(taskId: Long, updateLogic: suspend (TaskEntity, Instant) -> TaskEntity?) {
         val now = clockNow()
-        val task = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val updatedTaskEntity = updateLogic(task, now) ?: return
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val updatedTaskEntity = updateLogic(taskEntity, now) ?: return
 
         taskDao.upsert(updatedTaskEntity)
 
@@ -454,7 +454,7 @@ class TaskRepository(
         val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
             ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
-            withContext(Dispatchers.IO) {
+            val task = withContext(Dispatchers.IO) {
                 try {
                     tasksApi.update(
                         taskListRemoteId,
@@ -464,6 +464,10 @@ class TaskRepository(
                 } catch (_: Exception) {
                     null
                 }
+            }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
             }
         }
     }
