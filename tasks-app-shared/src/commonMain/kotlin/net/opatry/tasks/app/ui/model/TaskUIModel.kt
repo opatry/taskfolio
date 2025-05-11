@@ -63,6 +63,10 @@ data class TaskUIModel(
     val isCompleted: Boolean = false,
     val position: String = 0.toTaskPosition(),
     val indent: Int = 0,
+    val canMoveToTop: Boolean = false,
+    val canUnindent: Boolean = false,
+    val canIndent: Boolean = false,
+    val canCreateSubTask: Boolean = false,
 ) {
     val dateRange: DateRange
         get() {
@@ -79,9 +83,4 @@ data class TaskUIModel(
                 else -> DateRange.Today(dueLocalDate)
             }
         }
-
-    val canMoveToTop: Boolean = false // TODO not in first position in list
-    val canUnindent: Boolean = indent > 0
-    val canIndent: Boolean = indent < 1 // TODO & not first position in list
-    val canCreateSubTask: Boolean = indent == 0
 }
