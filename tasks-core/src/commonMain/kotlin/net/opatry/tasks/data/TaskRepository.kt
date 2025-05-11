@@ -299,7 +299,7 @@ class TaskRepository(
         }
     }
 
-    suspend fun createTaskList(title: String) {
+    suspend fun createTaskList(title: String): Long {
         val now = clockNow()
         val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
         val taskList = withContext(Dispatchers.IO) {
@@ -312,6 +312,7 @@ class TaskRepository(
         if (taskList != null) {
             taskListDao.upsert(taskList.asTaskListEntity(taskListId, TaskListEntity.Sorting.UserDefined))
         }
+        return taskListId
     }
 
     suspend fun deleteTaskList(taskListId: Long) {
@@ -389,7 +390,7 @@ class TaskRepository(
         taskListDao.sortTasksBy(taskListId, dbSorting)
     }
 
-    suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null) {
+    suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null): Long {
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         val now = clockNow()
         val firstPosition = 0.toTaskPosition()
@@ -422,6 +423,7 @@ class TaskRepository(
                 taskDao.upsert(task.asTaskEntity(taskListId, taskId))
             }
         }
+        return taskId
     }
 
     suspend fun deleteTask(taskId: Long) {
@@ -486,8 +488,7 @@ class TaskRepository(
         }
     }
 
-    suspend fun updateTask(taskListId: Long, taskId: Long, title: String, notes: String, dueDate: Instant?) {
-        // TODO deal with task list update
+    suspend fun updateTask(taskId: Long, title: String, notes: String, dueDate: Instant?) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
             taskEntity.copy(
                 title = title,
@@ -581,9 +582,43 @@ class TaskRepository(
         val now = clockNow()
     }
 
-    suspend fun moveToNewList(taskId: Long, newListTitle: String) {
+    suspend fun moveToNewList(taskId: Long, newListTitle: String): Long {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = clockNow()
+
         // TODO ideally transactional
+        val newTaskListId = createTaskList(newListTitle)
+        val now = clockNow()
+        val updatedTaskEntity = taskEntity.copy(
+            parentListLocalId = newTaskListId,
+            lastUpdateDate = now,
+            position = 0.toTaskPosition(),
+        )
+        taskDao.upsert(updatedTaskEntity)
+
+        // TODO should we update original list's remaining tasks' positions?
+
+        // FIXME should already be available in entity, quick & dirty workaround
+        val newTaskListRemoteId = taskListDao.getById(newTaskListId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && taskEntity.remoteId != null && newTaskListRemoteId != null) {
+            val task = withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.move(
+                        taskListId = taskListRemoteId,
+                        taskId = taskEntity.remoteId,
+                        parentTaskId = null,
+                        previousTaskId = null,
+                        destinationTaskListId = newTaskListRemoteId,
+                    )
+                } catch (_: Exception) {
+                    null
+                }
+            }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
+            }
+        }
+        return newTaskListId
     }
 }

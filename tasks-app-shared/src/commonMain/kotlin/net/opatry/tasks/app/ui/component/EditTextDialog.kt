@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -35,6 +35,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -60,6 +63,11 @@ fun EditTextDialog(
     initialText: String = "",
     allowBlank: Boolean = true,
 ) {
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
@@ -82,11 +90,13 @@ fun EditTextDialog(
                     Text(dialogTitle, style = MaterialTheme.typography.titleLarge)
                 }
                 OutlinedTextField(
-                    newTitle,
+                    value = newTitle,
                     onValueChange = {
                         alreadyHadSomeContent = alreadyHadSomeContent || it.isNotBlank()
                         newTitle = it
                     },
+                    modifier = Modifier
+                        .focusRequester(focusRequester),
                     label = { Text(stringResource(Res.string.edit_text_dialog_title)) },
                     maxLines = 1,
                     supportingText = if (allowBlank) null else {
