@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -104,7 +104,6 @@ fun TaskMenu(
                 },
                 onClick = { onAction(TaskAction.MoveToTop) },
                 modifier = Modifier.testTag(MOVE_TO_TOP),
-                enabled = false
             )
         }
 
@@ -115,7 +114,7 @@ fun TaskMenu(
                 },
                 onClick = { onAction(TaskAction.AddSubTask) },
                 modifier = Modifier.testTag(ADD_SUBTASK),
-                enabled = false
+                enabled = false // TODO support sub task creation
             )
         }
 
@@ -126,7 +125,7 @@ fun TaskMenu(
                 },
                 onClick = { onAction(TaskAction.Indent) },
                 modifier = Modifier.testTag(INDENT),
-                enabled = false
+                enabled = false // TODO support indentation
             )
         }
 
@@ -137,7 +136,7 @@ fun TaskMenu(
                 },
                 onClick = { onAction(TaskAction.Unindent) },
                 modifier = Modifier.testTag(UNINDENT),
-                enabled = false
+                enabled = false // TODO support indentation
             )
         }
 
@@ -147,7 +146,7 @@ fun TaskMenu(
             text = {
                 Text(stringResource(Res.string.task_menu_move_to), style = MaterialTheme.typography.titleSmall)
             },
-            enabled = false,
+            enabled = false, // TODO support task move to list
             onClick = {}
         )
 
@@ -157,12 +156,12 @@ fun TaskMenu(
             },
             onClick = { onAction(TaskAction.MoveToNewList) },
             modifier = Modifier.testTag(MOVE_TO_NEW_LIST),
-            enabled = false,
+            enabled = false, // TODO support task move to list
         )
 
         // FIXME not ideal when a lot of list, maybe ask for a dialog or bottom sheet in which to choose?
         //  or using a submenu?
-        val enableMoveTaskList = false
+        val enableMoveTaskList = false // TODO support task move to list
         if (enableMoveTaskList) {
             taskLists.forEach { taskList ->
                 DropdownMenuItem(

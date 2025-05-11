@@ -184,7 +184,9 @@ fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
             tasks.groupBy(TaskEntity::parentTaskLocalId).forEach { (_, subTasks) ->
                 val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
                 val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
-                val todoWithPositions = todo.mapIndexed { index, taskEntity -> taskEntity.copy(position = index.toString().padStart(20, '0')) }
+                val todoWithPositions = todo.mapIndexed { index, taskEntity ->
+                    taskEntity.copy(position = index.toTaskPosition())
+                }
 
                 val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(TaskEntity::position)
                 addAll(sortedSubTasks)
@@ -192,6 +194,8 @@ fun computeTaskPositions(tasks: List<TaskEntity>): List<TaskEntity> {
         }
     }
 }
+
+fun Number.toTaskPosition(): String = this.toString().padStart(20, '0')
 
 fun computeCompletedTaskPosition(task: TaskEntity): String {
     val completionDate = task.completionDate
@@ -210,7 +214,7 @@ fun computeCompletedTaskPosition(task: TaskEntity): String {
 fun Instant.asCompletedTaskPosition(): String {
     val upperBound = BigInteger("9999999999999999999")
     val sorting = upperBound - this.toEpochMilliseconds().toBigInteger()
-    return sorting.toString().padStart(20, '0')
+    return sorting.toTaskPosition()
 }
 
 class TaskRepository(
@@ -218,16 +222,16 @@ class TaskRepository(
     private val taskDao: TaskDao,
     private val taskListsApi: TaskListsApi,
     private val tasksApi: TasksApi,
+    private val clockNow: () -> Instant = Clock.System::now,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTaskLists() = taskListDao.getAllTaskListsWithTasksAsFlow()
         .distinctUntilChanged()
         .mapLatest { entries ->
             entries.map { (list, tasks) ->
-                // FIXME Where should happen the sorting, on SQL side or here or in UI layer?
                 list.asTaskListDataModel(tasks)
+            }
         }
-    }
 
     suspend fun sync() {
         val taskListIds = mutableMapOf<Long, String>()
@@ -296,7 +300,7 @@ class TaskRepository(
     }
 
     suspend fun createTaskList(title: String) {
-        val now = Clock.System.now()
+        val now = clockNow()
         val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
         val taskList = withContext(Dispatchers.IO) {
             try {
@@ -326,7 +330,7 @@ class TaskRepository(
     }
 
     suspend fun renameTaskList(taskListId: Long, newTitle: String) {
-        val now = Clock.System.now()
+        val now = clockNow()
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
             .copy(
                 title = newTitle,
@@ -334,7 +338,7 @@ class TaskRepository(
             )
         taskListDao.upsert(taskListEntity)
         if (taskListEntity.remoteId != null) {
-            withContext(Dispatchers.IO) {
+            val taskList = withContext(Dispatchers.IO) {
                 try {
                     taskListsApi.update(
                         taskListEntity.remoteId,
@@ -347,6 +351,9 @@ class TaskRepository(
                 } catch (_: Exception) {
                     null
                 }
+            }
+            if (taskList != null) {
+                taskListDao.upsert(taskList.asTaskListEntity(taskListId, taskListEntity.sorting))
             }
         }
     }
@@ -383,17 +390,26 @@ class TaskRepository(
     }
 
     suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null) {
-        val now = Clock.System.now()
+        val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
+        val now = clockNow()
+        val firstPosition = 0.toTaskPosition()
+        val currentTasks = taskDao.getTasksFromPositionOnward(taskListId, firstPosition)
+            .toMutableList()
         val taskEntity = TaskEntity(
             parentListLocalId = taskListId,
             title = title,
             notes = notes,
             lastUpdateDate = now,
             dueDate = dueDate,
-            position = ""/*TODO local position value?*/
+            position = firstPosition,
         )
         val taskId = taskDao.insert(taskEntity)
-        val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
+        if (currentTasks.isNotEmpty()) {
+            currentTasks.add(0, taskEntity)
+            val updatedTasks = computeTaskPositions(currentTasks)
+            taskDao.upsertAll(updatedTasks - taskEntity)
+        }
+
         if (taskListEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
@@ -431,9 +447,9 @@ class TaskRepository(
     }
 
     private suspend fun applyTaskUpdate(taskId: Long, updateLogic: suspend (TaskEntity, Instant) -> TaskEntity?) {
-        val now = Clock.System.now()
-        val task = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val updatedTaskEntity = updateLogic(task, now) ?: return
+        val now = clockNow()
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val updatedTaskEntity = updateLogic(taskEntity, now) ?: return
 
         taskDao.upsert(updatedTaskEntity)
 
@@ -441,7 +457,7 @@ class TaskRepository(
         val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
             ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
-            withContext(Dispatchers.IO) {
+            val task = withContext(Dispatchers.IO) {
                 try {
                     tasksApi.update(
                         taskListRemoteId,
@@ -452,11 +468,16 @@ class TaskRepository(
                     null
                 }
             }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
+            }
         }
     }
 
     suspend fun toggleTaskCompletionState(taskId: Long) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
+            // TODO should update position when changed/restored to not completed, what should it be?
             taskEntity.copy(
                 isCompleted = !taskEntity.isCompleted,
                 completionDate = if (taskEntity.isCompleted) null else updateTime,
@@ -506,28 +527,63 @@ class TaskRepository(
 
     suspend fun indentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        val now = clockNow()
     }
 
     suspend fun unindentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        val now = clockNow()
     }
 
     suspend fun moveToTop(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        require(!taskEntity.isCompleted) { "Can't move completed tasks" }
+        val now = clockNow()
+        val updatedTaskEntity = taskEntity.copy(
+            position = 0.toTaskPosition(),
+            lastUpdateDate = now,
+        )
+        val tasksToUpdate = taskDao.getTasksUpToPosition(taskEntity.parentListLocalId, taskEntity.position)
+            .toMutableList()
+        tasksToUpdate.removeIf { it.id == taskEntity.id }
+        // put the updated task at the beginning of the list to enforce proper ordering
+        tasksToUpdate.add(0, updatedTaskEntity)
+        val updatedTaskEntities = computeTaskPositions(tasksToUpdate)
+        taskDao.upsertAll(updatedTaskEntities)
+
+        // FIXME should already be available in entity, quick & dirty workaround
+        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
+            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
+            val task = withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.move(
+                        taskListId = taskListRemoteId,
+                        taskId = updatedTaskEntity.remoteId,
+                        parentTaskId = null,
+                        previousTaskId = null,
+                        destinationTaskListId = null,
+                    )
+                } catch (_: Exception) {
+                    null
+                }
+            }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
+            }
+        }
     }
 
     suspend fun moveToList(taskId: Long, targetListId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val taskListEntity = requireNotNull(taskListDao.getById(targetListId)) { "Invalid task list id $targetListId" }
-        val now = Clock.System.now()
+        val now = clockNow()
     }
 
     suspend fun moveToNewList(taskId: Long, newListTitle: String) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = Clock.System.now()
+        val now = clockNow()
         // TODO ideally transactional
     }
 }

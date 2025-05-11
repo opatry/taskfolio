@@ -137,7 +137,7 @@ class TaskListsViewModelTest {
                             dueDate = futureInstant,
                             lastUpdateDate = updateInstant,
                             completionDate = null,
-                            position = "1",
+                            position = "00000000000000000000",
                             indent = 0,
                         ),
                         TaskDataModel(
@@ -148,7 +148,7 @@ class TaskListsViewModelTest {
                             dueDate = pastInstant,
                             lastUpdateDate = updateInstant,
                             completionDate = null,
-                            position = "2",
+                            position = "00000000000000000001",
                             indent = 0,
                         ),
                         TaskDataModel(
@@ -159,7 +159,7 @@ class TaskListsViewModelTest {
                             dueDate = null,
                             lastUpdateDate = updateInstant,
                             completionDate = updateInstant,
-                            position = "3",
+                            position = "09999999999999999999",
                             indent = 0,
                         ),
                     ),
@@ -182,11 +182,14 @@ class TaskListsViewModelTest {
                         id = TaskId(value = 102),
                         title = "task2",
                         dueDate = LastWeek,
-                        completionDate = null,
                         notes = "notes2",
                         isCompleted = false,
-                        position = "2",
-                        indent = 0
+                        position = "00000000000000000001",
+                        indent = 0,
+                        canMoveToTop = true,
+                        canUnindent = false,
+                        canIndent = true,
+                        canCreateSubTask = true,
                     )
                 ),
                 DateRange.Later(date = NextWeek, numberOfDays = 7) to listOf(
@@ -194,11 +197,14 @@ class TaskListsViewModelTest {
                         id = TaskId(value = 101),
                         title = "task1",
                         dueDate = NextWeek,
-                        completionDate = null,
                         notes = "notes1",
                         isCompleted = false,
-                        position = "1",
-                        indent = 0
+                        position = "00000000000000000000",
+                        indent = 0,
+                        canMoveToTop = false,
+                        canUnindent = false,
+                        canIndent = false,
+                        canCreateSubTask = true,
                     )
                 ),
 
@@ -211,11 +217,14 @@ class TaskListsViewModelTest {
                     id = TaskId(value = 103),
                     title = "task3",
                     dueDate = null,
-                    completionDate = null,
                     notes = "notes3",
                     isCompleted = true,
-                    position = "3",
-                    indent = 0
+                    position = "09999999999999999999",
+                    indent = 0,
+                    canMoveToTop = false,
+                    canUnindent = false,
+                    canIndent = false,
+                    canCreateSubTask = false,
                 )
             ),
             taskList.completedTasks

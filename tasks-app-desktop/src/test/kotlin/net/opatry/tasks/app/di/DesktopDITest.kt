@@ -65,6 +65,7 @@ class DesktopDITest {
                 definition<HttpClient>(HttpClientEngine::class, HttpClientConfig::class),
                 definition<TaskListsViewModel>(Duration::class),
                 definition<File>(URI::class),
+                definition<TaskRepository>(Function0::class),
                 definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
             )
         )
@@ -107,7 +108,7 @@ class DesktopDITest {
     fun `verify app module`() {
         tasksAppModule.verify(
             injections = injectedParameters(
-                definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class),
+                definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class, Function0::class),
                 definition<TaskListsViewModel>(Duration::class, Logger::class),
                 definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
             )

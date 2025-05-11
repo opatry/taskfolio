@@ -25,7 +25,7 @@ package net.opatry.tasks.ui.screen
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onChildren
@@ -54,15 +54,15 @@ import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
 import org.jetbrains.compose.resources.pluralStringResource
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-@Suppress("TestFunctionName")
 @OptIn(ExperimentalTestApi::class)
 class RemainingTaskRowTest {
     @Test
-    fun RemainingTaskRow_Layout() = runComposeUiTest {
+    fun `when task has no notes and no due date then row should have title and no notes nor due date chip`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first().copy(
             title = "My Task",
@@ -84,10 +84,10 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun RemainingTaskRow_LayoutFull() = runComposeUiTest {
+    fun `when task has notes and due date then row should have title, notes and date chip`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first().copy(
-            title = "My Task With notes & date",
+            title = "My Task with notes & date",
             notes = "My notes",
             dueDate = today.minus(2, DateTimeUnit.WEEK)
         )
@@ -97,7 +97,7 @@ class RemainingTaskRowTest {
             RemainingTaskRow(listOf(taskList), task) {}
         }
 
-        onNodeWithText("My Task With notes & date")
+        onNodeWithText("My Task with notes & date")
             .assertIsDisplayed()
 
         // FIXME why useUnmergedTree is needed?
@@ -115,7 +115,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun RemainingTaskRow_Complete() = runComposeUiTest {
+    fun `when clicking task REMAINING_TASK_ICON then should trigger ToggleCompletion action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
@@ -133,7 +133,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun RemainingTaskRow_Menu() = runComposeUiTest {
+    fun `when clicking REMAINING_TASK_MENU_ICON then should display task menu`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         setContent {
@@ -152,7 +152,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun RemainingTaskRow_Edit() = runComposeUiTest {
+    fun `when clicking a task row then should trigger Edit action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
@@ -165,11 +165,11 @@ class RemainingTaskRowTest {
         onNodeWithTag(REMAINING_TASK_ROW)
             .performClick()
 
-        assertEquals(TaskAction.Edit, action, "Click on cell should trigger Edit action")
+        assertEquals(TaskAction.Edit, action, "Click on row should trigger Edit action")
     }
 
     @Test
-    fun RemainingTaskRow_EditDueDate() = runComposeUiTest {
+    fun `when clicking REMAINING_TASK_DUE_DATE_CHIP then should trigger UpdateDueDate action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
@@ -185,11 +185,30 @@ class RemainingTaskRowTest {
         assertEquals(TaskAction.UpdateDueDate, action, "UpdateDueDate action should have been triggered")
     }
 
-    // TODO
-    //  AddSubTask depends if task is already a subtask or not, or if it's the first of the list
     @Test
-    fun RemainingTaskRow_Menu_AddSubTask() = runComposeUiTest {
-        val taskList = createTaskList(remainingTaskCount = 1)
+    fun `when canCreateSubTask=false then ADD_SUBTASK menu should be hidden`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canCreateSubTask = false)))
+        )
+        val task = taskList.allRemainingTasks.first()
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {}
+        }
+
+        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+            .assertIsDisplayed()
+            .performClick()
+
+        onNodeWithTag(ADD_SUBTASK)
+            .assertDoesNotExist()
+    }
+
+    @Ignore("TODO restore once enabled")
+    @Test
+    fun `when canCreateSubTask=true then ADD_SUBTASK menu should be enabled and trigger AddSubTask action`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canCreateSubTask = true)))
+        )
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
         setContent {
@@ -204,18 +223,35 @@ class RemainingTaskRowTest {
 
         onNodeWithTag(ADD_SUBTASK)
             .assertIsDisplayed()
-            // TODO not implemented yet
-            .assertIsNotEnabled()
+            .assertIsEnabled()
+            .performClick()
 
-        // TODO restore once implemented
-        //  assertEquals(TaskAction.AddSubTask, action, "AddSubTask action should have been triggered")
+        assertEquals(TaskAction.AddSubTask, action, "AddSubTask action should have been triggered")
     }
 
-    // TODO
-    //  MoveToTop depends if task is the first of the list
     @Test
-    fun RemainingTaskRow_Menu_MoveToTop() = runComposeUiTest {
-        val taskList = createTaskList(remainingTaskCount = 1)
+    fun `when canMoveToTop=false then MOVE_TO_TOP menu should be hidden`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canMoveToTop = false)))
+        )
+        val task = taskList.allRemainingTasks.first()
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {}
+        }
+
+        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+            .assertIsDisplayed()
+            .performClick()
+
+        onNodeWithTag(MOVE_TO_TOP)
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun `when canMoveToTop=true then MOVE_TO_TOP menu should be enabled and trigger MoveToTop action`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canMoveToTop = true)))
+        )
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
         setContent {
@@ -229,17 +265,37 @@ class RemainingTaskRowTest {
             .performClick()
 
         onNodeWithTag(MOVE_TO_TOP)
-            .assertDoesNotExist()
+            .assertIsDisplayed()
+            .assertIsEnabled()
+            .performClick()
 
-        // TODO restore once implemented
-        //  assertEquals(TaskAction.MoveToTop, action, "MoveToTop action should have been triggered")
+        assertEquals(TaskAction.MoveToTop, action, "MoveToTop action should have been triggered")
     }
 
-    // TODO
-    //  Unindent depends if task is already a subtask
     @Test
-    fun RemainingTaskRow_Menu_Unindent() = runComposeUiTest {
-        val taskList = createTaskList(remainingTaskCount = 1)
+    fun `when canUnindent=false then UNINDENT menu should be hidden`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canUnindent = false)))
+        )
+        val task = taskList.allRemainingTasks.first()
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {}
+        }
+
+        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+            .assertIsDisplayed()
+            .performClick()
+
+        onNodeWithTag(UNINDENT)
+            .assertDoesNotExist()
+    }
+
+    @Ignore("TODO restore once enabled")
+    @Test
+    fun `when canUnindent=true then UNINDENT menu should be enabled and trigger Unindent action`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canUnindent = true)))
+        )
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
         setContent {
@@ -253,17 +309,37 @@ class RemainingTaskRowTest {
             .performClick()
 
         onNodeWithTag(UNINDENT)
-            .assertDoesNotExist()
+            .assertIsDisplayed()
+            .assertIsEnabled()
+            .performClick()
 
-        // TODO restore once implemented
-        //  assertEquals(TaskAction.Unindent, action, "Unindent action should have been triggered")
+        assertEquals(TaskAction.Unindent, action, "Unindent action should have been triggered")
     }
 
-    // TODO
-    //  Indent depends if task is already a subtask
     @Test
-    fun RemainingTaskRow_Menu_Indent() = runComposeUiTest {
-        val taskList = createTaskList(remainingTaskCount = 1)
+    fun `when canIndent=false then INDENT menu should be hidden`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canIndent = false)))
+        )
+        val task = taskList.allRemainingTasks.first()
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {}
+        }
+
+        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+            .assertIsDisplayed()
+            .performClick()
+
+        onNodeWithTag(INDENT)
+            .assertDoesNotExist()
+    }
+
+    @Ignore("TODO restore once enabled")
+    @Test
+    fun `when canIndent=true then INDENT menu should be enabled and trigger Indent action`() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(null to listOf(createTask(canIndent = true)))
+        )
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
         setContent {
@@ -278,15 +354,15 @@ class RemainingTaskRowTest {
 
         onNodeWithTag(INDENT)
             .assertIsDisplayed()
-            // TODO not implemented yet
-            .assertIsNotEnabled()
+            .assertIsEnabled()
+            .performClick()
 
-        // TODO restore once implemented
-        //  assertEquals(TaskAction.Indent, action, "Indent action should have been triggered")
+        assertEquals(TaskAction.Indent, action, "Indent action should have been triggered")
     }
 
+    @Ignore("TODO restore once enabled")
     @Test
-    fun RemainingTaskRow_Menu_MoveToNewList() = runComposeUiTest {
+    fun `when clicking on MOVE_TO_NEW_LIST menu then should trigger MoveToNewList action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
@@ -302,17 +378,16 @@ class RemainingTaskRowTest {
 
         onNodeWithTag(MOVE_TO_NEW_LIST)
             .assertIsDisplayed()
-            // TODO not implemented yet
-            .assertIsNotEnabled()
+            .assertIsEnabled()
+            .performClick()
 
-        // TODO restore once implemented
-        //  assertEquals(TaskAction.MoveToNewList, action, "MoveToNewList action should have been triggered")
+        assertEquals(TaskAction.MoveToNewList, action, "MoveToNewList action should have been triggered")
     }
 
     // TODO
     //  Task parent list entry should be disabled, need several task list to test fully
     @Test
-    fun RemainingTaskRow_Menu_MoveToList() = runComposeUiTest {
+    fun `when clicking on MOVE_TO_LIST menu then should trigger MoveToList action with chosen list`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
@@ -335,7 +410,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun RemainingTaskRow_Menu_Delete() = runComposeUiTest {
+    fun `when clicking on DELETE menu then should trigger the Delete action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null

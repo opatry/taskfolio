@@ -50,6 +50,8 @@ import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import net.opatry.tasks.data.toTaskPosition
+import org.jetbrains.annotations.VisibleForTesting
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -79,7 +81,9 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
     )
 }
 
-private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
+@VisibleForTesting
+internal fun TaskDataModel.asTaskUIModel(): TaskUIModel {
+    val isFirstTask = position == 0.toTaskPosition()
     return TaskUIModel(
         id = TaskId(id),
         title = title,
@@ -88,6 +92,10 @@ private fun TaskDataModel.asTaskUIModel(): TaskUIModel {
         isCompleted = isCompleted,
         position = position,
         indent = indent,
+        canMoveToTop = !isCompleted && indent == 0 && !isFirstTask,
+        canUnindent = !isCompleted && indent > 0,
+        canIndent = !isCompleted && indent == 0 && !isFirstTask,
+        canCreateSubTask = !isCompleted && indent == 0,
     )
 }
 

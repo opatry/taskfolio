@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -35,8 +35,14 @@ interface TaskListDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(item: TaskListEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAll(items: List<TaskListEntity>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(item: TaskListEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(items: List<TaskListEntity>): List<Long>
 
     // FIXME should be a pending deletion "flag" until sync is done
     @Query("DELETE FROM task_list WHERE local_id = :id")
@@ -51,11 +57,14 @@ interface TaskListDao {
     @Query("SELECT * FROM task_list")
     fun getAllAsFlow(): Flow<List<TaskListEntity>>
 
-    // FIXME order should use "parent" lexicographic order
+    // FIXME order should use "parent" lexicographic order, but need to have initial task list first
     // use LEFT JOIN to get all task lists even if they have no task
     @Query(
-        """SELECT * FROM task_list
-LEFT JOIN task ON task_list.local_id = task.parent_list_local_id ORDER BY task_list.local_id ASC, task.local_id ASC"""
+        """
+            SELECT * FROM task_list
+            LEFT JOIN task ON task_list.local_id = task.parent_list_local_id
+            ORDER BY task_list.local_id ASC, task.position ASC
+        """
     )
     fun getAllTaskListsWithTasksAsFlow(): Flow<Map<TaskListEntity, List<TaskEntity>>>
 

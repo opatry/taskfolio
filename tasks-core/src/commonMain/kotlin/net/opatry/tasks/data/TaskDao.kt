@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -35,8 +35,14 @@ interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(item: TaskEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAll(items: List<TaskEntity>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(item: TaskEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(items: List<TaskEntity>): List<Long>
 
     @Query("SELECT * FROM task WHERE remote_id = :remoteId")
     suspend fun getByRemoteId(remoteId: String): TaskEntity?
@@ -54,6 +60,24 @@ interface TaskDao {
     // FIXME should be a pending deletion "flag" until sync is done
     @Query("DELETE FROM task WHERE local_id IN (:ids)")
     suspend fun deleteTasks(ids: List<Long>)
+
+    @Query(
+        """
+            SELECT * FROM task
+            WHERE parent_list_local_id = :taskListLocalId AND position <= :position AND is_completed = false
+            ORDER BY position ASC
+        """
+    )
+    suspend fun getTasksUpToPosition(taskListLocalId: Long, position: String): List<TaskEntity>
+
+    @Query(
+        """
+            SELECT * FROM task
+            WHERE parent_list_local_id = :taskListLocalId AND position >= :position AND is_completed = false
+            ORDER BY position ASC
+        """
+    )
+    suspend fun getTasksFromPositionOnward(taskListLocalId: Long, position: String): List<TaskEntity>
 
     @Query("SELECT * FROM task WHERE parent_list_local_id = :taskListLocalId AND is_completed = true ORDER BY position ASC")
     suspend fun getCompletedTasks(taskListLocalId: Long): List<TaskEntity>
