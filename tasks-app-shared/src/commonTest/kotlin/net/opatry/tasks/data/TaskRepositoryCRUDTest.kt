@@ -199,7 +199,9 @@ class TaskRepositoryCRUDTest {
         assertNotNull(updatedTaskList1)
         assertEquals(2, updatedTaskList1.tasks.size)
         assertEquals(task3.id, updatedTaskList1.tasks[0].id)
+        assertEquals("00000000000000000000", updatedTaskList1.tasks[0].position, "task from first list should have their position updated")
         assertEquals(task1.id, updatedTaskList1.tasks[1].id)
+        assertEquals("00000000000000000001", updatedTaskList1.tasks[1].position, "task from first list should have their position updated")
 
         val updatedTaskList2 = repository.findTaskListById(taskList2.id)
         assertNotNull(updatedTaskList2)
@@ -207,6 +209,7 @@ class TaskRepositoryCRUDTest {
         assertEquals(task2.id, updatedTaskList2.tasks[0].id)
         assertEquals("00000000000000000000", updatedTaskList2.tasks[0].position, "task should be moved at first position")
         assertEquals(task4.id, updatedTaskList2.tasks[1].id)
+        assertEquals("00000000000000000001", updatedTaskList2.tasks[1].position, "task from second list should have their position updated")
     }
 
     @Test
@@ -221,6 +224,7 @@ class TaskRepositoryCRUDTest {
         assertNotNull(updatedTaskList1)
         assertEquals(1, updatedTaskList1.tasks.size)
         assertEquals(task1.id, updatedTaskList1.tasks.first().id)
+        assertEquals("00000000000000000000", updatedTaskList1.tasks.first().position, "task should be moved at first position")
 
         val taskList2 = repository.findTaskListById(taskListId2)
         assertNotNull(taskList2)

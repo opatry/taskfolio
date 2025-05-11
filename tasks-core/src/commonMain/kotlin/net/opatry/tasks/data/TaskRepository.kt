@@ -587,7 +587,22 @@ class TaskRepository(
         )
         taskDao.upsert(updatedTaskEntity)
 
-        // TODO should we update original list's remaining tasks' positions?
+        // update positions of source list
+        val initialTasksAfter = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.position)
+            .toMutableList()
+        if (initialTasksAfter.isNotEmpty()) {
+            val updatedTasks = computeTaskPositions(initialTasksAfter, taskEntity.position.toInt())
+            taskDao.upsertAll(updatedTasks)
+        }
+
+        // update positions of destination list
+        val destinationTasksAfter = taskDao.getTasksUpToPosition(updatedTaskEntity.id, updatedTaskEntity.position)
+            .toMutableList()
+        destinationTasksAfter.removeIf { it.id == updatedTaskEntity.id }
+        if (destinationTasksAfter.isNotEmpty()) {
+            val updatedTaskEntities = computeTaskPositions(destinationTasksAfter, newPositionStart = 1)
+            taskDao.upsertAll(updatedTaskEntities)
+        }
 
         // FIXME should already be available in entity, quick & dirty workaround
         val newTaskListRemoteId = destinationTaskListEntity.remoteId
