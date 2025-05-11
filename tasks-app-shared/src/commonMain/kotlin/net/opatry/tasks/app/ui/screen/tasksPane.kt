@@ -146,7 +146,8 @@ import net.opatry.tasks.resources.task_due_date_label_yesterday
 import net.opatry.tasks.resources.task_due_date_update_cta
 import net.opatry.tasks.resources.task_editor_sheet_edit_title
 import net.opatry.tasks.resources.task_editor_sheet_list_dropdown_label
-import net.opatry.tasks.resources.task_editor_sheet_new_title
+import net.opatry.tasks.resources.task_editor_sheet_new_subtask_title
+import net.opatry.tasks.resources.task_editor_sheet_new_task_title
 import net.opatry.tasks.resources.task_editor_sheet_no_due_date_fallback
 import net.opatry.tasks.resources.task_editor_sheet_notes_field_label
 import net.opatry.tasks.resources.task_editor_sheet_notes_field_placeholder
@@ -216,6 +217,7 @@ fun TaskListDetail(
     var showDatePickerDialog by remember { mutableStateOf(false) }
     val taskEditorSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showNewTaskSheet by remember { mutableStateOf(false) }
+    var showNewSubTaskSheet by remember { mutableStateOf(false) }
     var showNewTaskListAlert by remember { mutableStateOf(false) }
 
     var showUndoTaskDeletionSnackbar by remember { mutableStateOf(false) }
@@ -306,7 +308,7 @@ fun TaskListDetail(
                     },
                     onNewSubTask = {
                         taskOfInterest = it
-                        showNewTaskSheet = true
+                        showNewSubTaskSheet = true
                     },
                     onUnindent = { viewModel.unindentTask(it.id) },
                     onIndent = { viewModel.indentTask(it.id) },
@@ -392,7 +394,7 @@ fun TaskListDetail(
     }
 
     // FIXME extract a reusable dialog with proper callbacks instead of putting `if`s everywhere
-    if (showEditTaskSheet || showNewTaskSheet) {
+    if (showEditTaskSheet || showNewTaskSheet || showNewSubTaskSheet) {
         val task = taskOfInterest
         ModalBottomSheet(
             sheetState = taskEditorSheetState,
@@ -400,18 +402,27 @@ fun TaskListDetail(
                 taskOfInterest = null
                 showEditTaskSheet = false
                 showNewTaskSheet = false
+                showNewSubTaskSheet = false
             }
         ) {
-            val sheetTitleRes = if (showEditTaskSheet) Res.string.task_editor_sheet_edit_title else Res.string.task_editor_sheet_new_title
-            var newTitle by remember { mutableStateOf(task?.title ?: "") }
+            val sheetTitleRes = when {
+                showEditTaskSheet -> Res.string.task_editor_sheet_edit_title
+                showNewSubTaskSheet -> Res.string.task_editor_sheet_new_subtask_title
+                else -> Res.string.task_editor_sheet_new_task_title
+            }
+            // FIXME remembers from 1 dialog to the other
+            val initialTitle = task?.title.takeUnless { showNewSubTaskSheet }.orEmpty()
+            var newTitle by remember { mutableStateOf(initialTitle) }
             // avoid displaying an error message when user didn't even started to write content
-            var alreadyHadSomeContent by remember { mutableStateOf((task?.title ?: "").isNotBlank()) }
+            var alreadyHadSomeContent by remember { mutableStateOf(initialTitle.isNotBlank()) }
             val titleHasError by remember {
                 derivedStateOf {
                     newTitle.isBlank()
                 }
             }
-            var newNotes by remember { mutableStateOf(task?.notes ?: "") }
+            // FIXME remembers from 1 dialog to the other
+            val initialNotes = task?.notes?.takeUnless { showNewSubTaskSheet }.orEmpty()
+            var newNotes by remember { mutableStateOf(initialNotes) }
             var expandTaskListsDropDown by remember { mutableStateOf(false) }
             var targetList by remember { mutableStateOf(taskList) }
 
@@ -528,22 +539,35 @@ fun TaskListDetail(
                         taskOfInterest = null
                         showEditTaskSheet = false
                         showNewTaskSheet = false
+                        showNewSubTaskSheet = false
                     }) {
                         Text(stringResource(Res.string.dialog_cancel))
                     }
                     Button(
                         onClick = {
-                            if (showEditTaskSheet) {
-                                taskOfInterest = null
-                                showEditTaskSheet = false
+                            when {
+                                showEditTaskSheet -> {
+                                    taskOfInterest = null
+                                    showEditTaskSheet = false
 
-                                // TODO deal with due date and nested alert dialogs
-                                viewModel.updateTask(requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
-                            } else if (showNewTaskSheet) {
-                                showNewTaskSheet = false
+                                    // TODO deal with due date and nested alert dialogs
+                                    viewModel.updateTask(requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
+                                }
 
-                                onNavigateTo(targetList)
-                                viewModel.createTask(targetList.id, newTitle, newNotes, null /*TODO*/)
+                                showNewSubTaskSheet -> {
+                                    taskOfInterest = null
+                                    showNewSubTaskSheet = false
+
+                                    // TODO deal with due date and nested alert dialogs
+                                    viewModel.createSubTask(targetList.id, requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
+                                }
+
+                                showNewTaskSheet -> {
+                                    showNewTaskSheet = false
+
+                                    onNavigateTo(targetList)
+                                    viewModel.createTask(targetList.id, newTitle, newNotes, null /*TODO*/)
+                                }
                             }
                         },
                         enabled = newTitle.isNotBlank()

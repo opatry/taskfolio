@@ -104,7 +104,8 @@
     <string name="task_due_date_update_cta">Update</string>
 
     <string name="task_editor_sheet_edit_title">Edit task</string>
-    <string name="task_editor_sheet_new_title">New task</string>
+    <string name="task_editor_sheet_new_task_title">New task</string>
+    <string name="task_editor_sheet_new_subtask_title">New subtask</string>
     <string name="task_editor_sheet_title_field_label">Title</string>
     <string name="task_editor_sheet_title_field_placeholder">Set a title</string>
     <string name="task_editor_sheet_title_field_empty_error">Title cannot be empty</string>

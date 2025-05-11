@@ -101,7 +101,8 @@
     <string name="task_due_date_update_cta">Mettre à jour</string>
 
     <string name="task_editor_sheet_edit_title">Modifier la tâche</string>
-    <string name="task_editor_sheet_new_title">Nouvelle tâche</string>
+    <string name="task_editor_sheet_new_task_title">Nouvelle tâche</string>
+    <string name="task_editor_sheet_new_subtask_title">Nouvelle sous-tâche</string>
     <string name="task_editor_sheet_title_field_label">Titre</string>
     <string name="task_editor_sheet_title_field_placeholder">Donner un titre</string>
     <string name="task_editor_sheet_title_field_empty_error">Le titre ne peut pas être vide</string>
