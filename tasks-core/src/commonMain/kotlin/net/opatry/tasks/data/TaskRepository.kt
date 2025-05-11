@@ -338,7 +338,7 @@ class TaskRepository(
             )
         taskListDao.upsert(taskListEntity)
         if (taskListEntity.remoteId != null) {
-            withContext(Dispatchers.IO) {
+            val taskList = withContext(Dispatchers.IO) {
                 try {
                     taskListsApi.update(
                         taskListEntity.remoteId,
@@ -351,6 +351,9 @@ class TaskRepository(
                 } catch (_: Exception) {
                     null
                 }
+            }
+            if (taskList != null) {
+                taskListDao.upsert(taskList.asTaskListEntity(taskListId, taskListEntity.sorting))
             }
         }
     }
