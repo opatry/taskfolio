@@ -57,7 +57,6 @@ interface TaskListDao {
     @Query("SELECT * FROM task_list")
     fun getAllAsFlow(): Flow<List<TaskListEntity>>
 
-    // FIXME order should use "parent" lexicographic order, but need to have initial task list first
     // use LEFT JOIN to get all task lists even if they have no task
     @Query(
         """
