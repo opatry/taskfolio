@@ -158,7 +158,7 @@ fun TaskMenu(
 
         // FIXME not ideal when a lot of list, maybe ask for a dialog or bottom sheet in which to choose?
         //  or using a submenu?
-        val enableMoveTaskList = false // TODO support task move to list
+        val enableMoveTaskList = true // TODO should it be hidden when 1 list only?
         if (enableMoveTaskList) {
             taskLists.forEach { taskList ->
                 val isCurrentList = taskList.id == currentTaskList?.id

@@ -26,10 +26,12 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -383,15 +385,14 @@ class RemainingTaskRowTest {
         assertEquals(TaskAction.MoveToNewList, action, "MoveToNewList action should have been triggered")
     }
 
-    // TODO
-    //  Task parent list entry should be disabled, need several task list to test fully
     @Test
     fun `when clicking on MOVE_TO_LIST menu then should trigger MoveToList action with chosen list`() = runComposeUiTest {
-        val taskList = createTaskList(remainingTaskCount = 1)
-        val task = taskList.allRemainingTasks.first()
+        val taskList1 = createTaskList(title = "list1", remainingTaskCount = 1)
+        val taskList2 = createTaskList(title = "list2")
+        val task = taskList1.allRemainingTasks.first()
         var action: TaskAction? = null
         setContent {
-            RemainingTaskRow(listOf(taskList), task) {
+            RemainingTaskRow(listOf(taskList1, taskList2), task) {
                 action = it
             }
         }
@@ -401,11 +402,18 @@ class RemainingTaskRowTest {
             .performClick()
 
         onAllNodesWithTag(MOVE_TO_LIST)
-            // TODO not implemented yet
-            .assertCountEquals(0)
+            .assertCountEquals(2)
+            .onFirst()
+            .assertTextEquals(taskList1.title)
+            .assertIsNotEnabled()
 
-        // TODO restore once implemented
-        //  assertEquals(TaskAction.MoveToList(taskList2), action, "MoveToList action should have been triggered")
+        onAllNodesWithTag(MOVE_TO_LIST)
+            .onLast()
+            .assertTextEquals(taskList2.title)
+            .assertIsEnabled()
+            .performClick()
+
+        assertEquals(TaskAction.MoveToList(taskList2), action, "MoveToList action should have been triggered on list2")
     }
 
     @Test
