@@ -514,33 +514,33 @@ class TaskListsViewModelTest {
 
     @Test
     fun `updateTask should update repository`() = runTest {
-        viewModel.updateTask(TaskListId(1), TaskId(100), "title2", "", null)
+        viewModel.updateTask(TaskId(100), "title2", "", null)
         advanceUntilIdle()
 
-        then(taskRepository).should().updateTask(1, 100, "title2", "", null)
+        then(taskRepository).should().updateTask(100, "title2", "", null)
     }
 
     @Test
     fun `updateTask with extra parameters should update repository accordingly`() = runTest {
         val (date, instant) = buildMoments()
-        viewModel.updateTask(TaskListId(1), TaskId(100), "title2", "notes2", date)
+        viewModel.updateTask(TaskId(100), "title2", "notes2", date)
         advanceUntilIdle()
 
-        then(taskRepository).should().updateTask(1, 100, "title2", "notes2", instant)
+        then(taskRepository).should().updateTask(100, "title2", "notes2", instant)
     }
 
     @Test
     fun `updateTask with dirty string parameters should update repository with strings cleaned`() = runTest {
-        viewModel.updateTask(TaskListId(1), TaskId(100), "    title2    ", "    notes2    ", null)
+        viewModel.updateTask(TaskId(100), "    title2    ", "    notes2    ", null)
         advanceUntilIdle()
 
-        then(taskRepository).should().updateTask(1, 100, "title2", "notes2", null)
+        then(taskRepository).should().updateTask(100, "title2", "notes2", null)
     }
 
     @Test
     fun `updateTask failure when calling repository should log error`() = runTest {
         val e = mock(RuntimeException::class.java)
-        `when`(taskRepository.updateTask(1, 100, "", "", null))
+        `when`(taskRepository.updateTask(100, "", "", null))
             .thenThrow(e)
 
         val events = mutableListOf<TaskEvent>()
@@ -548,7 +548,7 @@ class TaskListsViewModelTest {
             viewModel.eventFlow.toList(events)
         }
 
-        viewModel.updateTask(TaskListId(1), TaskId(100), "", "", null)
+        viewModel.updateTask(TaskId(100), "", "", null)
         advanceUntilIdle()
 
         then(logger).should().logError("Error while updating task (TaskId(value=100))", e)

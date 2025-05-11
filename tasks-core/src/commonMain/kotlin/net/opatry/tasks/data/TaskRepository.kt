@@ -486,8 +486,7 @@ class TaskRepository(
         }
     }
 
-    suspend fun updateTask(taskListId: Long, taskId: Long, title: String, notes: String, dueDate: Instant?) {
-        // TODO deal with task list update
+    suspend fun updateTask(taskId: Long, title: String, notes: String, dueDate: Instant?) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
             taskEntity.copy(
                 title = title,

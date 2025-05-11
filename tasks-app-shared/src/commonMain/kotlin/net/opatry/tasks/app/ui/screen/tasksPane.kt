@@ -539,7 +539,7 @@ fun TaskListDetail(
                                 showEditTaskSheet = false
 
                                 // TODO deal with due date and nested alert dialogs
-                                viewModel.updateTask(targetList.id, requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
+                                viewModel.updateTask(requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
                             } else if (showNewTaskSheet) {
                                 showNewTaskSheet = false
 
