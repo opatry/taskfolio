@@ -489,8 +489,8 @@ fun TaskListDetail(
                         label = { Text(dueDateLabel, color = task?.dateRange.toColor()) },
                     )
 
-                    val enableAdvancedTaskEdit = false
-                    if (enableAdvancedTaskEdit) {
+                    val enableAdvancedTaskEdit = false // TODO implement advanced task edit
+                    if (enableAdvancedTaskEdit && showEditTaskSheet) {
                         ExposedDropdownMenuBox(
                             expanded = expandTaskListsDropDown,
                             onExpandedChange = { expandTaskListsDropDown = it }
