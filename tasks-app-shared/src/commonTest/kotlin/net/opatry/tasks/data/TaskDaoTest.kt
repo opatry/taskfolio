@@ -24,39 +24,41 @@ package net.opatry.tasks.data
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.util.inMemoryTasksAppDatabaseBuilder
+import org.junit.After
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-private fun runWithInMemoryDatabase(
-    test: suspend TestScope.(TaskDao) -> Unit
-) = runTest {
-    val db = inMemoryTasksAppDatabaseBuilder()
-        .setDriver(BundledSQLiteDriver())
-        .setQueryCoroutineContext(backgroundScope.coroutineContext)
-        .build()
-
-    try {
-        test(db.getTaskDao())
-    } finally {
-        db.close()
-    }
-}
-
 class TaskDaoTest {
+
     private val now: Instant
         get() = Clock.System.now()
 
+    private lateinit var db: TasksAppDatabase
+    private lateinit var taskDao: TaskDao
+
+    @BeforeTest
+    fun createDb() {
+        db = inMemoryTasksAppDatabaseBuilder()
+            .setDriver(BundledSQLiteDriver())
+            .build()
+        taskDao = db.getTaskDao()
+        taskDao = db.getTaskDao()
+    }
+
+    @After
+    fun closeDb() = db.close()
+
     @Test
-    fun `when insert then getById(taskId) should return created TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+    fun `when insert then getById(taskId) should return created TaskEntity`() = runTest {
         val giveNow = now
         val taskId = taskDao.insert(
             TaskEntity(
@@ -77,7 +79,7 @@ class TaskDaoTest {
 
 
     @Test
-    fun `when insertAll local tasks then getLocalOnlyTasks should return all local tasks`() = runWithInMemoryDatabase { taskDao ->
+    fun `when insertAll local tasks then getLocalOnlyTasks should return all local tasks`() = runTest {
         val tasks = listOf(
             TaskEntity(
                 id = 1L,
@@ -106,7 +108,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when upsert with updated title then getById(taskId) should return updated task`() = runWithInMemoryDatabase { taskDao ->
+    fun `when upsert with updated title then getById(taskId) should return updated task`() = runTest {
         val original = TaskEntity(
             id = 1L,
             parentListLocalId = 1L,
@@ -124,7 +126,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when upsert with new task then getById(taskId) should return created task`() = runWithInMemoryDatabase { taskDao ->
+    fun `when upsert with new task then getById(taskId) should return created task`() = runTest {
         val entity = TaskEntity(
             id = 1L,
             parentListLocalId = 1L,
@@ -141,7 +143,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when upsertAll then getLocalOnlyTaskLists should return updated task lists`() = runWithInMemoryDatabase { taskDao ->
+    fun `when upsertAll then getLocalOnlyTaskLists should return updated task lists`() = runTest {
         val items = listOf(
             TaskEntity(
                 id = 1L,
@@ -172,7 +174,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when deleteTask then getById(taskId) should return null`() = runWithInMemoryDatabase { taskDao ->
+    fun `when deleteTask then getById(taskId) should return null`() = runTest {
         val task = TaskEntity(
             id = 1L,
             parentListLocalId = 1L,
@@ -188,7 +190,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when deleteTasks then getById(taskId) should return null for all deleted tasks`() = runWithInMemoryDatabase { taskDao ->
+    fun `when deleteTasks then getById(taskId) should return null for all deleted tasks`() = runTest {
         taskDao.insertAll(
             listOf(
                 TaskEntity(
@@ -215,7 +217,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getCompletedTasks then should return completed tasks only`() = runWithInMemoryDatabase { taskDao ->
+    fun `when getCompletedTasks then should return completed tasks only`() = runTest {
         taskDao.insertAll(
             listOf(
                 TaskEntity(
@@ -260,7 +262,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when deleteStaleTasks then should delete all tasks not in the list of valid remote ids`() = runWithInMemoryDatabase { taskDao ->
+    fun `when deleteStaleTasks then should delete all tasks not in the list of valid remote ids`() = runTest {
         taskDao.insertAll(
             listOf(
                 TaskEntity(
@@ -289,7 +291,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getAllAsFlow then should emit value for new tasks when collecting`() = runWithInMemoryDatabase { taskDao ->
+    fun `when getAllAsFlow then should emit value for new tasks when collecting`() = runTest {
         val task = TaskEntity(
             id = 1L,
             parentListLocalId = 1L,
@@ -306,7 +308,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `given position p1 when getTasksUpToPosition then should return tasks with position lower or equal to p1`() = runWithInMemoryDatabase { taskDao ->
+    fun `given position p1 when getTasksUpToPosition then should return tasks with position lower or equal to p1`() = runTest {
         val firstTaskId = taskDao.insert(
             TaskEntity(
                 title = "first",
@@ -344,7 +346,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `given position p1 when getTasksFromPositionOnward then should return tasks with position greater or equal to p1`() = runWithInMemoryDatabase { taskDao ->
+    fun `given position p1 when getTasksFromPositionOnward then should return tasks with position greater or equal to p1`() = runTest {
         taskDao.insert(
             TaskEntity(
                 title = "first",
@@ -388,7 +390,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getTasksUpToPosition with no parent position then should return created TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+    fun `when getTasksUpToPosition with no parent position then should return created TaskEntity`() = runTest {
         val now = Clock.System.now()
         val taskId = taskDao.insert(
             TaskEntity(
@@ -409,7 +411,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getTasksUpToPosition with parent position then should return created child TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+    fun `when getTasksUpToPosition with parent position then should return created child TaskEntity`() = runTest {
         val parentTaskId = taskDao.insert(
             TaskEntity(
                 title = "parent",
@@ -439,7 +441,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getTasksFromPositionOnward with no parent position then should return created TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+    fun `when getTasksFromPositionOnward with no parent position then should return created TaskEntity`() = runTest {
         val now = Clock.System.now()
         val taskId = taskDao.insert(
             TaskEntity(
@@ -460,7 +462,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getTasksFromPositionOnward with parent position then should return created child TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+    fun `when getTasksFromPositionOnward with parent position then should return created child TaskEntity`() = runTest {
         val parentTaskId = taskDao.insert(
             TaskEntity(
                 title = "parent",
