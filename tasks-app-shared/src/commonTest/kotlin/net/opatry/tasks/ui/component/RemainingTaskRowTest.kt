@@ -464,7 +464,6 @@ class RemainingTaskRowTest {
             .assertDoesNotExist()
     }
 
-    @Ignore("TODO restore once enabled")
     @Test
     fun `when canIndent=true then INDENT menu should be enabled and trigger Indent action`() = runComposeUiTest {
         val taskList = createTaskList().copy(

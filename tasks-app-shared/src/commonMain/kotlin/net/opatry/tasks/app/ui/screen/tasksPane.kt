@@ -209,7 +209,7 @@ fun TaskListDetail(
                 }
 
                 is TaskAction.Indent -> {
-                    viewModel.unindentTask(action.task.id)
+                    viewModel.indentTask(action.task.id)
                 }
 
                 is TaskAction.MoveToTop -> {
