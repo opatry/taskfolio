@@ -332,7 +332,7 @@ class TaskDaoTest {
             )
         )
 
-        val tasks = taskDao.getTasksUpToPosition(0L, "00000000000000000001")
+        val tasks = taskDao.getTasksUpToPosition(0L, null, "00000000000000000001")
 
         assertEquals(2, tasks.size)
         assertEquals(firstTaskId, tasks[0].id)
@@ -351,6 +351,8 @@ class TaskDaoTest {
                 parentListLocalId = 0L,
                 lastUpdateDate = now,
                 position = "00000000000000000000",
+                parentTaskLocalId = null,
+                isCompleted = false,
             )
         )
         val secondTaskId = taskDao.insert(
@@ -359,6 +361,8 @@ class TaskDaoTest {
                 parentListLocalId = 0L,
                 lastUpdateDate = now,
                 position = "00000000000000000001",
+                parentTaskLocalId = null,
+                isCompleted = false,
             )
         )
         val thirdTaskId = taskDao.insert(
@@ -367,10 +371,12 @@ class TaskDaoTest {
                 parentListLocalId = 0L,
                 lastUpdateDate = now,
                 position = "00000000000000000002",
+                parentTaskLocalId = null,
+                isCompleted = false,
             )
         )
 
-        val tasks = taskDao.getTasksFromPositionOnward(0L, "00000000000000000001")
+        val tasks = taskDao.getTasksFromPositionOnward(0L, null, "00000000000000000001")
 
         assertEquals(2, tasks.size)
         assertEquals(secondTaskId, tasks[0].id)
@@ -379,5 +385,107 @@ class TaskDaoTest {
         assertEquals(thirdTaskId, tasks[1].id)
         assertEquals("third", tasks[1].title)
         assertEquals("00000000000000000002", tasks[1].position)
+    }
+
+    @Test
+    fun `when getTasksUpToPosition with no parent position then should return created TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+        val now = Clock.System.now()
+        val taskId = taskDao.insert(
+            TaskEntity(
+                title = "task",
+                parentListLocalId = 0L,
+                lastUpdateDate = now,
+                position = "00000000000000000000",
+            )
+        )
+
+        val tasks = taskDao.getTasksUpToPosition(0L, null, "00000000000000000000")
+
+        assertEquals(1, tasks.size)
+        assertEquals(taskId, tasks.first().id)
+        assertEquals("task", tasks.first().title)
+        assertEquals(now, tasks.first().lastUpdateDate)
+        assertEquals("00000000000000000000", tasks.first().position)
+    }
+
+    @Test
+    fun `when getTasksUpToPosition with parent position then should return created child TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+        val parentTaskId = taskDao.insert(
+            TaskEntity(
+                title = "parent",
+                parentListLocalId = 0L,
+                lastUpdateDate = Clock.System.now(),
+                position = "00000000000000000000",
+            )
+        )
+        val now = Clock.System.now()
+        val childTaskId = taskDao.insert(
+            TaskEntity(
+                title = "child",
+                parentListLocalId = 0L,
+                parentTaskLocalId = parentTaskId,
+                lastUpdateDate = now,
+                position = "00000000000000000000",
+            )
+        )
+
+        val tasks = taskDao.getTasksUpToPosition(0L, parentTaskId, "00000000000000000000")
+
+        assertEquals(1, tasks.size)
+        assertEquals(childTaskId, tasks.first().id)
+        assertEquals("child", tasks.first().title)
+        assertEquals(now, tasks.first().lastUpdateDate)
+        assertEquals("00000000000000000000", tasks.first().position)
+    }
+
+    @Test
+    fun `when getTasksFromPositionOnward with no parent position then should return created TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+        val now = Clock.System.now()
+        val taskId = taskDao.insert(
+            TaskEntity(
+                title = "task",
+                parentListLocalId = 0L,
+                lastUpdateDate = now,
+                position = "00000000000000000000",
+            )
+        )
+
+        val tasks = taskDao.getTasksFromPositionOnward(0L, null, "00000000000000000000")
+
+        assertEquals(1, tasks.size)
+        assertEquals(taskId, tasks.first().id)
+        assertEquals("task", tasks.first().title)
+        assertEquals(now, tasks.first().lastUpdateDate)
+        assertEquals("00000000000000000000", tasks.first().position)
+    }
+
+    @Test
+    fun `when getTasksFromPositionOnward with parent position then should return created child TaskEntity`() = runWithInMemoryDatabase { taskDao ->
+        val parentTaskId = taskDao.insert(
+            TaskEntity(
+                title = "parent",
+                parentListLocalId = 0L,
+                lastUpdateDate = Clock.System.now(),
+                position = "00000000000000000000",
+            )
+        )
+        val now = Clock.System.now()
+        val childTaskId = taskDao.insert(
+            TaskEntity(
+                title = "child",
+                parentListLocalId = 0L,
+                parentTaskLocalId = parentTaskId,
+                lastUpdateDate = now,
+                position = "00000000000000000000",
+            )
+        )
+
+        val tasks = taskDao.getTasksFromPositionOnward(0L, parentTaskId, "00000000000000000000")
+
+        assertEquals(1, tasks.size)
+        assertEquals(childTaskId, tasks.first().id)
+        assertEquals("child", tasks.first().title)
+        assertEquals(now, tasks.first().lastUpdateDate)
+        assertEquals("00000000000000000000", tasks.first().position)
     }
 }

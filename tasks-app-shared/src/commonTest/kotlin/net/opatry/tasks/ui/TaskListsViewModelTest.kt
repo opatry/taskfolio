@@ -269,13 +269,13 @@ class TaskListsViewModelTest {
         viewModel.createTask(taskListId, "task")
         advanceUntilIdle()
 
-        then(taskRepository).should().createTask(100, "task")
+        then(taskRepository).should().createTask(100, null, "task")
     }
 
     @Test
     fun `createTask failure when calling repository should log error`() = runTest {
         val e = mock(RuntimeException::class.java)
-        `when`(taskRepository.createTask(100, "task"))
+        `when`(taskRepository.createTask(100, null, "task"))
             .thenThrow(e)
 
         val events = mutableListOf<TaskEvent>()
@@ -300,7 +300,46 @@ class TaskListsViewModelTest {
         viewModel.createTask(TaskListId(100), "task", "notes", date)
         advanceUntilIdle()
 
-        then(taskRepository).should().createTask(100, "task", "notes", instant)
+        then(taskRepository).should().createTask(100, null, "task", "notes", instant)
+    }
+
+    @Test
+    fun `createSubTask should update repository`() = runTest {
+        viewModel.createSubTask(TaskListId(100), TaskId(1), "subtask")
+        advanceUntilIdle()
+
+        then(taskRepository).should().createTask(100, 1, "subtask")
+    }
+
+    @Test
+    fun `createSubTask failure when calling repository should log error`() = runTest {
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.createTask(100, 1, "subtask"))
+            .thenThrow(e)
+
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
+        viewModel.createSubTask(TaskListId(100), TaskId(1), "subtask")
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while creating sub task (TaskListId(value=100) > TaskId(value=1))", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.Task.CreateChild, events.first())
+
+        eventCollectorJob.cancel()
+    }
+
+    @Test
+    fun `createSubTask with extra parameters should update repository accordingly`() = runTest {
+        val (date, instant) = buildMoments()
+
+        viewModel.createSubTask(TaskListId(100), TaskId(1), "subtask", "notes", date)
+        advanceUntilIdle()
+
+        then(taskRepository).should().createTask(100, 1, "subtask", "notes", instant)
     }
 
     @Test

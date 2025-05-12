@@ -34,6 +34,7 @@ sealed interface TaskEvent {
 
         enum class Task : Error {
             Create,
+            CreateChild,
             Delete,
             Restore,
             ToggleCompletionState,

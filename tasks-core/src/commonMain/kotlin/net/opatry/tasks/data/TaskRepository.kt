@@ -59,12 +59,12 @@ private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.So
     )
 }
 
-private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?): TaskEntity {
+private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?, parentTaskLocalId: Long? = null): TaskEntity {
     return TaskEntity(
         id = localId ?: 0,
         remoteId = id,
         parentListLocalId = parentLocalId,
-        // TODO parentTaskLocalId = ,
+        parentTaskLocalId = parentTaskLocalId,
         parentTaskRemoteId = parent,
         etag = etag,
         title = title,
@@ -390,14 +390,16 @@ class TaskRepository(
         taskListDao.sortTasksBy(taskListId, dbSorting)
     }
 
-    suspend fun createTask(taskListId: Long, title: String, notes: String = "", dueDate: Instant? = null): Long {
+    suspend fun createTask(taskListId: Long, parentTaskId: Long? = null, title: String, notes: String = "", dueDate: Instant? = null): Long {
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
+        val parentTaskEntity = parentTaskId?.let { requireNotNull(taskDao.getById(it)) { "Invalid parent task id $parentTaskId" } }
         val now = clockNow()
         val firstPosition = 0.toTaskPosition()
-        val currentTasks = taskDao.getTasksFromPositionOnward(taskListId, firstPosition)
+        val currentTasks = taskDao.getTasksFromPositionOnward(taskListId, parentTaskId, firstPosition)
             .toMutableList()
         val taskEntity = TaskEntity(
             parentListLocalId = taskListId,
+            parentTaskLocalId = parentTaskId,
             title = title,
             notes = notes,
             lastUpdateDate = now,
@@ -410,16 +412,19 @@ class TaskRepository(
             taskDao.upsertAll(updatedTasks)
         }
 
+        // FIXME should already be available in entity, quick & dirty workaround
+        val parentTaskRemoteId = parentTaskEntity?.remoteId
+            ?: parentTaskId?.let { taskListDao.getById(it) }?.remoteId
         if (taskListEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
-                    tasksApi.insert(taskListEntity.remoteId, taskEntity.asTask())
+                    tasksApi.insert(taskListEntity.remoteId, taskEntity.asTask(), parentTaskRemoteId)
                 } catch (_: Exception) {
                     null
                 }
             }
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(taskListId, taskId))
+                taskDao.upsert(task.asTaskEntity(taskListId, taskId, parentTaskId))
             }
         }
         return taskId
@@ -430,7 +435,7 @@ class TaskRepository(
         // TODO pending deletion?
         taskDao.deleteTask(taskId)
 
-        val tasksToUpdated = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.position)
+        val tasksToUpdated = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.parentTaskLocalId, taskEntity.position)
         if (tasksToUpdated.isNotEmpty()) {
             val updatedTasks = computeTaskPositions(tasksToUpdated, newPositionStart = taskEntity.position.toInt())
             taskDao.upsertAll(updatedTasks)
@@ -550,7 +555,7 @@ class TaskRepository(
             position = 0.toTaskPosition(),
             lastUpdateDate = now,
         )
-        val tasksToUpdate = taskDao.getTasksUpToPosition(taskEntity.parentListLocalId, taskEntity.position)
+        val tasksToUpdate = taskDao.getTasksUpToPosition(taskEntity.parentListLocalId, null, taskEntity.position)
             .toMutableList()
         tasksToUpdate.removeIf { it.id == taskEntity.id }
         // put the updated task at the beginning of the list to enforce proper ordering
@@ -595,7 +600,7 @@ class TaskRepository(
         taskDao.upsert(updatedTaskEntity)
 
         // update positions of source list
-        val initialTasksAfter = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.position)
+        val initialTasksAfter = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, null, taskEntity.position)
             .toMutableList()
         if (initialTasksAfter.isNotEmpty()) {
             val updatedTasks = computeTaskPositions(initialTasksAfter, taskEntity.position.toInt())
@@ -603,7 +608,7 @@ class TaskRepository(
         }
 
         // update positions of destination list
-        val destinationTasksAfter = taskDao.getTasksUpToPosition(updatedTaskEntity.id, updatedTaskEntity.position)
+        val destinationTasksAfter = taskDao.getTasksUpToPosition(updatedTaskEntity.id, null, updatedTaskEntity.position)
             .toMutableList()
         destinationTasksAfter.removeIf { it.id == updatedTaskEntity.id }
         if (destinationTasksAfter.isNotEmpty()) {

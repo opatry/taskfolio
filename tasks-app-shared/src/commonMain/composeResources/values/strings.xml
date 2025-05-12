@@ -73,6 +73,7 @@
     <string name="task_list_pane_task_options_icon_content_desc">Task options</string>
 
     <string name="task_event_error_task_create">An error occurred while creating task</string>
+    <string name="task_event_error_task_create_child">An error occurred while creating subtask</string>
     <string name="task_event_error_task_delete">An error occurred while deleting task</string>
     <string name="task_event_error_task_unindent">An error occurred while unindenting task</string>
     <string name="task_event_error_task_indent">An error occurred while indenting task</string>
@@ -104,7 +105,8 @@
     <string name="task_due_date_update_cta">Update</string>
 
     <string name="task_editor_sheet_edit_title">Edit task</string>
-    <string name="task_editor_sheet_new_title">New task</string>
+    <string name="task_editor_sheet_new_task_title">New task</string>
+    <string name="task_editor_sheet_new_subtask_title">New subtask</string>
     <string name="task_editor_sheet_title_field_label">Title</string>
     <string name="task_editor_sheet_title_field_placeholder">Set a title</string>
     <string name="task_editor_sheet_title_field_empty_error">Title cannot be empty</string>
