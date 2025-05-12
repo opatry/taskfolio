@@ -576,7 +576,58 @@ class TaskRepository(
 
     suspend fun indentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        require(taskEntity.parentTaskLocalId == null) { "Cannot indent subtask" }
+        val parentTaskEntity = requireNotNull(taskDao.getPreviousSiblingTask(taskEntity)) {
+            "Cannot indent top level task at first position"
+        }
+        require(parentTaskEntity.parentTaskLocalId == null) { "Parent task must be a top level task" }
+
+        val subTasks = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.id, 0.toTaskPosition())
+        require(subTasks.isEmpty()) { "Cannot indent task with subtasks" }
+
         val now = nowProvider.now()
+        val targetPosition = Int.MAX_VALUE.toTaskPosition()
+        val updatedTaskEntity = taskEntity.copy(
+            parentTaskLocalId = parentTaskEntity.id,
+            lastUpdateDate = now,
+            position = targetPosition,
+        )
+
+        // compute final subtasks position and find previous sibling subtask
+        val subtasksToUpdate = taskDao.getTasksUpToPosition(taskEntity.parentListLocalId, parentTaskEntity.id, targetPosition)
+            .toMutableList()
+        val previousSubtaskRemoteId = subtasksToUpdate.lastOrNull()?.remoteId
+        subtasksToUpdate += updatedTaskEntity
+        val updatedSubtaskEntities = computeTaskPositions(subtasksToUpdate)
+        taskDao.upsertAll(updatedSubtaskEntities)
+
+        // indent tasks position after the indented task
+        val tasksToUpdate = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, null, taskEntity.position)
+        if (tasksToUpdate.isNotEmpty()) {
+            val updatedTaskEntities = computeTaskPositions(tasksToUpdate, taskEntity.position.toInt())
+            taskDao.upsertAll(updatedTaskEntities)
+        }
+
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
+            val task = withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.move(
+                        taskListId = taskListRemoteId,
+                        taskId = updatedTaskEntity.remoteId,
+                        parentTaskId = parentTaskEntity.remoteId,
+                        previousTaskId = previousSubtaskRemoteId,
+                        destinationTaskListId = null,
+                    )
+                } catch (_: Exception) {
+                    null
+                }
+            }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, updatedTaskEntity.id, parentTaskEntity.id))
+            }
+        }
     }
 
     suspend fun unindentTask(taskId: Long) {
