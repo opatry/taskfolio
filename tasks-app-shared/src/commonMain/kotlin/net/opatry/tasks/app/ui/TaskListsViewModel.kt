@@ -157,6 +157,10 @@ class TaskListsViewModel(
         }
     }
 
+    fun repairTaskList(taskListId: TaskListId) {
+        // TODO
+    }
+
     fun renameTaskList(taskListId: TaskListId, newTitle: String) {
         viewModelScope.launch {
             try {

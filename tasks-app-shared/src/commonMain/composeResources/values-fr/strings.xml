@@ -45,6 +45,10 @@
     <string name="task_lists_screen_default_task_list_title">Mes tâches</string>
     <string name="task_lists_screen_empty_state_no_selection_title">Aucune liste de tâches sélectionnée</string>
     <string name="task_lists_screen_empty_state_no_selection_desc">Sélectionnez une liste de tâches pour afficher son contenu</string>
+    <string name="task_lists_screen_empty_state_broken_list_indent_title">Mettre à jour cette liste</string>
+    <string name="task_lists_screen_empty_state_broken_list_indent_desc">Cette liste a plusieurs niveaux de sous-tâches, ce qui n'est pas pris en charge. Mettez à jour cette liste pour l'utiliser.</string>
+    <string name="task_lists_screen_empty_state_broken_list_indent_delete_cta">Supprimer la liste</string>
+    <string name="task_lists_screen_empty_state_broken_list_indent_repair_cta">Mettre à jour la liste</string>
     <string name="task_lists_screen_empty_state_title">Aucune liste de tâches</string>
     <string name="task_lists_screen_empty_state_desc">Créez une nouvelle liste de tâches pour commencer</string>
     <string name="task_lists_screen_empty_state_cta">Nouvelle liste de tâches</string>

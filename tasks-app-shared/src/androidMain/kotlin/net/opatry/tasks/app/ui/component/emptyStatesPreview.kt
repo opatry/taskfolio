@@ -36,9 +36,16 @@ private fun NoTaskListSelectedEmptyStatePreview() {
 
 @PreviewLightDark
 @Composable
-private fun NoTaskListEmptyStatePreview(
-) {
+private fun NoTaskListEmptyStatePreview() {
     TaskfolioThemedPreview {
         NoTaskListEmptyState {}
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun BrokenListIndentationEmptyStatePreview() {
+    TaskfolioThemedPreview {
+        BrokenListIndentationEmptyState({}, {})
     }
 }
