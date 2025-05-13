@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.component
 
 import Check
+import CopyPlus
 import ListPlus
 import LucideIcons
 import SquareStack
@@ -108,7 +109,7 @@ fun TaskMenu(
         if (task.canCreateSubTask) {
             DropdownMenuItem(
                 text = {
-                    RowWithIcon(stringResource(Res.string.task_menu_add_subtask), LucideIcons.SquareStack)
+                    RowWithIcon(stringResource(Res.string.task_menu_add_subtask), LucideIcons.CopyPlus)
                 },
                 onClick = { onAction(TaskAction.AddSubTask) },
                 modifier = Modifier.testTag(ADD_SUBTASK),
