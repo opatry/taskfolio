@@ -40,6 +40,8 @@ data class TaskListUIModel(
                 || (includeCompleted && completedTasks.contains(task))
     }
 
+    fun hasBrokenIndentation() = allRemainingTasks.any { it.indent > 1 }
+
     val allRemainingTasks: List<TaskUIModel>
         get() = remainingTasks.values.flatten()
     val isEmpty: Boolean = allRemainingTasks.isEmpty() && completedTasks.isEmpty()

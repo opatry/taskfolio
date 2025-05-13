@@ -45,6 +45,7 @@ import kotlinx.coroutines.launch
 import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.asLabel
+import net.opatry.tasks.app.ui.component.BrokenListIndentationEmptyState
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
@@ -101,12 +102,12 @@ fun TaskListsMasterDetail(
             directive = navigator.scaffoldDirective,
             value = navigator.scaffoldValue,
             listPane = {
-                val list = taskLists
+                val lists = taskLists
                 AnimatedPane {
                     when {
-                        list == null -> LoadingPane()
+                        lists == null -> LoadingPane()
 
-                        list.isEmpty() -> {
+                        lists.isEmpty() -> {
                             val newTaskListName = stringResource(Res.string.task_lists_screen_default_task_list_title)
                             NoTaskListEmptyState {
                                 onNewTaskList(newTaskListName)
@@ -115,8 +116,8 @@ fun TaskListsMasterDetail(
 
                         else -> Row {
                             TaskListsColumn(
-                                list,
-                                selectedItem = list.find { it.id.value == navigator.currentDestination?.contentKey },
+                                lists,
+                                selectedItem = lists.find { it.id.value == navigator.currentDestination?.contentKey },
                                 onNewTaskList = { onNewTaskList("") },
                                 onItemClick = { taskList ->
                                     scope.launch {
@@ -139,6 +140,12 @@ fun TaskListsMasterDetail(
                     when {
                         list == null -> LoadingPane()
                         selectedList == null -> NoTaskListSelectedEmptyState()
+                        selectedList.hasBrokenIndentation() -> {
+                            BrokenListIndentationEmptyState(
+                                onDeleteList = { viewModel.deleteTaskList(selectedList.id) },
+                                onRepairList = { viewModel.repairTaskList(selectedList.id) },
+                            )
+                        }
                         else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
                             scope.launch {
                                 when (targetedTaskList) {
