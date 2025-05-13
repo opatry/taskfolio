@@ -28,6 +28,7 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
+import net.opatry.tasks.data.toTaskPosition
 import java.net.ConnectException
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -54,6 +55,15 @@ class InMemoryTasksApi(
         if (!isNetworkAvailable) throw ConnectException("Network unavailable")
         requests += requestName
         return logic()
+    }
+
+    private fun recomputeTaskPositions(tasks: List<Task>): List<Task> {
+        val nextPositions = mutableMapOf<String?, Int>(null to 0)
+        return tasks.map { task ->
+            val position = nextPositions.getOrDefault(task.parent, 0)
+            nextPositions[task.parent] = position + 1
+            task.copy(position = position.toTaskPosition())
+        }
     }
 
     override suspend fun clear(taskListId: String) {
@@ -89,7 +99,7 @@ class InMemoryTasksApi(
                         task
                     }
                 }
-                storage[taskListId] = tasks
+                storage[taskListId] = recomputeTaskPositions(tasks).toMutableList()
             }
         }
     }
@@ -105,6 +115,9 @@ class InMemoryTasksApi(
 
     override suspend fun insert(taskListId: String, task: Task, parentTaskId: String?, previousTaskId: String?): Task {
         return handleRequest("insert") {
+            val previousTaskIndex = storage[taskListId]
+                ?.indexOfFirst { it.id == previousTaskId }
+                ?: -1
             val newTask = task.copy(
                 id = taskId.addAndFetch(1).toString(),
                 etag = "etag",
@@ -112,15 +125,15 @@ class InMemoryTasksApi(
                 updatedDate = Clock.System.now(),
                 selfLink = "selfLink",
                 parent = parentTaskId,
-                position = "00000000000000000000", // TODO compute position from previous
+                position = "", // will be updated with all together by recomputeTaskPositions
             )
             synchronized(this) {
                 val tasks = storage.getOrDefault(taskListId, mutableListOf())
-                val previousTaskIndex = tasks.indexOfFirst { it.id == previousTaskId }.coerceAtLeast(0)
-                tasks.add(previousTaskIndex, newTask)
-                storage[taskListId] = tasks
+                tasks.add(previousTaskIndex + 1, newTask)
+                val positionedTasks = recomputeTaskPositions(tasks)
+                storage[taskListId] = positionedTasks.toMutableList()
+                positionedTasks[previousTaskIndex + 1]
             }
-            newTask
         }
     }
 
@@ -216,18 +229,21 @@ class InMemoryTasksApi(
                 if (parentTaskId != null && destinationTasks.none { it.id == parentTaskId }) {
                     error("Task ($parentTaskId) not found in task list ($targetListId)")
                 }
-                val previousTaskIndex = destinationTasks.indexOfFirst { it.id == previousTaskId }
-                if (previousTaskIndex == -1) {
+                val pivotId = previousTaskId ?: parentTaskId
+                val previousTaskIndex = destinationTasks.indexOfFirst { it.id == pivotId }
+                if (previousTaskId != null && previousTaskIndex == -1) {
                     error("Task ($previousTaskId) not found in task list ($targetListId)")
                 }
-                // TODO "position"
                 val moved = task.copy(parent = parentTaskId)
+                destinationTasks.removeIf { it.id == moved.id }
                 destinationTasks.add(previousTaskIndex + 1, moved)
-                storage[targetListId] = destinationTasks
+                val positionedDestinationTasks = recomputeTaskPositions(destinationTasks)
+                storage[targetListId] = positionedDestinationTasks.toMutableList()
                 if (taskListId != targetListId) {
-                    storage[taskListId] = tasks.filter { it.id != taskId }.toMutableList()
+                    val sourceTasks = tasks.filter { it.id != taskId }
+                    storage[taskListId] = recomputeTaskPositions(sourceTasks).toMutableList()
                 }
-                moved
+                positionedDestinationTasks[previousTaskIndex + 1]
             }
         }
     }
