@@ -581,4 +581,102 @@ class TaskRepositoryCRUDTest {
             repository.indentTask(subtaskId)
         }
     }
+
+    @Test
+    fun `sorting tasks by due date should honor due date and ignore parent task link and indentation`() = runTaskRepositoryTest { repository ->
+        val (taskList, task1) = repository.createAndGetTask("list", "task1")
+        val t1 = Clock.System.now() + 1.days
+        repository.updateTaskDueDate(task1.id, t1)
+        val task2 = repository.createAndGetTask(taskList.id, "task2")
+        val t2 = Clock.System.now() + 2.days
+        repository.updateTaskDueDate(task2.id, t2)
+        val task3 = repository.createAndGetTask(taskList.id, "task3")
+        val t3 = Clock.System.now() + 3.days
+        repository.updateTaskDueDate(task3.id, t3)
+        val task4 = repository.createAndGetTask(taskList.id, "task4")
+        val t4 = Clock.System.now() + 4.days
+        repository.updateTaskDueDate(task4.id, t4)
+        repository.indentTask(task3.id)
+        // list
+        //   - task4 [0000]
+        //      - task3 [0000]
+        //   - task2 [0001]
+        //   - task1 [0002]
+
+        repository.sortTasksBy(taskList.id, TaskListSorting.DueDate)
+
+        // list
+        //   - task1 due in 1 days
+        //   - task2 due in 2 days
+        //   - task3 due in 3 days
+        //   - task4 due in 4 days
+        val updatedTaskList = repository.findTaskListById(taskList.id)
+        assertNotNull(updatedTaskList)
+        val tasks = updatedTaskList.tasks
+        assertEquals(4, tasks.size, "should have 4 tasks in list")
+        assertEquals(task1.id, tasks[0].id, "first task should be task1")
+        assertEquals(0, tasks[0].indent, "task shouldn't be indented in due date sorting")
+        assertEquals("00000000000000000002", tasks[0].position, "task position should remain unchanged in due date sorting")
+        assertEquals(task2.id, tasks[1].id, "second task should be task2")
+        assertEquals(0, tasks[1].indent, "task shouldn't be indented in due date sorting")
+        assertEquals("00000000000000000001", tasks[1].position, "task position should remain unchanged in due date sorting")
+        assertEquals(task3.id, tasks[2].id, "third task should be task3")
+        assertEquals(0, tasks[2].indent, "task shouldn't be indented in due date sorting")
+        assertEquals("00000000000000000000", tasks[2].position, "task position should remain unchanged in due date sorting")
+        assertEquals(task4.id, tasks[3].id, "fourth task should be task4")
+        assertEquals(0, tasks[3].indent, "task shouldn't be indented in due date sorting")
+        assertEquals("00000000000000000000", tasks[3].position, "task position should remain unchanged in due date sorting")
+    }
+
+    @Test
+    fun `sorting tasks manually should honor position & parent task link`() = runTaskRepositoryTest { repository ->
+        val (taskList, task1) = repository.createAndGetTask("list", "task1")
+        val t1 = Clock.System.now() + 1.days
+        repository.updateTaskDueDate(task1.id, t1)
+        val task2 = repository.createAndGetTask(taskList.id, "task2")
+        val t2 = Clock.System.now() + 2.days
+        repository.updateTaskDueDate(task2.id, t2)
+        val task3 = repository.createAndGetTask(taskList.id, "task3")
+        val t3 = Clock.System.now() + 3.days
+        repository.updateTaskDueDate(task1.id, t3)
+        val task4 = repository.createAndGetTask(taskList.id, "task4")
+        val t4 = Clock.System.now() + 4.days
+        repository.updateTaskDueDate(task1.id, t4)
+        repository.indentTask(task3.id)
+        // list
+        //   - task4 [0000]
+        //      - task3 [0000]
+        //   - task2 [0001]
+        //   - task1 [0002]
+        repository.sortTasksBy(taskList.id, TaskListSorting.DueDate)
+        // list
+        //   - task1 due in 1 days
+        //   - task2 due in 2 days
+        //   - task3 due in 3 days
+        //   - task4 due in 4 days
+
+        repository.sortTasksBy(taskList.id, TaskListSorting.Manual)
+
+        // list
+        //   - task4 [0000]
+        //      - task3 [0000]
+        //   - task2 [0001]
+        //   - task1 [0002]
+        val updatedTaskList = repository.findTaskListById(taskList.id)
+        assertNotNull(updatedTaskList)
+        val tasks = updatedTaskList.tasks
+        assertEquals(4, tasks.size, "should have 4 tasks in list")
+        assertEquals(task4.id, tasks[0].id, "first task should be task4")
+        assertEquals(0, tasks[0].indent, "first task shouldn't be indented")
+        assertEquals("00000000000000000000", tasks[0].position, "first task should be at position 0 (first task)")
+        assertEquals(task3.id, tasks[1].id, "second task should be task3")
+        assertEquals(1, tasks[1].indent, "second task should be a subtask indented by 1")
+        assertEquals("00000000000000000000", tasks[1].position, "second task should be at position 0 (first subtask)")
+        assertEquals(task2.id, tasks[2].id, "third task should be task2")
+        assertEquals(0, tasks[2].indent, "third task shouldn't be indented")
+        assertEquals("00000000000000000001", tasks[2].position, "third task should be at position 1 (second subtask)")
+        assertEquals(task1.id, tasks[3].id, "fourth task should be task1")
+        assertEquals(0, tasks[3].indent, "fourth task shouldn't be indented")
+        assertEquals("00000000000000000002", tasks[3].position, "fourth task should be at position 1 (second task)")
+    }
 }
