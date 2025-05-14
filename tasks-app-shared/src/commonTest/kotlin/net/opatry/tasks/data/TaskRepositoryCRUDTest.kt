@@ -23,6 +23,7 @@
 package net.opatry.tasks.data
 
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.Instant
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.util.runTaskRepositoryTest
@@ -145,6 +146,31 @@ class TaskRepositoryCRUDTest {
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("These are some notes", tasks.first().notes)
+    }
+
+    @Test
+    fun `edit task due date`() = runTaskRepositoryTest { repository ->
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
+
+        val updatedDate = Instant.DISTANT_FUTURE
+        repository.updateTaskDueDate(task.id, updatedDate)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals(updatedDate, tasks.first().dueDate)
+    }
+
+    @Test
+    fun `reset task due date`() = runTaskRepositoryTest { repository ->
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
+
+        repository.updateTaskDueDate(task.id, null)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals(null, tasks.first().dueDate)
     }
 
     @Test
