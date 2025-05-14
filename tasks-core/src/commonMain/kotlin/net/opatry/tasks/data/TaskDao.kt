@@ -29,9 +29,6 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import net.opatry.tasks.data.entity.TaskEntity
 
-// this MUST not be a valid ID in the database (IDs should start at 0)
-private const val NULL_ID_SENTINEL = -1L
-
 @Dao
 interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
@@ -63,15 +60,11 @@ interface TaskDao {
     @Query("DELETE FROM task WHERE local_id IN (:ids)")
     suspend fun deleteTasks(ids: List<Long>)
 
-    // using COALESCE to handle nulls for convenience & simplicity
-    // it requires that no task ID is equal to `NULL_ID_SENTINEL` (which is the case)
-    // alternatively, we could use a OR condition and check both nulls or both equals
-    // `parent_local_id = :parentTaskLocalId OR (:parentTaskLocalId IS NULL AND parent_local_id IS NULL)`
     @Query(
         """
             SELECT * FROM task
             WHERE parent_list_local_id = :taskListLocalId
-              AND COALESCE(parent_local_id, $NULL_ID_SENTINEL) = COALESCE(:parentTaskLocalId, $NULL_ID_SENTINEL)
+              AND ((parent_local_id IS NULL AND :parentTaskLocalId IS NULL) OR parent_local_id = :parentTaskLocalId)
               AND position <= :position
               AND is_completed = false
             ORDER BY position ASC
@@ -79,15 +72,11 @@ interface TaskDao {
     )
     suspend fun getTasksUpToPosition(taskListLocalId: Long, parentTaskLocalId: Long?, position: String): List<TaskEntity>
 
-    // using COALESCE to handle nulls for convenience & simplicity
-    // it requires that no task ID is equal to `NULL_ID_SENTINEL` (which is the case)
-    // alternatively, we could use a OR condition and check both nulls or both equals
-    // `parent_local_id = :parentTaskLocalId OR (:parentTaskLocalId IS NULL AND parent_local_id IS NULL)`
     @Query(
         """
             SELECT * FROM task
             WHERE parent_list_local_id = :taskListLocalId
-              AND COALESCE(parent_local_id, $NULL_ID_SENTINEL) = COALESCE(:parentTaskLocalId, $NULL_ID_SENTINEL)
+              AND ((parent_local_id IS NULL AND :parentTaskLocalId IS NULL) OR parent_local_id = :parentTaskLocalId)
               AND position >= :position
               AND is_completed = false
             ORDER BY position ASC
