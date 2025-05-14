@@ -168,7 +168,17 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
 }
 
 fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
-    return tasks.sortedBy(TaskEntity::dueDate)
+    val (completedTasks, remainingTasks) = tasks.partition(TaskEntity::isCompleted)
+    val sortedRemainingTasks = remainingTasks.sortedWith(
+        compareBy<TaskEntity> { it.dueDate == null }
+            .thenBy(TaskEntity::dueDate)
+    )
+    return sortedRemainingTasks + sortCompletedTasks(completedTasks)
+}
+
+fun sortCompletedTasks(tasks: List<TaskEntity>): List<TaskEntity> {
+    require(tasks.all(TaskEntity::isCompleted)) { "Only completed tasks can be sorted" }
+    return tasks.sortedBy(TaskEntity::position)
 }
 
 /**
