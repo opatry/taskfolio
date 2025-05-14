@@ -34,12 +34,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 - Authentication flow isn't 100% reliable yet.
 - Local-first support with Google Tasks sync is limited, in particular sorting & conflict management is barely implemented.
-- Task deletion undo is not implemented
-- Very limited move capabilities
-  - can't move task from one list to another
-  - can't indent/unindent
-  - can't create sub-task
-  - no drag'n'drop
+- No drag'n'drop to re-order tasks nor move them between lists.
 - Task list ordering isn't supported (there is no API for that in the Google Tasks API)
 
 ## 🛠️ Tech stack
