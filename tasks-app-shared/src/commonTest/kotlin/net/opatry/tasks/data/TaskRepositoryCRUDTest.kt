@@ -23,6 +23,7 @@
 package net.opatry.tasks.data
 
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
@@ -330,6 +331,27 @@ class TaskRepositoryCRUDTest {
             assertEquals(0, tasks[3].indent, "task shouldn't be indented in due date sorting")
             assertEquals("00000000000000000000", tasks[3].position, "task position should remain unchanged in due date sorting")
         }
+
+    @Test
+    fun `indent a task should keep its attributes unchanged`() = runTaskRepositoryTest { repository ->
+        val (taskList, task1) = repository.createAndGetTask("list", "task1")
+        val now = Clock.System.now()
+        repository.updateTask(task1.id, "updateTitle1", "updatedNotes1", now)
+        repository.createAndGetTask(taskList.id, "task2")
+
+        repository.indentTask(task1.id)
+
+        val updatedTaskList = repository.findTaskListById(taskList.id)
+        assertNotNull(updatedTaskList)
+        val tasks = updatedTaskList.tasks
+        assertEquals(2, tasks.size)
+        assertEquals(task1.id, tasks[1].id)
+        assertEquals("updateTitle1", tasks[1].title)
+        assertEquals("updatedNotes1", tasks[1].notes)
+        assertEquals(now, tasks[1].dueDate)
+        assertEquals(1, tasks[1].indent)
+        assertEquals("00000000000000000000", tasks[1].position)
+    }
 
     @Test
     fun `indent top level task should use previous sibling as parent task`() = runTaskRepositoryTest { repository ->
