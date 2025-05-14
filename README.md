@@ -70,11 +70,11 @@ I do not aim to implement advanced features beyond what is supported by the Goog
   - Made from [Compose Icons](https://composeicons.com/icon-libraries/lucide) (not using the direct Gradle dependency to tweak stroke width)
   - Only integrates what seem relevant for the app needs
   - KMP
-- [`:tasks-core`](tasks-core) <span style="color: #CCFF00;">■■■■■■</span>□□□□ 60%	
+- [`:tasks-core`](tasks-core) <span style="color: #CCFF00;">■■■■■■■■</span>□□ 80%
   - Taskfolio business logic
   - Local first with Room database, sync with Google Tasks 
   - KMP
-- [`:tasks-app-shared`](tasks-app-shared) <span style="color: #99FF00;">■■■■■■■</span>□□□ 70%	
+- [`:tasks-app-shared`](tasks-app-shared) <span style="color: #99FF00;">■■■■■■■■</span>□□ 80%
   - All screens & UI components integrating the `:tasks-core` business logic
     in Compose
   - KMP
