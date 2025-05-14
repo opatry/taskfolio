@@ -137,6 +137,21 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `edit task with all parameters`() = runTaskRepositoryTest { repository ->
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
+
+        val updatedDate = Instant.DISTANT_FUTURE
+        repository.updateTask(task.id, "new title", "new notes", updatedDate)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals("new title", tasks.first().title)
+        assertEquals("new notes", tasks.first().notes)
+        assertEquals(updatedDate, tasks.first().dueDate)
+    }
+
+    @Test
     fun `edit task notes`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
