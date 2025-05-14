@@ -690,7 +690,13 @@ fun TasksColumn(
                 RemainingTaskRow(
                     taskLists,
                     task,
-                    showDate = taskList.sorting == TaskListSorting.Manual || dateRange is DateRange.Overdue
+                    // TODO could come from the UI mapper/UI state
+                    showDate = when {
+                        taskList.sorting == TaskListSorting.Manual -> true
+                        taskList.sorting == TaskListSorting.Title -> true
+                        dateRange is DateRange.Overdue -> true
+                        else -> false
+                    }
                 ) { action ->
                     when (action) {
                         TaskAction.ToggleCompletion -> onToggleCompletionState(task)

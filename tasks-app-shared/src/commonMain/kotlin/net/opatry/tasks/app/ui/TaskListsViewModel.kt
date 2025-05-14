@@ -70,6 +70,7 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
                     else -> task.dateRange
                 }
             }
+        TaskListSorting.Title -> mapOf(null to remainingTasks)
     }
 
     return TaskListUIModel(

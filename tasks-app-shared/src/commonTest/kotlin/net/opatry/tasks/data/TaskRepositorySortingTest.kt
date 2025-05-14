@@ -133,6 +133,151 @@ class TaskRepositorySortingTest {
     }
 
     @Test
+    fun `sort tasks by title ignore case`() = runTaskRepositoryTest { repository ->
+        val task1Lower = TaskEntity(
+            id = 1,
+            parentListLocalId = 1,
+            title = "t1",
+            dueDate = null,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+        val task1Upper = TaskEntity(
+            id = 1,
+            parentListLocalId = 1,
+            title = "T11",
+            dueDate = null,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+        val task2Lower = TaskEntity(
+            id = 2,
+            parentListLocalId = 1,
+            title = "t2",
+            dueDate = now,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+        val task2Upper = TaskEntity(
+            id = 2,
+            parentListLocalId = 1,
+            title = "T22",
+            dueDate = now,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+
+        val tasks = sortTasksTitleOrdering(listOf(task1Lower, task2Lower, task1Upper, task2Upper))
+
+        assertEquals(4, tasks.size)
+        assertEquals(task1Lower.id, tasks[0].id)
+        assertEquals(task1Upper.id, tasks[1].id)
+        assertEquals(task2Lower.id, tasks[2].id)
+        assertEquals(task2Upper.id, tasks[3].id)
+    }
+
+    @Test
+    fun `sort tasks by title ignore case and fallbacks to lower before upper if same`() = runTaskRepositoryTest { repository ->
+        val task1Lower = TaskEntity(
+            id = 1,
+            parentListLocalId = 1,
+            title = "t1",
+            dueDate = null,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+        val task1Upper = TaskEntity(
+            id = 1,
+            parentListLocalId = 1,
+            title = "T1",
+            dueDate = null,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+
+        val tasks = sortTasksTitleOrdering(listOf(task1Upper, task1Lower))
+
+        assertEquals(2, tasks.size)
+        assertEquals(task1Lower.id, tasks[0].id)
+        assertEquals(task1Upper.id, tasks[1].id)
+    }
+
+    @Test
+    fun `sort tasks by title put remaining tasks before completed tasks`() {
+        val completedTask = TaskEntity(
+            id = 1,
+            parentListLocalId = 1,
+            title = "aaa",
+            dueDate = now,
+            lastUpdateDate = now,
+            isCompleted = true,
+            completionDate = now,
+            position = "09999999999999999999",
+        )
+        val task = TaskEntity(
+            id = 2,
+            parentListLocalId = 1,
+            title = "bbb",
+            dueDate = null,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+
+        val tasks = sortTasksTitleOrdering(listOf(completedTask, task))
+
+        assertEquals(2, tasks.size)
+        assertEquals(task.id, tasks[0].id)
+        assertEquals(completedTask.id, tasks[1].id)
+    }
+
+    @Test
+    fun `sort tasks by title still sorts completed tasks by position`() {
+        val completedTaskFirst = TaskEntity(
+            id = 1,
+            parentListLocalId = 1,
+            title = "aaa",
+            dueDate = now,
+            lastUpdateDate = now,
+            isCompleted = true,
+            completionDate = now - 1.days,
+            position = "09999999999999999999",
+        )
+        val completedTaskLast = TaskEntity(
+            id = 2,
+            parentListLocalId = 1,
+            title = "bbb",
+            dueDate = now,
+            lastUpdateDate = now,
+            isCompleted = true,
+            completionDate = now,
+            position = "09999999999999999998",
+        )
+        val task = TaskEntity(
+            id = 3,
+            parentListLocalId = 1,
+            title = "task",
+            dueDate = null,
+            lastUpdateDate = now,
+            isCompleted = false,
+            position = "00000000000000000000",
+        )
+
+        val tasks = sortTasksTitleOrdering(listOf(completedTaskLast, completedTaskFirst, task))
+
+        assertEquals(3, tasks.size)
+        assertEquals(task.id, tasks[0].id)
+        assertEquals(completedTaskLast.id, tasks[1].id)
+        assertEquals(completedTaskFirst.id, tasks[2].id)
+    }
+
+    @Test
     fun `sorting completed tasks should throw IllegalArgumentException when providing uncompleted tasks`() {
         assertFailsWith<IllegalArgumentException>("Only completed tasks can be sorted") {
             sortCompletedTasks(

@@ -46,6 +46,7 @@ import java.math.BigInteger
 enum class TaskListSorting {
     Manual,
     DueDate,
+    Title,
 }
 
 private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.Sorting): TaskListEntity {
@@ -84,6 +85,10 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
         }
 
         TaskListEntity.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
+            task.asTaskDataModel(0)
+        }
+
+        TaskListEntity.Sorting.Title -> TaskListSorting.Title to sortTasksTitleOrdering(tasks).map { task ->
             task.asTaskDataModel(0)
         }
     }
@@ -172,6 +177,15 @@ fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
     val sortedRemainingTasks = remainingTasks.sortedWith(
         compareBy<TaskEntity> { it.dueDate == null }
             .thenBy(TaskEntity::dueDate)
+    )
+    return sortedRemainingTasks + sortCompletedTasks(completedTasks)
+}
+
+fun sortTasksTitleOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
+    val (completedTasks, remainingTasks) = tasks.partition(TaskEntity::isCompleted)
+    val sortedRemainingTasks = remainingTasks.sortedWith(
+        compareBy<TaskEntity> { it.title.lowercase() }
+            .thenByDescending(TaskEntity::title)
     )
     return sortedRemainingTasks + sortCompletedTasks(completedTasks)
 }
@@ -397,6 +411,7 @@ class TaskRepository(
         val dbSorting = when (sorting) {
             TaskListSorting.Manual -> TaskListEntity.Sorting.UserDefined
             TaskListSorting.DueDate -> TaskListEntity.Sorting.DueDate
+            TaskListSorting.Title -> TaskListEntity.Sorting.Title
         }
         // no update date change, it's a local only information unrelated to remote tasks
         taskListDao.sortTasksBy(taskListId, dbSorting)
