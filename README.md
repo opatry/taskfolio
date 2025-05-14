@@ -24,6 +24,8 @@
 
 This project is not intended as a comprehensive task manager for public use.
 I do not aim to implement advanced features beyond what is supported by the Google Tasks REST API.
+
+- no task list reordering
 - no starred task
 - no task priority
 - only due date, no custom time support
@@ -32,10 +34,14 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 ## 🚧 Known Limitations
 
-- Authentication flow isn't 100% reliable yet.
-- Local-first support with Google Tasks sync is limited, in particular sorting & conflict management is barely implemented.
-- No drag'n'drop to re-order tasks nor move them between lists.
-- Task list ordering isn't supported (there is no API for that in the Google Tasks API)
+- Authentication flow isn't 100% reliable yet ([#34](https://github.com/opatry/taskfolio/issues/34)).
+- Local-first support with Google Tasks sync is limited, in particular sorting & conflict management is barely implemented ([#140](https://github.com/opatry/taskfolio/issues/140)).
+- No indentation support (ongoing) (#129)
+- Task completion state toggle doesn't honor indentation properly (ongoing) (#175)
+- No drag'n'drop to re-order tasks nor move them between lists ([#133](https://github.com/opatry/taskfolio/issues/133)).
+- Task deletion undo is not implemented ([#149](https://github.com/opatry/taskfolio/issues/149)).
+- Local action sync failure might not be synced again ([#150](https://github.com/opatry/taskfolio/issues/150)).
+- Setting due date isn't properly supported ([#155](https://github.com/opatry/taskfolio/issues/155)).
 
 ## 🛠️ Tech stack
 
