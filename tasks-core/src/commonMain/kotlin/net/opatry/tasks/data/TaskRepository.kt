@@ -59,7 +59,7 @@ private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.So
     )
 }
 
-private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?, parentTaskLocalId: Long? = null): TaskEntity {
+private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?, parentTaskLocalId: Long?): TaskEntity {
     return TaskEntity(
         id = localId ?: 0,
         remoteId = id,
@@ -281,7 +281,8 @@ class TaskRepository(
             }
             remoteTasks.onEach { remoteTask ->
                 val existingEntity = taskDao.getByRemoteId(remoteTask.id)
-                taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id))
+                val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
+                taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id, parentTaskEntity?.id))
             }
             taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
             taskDao.getLocalOnlyTasks(localListId).onEach { localTask ->
@@ -293,7 +294,8 @@ class TaskRepository(
                     }
                 }
                 if (remoteTask != null) {
-                    taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id))
+                    val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
+                    taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id, parentTaskEntity?.id))
                 }
             }
         }
@@ -483,7 +485,7 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId, updatedTaskEntity.parentTaskLocalId))
             }
         }
     }
@@ -582,7 +584,7 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId))
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId, null))
             }
         }
     }
@@ -635,7 +637,7 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(destinationListId, taskId))
+                taskDao.upsert(task.asTaskEntity(destinationListId, taskId, null))
             }
         }
     }
