@@ -46,6 +46,7 @@ import java.math.BigInteger
 enum class TaskListSorting {
     Manual,
     DueDate,
+    Title,
 }
 
 private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.Sorting): TaskListEntity {
@@ -84,6 +85,10 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
         }
 
         TaskListEntity.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
+            task.asTaskDataModel(0)
+        }
+
+        TaskListEntity.Sorting.Title -> TaskListSorting.Title to sortTasksTitleOrdering(tasks).map { task ->
             task.asTaskDataModel(0)
         }
     }
@@ -168,7 +173,26 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
 }
 
 fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
-    return tasks.sortedBy(TaskEntity::dueDate)
+    val (completedTasks, remainingTasks) = tasks.partition(TaskEntity::isCompleted)
+    val sortedRemainingTasks = remainingTasks.sortedWith(
+        compareBy<TaskEntity> { it.dueDate == null }
+            .thenBy(TaskEntity::dueDate)
+    )
+    return sortedRemainingTasks + sortCompletedTasks(completedTasks)
+}
+
+fun sortTasksTitleOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
+    val (completedTasks, remainingTasks) = tasks.partition(TaskEntity::isCompleted)
+    val sortedRemainingTasks = remainingTasks.sortedWith(
+        compareBy<TaskEntity> { it.title.lowercase() }
+            .thenByDescending(TaskEntity::title)
+    )
+    return sortedRemainingTasks + sortCompletedTasks(completedTasks)
+}
+
+fun sortCompletedTasks(tasks: List<TaskEntity>): List<TaskEntity> {
+    require(tasks.all(TaskEntity::isCompleted)) { "Only completed tasks can be sorted" }
+    return tasks.sortedBy(TaskEntity::position)
 }
 
 /**
@@ -387,6 +411,7 @@ class TaskRepository(
         val dbSorting = when (sorting) {
             TaskListSorting.Manual -> TaskListEntity.Sorting.UserDefined
             TaskListSorting.DueDate -> TaskListEntity.Sorting.DueDate
+            TaskListSorting.Title -> TaskListEntity.Sorting.Title
         }
         // no update date change, it's a local only information unrelated to remote tasks
         taskListDao.sortTasksBy(taskListId, dbSorting)

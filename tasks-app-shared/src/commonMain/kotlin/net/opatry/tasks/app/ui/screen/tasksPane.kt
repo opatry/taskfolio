@@ -265,6 +265,7 @@ fun TaskListDetail(
                             TaskListMenuAction.Dismiss -> Unit
                             TaskListMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
                             TaskListMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
+                            TaskListMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
                             TaskListMenuAction.Rename -> showRenameTaskListDialog = true
                             TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
                             TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
@@ -690,7 +691,13 @@ fun TasksColumn(
                 RemainingTaskRow(
                     taskLists,
                     task,
-                    showDate = taskList.sorting == TaskListSorting.Manual || dateRange is DateRange.Overdue
+                    // TODO could come from the UI mapper/UI state
+                    showDate = when {
+                        taskList.sorting == TaskListSorting.Manual -> true
+                        taskList.sorting == TaskListSorting.Title -> true
+                        dateRange is DateRange.Overdue -> true
+                        else -> false
+                    }
                 ) { action ->
                     when (action) {
                         TaskAction.ToggleCompletion -> onToggleCompletionState(task)

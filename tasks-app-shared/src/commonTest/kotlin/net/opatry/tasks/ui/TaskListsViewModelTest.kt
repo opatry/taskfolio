@@ -491,6 +491,38 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `sortBy(Title) should update repository by Title`() = runTest {
+        val sorting = TaskListSorting.Title
+
+        viewModel.sortBy(TaskListId(1), sorting)
+        advanceUntilIdle()
+
+        then(taskRepository).should().sortTasksBy(1, sorting)
+    }
+
+    @Test
+    fun `sortBy(Title) failure when calling repository should log error`() = runTest {
+        val sorting = TaskListSorting.Title
+        val e = mock(RuntimeException::class.java)
+        `when`(taskRepository.sortTasksBy(1, sorting))
+            .thenThrow(e)
+
+        val events = mutableListOf<TaskEvent>()
+        val eventCollectorJob = launch {
+            viewModel.eventFlow.toList(events)
+        }
+
+        viewModel.sortBy(TaskListId(1), sorting)
+        advanceUntilIdle()
+
+        then(logger).should().logError("Error while sorting task list (TaskListId(value=1)) by Title", e)
+        assertEquals(1, events.size)
+        assertEquals(TaskEvent.Error.TaskList.Sort, events.first())
+
+        eventCollectorJob.cancel()
+    }
+
+    @Test
     fun `sortBy(Manual) should update repository by DueDate`() = runTest {
         val sorting = TaskListSorting.Manual
 

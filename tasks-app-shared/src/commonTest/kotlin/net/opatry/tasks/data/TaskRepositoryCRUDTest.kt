@@ -247,4 +247,35 @@ class TaskRepositoryCRUDTest {
         assertEquals(task2.id, updatedTask.id)
         assertEquals("00000000000000000000", updatedTask.position, "task should be moved at first position")
     }
+
+    @Test
+    fun `sorting tasks by title should honor title (ignore case) and ignore parent task link`() =
+        runTaskRepositoryTest { repository ->
+            val (taskList, task1) = repository.createAndGetTask("list", "t1")
+            val task2 = repository.createAndGetTask(taskList.id, "T1")
+            val task3 = repository.createAndGetTask(taskList.id, "t100")
+            val task4 = repository.createAndGetTask(taskList.id, "t2")
+            repository.indentTask(task3.id)
+            // list
+            //   - t2 [0000]
+            //      - t100 [0000]
+            //   - T1 [0001]
+            //   - t1 [0002]
+
+            repository.sortTasksBy(taskList.id, TaskListSorting.Title)
+
+            // list
+            //   - t1 (lowercase comes first)
+            //   - T1 (uppercase come second)
+            //   - t100 (no collator, 100 comes before 2)
+            //   - t2
+            val updatedTaskList = repository.findTaskListById(taskList.id)
+            assertNotNull(updatedTaskList)
+            val tasks = updatedTaskList.tasks
+            assertEquals(4, tasks.size, "should have 4 tasks in list")
+            assertEquals(task1.id, tasks[0].id, "first task should be t1")
+            assertEquals(task2.id, tasks[1].id, "second task should be T1")
+            assertEquals(task3.id, tasks[2].id, "third task should be t100")
+            assertEquals(task4.id, tasks[3].id, "fourth task should be t2")
+        }
 }
