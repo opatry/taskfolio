@@ -51,12 +51,14 @@ import net.opatry.tasks.resources.task_list_menu_rename
 import net.opatry.tasks.resources.task_list_menu_sort_by
 import net.opatry.tasks.resources.task_list_menu_sort_due_date
 import net.opatry.tasks.resources.task_list_menu_sort_manual
+import net.opatry.tasks.resources.task_list_menu_sort_title
 import org.jetbrains.compose.resources.stringResource
 
 enum class TaskListMenuAction {
     Dismiss,
     SortManual,
     SortDate,
+    SortTitle,
     Rename,
     ClearCompletedTasks,
     Delete,
@@ -104,6 +106,18 @@ fun TaskListMenu(
             },
             enabled = !isDueDateSorting,
             onClick = { onAction(TaskListMenuAction.SortDate) }
+        )
+
+        val isTitleSorting = taskList.sorting == TaskListSorting.Title
+        DropdownMenuItem(
+            text = {
+                RowWithIcon(
+                    stringResource(Res.string.task_list_menu_sort_title),
+                    LucideIcons.Check.takeIf { isTitleSorting }
+                )
+            },
+            enabled = !isTitleSorting,
+            onClick = { onAction(TaskListMenuAction.SortTitle) }
         )
 
         HorizontalDivider()

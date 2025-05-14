@@ -265,6 +265,7 @@ fun TaskListDetail(
                             TaskListMenuAction.Dismiss -> Unit
                             TaskListMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
                             TaskListMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
+                            TaskListMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
                             TaskListMenuAction.Rename -> showRenameTaskListDialog = true
                             TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
                             TaskListMenuAction.Delete -> showDeleteTaskListDialog = true

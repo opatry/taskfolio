@@ -120,6 +120,7 @@
     <string name="task_list_menu_sort_by">Trier par</string>
     <string name="task_list_menu_sort_manual">Manuel</string>
     <string name="task_list_menu_sort_due_date">Date d'échéance</string>
+    <string name="task_list_menu_sort_title">Titre</string>
     <string name="task_list_menu_rename">Renommer</string>
     <string name="task_list_menu_clear_all_completed_tasks">Effacer toutes les tâches terminées</string>
     <string name="task_list_menu_delete">Supprimer la liste</string>

@@ -123,6 +123,7 @@
     <string name="task_list_menu_sort_by">Sort by</string>
     <string name="task_list_menu_sort_manual">Manual</string>
     <string name="task_list_menu_sort_due_date">Due date</string>
+    <string name="task_list_menu_sort_title">Title</string>
     <string name="task_list_menu_rename">Rename</string>
     <string name="task_list_menu_clear_all_completed_tasks">Clear all completed tasks</string>
     <string name="task_list_menu_delete">Delete list</string>
