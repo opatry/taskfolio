@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui
+package net.opatry.tasks.presentation
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -43,13 +43,13 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.Logger
+import net.opatry.tasks.app.presentation.TaskListsViewModel
+import net.opatry.tasks.app.presentation.model.DateRange
+import net.opatry.tasks.app.presentation.model.TaskId
+import net.opatry.tasks.app.presentation.model.TaskListId
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.TaskEvent
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.model.DateRange
-import net.opatry.tasks.app.ui.model.TaskId
-import net.opatry.tasks.app.ui.model.TaskListId
-import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel

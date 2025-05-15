@@ -53,14 +53,14 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.datetime.todayIn
+import net.opatry.tasks.app.presentation.model.DateRange
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ICON
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_MENU_ICON
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_NOTES
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
-import net.opatry.tasks.app.ui.model.DateRange
-import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_days_ago
 import net.opatry.tasks.resources.task_due_date_label_no_date

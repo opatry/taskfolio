@@ -56,8 +56,8 @@ import androidx.compose.ui.window.Popup
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import net.opatry.google.auth.GoogleAuthenticator
-import net.opatry.tasks.app.ui.UserState
-import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.app.presentation.UserState
+import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.profile_popup_no_email
 import net.opatry.tasks.resources.profile_popup_sign_explanation

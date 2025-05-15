@@ -31,11 +31,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_DUE_DATE
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MANUAL
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MENU
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_TITLE
-import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_menu_sort_by

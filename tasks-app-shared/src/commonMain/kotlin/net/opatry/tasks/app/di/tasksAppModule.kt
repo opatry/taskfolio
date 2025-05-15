@@ -24,8 +24,8 @@ package net.opatry.tasks.app.di
 
 import net.opatry.google.profile.HttpUserInfoApi
 import net.opatry.google.profile.UserInfoApi
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.app.presentation.TaskListsViewModel
+import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.TaskRepository
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named

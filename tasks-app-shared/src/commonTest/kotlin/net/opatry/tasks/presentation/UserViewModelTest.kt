@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui
+package net.opatry.tasks.presentation
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -31,8 +31,8 @@ import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
-import net.opatry.tasks.app.ui.UserState
-import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.app.presentation.UserState
+import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.UserDao
 import net.opatry.tasks.data.entity.UserEntity
 import net.opatry.test.MainDispatcherRule

@@ -34,8 +34,8 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import net.opatry.tasks.app.ui.model.TaskListId
-import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskListId
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.screen.TaskListsColumn
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.TASK_LIST_ROW

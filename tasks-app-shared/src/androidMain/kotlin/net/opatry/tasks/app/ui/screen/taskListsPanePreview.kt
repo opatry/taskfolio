@@ -29,8 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import net.opatry.tasks.app.ui.model.TaskListId
-import net.opatry.tasks.app.ui.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskListId
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 

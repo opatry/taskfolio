@@ -29,8 +29,8 @@ import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
-import net.opatry.tasks.app.ui.TaskListsViewModel
-import net.opatry.tasks.app.ui.UserViewModel
+import net.opatry.tasks.app.presentation.TaskListsViewModel
+import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.TaskDao
 import net.opatry.tasks.data.TaskListDao
 import net.opatry.tasks.data.TaskRepository

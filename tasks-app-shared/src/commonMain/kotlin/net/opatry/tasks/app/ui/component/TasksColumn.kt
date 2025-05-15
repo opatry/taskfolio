@@ -50,14 +50,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.presentation.model.DateRange
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.FULLY_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
-import net.opatry.tasks.app.ui.model.DateRange
-import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_all_tasks_complete_desc

@@ -25,7 +25,7 @@ package net.opatry.tasks.app.ui.component
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import net.opatry.tasks.app.ui.UserState
+import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 @PreviewLightDark

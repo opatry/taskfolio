@@ -27,11 +27,11 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.datetime.LocalDate
-import net.opatry.tasks.app.ui.model.DateRange
-import net.opatry.tasks.app.ui.model.TaskId
-import net.opatry.tasks.app.ui.model.TaskListId
-import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.model.TaskUIModel
+import net.opatry.tasks.app.presentation.model.DateRange
+import net.opatry.tasks.app.presentation.model.TaskId
+import net.opatry.tasks.app.presentation.model.TaskListId
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
 

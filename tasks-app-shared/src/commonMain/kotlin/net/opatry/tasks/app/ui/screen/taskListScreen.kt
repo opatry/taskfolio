@@ -42,8 +42,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.ui.TaskEvent
-import net.opatry.tasks.app.ui.TaskListsViewModel
 import net.opatry.tasks.app.ui.asLabel
 import net.opatry.tasks.app.ui.component.BrokenListIndentationEmptyState
 import net.opatry.tasks.app.ui.component.LoadingPane

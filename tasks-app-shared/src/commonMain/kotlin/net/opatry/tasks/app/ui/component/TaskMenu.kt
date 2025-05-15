@@ -38,6 +38,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.ADD_SUBTASK
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.DELETE
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.INDENT
@@ -46,8 +48,6 @@ import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_NEW_LIST
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_TOP
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.TASK_MENU
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.UNINDENT
-import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_menu_add_subtask
 import net.opatry.tasks.resources.task_menu_delete
