@@ -36,14 +36,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.CLEAR_COMPLETED_TASKS
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.EDIT_MENU
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.RENAME
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_menu_clear_all_completed_tasks
 import net.opatry.tasks.resources.task_list_menu_default_list_cannot_be_deleted
 import net.opatry.tasks.resources.task_list_menu_delete
 import net.opatry.tasks.resources.task_list_menu_rename
+import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.stringResource
+
+@VisibleForTesting
+internal object TaskListEditMenuTestTag {
+    const val EDIT_MENU = "TASK_LIST_EDIT_MENU"
+    const val RENAME = "TASK_LIST_RENAME"
+    const val CLEAR_COMPLETED_TASKS = "TASK_LIST_CLEAR_COMPLETED_TASKS"
+    const val DELETE = "TASK_LIST_DELETE"
+}
 
 enum class TaskListEditMenuAction {
     Rename,
@@ -61,12 +75,14 @@ fun TaskListEditMenu(
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
+        modifier = Modifier.testTag(EDIT_MENU),
     ) {
         DropdownMenuItem(
             text = {
                 Text(stringResource(Res.string.task_list_menu_rename))
             },
-            onClick = { onAction(TaskListEditMenuAction.Rename) }
+            onClick = { onAction(TaskListEditMenuAction.Rename) },
+            modifier = Modifier.testTag(RENAME),
         )
 
         DropdownMenuItem(
@@ -74,7 +90,8 @@ fun TaskListEditMenu(
                 Text(stringResource(Res.string.task_list_menu_clear_all_completed_tasks))
             },
             enabled = taskList.hasCompletedTasks,
-            onClick = { onAction(TaskListEditMenuAction.ClearCompletedTasks) }
+            onClick = { onAction(TaskListEditMenuAction.ClearCompletedTasks) },
+            modifier = Modifier.testTag(CLEAR_COMPLETED_TASKS),
         )
 
         HorizontalDivider()
@@ -99,7 +116,8 @@ fun TaskListEditMenu(
                 }
             },
             enabled = isDeletedAllowed,
-            onClick = { onAction(TaskListEditMenuAction.Delete) }
+            onClick = { onAction(TaskListEditMenuAction.Delete) },
+            modifier = Modifier.testTag(DELETE),
         )
     }
 }
