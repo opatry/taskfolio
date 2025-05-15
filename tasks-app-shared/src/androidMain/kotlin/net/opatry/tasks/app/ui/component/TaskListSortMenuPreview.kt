@@ -22,7 +22,7 @@
 
 package net.opatry.tasks.app.ui.component
 
-import EllipsisVertical
+import ArrowDownAZ
 import LucideIcons
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.model.TaskListId
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.data.TaskListSorting
 
 // FIXME When displayed with dark, the menu labels are invisible
 //  keep only single light preview
@@ -52,11 +53,12 @@ private fun TaskListMenuPreview() {
                 .padding(24.dp), contentAlignment = Alignment.TopEnd
         ) {
             IconButton(onClick = {}) {
-                Icon(LucideIcons.EllipsisVertical, null)
-                TaskListMenu(
+                Icon(LucideIcons.ArrowDownAZ, null)
+                TaskListSortMenu(
                     taskList = TaskListUIModel(
                         id = TaskListId(0L),
                         title = "My task list",
+                        sorting = TaskListSorting.Title,
                     ),
                     expanded = true,
                     onDismiss = {},

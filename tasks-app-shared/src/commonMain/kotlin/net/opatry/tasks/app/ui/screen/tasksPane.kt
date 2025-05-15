@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.app.ui.screen
 
+import ArrowDownAZ
 import CalendarDays
 import CheckCheck
 import ChevronDown
@@ -114,8 +115,10 @@ import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.EmptyState
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
-import net.opatry.tasks.app.ui.component.TaskListMenu
-import net.opatry.tasks.app.ui.component.TaskListMenuAction
+import net.opatry.tasks.app.ui.component.TaskListEditMenu
+import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
+import net.opatry.tasks.app.ui.component.TaskListSortMenu
+import net.opatry.tasks.app.ui.component.TaskListSortMenuAction
 import net.opatry.tasks.app.ui.component.TaskMenu
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
@@ -208,7 +211,8 @@ fun TaskListDetail(
     // TODO extract a smart state for all this mess
     var taskOfInterest by remember { mutableStateOf<TaskUIModel?>(null) }
 
-    var showTaskListActions by remember { mutableStateOf(false) }
+    var showTaskListSortMenu by remember { mutableStateOf(false) }
+    var showTaskListEditMenu by remember { mutableStateOf(false) }
     var showRenameTaskListDialog by remember { mutableStateOf(false) }
     var showClearTaskListCompletedTasksDialog by remember { mutableStateOf(false) }
     var showDeleteTaskListDialog by remember { mutableStateOf(false) }
@@ -256,27 +260,42 @@ fun TaskListDetail(
                     Text(text = taskList.title, style = MaterialTheme.typography.headlineSmall)
                 },
                 actions = {
-                    IconButton(onClick = { showTaskListActions = true }) {
-                        Icon(LucideIcons.EllipsisVertical, null)
-                    }
-                    TaskListMenu(
-                        taskList = taskList,
-                        expanded = showTaskListActions,
-                        onDismiss = {
-                            showTaskListActions = false
-                        },
-                        onAction = { action ->
-                            showTaskListActions = false
-                            when (action) {
-                                TaskListMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
-                                TaskListMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
-                                TaskListMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
-                                TaskListMenuAction.Rename -> showRenameTaskListDialog = true
-                                TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
-                                TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
+                    IconButton(onClick = { showTaskListSortMenu = true }) {
+                        Icon(LucideIcons.ArrowDownAZ, null)
+                        TaskListSortMenu(
+                            taskList = taskList,
+                            expanded = showTaskListSortMenu,
+                            onDismiss = {
+                                showTaskListSortMenu = false
+                            },
+                            onAction = { action ->
+                                showTaskListSortMenu = false
+                                when (action) {
+                                    TaskListSortMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
+                                    TaskListSortMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
+                                    TaskListSortMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
+                    IconButton(onClick = { showTaskListEditMenu = true }) {
+                        Icon(LucideIcons.EllipsisVertical, null)
+                        TaskListEditMenu(
+                            taskList = taskList,
+                            expanded = showTaskListEditMenu,
+                            onDismiss = {
+                                showTaskListEditMenu = false
+                            },
+                            onAction = { action ->
+                                showTaskListEditMenu = false
+                                when (action) {
+                                    TaskListEditMenuAction.Rename -> showRenameTaskListDialog = true
+                                    TaskListEditMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
+                                    TaskListEditMenuAction.Delete -> showDeleteTaskListDialog = true
+                                }
+                            }
+                        )
+                    }
                 }
             )
         },
