@@ -87,6 +87,41 @@ class TaskUIModelMapperTest {
     }
 
     @Test
+    fun `no completion date is mapped to null`() {
+        val task = TaskDataModel(
+            id = 42L,
+            title = "title",
+            completionDate = null,
+            lastUpdateDate = Clock.System.now(),
+            position = "00000000000000000000",
+            indent = 0,
+        )
+
+        val taskUIModel = task.asTaskUIModel()
+
+        assertEquals(null, taskUIModel.completionDate)
+    }
+
+    @Test
+    fun `completion date is mapped to LocalDate`() {
+        val (completionDate, instant) = buildMoments()
+        val task = TaskDataModel(
+            id = 42L,
+            title = "title",
+            isCompleted = true,
+            completionDate = instant,
+            lastUpdateDate = Clock.System.now(),
+            position = "00000000000000000000",
+            indent = 0,
+        )
+
+        val taskUIModel = task.asTaskUIModel()
+
+        assertTrue(taskUIModel.isCompleted)
+        assertEquals(completionDate, taskUIModel.completionDate)
+    }
+
+    @Test
     fun `canMoveToTop when not completed, not first task and not indented should be true`() {
         val task = TaskDataModel(
             id = 0L,
