@@ -36,6 +36,7 @@ import net.opatry.tasks.resources.task_list_menu_sort_by
 import net.opatry.tasks.resources.task_list_menu_sort_due_date
 import net.opatry.tasks.resources.task_list_menu_sort_manual
 import net.opatry.tasks.resources.task_list_menu_sort_title
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -49,48 +50,57 @@ fun TaskListSortMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
     ) {
-        DropdownMenuItem(
-            text = {
-                Text(stringResource(Res.string.task_list_menu_sort_by), style = MaterialTheme.typography.titleSmall)
-            },
-            enabled = false,
-            onClick = {}
-        )
+        MenuSectionItem(Res.string.task_list_menu_sort_by)
 
-        val isManualSorting = taskList.sorting == TaskListSorting.Manual
-        DropdownMenuItem(
-            text = {
-                RowWithIcon(
-                    stringResource(Res.string.task_list_menu_sort_manual),
-                    LucideIcons.Check.takeIf { isManualSorting }
-                )
-            },
-            enabled = !isManualSorting,
-            onClick = { onSortingClick(TaskListSorting.Manual) }
-        )
-
-        val isDueDateSorting = taskList.sorting == TaskListSorting.DueDate
-        DropdownMenuItem(
-            text = {
-                RowWithIcon(
-                    stringResource(Res.string.task_list_menu_sort_due_date),
-                    LucideIcons.Check.takeIf { isDueDateSorting }
-                )
-            },
-            enabled = !isDueDateSorting,
-            onClick = { onSortingClick(TaskListSorting.DueDate) }
-        )
-
-        val isTitleSorting = taskList.sorting == TaskListSorting.Title
-        DropdownMenuItem(
-            text = {
-                RowWithIcon(
-                    stringResource(Res.string.task_list_menu_sort_title),
-                    LucideIcons.Check.takeIf { isTitleSorting }
-                )
-            },
-            enabled = !isTitleSorting,
-            onClick = { onSortingClick(TaskListSorting.Title) }
-        )
+        // using listOf to enforce specific order and avoid relying on Enum::entries order
+        listOf(
+            TaskListSorting.Manual,
+            TaskListSorting.DueDate,
+            TaskListSorting.Title,
+        ).forEach { sorting ->
+            SortMenuItem(sorting, taskList.sorting) { onSortingClick(sorting) }
+        }
     }
+}
+
+@Composable
+private fun MenuSectionItem(labelRes: StringResource) {
+    MenuSectionItem(stringResource(labelRes))
+}
+
+@Composable
+private fun MenuSectionItem(label: String) {
+    DropdownMenuItem(
+        text = {
+            Text(label, style = MaterialTheme.typography.titleSmall)
+        },
+        enabled = false,
+        onClick = {}
+    )
+}
+
+private val TaskListSorting.labelRes: StringResource
+    get() = when (this) {
+        TaskListSorting.Manual -> Res.string.task_list_menu_sort_manual
+        TaskListSorting.DueDate -> Res.string.task_list_menu_sort_due_date
+        TaskListSorting.Title -> Res.string.task_list_menu_sort_title
+    }
+
+@Composable
+private fun SortMenuItem(
+    sorting: TaskListSorting,
+    currentSorting: TaskListSorting,
+    onClick: () -> Unit
+) {
+    val isCurrentSorting = sorting == currentSorting
+    DropdownMenuItem(
+        text = {
+            RowWithIcon(
+                stringResource(sorting.labelRes),
+                LucideIcons.Check.takeIf { isCurrentSorting }
+            )
+        },
+        enabled = !isCurrentSorting,
+        onClick = onClick
+    )
 }
