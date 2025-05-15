@@ -91,7 +91,7 @@ fun TaskListsColumn(
                 HorizontalDivider()
             }
         }
-        items(taskLists, TaskListUIModel::id) { taskList ->
+        items(taskLists, { it.id.value }) { taskList ->
             TaskListRow(
                 taskList,
                 Modifier.padding(horizontal = 8.dp).animateItem(),
