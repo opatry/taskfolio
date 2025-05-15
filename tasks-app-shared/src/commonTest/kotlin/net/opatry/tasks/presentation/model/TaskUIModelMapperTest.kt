@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui
+package net.opatry.tasks.presentation.model
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -28,7 +28,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import net.opatry.tasks.app.ui.asTaskUIModel
+import net.opatry.tasks.app.presentation.asTaskUIModel
 import net.opatry.tasks.data.model.TaskDataModel
 import kotlin.test.Test
 import kotlin.test.assertEquals

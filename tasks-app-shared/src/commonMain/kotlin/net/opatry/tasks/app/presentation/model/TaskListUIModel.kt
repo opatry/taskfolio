@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.model
+package net.opatry.tasks.app.presentation.model
 
 import net.opatry.tasks.data.TaskListSorting
 

@@ -24,6 +24,7 @@ package net.opatry.tasks.app.ui.screen
 
 import CircleFadingPlus
 import LucideIcons
+import androidx.annotation.VisibleForTesting
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -48,8 +49,8 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.RowWithIcon
-import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.TASK_LIST_ROW
 import net.opatry.tasks.resources.Res
@@ -57,7 +58,8 @@ import net.opatry.tasks.resources.task_lists_screen_add_task_list_cta
 import org.jetbrains.compose.resources.stringResource
 
 
-object TaskListsPaneTestTag {
+@VisibleForTesting
+internal object TaskListsPaneTestTag {
     const val NEW_TASK_LIST_BUTTON = "NEW_TASK_LIST_BUTTON"
     const val TASK_LIST_ROW = "TASK_LIST_ROW"
 }

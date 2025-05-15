@@ -38,11 +38,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.CLEAR_COMPLETED_TASKS
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.EDIT_MENU
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.RENAME
-import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_menu_clear_all_completed_tasks
 import net.opatry.tasks.resources.task_list_menu_default_list_cannot_be_deleted

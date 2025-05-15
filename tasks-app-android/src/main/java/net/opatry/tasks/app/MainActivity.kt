@@ -32,10 +32,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.presentation.TaskListsViewModel
+import net.opatry.tasks.app.presentation.UserState
+import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.app.ui.TasksApp
-import net.opatry.tasks.app.ui.UserState
-import net.opatry.tasks.app.ui.UserViewModel
 import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.screen.AboutApp

@@ -53,14 +53,14 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.datetime.todayIn
-import net.opatry.tasks.app.ui.model.DateRange
-import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.app.ui.model.TaskUIModel
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_DUE_DATE_CHIP
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_MENU_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_NOTES
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
+import net.opatry.tasks.app.presentation.model.DateRange
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ICON
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_MENU_ICON
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_NOTES
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_days_ago
 import net.opatry.tasks.resources.task_due_date_label_no_date
@@ -75,6 +75,14 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
 
+@VisibleForTesting
+internal object RemainingTaskRowTestTag {
+    const val REMAINING_TASK_ROW = "REMAINING_TASK_ROW"
+    const val REMAINING_TASK_ICON = "REMAINING_TASK_ICON"
+    const val REMAINING_TASK_NOTES = "REMAINING_TASK_NOTES"
+    const val REMAINING_TASK_DUE_DATE_CHIP = "REMAINING_TASK_DUE_DATE_CHIP"
+    const val REMAINING_TASK_MENU_ICON = "REMAINING_TASK_MENU_ICON"
+}
 
 @VisibleForTesting
 @Composable
@@ -132,9 +140,8 @@ internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (th
     }
 }
 
-@VisibleForTesting
 @Composable
-internal fun RemainingTaskRow(
+fun RemainingTaskRow(
     taskLists: List<TaskListUIModel>,
     task: TaskUIModel,
     showDate: Boolean = true,

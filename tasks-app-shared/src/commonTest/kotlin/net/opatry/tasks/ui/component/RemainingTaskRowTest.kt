@@ -39,6 +39,11 @@ import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
 import net.opatry.tasks.app.ui.component.RemainingTaskRow
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ICON
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_MENU_ICON
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_NOTES
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.ADD_SUBTASK
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.DELETE
@@ -48,11 +53,6 @@ import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_NEW_LIST
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_TOP
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.TASK_MENU
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.UNINDENT
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_DUE_DATE_CHIP
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_MENU_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_NOTES
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
 import net.opatry.tasks.ui.screen.createTask
