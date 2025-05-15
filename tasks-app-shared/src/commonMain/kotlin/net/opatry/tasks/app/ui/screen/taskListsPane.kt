@@ -122,7 +122,7 @@ fun TaskListRow(
     ) {
         ListItem(
             headlineContent = {
-                Text(taskList.title, overflow = TextOverflow.Ellipsis, maxLines = 1)
+                Text(taskList.title, overflow = TextOverflow.MiddleEllipsis, maxLines = 1)
             },
             colors = ListItemDefaults.colors(
                 containerColor = cellBackground

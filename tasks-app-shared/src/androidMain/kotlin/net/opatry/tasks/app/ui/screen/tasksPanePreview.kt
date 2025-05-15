@@ -83,7 +83,9 @@ private fun TaskRowValuesPreview() {
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TaskRowScaffold(dueDate = null)
             TaskRowScaffold(notes = "This is some details")
+            TaskRowScaffold(title = "A task with a very very very very long name", notes = "This is some details")
             TaskRowScaffold(notes = "This is some details about the task\nsdfsdfsd sdfsdf sdf sdfsd f\ns fsdfsd fsdfdsf f\n", dueDate = null)
+            TaskRowScaffold(title = "A completed task with a very very very very long name", notes = "This is some details", isCompleted = true)
             TaskRowScaffold(title = "My completed task", notes = "This is some details", isCompleted = true)
         }
     }

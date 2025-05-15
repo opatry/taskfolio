@@ -846,7 +846,7 @@ internal fun RemainingTaskRow(
             Text(
                 task.title,
                 style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.MiddleEllipsis,
                 maxLines = 1
             )
 
@@ -908,7 +908,7 @@ internal fun CompletedTaskRow(
                 task.title,
                 textDecoration = TextDecoration.LineThrough,
                 style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.MiddleEllipsis,
                 maxLines = 1
             )
 
