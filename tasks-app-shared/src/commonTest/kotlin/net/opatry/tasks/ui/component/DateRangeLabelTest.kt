@@ -27,8 +27,8 @@ import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import net.opatry.tasks.app.ui.component.toLabel
 import net.opatry.tasks.app.ui.model.DateRange
-import net.opatry.tasks.app.ui.screen.toLabel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_days_ago
 import net.opatry.tasks.resources.task_due_date_label_today

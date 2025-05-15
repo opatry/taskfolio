@@ -26,15 +26,11 @@ import CalendarDays
 import CheckCheck
 import ChevronDown
 import ChevronRight
-import Circle
-import CircleCheckBig
 import CircleOff
-import EllipsisVertical
 import ListPlus
 import LucideIcons
 import NotepadText
 import Plus
-import Trash
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -89,59 +85,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.format.DayOfWeekNames
-import kotlinx.datetime.format.MonthNames
-import kotlinx.datetime.format.Padding
-import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.todayIn
 import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.component.CompletedTaskRow
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.EmptyState
+import net.opatry.tasks.app.ui.component.RemainingTaskRow
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
 import net.opatry.tasks.app.ui.component.TaskListTopAppBar
-import net.opatry.tasks.app.ui.component.TaskMenu
+import net.opatry.tasks.app.ui.component.toColor
+import net.opatry.tasks.app.ui.component.toLabel
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE_LABEL
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DELETE_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DUE_DATE_CHIP
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_NOTES
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_DUE_DATE_CHIP
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_MENU_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_NOTES
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
-import net.opatry.tasks.resources.task_due_date_label_days_ago
-import net.opatry.tasks.resources.task_due_date_label_no_date
-import net.opatry.tasks.resources.task_due_date_label_past
-import net.opatry.tasks.resources.task_due_date_label_today
-import net.opatry.tasks.resources.task_due_date_label_tomorrow
-import net.opatry.tasks.resources.task_due_date_label_weeks_ago
-import net.opatry.tasks.resources.task_due_date_label_yesterday
 import net.opatry.tasks.resources.task_due_date_update_cta
 import net.opatry.tasks.resources.task_editor_sheet_edit_title
 import net.opatry.tasks.resources.task_editor_sheet_list_dropdown_label
@@ -163,21 +135,16 @@ import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_co
 import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_confirm
 import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_message
 import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_title
-import net.opatry.tasks.resources.task_list_pane_delete_task_icon_content_desc
 import net.opatry.tasks.resources.task_list_pane_rename_dialog_cta
 import net.opatry.tasks.resources.task_list_pane_rename_dialog_title
 import net.opatry.tasks.resources.task_list_pane_task_deleted_snackbar
 import net.opatry.tasks.resources.task_list_pane_task_deleted_undo_snackbar
-import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
 import net.opatry.tasks.resources.task_list_pane_task_restored_snackbar
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
 import net.opatry.tasks.resources.task_menu_move_to_new_list_create_task_list_dialog_confirm
 import net.opatry.tasks.resources.task_menu_move_to_new_list_create_task_list_dialog_title
-import org.jetbrains.annotations.VisibleForTesting
-import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.math.abs
 
 object TaskListPaneTestTag {
     const val ALL_COMPLETE_EMPTY_STATE = "ALL_COMPLETE_EMPTY_STATE"
@@ -759,185 +726,3 @@ private val DateRange.key: String
         DateRange.None -> "none"
     }
 
-@VisibleForTesting
-@Composable
-internal fun DateRange?.toColor(): Color = when (this) {
-    is DateRange.Overdue -> MaterialTheme.colorScheme.error
-    is DateRange.Today -> MaterialTheme.colorScheme.primary
-    is DateRange.Later,
-    DateRange.None,
-    null -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-}
-
-@VisibleForTesting
-@Composable
-internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (this) {
-    is DateRange.Overdue -> {
-        val numberOfDays = abs(numberOfDays)
-        when {
-            sectionLabel -> stringResource(Res.string.task_due_date_label_past)
-            numberOfDays == 1 -> stringResource(Res.string.task_due_date_label_yesterday)
-            numberOfDays < 7 -> pluralStringResource(Res.plurals.task_due_date_label_days_ago, numberOfDays, numberOfDays)
-            else -> (numberOfDays / 7).let { numberOfWeeks ->
-                pluralStringResource(Res.plurals.task_due_date_label_weeks_ago, numberOfWeeks, numberOfWeeks)
-            }
-        }
-    }
-
-    is DateRange.Today -> stringResource(Res.string.task_due_date_label_today)
-    is DateRange.Later -> when {
-        numberOfDays == 1 -> stringResource(Res.string.task_due_date_label_tomorrow)
-        // TODO localize names & format
-        date.year == Clock.System.todayIn(TimeZone.currentSystemDefault()).year -> LocalDate.Format {
-            // FIXME doesn't work with more than 2 dd or MM
-            //  byUnicodePattern("ddd', 'MMM' 'yyyy")
-            dayOfWeek(DayOfWeekNames.ENGLISH_ABBREVIATED) // TODO translation
-            chars(", ")
-            monthName(MonthNames.ENGLISH_ABBREVIATED) // TODO translation
-            char(' ')
-            dayOfMonth(Padding.NONE)
-        }.format(date)
-
-        else -> LocalDate.Format {
-            // FIXME doesn't work with more than 2 MM
-            //  byUnicodePattern("MMMM' 'dd', 'yyyy")
-            monthName(MonthNames.ENGLISH_FULL) // TODO translation
-            char(' ')
-            dayOfMonth(Padding.NONE)
-            chars(", ")
-            year()
-        }.format(date)
-    }
-
-    DateRange.None -> when {
-        sectionLabel -> stringResource(Res.string.task_due_date_label_no_date)
-        else -> ""
-    }
-}
-
-@VisibleForTesting
-@Composable
-internal fun RemainingTaskRow(
-    taskLists: List<TaskListUIModel>,
-    task: TaskUIModel,
-    showDate: Boolean = true,
-    onAction: (TaskAction) -> Unit,
-) {
-    var showContextualMenu by remember { mutableStateOf(false) }
-
-    Row(
-        Modifier
-            .testTag(REMAINING_TASK_ROW)
-            .clickable(onClick = { onAction(TaskAction.Edit) })
-    ) {
-        IconButton(
-            onClick = { onAction(TaskAction.ToggleCompletion) },
-            modifier = Modifier
-                .testTag(REMAINING_TASK_ICON)
-                .padding(start = 36.dp * task.indent)
-        ) {
-            Icon(LucideIcons.Circle, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
-        }
-        Column(
-            Modifier
-                .weight(1f)
-                .padding(vertical = 8.dp)
-        ) {
-            Text(
-                task.title,
-                style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.MiddleEllipsis,
-                maxLines = 1
-            )
-
-            if (task.notes.isNotBlank()) {
-                Text(
-                    task.notes,
-                    modifier = Modifier.testTag(REMAINING_TASK_NOTES),
-                    style = MaterialTheme.typography.bodySmall,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
-            }
-            if (showDate && task.dueDate != null) {
-                AssistChip(
-                    onClick = { onAction(TaskAction.UpdateDueDate) },
-                    label = {
-                        Text(
-                            task.dateRange.toLabel(),
-                            color = task.dateRange.toColor()
-                        )
-                    },
-                    modifier = Modifier.testTag(REMAINING_TASK_DUE_DATE_CHIP),
-                    shape = MaterialTheme.shapes.large,
-                )
-            }
-        }
-        Box {
-            IconButton(onClick = { showContextualMenu = true }, Modifier.testTag(REMAINING_TASK_MENU_ICON)) {
-                Icon(LucideIcons.EllipsisVertical, stringResource(Res.string.task_list_pane_task_options_icon_content_desc))
-            }
-            TaskMenu(taskLists, task, showContextualMenu) { action ->
-                showContextualMenu = false
-                action?.let(onAction)
-            }
-        }
-    }
-}
-
-@VisibleForTesting
-@Composable
-internal fun CompletedTaskRow(
-    task: TaskUIModel,
-    onAction: (TaskAction) -> Unit,
-) {
-    Row(
-        Modifier
-            .testTag(COMPLETED_TASK_ROW)
-            .clickable(onClick = { onAction(TaskAction.Edit) })
-    ) {
-        IconButton(onClick = { onAction(TaskAction.ToggleCompletion) }, Modifier.testTag(COMPLETED_TASK_ICON)) {
-            Icon(LucideIcons.CircleCheckBig, null, tint = MaterialTheme.colorScheme.primary)
-        }
-        Column(
-            Modifier
-                .weight(1f)
-                .padding(vertical = 8.dp)
-        ) {
-            Text(
-                task.title,
-                textDecoration = TextDecoration.LineThrough,
-                style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.MiddleEllipsis,
-                maxLines = 1
-            )
-
-            if (task.notes.isNotBlank()) {
-                Text(
-                    task.notes,
-                    modifier = Modifier.testTag(COMPLETED_TASK_NOTES),
-                    style = MaterialTheme.typography.bodySmall,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
-            }
-            if (task.dueDate != null) {
-                AssistChip(
-                    onClick = { onAction(TaskAction.UpdateDueDate) },
-                    label = {
-                        Text(
-                            task.dateRange.toLabel(),
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                    },
-                    modifier = Modifier.testTag(COMPLETED_TASK_DUE_DATE_CHIP),
-                    shape = MaterialTheme.shapes.large,
-                )
-            }
-        }
-
-        IconButton(onClick = { onAction(TaskAction.Delete) }, Modifier.testTag(COMPLETED_TASK_DELETE_ICON)) {
-            Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
-        }
-    }
-}
