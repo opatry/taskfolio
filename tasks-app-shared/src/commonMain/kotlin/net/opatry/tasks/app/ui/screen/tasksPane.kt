@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.screen
 
 import ArrowDownAZ
+import CalendarArrowDown
 import CalendarDays
 import CheckCheck
 import ChevronDown
@@ -32,6 +33,7 @@ import CircleCheckBig
 import CircleOff
 import EllipsisVertical
 import ListPlus
+import ListTree
 import LucideIcons
 import NotepadText
 import Plus
@@ -259,8 +261,13 @@ fun TaskListDetail(
                     Text(text = taskList.title, style = MaterialTheme.typography.headlineSmall)
                 },
                 actions = {
+                    val sortMenuIcon = when (taskList.sorting) {
+                        TaskListSorting.Manual -> LucideIcons.ListTree
+                        TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
+                        TaskListSorting.Title -> LucideIcons.ArrowDownAZ
+                    }
                     IconButton(onClick = { showTaskListSortMenu = true }) {
-                        Icon(LucideIcons.ArrowDownAZ, null)
+                        Icon(sortMenuIcon, null)
                         TaskListSortMenu(
                             taskList = taskList,
                             expanded = showTaskListSortMenu,
