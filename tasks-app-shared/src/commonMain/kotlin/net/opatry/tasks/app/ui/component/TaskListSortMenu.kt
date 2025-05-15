@@ -38,18 +38,12 @@ import net.opatry.tasks.resources.task_list_menu_sort_manual
 import net.opatry.tasks.resources.task_list_menu_sort_title
 import org.jetbrains.compose.resources.stringResource
 
-enum class TaskListSortMenuAction {
-    SortManual,
-    SortDate,
-    SortTitle,
-}
-
 @Composable
 fun TaskListSortMenu(
     taskList: TaskListUIModel,
     expanded: Boolean,
     onDismiss: () -> Unit,
-    onAction: (TaskListSortMenuAction) -> Unit
+    onSortingClick: (TaskListSorting) -> Unit
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -72,7 +66,7 @@ fun TaskListSortMenu(
                 )
             },
             enabled = !isManualSorting,
-            onClick = { onAction(TaskListSortMenuAction.SortManual) }
+            onClick = { onSortingClick(TaskListSorting.Manual) }
         )
 
         val isDueDateSorting = taskList.sorting == TaskListSorting.DueDate
@@ -84,7 +78,7 @@ fun TaskListSortMenu(
                 )
             },
             enabled = !isDueDateSorting,
-            onClick = { onAction(TaskListSortMenuAction.SortDate) }
+            onClick = { onSortingClick(TaskListSorting.DueDate) }
         )
 
         val isTitleSorting = taskList.sorting == TaskListSorting.Title
@@ -96,7 +90,7 @@ fun TaskListSortMenu(
                 )
             },
             enabled = !isTitleSorting,
-            onClick = { onAction(TaskListSortMenuAction.SortTitle) }
+            onClick = { onSortingClick(TaskListSorting.Title) }
         )
     }
 }

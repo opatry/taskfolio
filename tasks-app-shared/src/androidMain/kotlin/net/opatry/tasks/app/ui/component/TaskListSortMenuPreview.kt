@@ -62,7 +62,7 @@ private fun TaskListMenuPreview() {
                     ),
                     expanded = true,
                     onDismiss = {},
-                    onAction = {},
+                    onSortingClick = {},
                 )
             }
         }

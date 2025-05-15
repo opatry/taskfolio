@@ -118,7 +118,6 @@ import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskListEditMenu
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
 import net.opatry.tasks.app.ui.component.TaskListSortMenu
-import net.opatry.tasks.app.ui.component.TaskListSortMenuAction
 import net.opatry.tasks.app.ui.component.TaskMenu
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
@@ -268,13 +267,9 @@ fun TaskListDetail(
                             onDismiss = {
                                 showTaskListSortMenu = false
                             },
-                            onAction = { action ->
+                            onSortingClick = { sorting ->
                                 showTaskListSortMenu = false
-                                when (action) {
-                                    TaskListSortMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
-                                    TaskListSortMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
-                                    TaskListSortMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
-                                }
+                                viewModel.sortBy(taskList.id, sorting)
                             }
                         )
                     }
