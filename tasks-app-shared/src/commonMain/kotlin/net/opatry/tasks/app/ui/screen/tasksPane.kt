@@ -22,8 +22,6 @@
 
 package net.opatry.tasks.app.ui.screen
 
-import ArrowDownAZ
-import CalendarArrowDown
 import CalendarDays
 import CheckCheck
 import ChevronDown
@@ -33,7 +31,6 @@ import CircleCheckBig
 import CircleOff
 import EllipsisVertical
 import ListPlus
-import ListTree
 import LucideIcons
 import NotepadText
 import Plus
@@ -80,7 +77,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -117,9 +113,8 @@ import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.EmptyState
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
-import net.opatry.tasks.app.ui.component.TaskListEditMenu
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
-import net.opatry.tasks.app.ui.component.TaskListSortMenu
+import net.opatry.tasks.app.ui.component.TaskListTopAppBar
 import net.opatry.tasks.app.ui.component.TaskMenu
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
@@ -212,8 +207,6 @@ fun TaskListDetail(
     // TODO extract a smart state for all this mess
     var taskOfInterest by remember { mutableStateOf<TaskUIModel?>(null) }
 
-    var showTaskListSortMenu by remember { mutableStateOf(false) }
-    var showTaskListEditMenu by remember { mutableStateOf(false) }
     var showRenameTaskListDialog by remember { mutableStateOf(false) }
     var showClearTaskListCompletedTasksDialog by remember { mutableStateOf(false) }
     var showDeleteTaskListDialog by remember { mutableStateOf(false) }
@@ -255,50 +248,18 @@ fun TaskListDetail(
 
     Scaffold(
         topBar = {
-            // FIXME tweak colors, elevation, etc.
-            TopAppBar(
-                title = {
-                    Text(text = taskList.title, style = MaterialTheme.typography.headlineSmall)
+            TaskListTopAppBar(
+                taskList = taskList,
+                onSort = { sorting ->
+                    viewModel.sortBy(taskList.id, sorting)
                 },
-                actions = {
-                    val sortMenuIcon = when (taskList.sorting) {
-                        TaskListSorting.Manual -> LucideIcons.ListTree
-                        TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
-                        TaskListSorting.Title -> LucideIcons.ArrowDownAZ
+                onEdit = { action ->
+                    when (action) {
+                        TaskListEditMenuAction.Rename -> showRenameTaskListDialog = true
+                        TaskListEditMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
+                        TaskListEditMenuAction.Delete -> showDeleteTaskListDialog = true
                     }
-                    IconButton(onClick = { showTaskListSortMenu = true }) {
-                        Icon(sortMenuIcon, null)
-                        TaskListSortMenu(
-                            taskList = taskList,
-                            expanded = showTaskListSortMenu,
-                            onDismiss = {
-                                showTaskListSortMenu = false
-                            },
-                            onSortingClick = { sorting ->
-                                showTaskListSortMenu = false
-                                viewModel.sortBy(taskList.id, sorting)
-                            }
-                        )
-                    }
-                    IconButton(onClick = { showTaskListEditMenu = true }) {
-                        Icon(LucideIcons.EllipsisVertical, null)
-                        TaskListEditMenu(
-                            taskList = taskList,
-                            expanded = showTaskListEditMenu,
-                            onDismiss = {
-                                showTaskListEditMenu = false
-                            },
-                            onAction = { action ->
-                                showTaskListEditMenu = false
-                                when (action) {
-                                    TaskListEditMenuAction.Rename -> showRenameTaskListDialog = true
-                                    TaskListEditMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
-                                    TaskListEditMenuAction.Delete -> showDeleteTaskListDialog = true
-                                }
-                            }
-                        )
-                    }
-                }
+                },
             )
         },
         snackbarHost = {
