@@ -73,6 +73,7 @@
     <string name="task_list_pane_all_tasks_complete_title">All tasks complete</string>
     <string name="task_list_pane_all_tasks_complete_desc">Nice work!</string>
     <string name="task_list_pane_completed_section_title_with_count">Completed (%1$s)</string>
+    <string name="task_list_pane_completed_date_label">Completed: %1$s</string>
     <string name="task_list_pane_delete_task_icon_content_desc">Delete task</string>
     <string name="task_list_pane_task_options_icon_content_desc">Task options</string>
 

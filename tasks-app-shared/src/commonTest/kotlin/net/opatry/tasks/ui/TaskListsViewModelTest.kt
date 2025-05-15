@@ -219,6 +219,7 @@ class TaskListsViewModelTest {
                     dueDate = null,
                     notes = "notes3",
                     isCompleted = true,
+                    completionDate = yesterday,
                     position = "09999999999999999999",
                     indent = 0,
                     canMoveToTop = false,

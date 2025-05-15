@@ -26,7 +26,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 import net.opatry.tasks.app.ui.model.TaskId
 import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
@@ -36,15 +39,28 @@ private class CompletedTaskRowPreviewDataProvider :
     override val values = sequenceOf(
         TaskUIModel(
             id = TaskId(0),
-            title = "Completed without due date",
-            dueDate = null,
+            title = "Completed with this year completion date",
             isCompleted = true,
+            completionDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
         ),
         TaskUIModel(
             id = TaskId(0),
-            title = "Completed with due date",
-            dueDate = LocalDate.parse("2025-01-01"),
+            title = "Completed with notes",
             isCompleted = true,
+            notes = "• This is a \n• multiline note",
+            completionDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+        ),
+        TaskUIModel(
+            id = TaskId(0),
+            title = "Completed with +1y old completion date",
+            isCompleted = true,
+            completionDate = LocalDate.parse("2024-01-01"),
+        ),
+        TaskUIModel(
+            id = TaskId(0),
+            title = "Completed without completion date",
+            isCompleted = true,
+            completionDate = null,
         ),
     )
 }

@@ -91,6 +91,7 @@ internal fun TaskDataModel.asTaskUIModel(): TaskUIModel {
         notes = notes,
         dueDate = dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
         isCompleted = isCompleted,
+        completionDate = completionDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
         position = position,
         indent = indent,
         canMoveToTop = !isCompleted && indent == 0 && !isFirstTask,

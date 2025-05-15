@@ -61,6 +61,7 @@ data class TaskUIModel(
     val dueDate: LocalDate? = null,
     val notes: String = "",
     val isCompleted: Boolean = false,
+    val completionDate: LocalDate? = null,
     val position: String = 0.toTaskPosition(),
     val indent: Int = 0,
     val canMoveToTop: Boolean = false,

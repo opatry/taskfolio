@@ -73,6 +73,7 @@
     <string name="task_list_pane_all_tasks_complete_title">Toutes les tâches sont terminées</string>
     <string name="task_list_pane_all_tasks_complete_desc">Beau travail !</string>
     <string name="task_list_pane_completed_section_title_with_count">Terminées (%1$s)</string>
+    <string name="task_list_pane_completed_date_label">Completée le : %1$s</string>
     <string name="task_list_pane_delete_task_icon_content_desc">Supprimer la tâche</string>
     <string name="task_list_pane_task_options_icon_content_desc">Options de la tâche</string>
     <string name="task_event_error_task_create">Une erreur est survenue lors de la création de la tâche</string>
