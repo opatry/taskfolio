@@ -23,29 +23,24 @@
 package net.opatry.tasks.ui.component
 
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.onChildren
-import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.minus
+import kotlinx.datetime.LocalDate
 import net.opatry.tasks.app.ui.component.CompletedTaskRow
 import net.opatry.tasks.app.ui.component.TaskAction
+import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_COMPLETION_DATE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DELETE_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ICON
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_NOTES
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
 import net.opatry.tasks.resources.Res
-import net.opatry.tasks.resources.task_due_date_label_weeks_ago
+import net.opatry.tasks.resources.task_list_pane_completed_date_label
 import net.opatry.tasks.ui.screen.createTask
-import net.opatry.tasks.ui.screen.today
-import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -57,7 +52,7 @@ class CompletedTaskRowTest {
     fun CompletedTaskRow_Layout() = runComposeUiTest {
         val task = createTask("My Completed Task", isCompleted = true).copy(
             notes = "",
-            dueDate = null
+            completionDate = null
         )
         setContent {
             CompletedTaskRow(task) {}
@@ -69,7 +64,7 @@ class CompletedTaskRowTest {
         onNodeWithTag(COMPLETED_TASK_NOTES)
             .assertDoesNotExist()
 
-        onNodeWithTag(COMPLETED_TASK_DUE_DATE_CHIP)
+        onNodeWithTag(COMPLETED_TASK_COMPLETION_DATE)
             .assertDoesNotExist()
     }
 
@@ -77,11 +72,11 @@ class CompletedTaskRowTest {
     fun CompletedTaskRow_LayoutFull() = runComposeUiTest {
         val task = createTask("My Completed Task With notes & date", isCompleted = true).copy(
             notes = "My notes",
-            dueDate = today.minus(2, DateTimeUnit.WEEK)
+            completionDate = LocalDate.parse("2023-10-01")
         )
-        lateinit var twoWeeksAgo: String
+        lateinit var dateStr: String
         setContent {
-            twoWeeksAgo = pluralStringResource(Res.plurals.task_due_date_label_weeks_ago, 2, 2)
+            dateStr = stringResource(Res.string.task_list_pane_completed_date_label, "October 1, 2023")
             CompletedTaskRow(task) {}
         }
 
@@ -94,12 +89,9 @@ class CompletedTaskRowTest {
             .assertTextEquals("My notes")
 
         // FIXME why useUnmergedTree is needed?
-        onNodeWithTag(COMPLETED_TASK_DUE_DATE_CHIP, useUnmergedTree = true)
+        onNodeWithTag(COMPLETED_TASK_COMPLETION_DATE, useUnmergedTree = true)
             .assertIsDisplayed()
-            .onChildren()
-            .assertCountEquals(1)
-            .onFirst()
-            .assertTextEquals(twoWeeksAgo)
+            .assertTextEquals(dateStr)
     }
 
     @Test
@@ -150,21 +142,5 @@ class CompletedTaskRowTest {
             .performClick()
 
         assertEquals(TaskAction.Edit, action, "Click on cell should trigger Edit action")
-    }
-
-    @Test
-    fun CompletedTaskRow_EditDueDate() = runComposeUiTest {
-        val task = createTask(isCompleted = true)
-        var action: TaskAction? = null
-        setContent {
-            CompletedTaskRow(task) {
-                action = it
-            }
-        }
-
-        onNodeWithTag(COMPLETED_TASK_DUE_DATE_CHIP)
-            .performClick()
-
-        assertEquals(TaskAction.UpdateDueDate, action, "UpdateDueDate action should have been triggered")
     }
 }
