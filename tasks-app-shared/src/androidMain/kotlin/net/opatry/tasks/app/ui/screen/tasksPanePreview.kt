@@ -48,16 +48,28 @@ private fun TaskRowScaffold(
     dueDate: LocalDate? = Clock.System.todayIn(TimeZone.currentSystemDefault()),
     isCompleted: Boolean = false
 ) {
-    RemainingTaskRow(
-        emptyList(),
-        TaskUIModel(
-            id = TaskId(0L),
-            title = title,
-            notes = notes,
-            dueDate = dueDate,
-            isCompleted = isCompleted
-        )
-    ) {}
+    if (isCompleted) {
+        CompletedTaskRow(
+            TaskUIModel(
+                id = TaskId(0L),
+                title = title,
+                notes = notes,
+                dueDate = dueDate,
+                isCompleted = true
+            )
+        ) {}
+    } else {
+        RemainingTaskRow(
+            emptyList(),
+            TaskUIModel(
+                id = TaskId(0L),
+                title = title,
+                notes = notes,
+                dueDate = dueDate,
+                isCompleted = false
+            )
+        ) {}
+    }
 }
 
 @PreviewLightDark
