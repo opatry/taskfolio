@@ -77,7 +77,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -114,8 +113,8 @@ import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.EmptyState
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
-import net.opatry.tasks.app.ui.component.TaskListMenu
-import net.opatry.tasks.app.ui.component.TaskListMenuAction
+import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
+import net.opatry.tasks.app.ui.component.TaskListTopAppBar
 import net.opatry.tasks.app.ui.component.TaskMenu
 import net.opatry.tasks.app.ui.model.DateRange
 import net.opatry.tasks.app.ui.model.TaskListUIModel
@@ -208,7 +207,6 @@ fun TaskListDetail(
     // TODO extract a smart state for all this mess
     var taskOfInterest by remember { mutableStateOf<TaskUIModel?>(null) }
 
-    var showTaskListActions by remember { mutableStateOf(false) }
     var showRenameTaskListDialog by remember { mutableStateOf(false) }
     var showClearTaskListCompletedTasksDialog by remember { mutableStateOf(false) }
     var showDeleteTaskListDialog by remember { mutableStateOf(false) }
@@ -250,28 +248,18 @@ fun TaskListDetail(
 
     Scaffold(
         topBar = {
-            // FIXME tweak colors, elevation, etc.
-            TopAppBar(
-                title = {
-                    Text(text = taskList.title, style = MaterialTheme.typography.headlineSmall)
+            TaskListTopAppBar(
+                taskList = taskList,
+                onSort = { sorting ->
+                    viewModel.sortBy(taskList.id, sorting)
                 },
-                actions = {
-                    IconButton(onClick = { showTaskListActions = true }) {
-                        Icon(LucideIcons.EllipsisVertical, null)
+                onEdit = { action ->
+                    when (action) {
+                        TaskListEditMenuAction.Rename -> showRenameTaskListDialog = true
+                        TaskListEditMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
+                        TaskListEditMenuAction.Delete -> showDeleteTaskListDialog = true
                     }
-                    TaskListMenu(taskList, showTaskListActions) { action ->
-                        showTaskListActions = false
-                        when (action) {
-                            TaskListMenuAction.Dismiss -> Unit
-                            TaskListMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
-                            TaskListMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
-                            TaskListMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
-                            TaskListMenuAction.Rename -> showRenameTaskListDialog = true
-                            TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
-                            TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
-                        }
-                    }
-                }
+                },
             )
         },
         snackbarHost = {
@@ -858,7 +846,7 @@ internal fun RemainingTaskRow(
             Text(
                 task.title,
                 style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.MiddleEllipsis,
                 maxLines = 1
             )
 
@@ -920,7 +908,7 @@ internal fun CompletedTaskRow(
                 task.title,
                 textDecoration = TextDecoration.LineThrough,
                 style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.MiddleEllipsis,
                 maxLines = 1
             )
 

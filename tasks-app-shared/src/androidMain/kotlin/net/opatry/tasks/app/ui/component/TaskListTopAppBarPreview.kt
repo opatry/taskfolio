@@ -22,46 +22,34 @@
 
 package net.opatry.tasks.app.ui.component
 
-import EllipsisVertical
-import LucideIcons
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import net.opatry.tasks.app.ui.model.TaskListId
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import net.opatry.tasks.data.TaskListSorting
 
-// FIXME When displayed with dark, the menu labels are invisible
-//  keep only single light preview
-@Preview(showBackground = true)
+private class SortingPreviewParameterProvider(
+    override val values: Sequence<TaskListSorting> = TaskListSorting.entries.asSequence()
+) : PreviewParameterProvider<TaskListSorting>
+
+@PreviewLightDark
 @Composable
-private fun TaskListMenuPreview() {
+private fun TaskListTopAppBarPreview(
+    @PreviewParameter(SortingPreviewParameterProvider::class) sorting: TaskListSorting
+) {
+    val taskList = TaskListUIModel(
+        id = TaskListId(0L),
+        title = "Task list with a very very very very long title",
+        sorting = sorting,
+    )
     TaskfolioThemedPreview {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(400.dp)
-                .padding(24.dp), contentAlignment = Alignment.TopEnd
-        ) {
-            IconButton(onClick = {}) {
-                Icon(LucideIcons.EllipsisVertical, null)
-                TaskListMenu(
-                    taskList = TaskListUIModel(
-                        id = TaskListId(0L),
-                        title = "My task list",
-                    ),
-                    expanded = true,
-                    onAction = {}
-                )
-            }
-        }
+        TaskListTopAppBar(
+            taskList = taskList,
+            onSort = {},
+            onEdit = {},
+        )
     }
 }

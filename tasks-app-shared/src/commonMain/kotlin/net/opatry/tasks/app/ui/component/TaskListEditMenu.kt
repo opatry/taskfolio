@@ -22,7 +22,6 @@
 
 package net.opatry.tasks.app.ui.component
 
-import Check
 import LucideIcons
 import Trash2
 import androidx.compose.foundation.layout.Arrangement
@@ -36,97 +35,54 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.CLEAR_COMPLETED_TASKS
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.EDIT_MENU
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.RENAME
 import net.opatry.tasks.app.ui.model.TaskListUIModel
-import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_menu_clear_all_completed_tasks
 import net.opatry.tasks.resources.task_list_menu_default_list_cannot_be_deleted
 import net.opatry.tasks.resources.task_list_menu_delete
 import net.opatry.tasks.resources.task_list_menu_rename
-import net.opatry.tasks.resources.task_list_menu_sort_by
-import net.opatry.tasks.resources.task_list_menu_sort_due_date
-import net.opatry.tasks.resources.task_list_menu_sort_manual
-import net.opatry.tasks.resources.task_list_menu_sort_title
+import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.stringResource
 
-enum class TaskListMenuAction {
-    Dismiss,
-    SortManual,
-    SortDate,
-    SortTitle,
+@VisibleForTesting
+internal object TaskListEditMenuTestTag {
+    const val EDIT_MENU = "TASK_LIST_EDIT_MENU"
+    const val RENAME = "TASK_LIST_RENAME"
+    const val CLEAR_COMPLETED_TASKS = "TASK_LIST_CLEAR_COMPLETED_TASKS"
+    const val DELETE = "TASK_LIST_DELETE"
+}
+
+enum class TaskListEditMenuAction {
     Rename,
     ClearCompletedTasks,
     Delete,
 }
 
 @Composable
-fun TaskListMenu(
+fun TaskListEditMenu(
     taskList: TaskListUIModel,
     expanded: Boolean,
-    onAction: (TaskListMenuAction) -> Unit
+    onDismiss: () -> Unit,
+    onAction: (TaskListEditMenuAction) -> Unit
 ) {
-    val allowDelete by remember(taskList.canDelete) { mutableStateOf(taskList.canDelete) }
-
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onAction(TaskListMenuAction.Dismiss) }
+        onDismissRequest = onDismiss,
+        modifier = Modifier.testTag(EDIT_MENU),
     ) {
-        DropdownMenuItem(
-            text = {
-                Text(stringResource(Res.string.task_list_menu_sort_by), style = MaterialTheme.typography.titleSmall)
-            },
-            enabled = false,
-            onClick = {}
-        )
-
-        val isManualSorting = taskList.sorting == TaskListSorting.Manual
-        DropdownMenuItem(
-            text = {
-                RowWithIcon(
-                    stringResource(Res.string.task_list_menu_sort_manual),
-                    LucideIcons.Check.takeIf { isManualSorting }
-                )
-            },
-            enabled = !isManualSorting,
-            onClick = { onAction(TaskListMenuAction.SortManual) }
-        )
-
-        val isDueDateSorting = taskList.sorting == TaskListSorting.DueDate
-        DropdownMenuItem(
-            text = {
-                RowWithIcon(
-                    stringResource(Res.string.task_list_menu_sort_due_date),
-                    LucideIcons.Check.takeIf { isDueDateSorting }
-                )
-            },
-            enabled = !isDueDateSorting,
-            onClick = { onAction(TaskListMenuAction.SortDate) }
-        )
-
-        val isTitleSorting = taskList.sorting == TaskListSorting.Title
-        DropdownMenuItem(
-            text = {
-                RowWithIcon(
-                    stringResource(Res.string.task_list_menu_sort_title),
-                    LucideIcons.Check.takeIf { isTitleSorting }
-                )
-            },
-            enabled = !isTitleSorting,
-            onClick = { onAction(TaskListMenuAction.SortTitle) }
-        )
-
-        HorizontalDivider()
-
         DropdownMenuItem(
             text = {
                 Text(stringResource(Res.string.task_list_menu_rename))
             },
-            onClick = { onAction(TaskListMenuAction.Rename) }
+            onClick = { onAction(TaskListEditMenuAction.Rename) },
+            modifier = Modifier.testTag(RENAME),
         )
 
         DropdownMenuItem(
@@ -134,21 +90,23 @@ fun TaskListMenu(
                 Text(stringResource(Res.string.task_list_menu_clear_all_completed_tasks))
             },
             enabled = taskList.hasCompletedTasks,
-            onClick = { onAction(TaskListMenuAction.ClearCompletedTasks) }
+            onClick = { onAction(TaskListEditMenuAction.ClearCompletedTasks) },
+            modifier = Modifier.testTag(CLEAR_COMPLETED_TASKS),
         )
 
         HorizontalDivider()
 
+        val isDeletedAllowed = taskList.canDelete
         DropdownMenuItem(
             text = {
                 val color = when {
-                    allowDelete -> MaterialTheme.colorScheme.error
+                    isDeletedAllowed -> MaterialTheme.colorScheme.error
                     else -> LocalContentColor.current
                 }
                 CompositionLocalProvider(LocalContentColor provides color) {
                     Column(Modifier.padding(vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         RowWithIcon(stringResource(Res.string.task_list_menu_delete), LucideIcons.Trash2)
-                        if (!allowDelete) {
+                        if (!isDeletedAllowed) {
                             Text(
                                 stringResource(Res.string.task_list_menu_default_list_cannot_be_deleted),
                                 style = MaterialTheme.typography.bodySmall
@@ -157,8 +115,9 @@ fun TaskListMenu(
                     }
                 }
             },
-            enabled = allowDelete,
-            onClick = { onAction(TaskListMenuAction.Delete) }
+            enabled = isDeletedAllowed,
+            onClick = { onAction(TaskListEditMenuAction.Delete) },
+            modifier = Modifier.testTag(DELETE),
         )
     }
 }

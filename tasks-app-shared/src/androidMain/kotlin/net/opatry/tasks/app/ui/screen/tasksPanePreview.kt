@@ -48,16 +48,28 @@ private fun TaskRowScaffold(
     dueDate: LocalDate? = Clock.System.todayIn(TimeZone.currentSystemDefault()),
     isCompleted: Boolean = false
 ) {
-    RemainingTaskRow(
-        emptyList(),
-        TaskUIModel(
-            id = TaskId(0L),
-            title = title,
-            notes = notes,
-            dueDate = dueDate,
-            isCompleted = isCompleted
-        )
-    ) {}
+    if (isCompleted) {
+        CompletedTaskRow(
+            TaskUIModel(
+                id = TaskId(0L),
+                title = title,
+                notes = notes,
+                dueDate = dueDate,
+                isCompleted = true
+            )
+        ) {}
+    } else {
+        RemainingTaskRow(
+            emptyList(),
+            TaskUIModel(
+                id = TaskId(0L),
+                title = title,
+                notes = notes,
+                dueDate = dueDate,
+                isCompleted = false
+            )
+        ) {}
+    }
 }
 
 @PreviewLightDark
@@ -83,7 +95,9 @@ private fun TaskRowValuesPreview() {
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             TaskRowScaffold(dueDate = null)
             TaskRowScaffold(notes = "This is some details")
+            TaskRowScaffold(title = "A task with a very very very very long name", notes = "This is some details")
             TaskRowScaffold(notes = "This is some details about the task\nsdfsdfsd sdfsdf sdf sdfsd f\ns fsdfsd fsdfdsf f\n", dueDate = null)
+            TaskRowScaffold(title = "A completed task with a very very very very long name", notes = "This is some details", isCompleted = true)
             TaskRowScaffold(title = "My completed task", notes = "This is some details", isCompleted = true)
         }
     }
