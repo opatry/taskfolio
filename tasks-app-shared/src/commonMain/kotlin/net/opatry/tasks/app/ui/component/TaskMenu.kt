@@ -26,8 +26,8 @@ import Check
 import CopyPlus
 import ListPlus
 import LucideIcons
-import SquareStack
 import Trash2
+import androidx.annotation.VisibleForTesting
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -58,7 +58,8 @@ import net.opatry.tasks.resources.task_menu_new_list
 import net.opatry.tasks.resources.task_menu_unindent
 import org.jetbrains.compose.resources.stringResource
 
-object TaskMenuTestTag {
+@VisibleForTesting
+internal object TaskMenuTestTag {
     const val TASK_MENU = "TASK_MENU"
     const val ADD_SUBTASK = "TASK_MENU_ADD_SUBTASK"
     const val MOVE_TO_TOP = "MOVE_TO_TOP"

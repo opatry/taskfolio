@@ -31,12 +31,12 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.datetime.LocalDate
 import net.opatry.tasks.app.ui.component.CompletedTaskRow
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_COMPLETION_DATE
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_DELETE_ICON
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ICON
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_NOTES
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ROW
 import net.opatry.tasks.app.ui.component.TaskAction
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_COMPLETION_DATE
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DELETE_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_NOTES
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_date_label
 import net.opatry.tasks.ui.screen.createTask

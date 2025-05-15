@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui.screen
+package net.opatry.tasks.ui.component
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
@@ -30,14 +30,17 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE_LABEL
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.REMAINING_TASK_ROW
-import net.opatry.tasks.app.ui.screen.TasksColumn
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ROW
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
+import net.opatry.tasks.app.ui.component.TasksColumn
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.FULLY_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_count
+import net.opatry.tasks.ui.screen.createTaskList
 import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 
@@ -62,6 +65,23 @@ class TasksColumnTest {
     }
 
     @Test
+    fun TasksColumn_FullyEmptyState() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 0, completedTaskCount = 0)
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                taskList = taskList,
+            )
+        }
+
+        onNodeWithTag(FULLY_EMPTY_STATE)
+            .assertIsDisplayed()
+
+        onNodeWithTag(TASKS_COLUMN)
+            .assertDoesNotExist()
+    }
+
+    @Test
     fun TasksColumn_AllCompletedEmptyState() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 0, completedTaskCount = 1)
         setContent {
@@ -70,6 +90,9 @@ class TasksColumnTest {
                 taskList = taskList,
             )
         }
+
+        onNodeWithTag(FULLY_EMPTY_STATE)
+            .assertDoesNotExist()
 
         onNodeWithTag(ALL_COMPLETE_EMPTY_STATE)
             .assertIsDisplayed()

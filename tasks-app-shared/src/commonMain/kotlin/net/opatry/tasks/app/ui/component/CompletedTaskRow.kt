@@ -48,17 +48,26 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.datetime.todayIn
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_COMPLETION_DATE
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_DELETE_ICON
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ICON
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_NOTES
+import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ROW
 import net.opatry.tasks.app.ui.model.TaskUIModel
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_COMPLETION_DATE
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DELETE_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_NOTES
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_date_label
 import net.opatry.tasks.resources.task_list_pane_delete_task_icon_content_desc
 import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.stringResource
+
+@VisibleForTesting
+internal object CompletedTaskRowTestTag {
+    const val COMPLETED_TASK_ROW = "COMPLETED_TASK_ROW"
+    const val COMPLETED_TASK_ICON = "COMPLETED_TASK_ICON"
+    const val COMPLETED_TASK_NOTES = "COMPLETED_TASK_NOTES"
+    const val COMPLETED_TASK_COMPLETION_DATE = "COMPLETED_TASK_COMPLETION_DATE"
+    const val COMPLETED_TASK_DELETE_ICON = "COMPLETED_TASK_DELETE_ICON"
+}
 
 private fun LocalDate.toLabel(): String {
     // TODO localize names & format
@@ -85,9 +94,8 @@ private fun LocalDate.toLabel(): String {
     }
 }
 
-@VisibleForTesting
 @Composable
-internal fun CompletedTaskRow(
+fun CompletedTaskRow(
     task: TaskUIModel,
     onAction: (TaskAction) -> Unit,
 ) {
