@@ -36,6 +36,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
+import net.opatry.tasks.app.ui.component.CompletedTaskRow
 import net.opatry.tasks.app.ui.component.RemainingTaskRow
 import net.opatry.tasks.app.ui.model.TaskId
 import net.opatry.tasks.app.ui.model.TaskUIModel

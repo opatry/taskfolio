@@ -26,13 +26,11 @@ import CalendarDays
 import CheckCheck
 import ChevronDown
 import ChevronRight
-import CircleCheckBig
 import CircleOff
 import ListPlus
 import LucideIcons
 import NotepadText
 import Plus
-import Trash
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -90,8 +88,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.datetime.Instant
@@ -99,6 +95,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.app.ui.TaskListsViewModel
+import net.opatry.tasks.app.ui.component.CompletedTaskRow
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.EmptyState
 import net.opatry.tasks.app.ui.component.RemainingTaskRow
@@ -114,11 +111,6 @@ import net.opatry.tasks.app.ui.model.TaskUIModel
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASKS_TOGGLE_LABEL
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DELETE_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_DUE_DATE_CHIP
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ICON
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_NOTES
-import net.opatry.tasks.app.ui.screen.TaskListPaneTestTag.COMPLETED_TASK_ROW
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
@@ -143,7 +135,6 @@ import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_co
 import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_confirm
 import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_message
 import net.opatry.tasks.resources.task_list_pane_delete_list_confirm_dialog_title
-import net.opatry.tasks.resources.task_list_pane_delete_task_icon_content_desc
 import net.opatry.tasks.resources.task_list_pane_rename_dialog_cta
 import net.opatry.tasks.resources.task_list_pane_rename_dialog_title
 import net.opatry.tasks.resources.task_list_pane_task_deleted_snackbar
@@ -153,7 +144,6 @@ import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
 import net.opatry.tasks.resources.task_menu_move_to_new_list_create_task_list_dialog_confirm
 import net.opatry.tasks.resources.task_menu_move_to_new_list_create_task_list_dialog_title
-import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.stringResource
 
 object TaskListPaneTestTag {
@@ -736,59 +726,3 @@ private val DateRange.key: String
         DateRange.None -> "none"
     }
 
-@VisibleForTesting
-@Composable
-internal fun CompletedTaskRow(
-    task: TaskUIModel,
-    onAction: (TaskAction) -> Unit,
-) {
-    Row(
-        Modifier
-            .testTag(COMPLETED_TASK_ROW)
-            .clickable(onClick = { onAction(TaskAction.Edit) })
-    ) {
-        IconButton(onClick = { onAction(TaskAction.ToggleCompletion) }, Modifier.testTag(COMPLETED_TASK_ICON)) {
-            Icon(LucideIcons.CircleCheckBig, null, tint = MaterialTheme.colorScheme.primary)
-        }
-        Column(
-            Modifier
-                .weight(1f)
-                .padding(vertical = 8.dp)
-        ) {
-            Text(
-                task.title,
-                textDecoration = TextDecoration.LineThrough,
-                style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.MiddleEllipsis,
-                maxLines = 1
-            )
-
-            if (task.notes.isNotBlank()) {
-                Text(
-                    task.notes,
-                    modifier = Modifier.testTag(COMPLETED_TASK_NOTES),
-                    style = MaterialTheme.typography.bodySmall,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
-            }
-            if (task.dueDate != null) {
-                AssistChip(
-                    onClick = { onAction(TaskAction.UpdateDueDate) },
-                    label = {
-                        Text(
-                            task.dateRange.toLabel(),
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                    },
-                    modifier = Modifier.testTag(COMPLETED_TASK_DUE_DATE_CHIP),
-                    shape = MaterialTheme.shapes.large,
-                )
-            }
-        }
-
-        IconButton(onClick = { onAction(TaskAction.Delete) }, Modifier.testTag(COMPLETED_TASK_DELETE_ICON)) {
-            Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
-        }
-    }
-}
