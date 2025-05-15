@@ -642,7 +642,7 @@ fun TasksColumn(
                     }
                 }
             }
-            items(tasks, key = TaskUIModel::id) { task ->
+            items(tasks, key = { it.id.value }) { task ->
                 RemainingTaskRow(
                     taskLists,
                     task,
@@ -700,7 +700,7 @@ fun TasksColumn(
         }
 
         if (showCompleted) {
-            items(taskList.completedTasks, key = TaskUIModel::id) { task ->
+            items(taskList.completedTasks, key = { it.id.value }) { task ->
                 CompletedTaskRow(
                     task,
                     onAction = { action ->
