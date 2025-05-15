@@ -29,6 +29,12 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_DUE_DATE
+import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MANUAL
+import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MENU
+import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_TITLE
 import net.opatry.tasks.app.ui.model.TaskListUIModel
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
@@ -36,8 +42,17 @@ import net.opatry.tasks.resources.task_list_menu_sort_by
 import net.opatry.tasks.resources.task_list_menu_sort_due_date
 import net.opatry.tasks.resources.task_list_menu_sort_manual
 import net.opatry.tasks.resources.task_list_menu_sort_title
+import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+
+@VisibleForTesting
+internal object TaskListSortMenuTestTag {
+    const val SORT_MENU = "TASK_LIST_SORT_MENU"
+    const val SORT_MANUAL = "TASK_LIST_SORT_MANUAL"
+    const val SORT_DUE_DATE = "TASK_LIST_SORT_DUE_DATE"
+    const val SORT_TITLE = "TASK_LIST_SORT_TITLE"
+}
 
 @Composable
 fun TaskListSortMenu(
@@ -49,6 +64,7 @@ fun TaskListSortMenu(
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
+        modifier = Modifier.testTag(SORT_MENU)
     ) {
         MenuSectionItem(Res.string.task_list_menu_sort_by)
 
@@ -86,6 +102,13 @@ private val TaskListSorting.labelRes: StringResource
         TaskListSorting.Title -> Res.string.task_list_menu_sort_title
     }
 
+private val TaskListSorting.testTag: String
+    get() = when (this) {
+        TaskListSorting.Manual -> SORT_MANUAL
+        TaskListSorting.DueDate -> SORT_DUE_DATE
+        TaskListSorting.Title -> SORT_TITLE
+    }
+
 @Composable
 private fun SortMenuItem(
     sorting: TaskListSorting,
@@ -101,6 +124,7 @@ private fun SortMenuItem(
             )
         },
         enabled = !isCurrentSorting,
-        onClick = onClick
+        onClick = onClick,
+        modifier = Modifier.testTag(sorting.testTag)
     )
 }
