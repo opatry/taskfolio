@@ -55,7 +55,6 @@ import net.opatry.tasks.resources.task_list_menu_sort_title
 import org.jetbrains.compose.resources.stringResource
 
 enum class TaskListMenuAction {
-    Dismiss,
     SortManual,
     SortDate,
     SortTitle,
@@ -68,13 +67,14 @@ enum class TaskListMenuAction {
 fun TaskListMenu(
     taskList: TaskListUIModel,
     expanded: Boolean,
+    onDismiss: () -> Unit,
     onAction: (TaskListMenuAction) -> Unit
 ) {
     val allowDelete by remember(taskList.canDelete) { mutableStateOf(taskList.canDelete) }
 
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onAction(TaskListMenuAction.Dismiss) }
+        onDismissRequest = onDismiss,
     ) {
         DropdownMenuItem(
             text = {

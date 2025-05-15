@@ -59,7 +59,8 @@ private fun TaskListMenuPreview() {
                         title = "My task list",
                     ),
                     expanded = true,
-                    onAction = {}
+                    onDismiss = {},
+                    onAction = {},
                 )
             }
         }

@@ -259,18 +259,24 @@ fun TaskListDetail(
                     IconButton(onClick = { showTaskListActions = true }) {
                         Icon(LucideIcons.EllipsisVertical, null)
                     }
-                    TaskListMenu(taskList, showTaskListActions) { action ->
-                        showTaskListActions = false
-                        when (action) {
-                            TaskListMenuAction.Dismiss -> Unit
-                            TaskListMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
-                            TaskListMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
-                            TaskListMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
-                            TaskListMenuAction.Rename -> showRenameTaskListDialog = true
-                            TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
-                            TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
+                    TaskListMenu(
+                        taskList = taskList,
+                        expanded = showTaskListActions,
+                        onDismiss = {
+                            showTaskListActions = false
+                        },
+                        onAction = { action ->
+                            showTaskListActions = false
+                            when (action) {
+                                TaskListMenuAction.SortManual -> viewModel.sortBy(taskList.id, TaskListSorting.Manual)
+                                TaskListMenuAction.SortDate -> viewModel.sortBy(taskList.id, TaskListSorting.DueDate)
+                                TaskListMenuAction.SortTitle -> viewModel.sortBy(taskList.id, TaskListSorting.Title)
+                                TaskListMenuAction.Rename -> showRenameTaskListDialog = true
+                                TaskListMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
+                                TaskListMenuAction.Delete -> showDeleteTaskListDialog = true
+                            }
                         }
-                    }
+                    )
                 }
             )
         },
