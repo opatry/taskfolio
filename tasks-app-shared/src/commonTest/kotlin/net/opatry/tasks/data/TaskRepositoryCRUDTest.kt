@@ -552,4 +552,20 @@ class TaskRepositoryCRUDTest {
         assertEquals(task2.id, tasks[1].id, "task without due date should come last")
         assertNull(tasks[1].dueDate)
     }
+
+    @Test
+    fun `unindent unavailable task should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.indentTask(42L)
+        }
+    }
+
+    @Test
+    fun `unindent top level task should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        val (_, task) = repository.createAndGetTask("list", "task1")
+
+        assertFailsWith<IllegalArgumentException>("Cannot indent a top level task") {
+            repository.indentTask(task.id)
+        }
+    }
 }
