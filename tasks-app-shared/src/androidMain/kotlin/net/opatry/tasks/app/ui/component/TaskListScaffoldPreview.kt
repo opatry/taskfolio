@@ -30,15 +30,14 @@ import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 @PreviewLightDark
 @Composable
-private fun TasksColumnPreview(
+private fun TaskListScaffoldPreview(
     @PreviewParameter(TaskListPreviewParameterProvider::class)
     taskList: TaskListUIModel,
 ) {
     TaskfolioThemedPreview {
-        TasksColumn(
-            taskLists = listOf(taskList),
+        TaskListScaffold(
+            taskLists = emptyList(),
             taskList = taskList,
-            showCompletedDefaultValue = true
         )
     }
 }

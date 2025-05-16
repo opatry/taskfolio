@@ -26,6 +26,7 @@ import CheckCheck
 import CircleOff
 import LucideIcons
 import Replace
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,8 +39,17 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_DELETE_BUTTON
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_REPAIR_BUTTON
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASKS_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LISTS_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LIST_SELECTED_EMPTY_STATE
 import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
+import net.opatry.tasks.resources.task_lists_screen_empty_list_title
 import net.opatry.tasks.resources.task_lists_screen_empty_state_broken_list_indent_delete_cta
 import net.opatry.tasks.resources.task_lists_screen_empty_state_broken_list_indent_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_state_broken_list_indent_repair_cta
@@ -51,20 +61,43 @@ import net.opatry.tasks.resources.task_lists_screen_empty_state_no_selection_tit
 import net.opatry.tasks.resources.task_lists_screen_empty_state_title
 import org.jetbrains.compose.resources.stringResource
 
+@VisibleForTesting
+internal object EmptyStatesTestTag {
+    const val NO_TASKS_EMPTY_STATE = "FULLY_EMPTY_STATE"
+    const val NO_TASK_LIST_SELECTED_EMPTY_STATE = "NO_TASK_LIST_SELECTED_EMPTY_STATE"
+    const val NO_TASK_LISTS_EMPTY_STATE = "NO_TASKS_EMPTY_STATE"
+    const val BROKEN_LIST_EMPTY_STATE = "BROKEN_LIST_EMPTY_STATE"
+    const val BROKEN_LIST_DELETE_BUTTON = "BROKEN_LIST_DELETE_BUTTON"
+    const val BROKEN_LIST_REPAIR_BUTTON = "BROKEN_LIST_REPAIR_BUTTON"
+}
+
 @Composable
 fun NoTaskListSelectedEmptyState() {
     EmptyState(
         icon = LucideIcons.CircleOff,
         title = stringResource(Res.string.task_lists_screen_empty_state_no_selection_title),
         description = stringResource(Res.string.task_lists_screen_empty_state_no_selection_desc),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().testTag(NO_TASK_LIST_SELECTED_EMPTY_STATE)
     )
 }
 
 @Composable
-fun NoTaskListEmptyState(onNewTaskListClick: () -> Unit) {
+fun NoTasksEmptyState() {
+    // TODO SVG undraw.co illustration `files/undraw_to_do_list_re_9nt7.svg`
+    EmptyState(
+        icon = LucideIcons.CircleOff,
+        title = stringResource(Res.string.task_lists_screen_empty_list_title),
+        description = stringResource(Res.string.task_lists_screen_empty_list_desc),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag(NO_TASKS_EMPTY_STATE),
+    )
+}
+
+@Composable
+fun NoTaskListsEmptyState(onNewTaskListClick: () -> Unit) {
     Column(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxSize().testTag(NO_TASK_LISTS_EMPTY_STATE),
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -83,7 +116,7 @@ fun NoTaskListEmptyState(onNewTaskListClick: () -> Unit) {
 @Composable
 fun BrokenListIndentationEmptyState(onDeleteList: () -> Unit, onRepairList: () -> Unit) {
     Column(
-        Modifier.fillMaxSize().padding(vertical = 24.dp),
+        Modifier.fillMaxSize().padding(vertical = 24.dp).testTag(BROKEN_LIST_EMPTY_STATE),
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Bottom),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -94,11 +127,18 @@ fun BrokenListIndentationEmptyState(onDeleteList: () -> Unit, onRepairList: () -
             modifier = Modifier.fillMaxWidth()
         )
         Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-            TextButton(onClick = onDeleteList) {
+            TextButton(
+                onClick = onDeleteList,
+                modifier = Modifier.testTag(BROKEN_LIST_DELETE_BUTTON)
+            ) {
                 Text(stringResource(Res.string.task_lists_screen_empty_state_broken_list_indent_delete_cta))
             }
             // TODO enable when broken indentation reparation is available
-            TextButton(onClick = onRepairList, enabled = false) {
+            TextButton(
+                onClick = onRepairList,
+                modifier = Modifier.testTag(BROKEN_LIST_REPAIR_BUTTON),
+                enabled = false,
+            ) {
                 Text(stringResource(Res.string.task_lists_screen_empty_state_broken_list_indent_repair_cta))
             }
         }

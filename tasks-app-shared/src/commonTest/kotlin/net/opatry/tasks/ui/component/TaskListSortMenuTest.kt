@@ -38,7 +38,6 @@ import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MANUAL
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MENU
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_TITLE
 import net.opatry.tasks.data.TaskListSorting
-import net.opatry.tasks.ui.screen.createTaskList
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui.screen
+package net.opatry.tasks.ui.component
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
@@ -37,9 +37,8 @@ import androidx.compose.ui.test.runComposeUiTest
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.screen.TaskListsColumn
-import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
-import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.TASK_LIST_ROW
-import kotlin.test.Test
+import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag
+import org.junit.Test
 import kotlin.test.assertEquals
 
 @Suppress("TestFunctionName")
@@ -52,7 +51,7 @@ class TaskListsColumnTest {
             TaskListsColumn(emptyList(), selectedItem = null, onNewTaskList = { ++newTaskClickCount }, onItemClick = {})
         }
 
-        onNodeWithTag(NEW_TASK_LIST_BUTTON)
+        onNodeWithTag(TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON)
             .assertIsDisplayed()
             .assertIsEnabled()
             .performClick()
@@ -68,7 +67,7 @@ class TaskListsColumnTest {
             TaskListsColumn(listOf(taskList), selectedItem = null, onNewTaskList = {}, onItemClick = { selectedList = it })
         }
 
-        onAllNodesWithTag(TASK_LIST_ROW)
+        onAllNodesWithTag(TaskListsPaneTestTag.TASK_LIST_ROW)
             .assertCountEquals(1)
             .onFirst()
             .performClick()
@@ -84,12 +83,12 @@ class TaskListsColumnTest {
             TaskListsColumn(listOf(taskList1, taskList2), selectedItem = taskList1, onNewTaskList = {}, onItemClick = {})
         }
 
-        onAllNodesWithTag(TASK_LIST_ROW)
+        onAllNodesWithTag(TaskListsPaneTestTag.TASK_LIST_ROW)
             .assertCountEquals(2)
             .onFirst()
             .assertIsSelected()
 
-        onAllNodesWithTag(TASK_LIST_ROW)
+        onAllNodesWithTag(TaskListsPaneTestTag.TASK_LIST_ROW)
             .onLast()
             .assertIsNotSelected()
     }

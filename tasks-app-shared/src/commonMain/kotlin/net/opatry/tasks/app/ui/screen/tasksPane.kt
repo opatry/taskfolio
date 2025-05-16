@@ -26,10 +26,8 @@ import CalendarDays
 import ListPlus
 import LucideIcons
 import NotepadText
-import Plus
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,16 +47,13 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -87,8 +82,7 @@ import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
-import net.opatry.tasks.app.ui.component.TaskListTopAppBar
-import net.opatry.tasks.app.ui.component.TasksColumn
+import net.opatry.tasks.app.ui.component.TaskListScaffold
 import net.opatry.tasks.app.ui.component.toColor
 import net.opatry.tasks.app.ui.component.toLabel
 import net.opatry.tasks.resources.Res
@@ -171,70 +165,50 @@ fun TaskListDetail(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TaskListTopAppBar(
-                taskList = taskList,
-                onSort = { sorting ->
-                    viewModel.sortBy(taskList.id, sorting)
-                },
-                onEdit = { action ->
-                    when (action) {
-                        TaskListEditMenuAction.Rename -> showRenameTaskListDialog = true
-                        TaskListEditMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
-                        TaskListEditMenuAction.Delete -> showDeleteTaskListDialog = true
-                    }
-                },
-            )
+    TaskListScaffold(
+        taskLists = taskLists,
+        taskList = taskList,
+        snackbarHostState = snackbarHostState,
+        onListSort = { sorting ->
+            viewModel.sortBy(taskList.id, sorting)
         },
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
-        },
-        // FIXME should be driven by the NavigationRail
-        floatingActionButton = {
-            if (!taskList.hasBrokenIndentation()) {
-                // FIXME hides bottom of screen
-                FloatingActionButton(onClick = { showNewTaskSheet = true }) {
-                    Icon(LucideIcons.Plus, null)
-                }
+        onListEdit = { action ->
+            when (action) {
+                TaskListEditMenuAction.Rename -> showRenameTaskListDialog = true
+                TaskListEditMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
+                TaskListEditMenuAction.Delete -> showDeleteTaskListDialog = true
             }
-        }
-    ) { innerPadding ->
-        Box(Modifier.padding(innerPadding)) {
-            TasksColumn(
-                taskLists,
-                taskList,
-                onDeleteTaskList = { showDeleteTaskListDialog = true },
-                onRepairTaskList = { viewModel.repairTaskList(taskList.id) },
-                onToggleCompletionState = { viewModel.toggleTaskCompletionState(it.id) },
-                onEditTask = {
-                    taskOfInterest = it
-                    showEditTaskSheet = true
-                },
-                onUpdateDueDate = {
-                    taskOfInterest = it
-                    showDatePickerDialog = true
-                },
-                onNewSubTask = {
-                    taskOfInterest = it
-                    showNewSubTaskSheet = true
-                },
-                onUnindent = { viewModel.unindentTask(it.id) },
-                onIndent = { viewModel.indentTask(it.id) },
-                onMoveToTop = { viewModel.moveToTop(it.id) },
-                onMoveToList = { task, taskList -> viewModel.moveToList(task.id, taskList.id) },
-                onMoveToNewList = {
-                    taskOfInterest = it
-                    showNewTaskListAlert = true
-                },
-                onDeleteTask = {
-                    taskOfInterest = it
-                    showUndoTaskDeletionSnackbar = true
-                    viewModel.deleteTask(it.id)
-                },
-            )
-        }
-    }
+        },
+        onNewTask = { showNewTaskSheet = true },
+        onDeleteList = { showDeleteTaskListDialog = true },
+        onRepairList = { viewModel.repairTaskList(taskList.id) },
+        onToggleTaskCompletionState = { viewModel.toggleTaskCompletionState(it.id) },
+        onEditTask = {
+            taskOfInterest = it
+            showEditTaskSheet = true
+        },
+        onUpdateTaskDueDate = {
+            taskOfInterest = it
+            showDatePickerDialog = true
+        },
+        onNewSubTask = {
+            taskOfInterest = it
+            showNewSubTaskSheet = true
+        },
+        onUnindentTask = { viewModel.unindentTask(it.id) },
+        onIndentTask = { viewModel.indentTask(it.id) },
+        onMoveTaskToTop = { viewModel.moveToTop(it.id) },
+        onMoveTaskToList = { task, taskList -> viewModel.moveToList(task.id, taskList.id) },
+        onMoveTaskToNewList = {
+            taskOfInterest = it
+            showNewTaskListAlert = true
+        },
+        onDeleteTask = {
+            taskOfInterest = it
+            showUndoTaskDeletionSnackbar = true
+            viewModel.deleteTask(it.id)
+        },
+    )
 
     if (showRenameTaskListDialog) {
         EditTextDialog(

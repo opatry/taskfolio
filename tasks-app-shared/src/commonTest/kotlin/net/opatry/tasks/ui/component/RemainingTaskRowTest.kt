@@ -55,9 +55,6 @@ import net.opatry.tasks.app.ui.component.TaskMenuTestTag.TASK_MENU
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.UNINDENT
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
-import net.opatry.tasks.ui.screen.createTask
-import net.opatry.tasks.ui.screen.createTaskList
-import net.opatry.tasks.ui.screen.today
 import org.jetbrains.compose.resources.pluralStringResource
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -134,7 +131,7 @@ class RemainingTaskRowTest {
             .assertIsDisplayed()
             .performClick()
 
-        assertEquals(TaskAction.ToggleCompletion, action, "Toggle completion action should have been triggered")
+        assertEquals(TaskAction.ToggleCompletion(task), action, "Toggle completion action should have been triggered")
     }
 
     @Test
@@ -170,7 +167,7 @@ class RemainingTaskRowTest {
         onNodeWithTag(REMAINING_TASK_ROW)
             .performClick()
 
-        assertEquals(TaskAction.Edit, action, "Click on row should trigger Edit action")
+        assertEquals(TaskAction.Edit(task), action, "Click on row should trigger Edit action")
     }
 
     @Test
@@ -187,7 +184,7 @@ class RemainingTaskRowTest {
         onNodeWithTag(REMAINING_TASK_DUE_DATE_CHIP)
             .performClick()
 
-        assertEquals(TaskAction.UpdateDueDate, action, "UpdateDueDate action should have been triggered")
+        assertEquals(TaskAction.UpdateDueDate(task), action, "UpdateDueDate action should have been triggered")
     }
 
     @Test
@@ -230,7 +227,7 @@ class RemainingTaskRowTest {
             .assertIsEnabled()
             .performClick()
 
-        assertEquals(TaskAction.AddSubTask, action, "AddSubTask action should have been triggered")
+        assertEquals(TaskAction.AddSubTask(task), action, "AddSubTask action should have been triggered")
     }
 
     @Test
@@ -273,7 +270,7 @@ class RemainingTaskRowTest {
             .assertIsEnabled()
             .performClick()
 
-        assertEquals(TaskAction.MoveToTop, action, "MoveToTop action should have been triggered")
+        assertEquals(TaskAction.MoveToTop(task), action, "MoveToTop action should have been triggered")
     }
 
     @Test
@@ -317,7 +314,7 @@ class RemainingTaskRowTest {
             .assertIsEnabled()
             .performClick()
 
-        assertEquals(TaskAction.Unindent, action, "Unindent action should have been triggered")
+        assertEquals(TaskAction.Unindent(task), action, "Unindent action should have been triggered")
     }
 
     @Test
@@ -361,7 +358,7 @@ class RemainingTaskRowTest {
             .assertIsEnabled()
             .performClick()
 
-        assertEquals(TaskAction.Indent, action, "Indent action should have been triggered")
+        assertEquals(TaskAction.Indent(task), action, "Indent action should have been triggered")
     }
 
     @Test
@@ -384,7 +381,7 @@ class RemainingTaskRowTest {
             .assertIsEnabled()
             .performClick()
 
-        assertEquals(TaskAction.MoveToNewList, action, "MoveToNewList action should have been triggered")
+        assertEquals(TaskAction.MoveToNewList(task), action, "MoveToNewList action should have been triggered")
     }
 
     @Test
@@ -415,7 +412,7 @@ class RemainingTaskRowTest {
             .assertIsEnabled()
             .performClick()
 
-        assertEquals(TaskAction.MoveToList(taskList2), action, "MoveToList action should have been triggered on list2")
+        assertEquals(TaskAction.MoveToList(task, taskList2), action, "MoveToList action should have been triggered on list2")
     }
 
     @Test
@@ -437,6 +434,6 @@ class RemainingTaskRowTest {
             .assertIsDisplayed()
             .performClick()
 
-        assertEquals(TaskAction.Delete, action, "Delete action should have been triggered")
+        assertEquals(TaskAction.Delete(task), action, "Delete action should have been triggered")
     }
 }

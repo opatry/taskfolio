@@ -25,24 +25,31 @@ package net.opatry.tasks.ui.component
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import net.opatry.tasks.app.presentation.model.TaskId
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ROW
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_DELETE_BUTTON
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_REPAIR_BUTTON
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASKS_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.app.ui.component.TasksColumn
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
-import net.opatry.tasks.app.ui.component.TasksColumnTestTag.FULLY_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_count
-import net.opatry.tasks.ui.screen.createTaskList
 import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 @Suppress("TestFunctionName")
 @OptIn(ExperimentalTestApi::class)
@@ -74,11 +81,65 @@ class TasksColumnTest {
             )
         }
 
-        onNodeWithTag(FULLY_EMPTY_STATE)
+        onNodeWithTag(NO_TASKS_EMPTY_STATE)
             .assertIsDisplayed()
 
         onNodeWithTag(TASKS_COLUMN)
             .assertDoesNotExist()
+    }
+
+    @Test
+    fun TasksColumn_BrokenListEmptyState() = runComposeUiTest {
+        val taskList = createTaskList().copy(
+            remainingTasks = mapOf(
+                null to listOf(
+                    TaskUIModel(
+                        id = TaskId(1),
+                        title = "broken indent",
+                        isCompleted = false,
+                        indent = 42,
+                    )
+                )
+            ),
+        )
+
+        var deleteCalled = false
+        var repairCalled = false
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                taskList = taskList,
+                onDeleteList = {
+                    deleteCalled = true
+                },
+                onRepairList = {
+                    repairCalled = true
+                }
+            )
+        }
+
+        onNodeWithTag(BROKEN_LIST_EMPTY_STATE)
+            .assertIsDisplayed()
+
+        onNodeWithTag(BROKEN_LIST_DELETE_BUTTON)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+            .performClick()
+
+        assertTrue(deleteCalled, "Delete callback should have been called").also {
+            deleteCalled = false
+        }
+
+        // TODO check behavior once repair is implemented
+        onNodeWithTag(BROKEN_LIST_REPAIR_BUTTON)
+            .assertIsDisplayed()
+            .assertIsNotEnabled()
+//            .assertIsEnabled()
+//            .performClick()
+//
+//        assertTrue(repairCalled, "Repair callback should have been called").also {
+//            repairCalled = false
+//        }
     }
 
     @Test
@@ -91,7 +152,7 @@ class TasksColumnTest {
             )
         }
 
-        onNodeWithTag(FULLY_EMPTY_STATE)
+        onNodeWithTag(NO_TASKS_EMPTY_STATE)
             .assertDoesNotExist()
 
         onNodeWithTag(ALL_COMPLETE_EMPTY_STATE)

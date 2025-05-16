@@ -47,7 +47,7 @@ import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.asLabel
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.MyBackHandler
-import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
+import net.opatry.tasks.app.ui.component.NoTaskListsEmptyState
 import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_default_task_list_title
@@ -108,7 +108,7 @@ fun TaskListsMasterDetail(
 
                         lists.isEmpty() -> {
                             val newTaskListName = stringResource(Res.string.task_lists_screen_default_task_list_title)
-                            NoTaskListEmptyState {
+                            NoTaskListsEmptyState {
                                 onNewTaskList(newTaskListName)
                             }
                         }

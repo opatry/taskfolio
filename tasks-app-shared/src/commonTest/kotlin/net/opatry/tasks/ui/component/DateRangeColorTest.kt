@@ -29,9 +29,8 @@ import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import net.opatry.tasks.app.ui.component.toColor
 import net.opatry.tasks.app.presentation.model.DateRange
-import net.opatry.tasks.ui.screen.today
+import net.opatry.tasks.app.ui.component.toColor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

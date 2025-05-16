@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.ui.screen
+package net.opatry.tasks.ui.component
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate

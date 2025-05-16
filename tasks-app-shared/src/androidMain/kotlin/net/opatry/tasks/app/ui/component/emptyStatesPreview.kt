@@ -36,9 +36,17 @@ private fun NoTaskListSelectedEmptyStatePreview() {
 
 @PreviewLightDark
 @Composable
+private fun NoTasksEmptyStatePreview() {
+    TaskfolioThemedPreview {
+        NoTasksEmptyState()
+    }
+}
+
+@PreviewLightDark
+@Composable
 private fun NoTaskListEmptyStatePreview() {
     TaskfolioThemedPreview {
-        NoTaskListEmptyState {}
+        NoTaskListsEmptyState {}
     }
 }
 
