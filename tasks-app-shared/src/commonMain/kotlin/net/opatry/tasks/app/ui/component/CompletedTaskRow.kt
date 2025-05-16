@@ -96,7 +96,7 @@ private fun LocalDate.toLabel(): String {
 
 @Composable
 fun CompletedTaskRow(
-    task: TaskUIModel,
+    task: TaskUIModel.Done,
     onAction: (TaskAction) -> Unit,
 ) {
     Row(
@@ -130,13 +130,11 @@ fun CompletedTaskRow(
                         maxLines = 2
                     )
                 }
-                if (task.completionDate != null) {
-                    Text(
-                        stringResource(Res.string.task_list_pane_completed_date_label, task.completionDate.toLabel()),
-                        modifier = Modifier.testTag(COMPLETED_TASK_COMPLETION_DATE),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
+                Text(
+                    stringResource(Res.string.task_list_pane_completed_date_label, task.completionDate.toLabel()),
+                    modifier = Modifier.testTag(COMPLETED_TASK_COMPLETION_DATE),
+                    style = MaterialTheme.typography.bodySmall,
+                )
             }
         }
 

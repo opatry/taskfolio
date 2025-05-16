@@ -74,19 +74,19 @@ sealed class TaskAction {
     data class ToggleCompletion(val task: TaskUIModel) : TaskAction()
     data class Edit(val task: TaskUIModel) : TaskAction()
     data class UpdateDueDate(val task: TaskUIModel) : TaskAction()
-    data class AddSubTask(val task: TaskUIModel) : TaskAction()
-    data class MoveToTop(val task: TaskUIModel) : TaskAction()
-    data class Unindent(val task: TaskUIModel) : TaskAction()
-    data class Indent(val task: TaskUIModel) : TaskAction()
-    data class MoveToList(val task: TaskUIModel, val targetParentList: TaskListUIModel) : TaskAction()
-    data class MoveToNewList(val task: TaskUIModel) : TaskAction()
+    data class AddSubTask(val task: TaskUIModel.Todo) : TaskAction()
+    data class MoveToTop(val task: TaskUIModel.Todo) : TaskAction()
+    data class Unindent(val task: TaskUIModel.Todo) : TaskAction()
+    data class Indent(val task: TaskUIModel.Todo) : TaskAction()
+    data class MoveToList(val task: TaskUIModel.Todo, val targetParentList: TaskListUIModel) : TaskAction()
+    data class MoveToNewList(val task: TaskUIModel.Todo) : TaskAction()
     data class Delete(val task: TaskUIModel) : TaskAction()
 }
 
 @Composable
 fun TaskMenu(
     taskLists: List<TaskListUIModel>,
-    task: TaskUIModel,
+    task: TaskUIModel.Todo,
     expanded: Boolean,
     onAction: (TaskAction?) -> Unit
 ) {

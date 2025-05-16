@@ -57,7 +57,9 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
-    val (completedTasks, remainingTasks) = tasks.map(TaskDataModel::asTaskUIModel).partition(TaskUIModel::isCompleted)
+    val tasksUIModels = tasks.map(TaskDataModel::asTaskUIModel)
+    val completedTasks = tasksUIModels.filterIsInstance<TaskUIModel.Done>()
+    val remainingTasks = tasksUIModels.filterIsInstance<TaskUIModel.Todo>()
 
     val taskGroups = when (sorting) {
         // no grouping
@@ -85,21 +87,31 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
 
 @VisibleForTesting
 internal fun TaskDataModel.asTaskUIModel(): TaskUIModel {
-    val isFirstTask = position == 0.toTaskPosition()
-    return TaskUIModel(
-        id = TaskId(id),
-        title = title,
-        notes = notes,
-        dueDate = dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
-        isCompleted = isCompleted,
-        completionDate = completionDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date,
-        position = position,
-        indent = indent,
-        canMoveToTop = !isCompleted && indent == 0 && !isFirstTask,
-        canUnindent = !isCompleted && indent > 0,
-        canIndent = !isCompleted && indent == 0 && !isFirstTask,
-        canCreateSubTask = !isCompleted && indent == 0,
-    )
+    val dueDate =  dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
+    return if (isCompleted) {
+        TaskUIModel.Done(
+            id = TaskId(id),
+            title = title,
+            notes = notes,
+            dueDate = dueDate,
+            completionDate = requireNotNull(completionDate).toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            position = position,
+        )
+    } else {
+        val isFirstTask = position == 0.toTaskPosition()
+        TaskUIModel.Todo(
+            id = TaskId(id),
+            title = title,
+            notes = notes,
+            dueDate = dueDate,
+            position = position,
+            indent = indent,
+            canMoveToTop = indent == 0 && !isFirstTask,
+            canUnindent = indent > 0,
+            canIndent = indent == 0 && !isFirstTask,
+            canCreateSubTask = indent == 0,
+        )
+    }
 }
 
 class TaskListsViewModel(

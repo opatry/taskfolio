@@ -93,10 +93,9 @@ class TasksColumnTest {
         val taskList = createTaskList().copy(
             remainingTasks = mapOf(
                 null to listOf(
-                    TaskUIModel(
+                    TaskUIModel.Todo(
                         id = TaskId(1),
                         title = "broken indent",
-                        isCompleted = false,
                         indent = 42,
                     )
                 )

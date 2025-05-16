@@ -29,10 +29,13 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import net.opatry.tasks.app.presentation.asTaskUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.data.model.TaskDataModel
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 private fun buildMoments(dateStr: String = "2024-10-16"): Pair<LocalDate, Instant> {
@@ -61,10 +64,10 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertEquals(42L, taskUIModel.id.value)
         assertEquals("title", taskUIModel.title)
         assertEquals("notes", taskUIModel.notes)
-        assertEquals(false, taskUIModel.isCompleted)
         assertEquals(date, taskUIModel.dueDate)
         assertEquals("00000000000000000042", taskUIModel.position)
         assertEquals(1, taskUIModel.indent)
@@ -87,19 +90,20 @@ class TaskUIModelMapperTest {
     }
 
     @Test
-    fun `no completion date is mapped to null`() {
+    fun `no completion date should throw for completed task`() {
         val task = TaskDataModel(
             id = 42L,
             title = "title",
+            isCompleted = true,
             completionDate = null,
             lastUpdateDate = Clock.System.now(),
-            position = "00000000000000000000",
+            position = "09999999999999999999",
             indent = 0,
         )
 
-        val taskUIModel = task.asTaskUIModel()
-
-        assertEquals(null, taskUIModel.completionDate)
+        assertFailsWith<IllegalArgumentException> {
+            task.asTaskUIModel()
+        }
     }
 
     @Test
@@ -117,12 +121,12 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
-        assertTrue(taskUIModel.isCompleted)
+        assertIs<TaskUIModel.Done>(taskUIModel)
         assertEquals(completionDate, taskUIModel.completionDate)
     }
 
     @Test
-    fun `canMoveToTop when not completed, not first task and not indented should be true`() {
+    fun `canMoveToTop when not first task and not indented should be true`() {
         val task = TaskDataModel(
             id = 0L,
             title = "title",
@@ -134,23 +138,8 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertTrue(taskUIModel.canMoveToTop)
-    }
-
-    @Test
-    fun `canMoveToTop when completed should be false`() {
-        val task = TaskDataModel(
-            id = 0L,
-            title = "title",
-            isCompleted = true,
-            lastUpdateDate = Clock.System.now(),
-            position = "00000000000000000001",
-            indent = 0,
-        )
-
-        val taskUIModel = task.asTaskUIModel()
-
-        assertFalse(taskUIModel.canMoveToTop)
     }
 
     @Test
@@ -166,6 +155,7 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertFalse(taskUIModel.canMoveToTop)
     }
 
@@ -182,11 +172,12 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertFalse(taskUIModel.canMoveToTop)
     }
 
     @Test
-    fun `canIndent when not completed, not already indented and not first task should be true`() {
+    fun `canIndent when not already indented and not first task should be true`() {
         val task = TaskDataModel(
             id = 0L,
             title = "title",
@@ -198,6 +189,7 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertTrue(taskUIModel.canIndent)
     }
 
@@ -214,6 +206,7 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertFalse(taskUIModel.canIndent)
     }
 
@@ -230,27 +223,12 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertFalse(taskUIModel.canIndent)
     }
 
     @Test
-    fun `canIndent when completed should be false`() {
-        val task = TaskDataModel(
-            id = 0L,
-            title = "title",
-            isCompleted = true,
-            lastUpdateDate = Clock.System.now(),
-            position = "00000000000000000001",
-            indent = 0,
-        )
-
-        val taskUIModel = task.asTaskUIModel()
-
-        assertFalse(taskUIModel.canIndent)
-    }
-
-    @Test
-    fun `canUnindent when not completed, already indented should be true`() {
+    fun `canUnindent when already indented should be true`() {
         val task = TaskDataModel(
             id = 0L,
             title = "title",
@@ -262,6 +240,7 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertTrue(taskUIModel.canUnindent)
     }
 
@@ -278,6 +257,7 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertTrue(taskUIModel.canUnindent)
     }
 
@@ -294,27 +274,12 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertFalse(taskUIModel.canUnindent)
     }
 
     @Test
-    fun `canUnindent when completed should be false`() {
-        val task = TaskDataModel(
-            id = 0L,
-            title = "title",
-            isCompleted = true,
-            lastUpdateDate = Clock.System.now(),
-            position = "00000000000000000000",
-            indent = 1,
-        )
-
-        val taskUIModel = task.asTaskUIModel()
-
-        assertFalse(taskUIModel.canUnindent)
-    }
-
-    @Test
-    fun `canCreateSubTask for not completed and unindented task should be true`() {
+    fun `canCreateSubTask for unindented task should be true`() {
         val task = TaskDataModel(
             id = 0L,
             title = "title",
@@ -326,6 +291,7 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertTrue(taskUIModel.canCreateSubTask)
     }
 
@@ -342,22 +308,7 @@ class TaskUIModelMapperTest {
 
         val taskUIModel = task.asTaskUIModel()
 
-        assertFalse(taskUIModel.canCreateSubTask)
-    }
-
-    @Test
-    fun `canCreateSubTask for completed task should be false`() {
-        val task = TaskDataModel(
-            id = 0L,
-            title = "title",
-            isCompleted = true,
-            lastUpdateDate = Clock.System.now(),
-            position = "00000000000000000000",
-            indent = 0,
-        )
-
-        val taskUIModel = task.asTaskUIModel()
-
+        assertIs<TaskUIModel.Todo>(taskUIModel)
         assertFalse(taskUIModel.canCreateSubTask)
     }
 }

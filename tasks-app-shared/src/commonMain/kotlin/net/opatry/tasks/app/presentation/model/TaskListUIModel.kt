@@ -31,8 +31,8 @@ value class TaskListId(val value: Long)
 data class TaskListUIModel(
     val id: TaskListId,
     val title: String,
-    val remainingTasks: Map<DateRange?, List<TaskUIModel>> = emptyMap(),
-    val completedTasks: List<TaskUIModel> = emptyList(),
+    val remainingTasks: Map<DateRange?, List<TaskUIModel.Todo>> = emptyMap(),
+    val completedTasks: List<TaskUIModel.Done> = emptyList(),
     val sorting: TaskListSorting = TaskListSorting.Manual,
 ) {
     fun containsTask(task: TaskUIModel, includeCompleted: Boolean = false): Boolean {
@@ -42,7 +42,7 @@ data class TaskListUIModel(
 
     fun hasBrokenIndentation() = allRemainingTasks.any { it.indent > 1 }
 
-    val allRemainingTasks: List<TaskUIModel>
+    val allRemainingTasks: List<TaskUIModel.Todo>
         get() = remainingTasks.values.flatten()
     val isEmpty: Boolean = allRemainingTasks.isEmpty() && completedTasks.isEmpty()
     val hasCompletedTasks: Boolean = completedTasks.isNotEmpty()
