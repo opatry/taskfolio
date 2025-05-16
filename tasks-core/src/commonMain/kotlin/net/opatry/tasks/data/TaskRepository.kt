@@ -494,8 +494,7 @@ class TaskRepository(
         taskDao.upsert(updatedTaskEntity)
 
         // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
@@ -596,8 +595,7 @@ class TaskRepository(
         }
 
         // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
@@ -641,8 +639,7 @@ class TaskRepository(
         taskDao.upsertAll(updatedTaskEntities)
 
         // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
