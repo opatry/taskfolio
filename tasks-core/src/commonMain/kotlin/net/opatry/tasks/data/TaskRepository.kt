@@ -549,6 +549,8 @@ class TaskRepository(
         when {
             wasCompleted -> {
                 // task restoration behaves behaves the same for top level and subtask, restore at first position
+                // TODO if subtask and parent is completed, should restore without parent anymore
+                // FIXME getTasksFromPositionOnward ignores completed tasks but should not here?
                 val tasksToUpdate =
                     taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.parentTaskLocalId, updatedTaskEntity.position)
                         .toMutableList()
