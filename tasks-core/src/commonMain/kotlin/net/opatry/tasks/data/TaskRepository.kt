@@ -519,8 +519,6 @@ class TaskRepository(
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val now = clockNow()
 
-        // TODO find all child tasks and toggle as well if complete parent task
-
         val wasCompleted = taskEntity.isCompleted
         val updatedTaskEntity = if (wasCompleted) {
             taskEntity.copy(
@@ -538,16 +536,34 @@ class TaskRepository(
             )
         }
 
-        if (wasCompleted) {
-            val tasksToUpdate =
-                taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.parentTaskLocalId, updatedTaskEntity.position)
-                    .toMutableList()
-            tasksToUpdate.add(0, updatedTaskEntity)
-            val updatedTasks = computeTaskPositions(tasksToUpdate, newPositionStart = 0)
+        when {
+            wasCompleted -> {
+                // task restoration behaves behaves the same for top level and subtask, restore at first position
+                val tasksToUpdate =
+                    taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.parentTaskLocalId, updatedTaskEntity.position)
+                        .toMutableList()
+                tasksToUpdate.add(0, updatedTaskEntity)
+                val updatedTasks = computeTaskPositions(tasksToUpdate, newPositionStart = 0)
 
-            taskDao.upsertAll(updatedTasks)
-        } else {
-            taskDao.upsert(updatedTaskEntity)
+                taskDao.upsertAll(updatedTasks)
+            }
+
+            taskEntity.parentTaskLocalId == null -> {
+                // top level task toggle to complete should also complete child tasks
+                val subtasksToUpdate = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.id, 0.toTaskPosition()).map {
+                    it.copy(
+                        isCompleted = true,
+                        completionDate = now,
+                        lastUpdateDate = now,
+                        position = now.asCompletedTaskPosition()
+                    )
+                }
+                taskDao.upsertAll(subtasksToUpdate + updatedTaskEntity)
+            }
+
+            else -> {
+                taskDao.upsert(updatedTaskEntity)
+            }
         }
 
         // FIXME should already be available in entity, quick & dirty workaround
