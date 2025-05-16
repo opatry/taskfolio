@@ -38,7 +38,6 @@ import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.CLEAR_COMPLETED
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.EDIT_MENU
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.RENAME
-import net.opatry.tasks.ui.screen.createTaskList
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

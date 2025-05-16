@@ -39,7 +39,6 @@ import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_date_label
-import net.opatry.tasks.ui.screen.createTask
 import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -108,7 +107,7 @@ class CompletedTaskRowTest {
             .assertIsDisplayed()
             .performClick()
 
-        assertEquals(TaskAction.ToggleCompletion, action, "Toggle completion action should have been triggered")
+        assertEquals(TaskAction.ToggleCompletion(task), action, "Toggle completion action should have been triggered")
     }
 
     @Test
@@ -125,7 +124,7 @@ class CompletedTaskRowTest {
             .assertIsDisplayed()
             .performClick()
 
-        assertEquals(TaskAction.Delete, action, "Delete action should have been triggered")
+        assertEquals(TaskAction.Delete(task), action, "Delete action should have been triggered")
     }
 
     @Test
@@ -141,6 +140,6 @@ class CompletedTaskRowTest {
         onNodeWithTag(COMPLETED_TASK_ROW)
             .performClick()
 
-        assertEquals(TaskAction.Edit, action, "Click on cell should trigger Edit action")
+        assertEquals(TaskAction.Edit(task), action, "Click on cell should trigger Edit action")
     }
 }

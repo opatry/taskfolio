@@ -46,10 +46,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.MORE_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.SORT_MENU_ICON
+import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.TITLE
 import net.opatry.tasks.data.TaskListSorting
 
 @VisibleForTesting
 internal object TaskListTopAppBarTestTag {
+    const val TITLE = "TASK_LIST_PANE_TITLE"
     const val SORT_MENU_ICON = "SORT_MENU_ICON"
     const val MORE_MENU_ICON = "MORE_MENU_ICON"
 }
@@ -69,52 +71,55 @@ fun TaskListTopAppBar(
         title = {
             Text(
                 text = taskList.title,
+                modifier = Modifier.testTag(TITLE),
                 style = MaterialTheme.typography.headlineSmall,
                 maxLines = 1,
                 overflow = TextOverflow.MiddleEllipsis,
             )
         },
         actions = {
-            IconButton(
-                onClick = { expandSortMenu = true },
-                modifier = Modifier.testTag(SORT_MENU_ICON),
-            ) {
-                Crossfade(taskList.sorting) { sorting ->
-                    val sortIcon = when (sorting) {
-                        TaskListSorting.Manual -> LucideIcons.ListTree
-                        TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
-                        TaskListSorting.Title -> LucideIcons.ArrowDownAZ
+            if (!taskList.hasBrokenIndentation()) {
+                IconButton(
+                    onClick = { expandSortMenu = true },
+                    modifier = Modifier.testTag(SORT_MENU_ICON),
+                ) {
+                    Crossfade(taskList.sorting) { sorting ->
+                        val sortIcon = when (sorting) {
+                            TaskListSorting.Manual -> LucideIcons.ListTree
+                            TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
+                            TaskListSorting.Title -> LucideIcons.ArrowDownAZ
+                        }
+                        Icon(sortIcon, null)
                     }
-                    Icon(sortIcon, null)
+                    TaskListSortMenu(
+                        taskList,
+                        expandSortMenu,
+                        onDismiss = {
+                            expandSortMenu = false
+                        },
+                        onSortingClick = { sorting ->
+                            expandSortMenu = false
+                            onSort(sorting)
+                        }
+                    )
                 }
-                TaskListSortMenu(
-                    taskList,
-                    expandSortMenu,
-                    onDismiss = {
-                        expandSortMenu = false
-                    },
-                    onSortingClick = { sorting ->
-                        expandSortMenu = false
-                        onSort(sorting)
-                    }
-                )
-            }
-            IconButton(
-                onClick = { expandEditMenu = true },
-                modifier = Modifier.testTag(MORE_MENU_ICON),
-            ) {
-                Icon(LucideIcons.EllipsisVertical, null)
-                TaskListEditMenu(
-                    taskList,
-                    expandEditMenu,
-                    onDismiss = {
-                        expandEditMenu = false
-                    },
-                    onAction = { action ->
-                        expandEditMenu = false
-                        onEdit(action)
-                    }
-                )
+                IconButton(
+                    onClick = { expandEditMenu = true },
+                    modifier = Modifier.testTag(MORE_MENU_ICON),
+                ) {
+                    Icon(LucideIcons.EllipsisVertical, null)
+                    TaskListEditMenu(
+                        taskList,
+                        expandEditMenu,
+                        onDismiss = {
+                            expandEditMenu = false
+                        },
+                        onAction = { action ->
+                            expandEditMenu = false
+                            onEdit(action)
+                        }
+                    )
+                }
             }
         }
     )

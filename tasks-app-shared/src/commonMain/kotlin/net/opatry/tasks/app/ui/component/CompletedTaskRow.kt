@@ -102,9 +102,9 @@ fun CompletedTaskRow(
     Row(
         Modifier
             .testTag(COMPLETED_TASK_ROW)
-            .clickable(onClick = { onAction(TaskAction.Edit) })
+            .clickable(onClick = { onAction(TaskAction.Edit(task)) })
     ) {
-        IconButton(onClick = { onAction(TaskAction.ToggleCompletion) }, Modifier.testTag(COMPLETED_TASK_ICON)) {
+        IconButton(onClick = { onAction(TaskAction.ToggleCompletion(task)) }, Modifier.testTag(COMPLETED_TASK_ICON)) {
             Icon(LucideIcons.CircleCheckBig, null, tint = MaterialTheme.colorScheme.primary)
         }
         Column(
@@ -140,7 +140,7 @@ fun CompletedTaskRow(
             }
         }
 
-        IconButton(onClick = { onAction(TaskAction.Delete) }, Modifier.testTag(COMPLETED_TASK_DELETE_ICON)) {
+        IconButton(onClick = { onAction(TaskAction.Delete(task)) }, Modifier.testTag(COMPLETED_TASK_DELETE_ICON)) {
             Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
         }
     }
