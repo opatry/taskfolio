@@ -28,6 +28,7 @@ import EllipsisVertical
 import ListTree
 import LucideIcons
 import androidx.annotation.VisibleForTesting
+import androidx.compose.animation.Crossfade
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -64,11 +65,6 @@ fun TaskListTopAppBar(
     var expandEditMenu by remember { mutableStateOf(false) }
 
     // FIXME tweak colors, elevation, etc.
-    val sortIcon = when (taskList.sorting) {
-        TaskListSorting.Manual -> LucideIcons.ListTree
-        TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
-        TaskListSorting.Title -> LucideIcons.ArrowDownAZ
-    }
     TopAppBar(
         title = {
             Text(
@@ -83,7 +79,14 @@ fun TaskListTopAppBar(
                 onClick = { expandSortMenu = true },
                 modifier = Modifier.testTag(SORT_MENU_ICON),
             ) {
-                Icon(sortIcon, null)
+                Crossfade(taskList.sorting) { sorting ->
+                    val sortIcon = when (sorting) {
+                        TaskListSorting.Manual -> LucideIcons.ListTree
+                        TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
+                        TaskListSorting.Title -> LucideIcons.ArrowDownAZ
+                    }
+                    Icon(sortIcon, null)
+                }
                 TaskListSortMenu(
                     taskList,
                     expandSortMenu,
