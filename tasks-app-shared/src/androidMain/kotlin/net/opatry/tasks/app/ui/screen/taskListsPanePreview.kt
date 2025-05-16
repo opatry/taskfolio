@@ -22,41 +22,48 @@
 
 package net.opatry.tasks.app.ui.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
+private val dataSet = listOf(
+    TaskListUIModel(
+        id = TaskListId(0L),
+        title = "My task list",
+    ),
+    TaskListUIModel(
+        id = TaskListId(0L),
+        title = "My selected task list",
+    ),
+    TaskListUIModel(
+        id = TaskListId(0L),
+        title = "This is a task list with a very very very long name",
+    ),
+)
 
+private class TaskListPreviewParameterProvider(
+    override val values: Sequence<TaskListUIModel> = dataSet.asSequence()
+) : PreviewParameterProvider<TaskListUIModel>
+
+@PreviewLightDark
 @Composable
-private fun TaskListRowScaffold(
-    title: String = "My task list",
-    isSelected: Boolean = false
+private fun TaskListRowPreview(
+    @PreviewParameter(TaskListPreviewParameterProvider::class)
+    taskList: TaskListUIModel
 ) {
-    TaskListRow(
-        TaskListUIModel(
-            id = TaskListId(0L),
-            title = title,
-        ),
-        isSelected = isSelected,
-        onClick = {}
-    )
+    TaskfolioThemedPreview {
+        TaskListRow(taskList, isSelected = taskList.title.contains("selected")) {}
+    }
 }
 
 @PreviewLightDark
 @Composable
-private fun TaskRowValuesPreview() {
+private fun TaskListsColumnPreview() {
     TaskfolioThemedPreview {
-        Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            TaskListRowScaffold("This is a task list with a very very very long name")
-            TaskListRowScaffold("My selected task list", isSelected = true)
-            TaskListRowScaffold()
-        }
+        TaskListsColumn(dataSet, dataSet.last(), {}, {})
     }
 }
