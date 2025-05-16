@@ -632,7 +632,54 @@ class TaskRepository(
 
     suspend fun unindentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val parentTaskId = requireNotNull(taskEntity.parentTaskLocalId) { "Cannot unindent top level task" }
+        val parentTaskEntity = requireNotNull(taskDao.getById(parentTaskId)) { "Invalid parent task id ${taskEntity.parentTaskLocalId}" }
+
         val now = nowProvider.now()
+        val parentTaskPosition = parentTaskEntity.position
+        val newPosition = parentTaskPosition.toInt() + 1
+
+        val updatedTaskEntity = taskEntity.copy(
+            parentTaskLocalId = null,
+            lastUpdateDate = now,
+            position = newPosition.toTaskPosition(),
+        )
+
+        // compute final subtasks position
+        val subtasksToUpdate = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, parentTaskEntity.id, taskEntity.position)
+            .toMutableList()
+        subtasksToUpdate.removeIf { it.id == taskEntity.id }
+        val updatedSubtaskEntities = computeTaskPositions(subtasksToUpdate, taskEntity.position.toInt())
+        taskDao.upsertAll(updatedSubtaskEntities)
+
+        // compute final tasks position
+        val tasksToUpdate = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, null, updatedTaskEntity.position)
+            .toMutableList()
+        // put the updated task at the beginning of the list to enforce proper ordering
+        tasksToUpdate.add(0, updatedTaskEntity)
+        val updatedTaskEntities = computeTaskPositions(tasksToUpdate, newPositionStart = newPosition)
+        taskDao.upsertAll(updatedTaskEntities)
+
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
+            val task = withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.move(
+                        taskListId = taskListRemoteId,
+                        taskId = updatedTaskEntity.remoteId,
+                        parentTaskId = null,
+                        previousTaskId = parentTaskEntity.remoteId,
+                        destinationTaskListId = null,
+                    )
+                } catch (_: Exception) {
+                    null
+                }
+            }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, updatedTaskEntity.id, null))
+            }
+        }
     }
 
     suspend fun moveToTop(taskId: Long) {
