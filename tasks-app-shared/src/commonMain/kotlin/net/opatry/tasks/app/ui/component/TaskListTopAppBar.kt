@@ -75,46 +75,48 @@ fun TaskListTopAppBar(
             )
         },
         actions = {
-            IconButton(
-                onClick = { expandSortMenu = true },
-                modifier = Modifier.testTag(SORT_MENU_ICON),
-            ) {
-                Crossfade(taskList.sorting) { sorting ->
-                    val sortIcon = when (sorting) {
-                        TaskListSorting.Manual -> LucideIcons.ListTree
-                        TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
-                        TaskListSorting.Title -> LucideIcons.ArrowDownAZ
+            if (!taskList.hasBrokenIndentation()) {
+                IconButton(
+                    onClick = { expandSortMenu = true },
+                    modifier = Modifier.testTag(SORT_MENU_ICON),
+                ) {
+                    Crossfade(taskList.sorting) { sorting ->
+                        val sortIcon = when (sorting) {
+                            TaskListSorting.Manual -> LucideIcons.ListTree
+                            TaskListSorting.DueDate -> LucideIcons.CalendarArrowDown
+                            TaskListSorting.Title -> LucideIcons.ArrowDownAZ
+                        }
+                        Icon(sortIcon, null)
                     }
-                    Icon(sortIcon, null)
+                    TaskListSortMenu(
+                        taskList,
+                        expandSortMenu,
+                        onDismiss = {
+                            expandSortMenu = false
+                        },
+                        onSortingClick = { sorting ->
+                            expandSortMenu = false
+                            onSort(sorting)
+                        }
+                    )
                 }
-                TaskListSortMenu(
-                    taskList,
-                    expandSortMenu,
-                    onDismiss = {
-                        expandSortMenu = false
-                    },
-                    onSortingClick = { sorting ->
-                        expandSortMenu = false
-                        onSort(sorting)
-                    }
-                )
-            }
-            IconButton(
-                onClick = { expandEditMenu = true },
-                modifier = Modifier.testTag(MORE_MENU_ICON),
-            ) {
-                Icon(LucideIcons.EllipsisVertical, null)
-                TaskListEditMenu(
-                    taskList,
-                    expandEditMenu,
-                    onDismiss = {
-                        expandEditMenu = false
-                    },
-                    onAction = { action ->
-                        expandEditMenu = false
-                        onEdit(action)
-                    }
-                )
+                IconButton(
+                    onClick = { expandEditMenu = true },
+                    modifier = Modifier.testTag(MORE_MENU_ICON),
+                ) {
+                    Icon(LucideIcons.EllipsisVertical, null)
+                    TaskListEditMenu(
+                        taskList,
+                        expandEditMenu,
+                        onDismiss = {
+                            expandEditMenu = false
+                        },
+                        onAction = { action ->
+                            expandEditMenu = false
+                            onEdit(action)
+                        }
+                    )
+                }
             }
         }
     )

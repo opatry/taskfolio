@@ -44,6 +44,22 @@ private class TaskListPreviewParameterProvider : PreviewParameterProvider<TaskLi
             remainingTasks = emptyMap(),
             completedTasks = emptyList()
         ),
+        // broken indentation
+        TaskListUIModel(
+            id = TaskListId(0L),
+            title = "Broken indentation",
+            remainingTasks = mapOf(
+                null to listOf(
+                    TaskUIModel(
+                        id = TaskId(1L),
+                        title = "Task 1",
+                        isCompleted = false,
+                        indent = 42,
+                    ),
+                )
+            ),
+            completedTasks = emptyList()
+        ),
         // all done empty state
         TaskListUIModel(
             id = TaskListId(0L),

@@ -80,6 +80,8 @@ internal object TasksColumnTestTag {
 fun TasksColumn(
     taskLists: List<TaskListUIModel>,
     taskList: TaskListUIModel,
+    onDeleteTaskList: () -> Unit = {},
+    onRepairTaskList: () -> Unit = {},
     onToggleCompletionState: (TaskUIModel) -> Unit = {},
     onEditTask: (TaskUIModel) -> Unit = {},
     onUpdateDueDate: (TaskUIModel) -> Unit = {},
@@ -94,124 +96,135 @@ fun TasksColumn(
 ) {
     var showCompleted by remember(taskList.id) { mutableStateOf(showCompletedDefaultValue) }
 
-    if (taskList.isEmpty) {
-        // TODO SVG undraw.co illustration `files/undraw_to_do_list_re_9nt7.svg`
-        EmptyState(
-            icon = LucideIcons.CircleOff,
-            title = stringResource(Res.string.task_lists_screen_empty_list_title),
-            description = stringResource(Res.string.task_lists_screen_empty_list_desc),
-            modifier = Modifier
-                .fillMaxSize()
-                .testTag(FULLY_EMPTY_STATE),
-        )
-    } else {
-        LazyColumn(
-            modifier = Modifier.testTag(TASKS_COLUMN),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            if (taskList.isEmptyRemainingTasksVisible) {
-                item(key = "all_tasks_complete") {
-                    EmptyState(
-                        icon = LucideIcons.CheckCheck,
-                        title = stringResource(Res.string.task_list_pane_all_tasks_complete_title),
-                        description = stringResource(Res.string.task_list_pane_all_tasks_complete_desc),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp)
-                            .testTag(ALL_COMPLETE_EMPTY_STATE),
-                    )
-                }
-            }
+    when {
+        taskList.isEmpty -> {
+            // TODO SVG undraw.co illustration `files/undraw_to_do_list_re_9nt7.svg`
+            EmptyState(
+                icon = LucideIcons.CircleOff,
+                title = stringResource(Res.string.task_lists_screen_empty_list_title),
+                description = stringResource(Res.string.task_lists_screen_empty_list_desc),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(FULLY_EMPTY_STATE),
+            )
+        }
 
-            taskList.remainingTasks.forEach { (dateRange, tasks) ->
-                if (dateRange != null) {
-                    stickyHeader(key = dateRange.key) {
-                        Box(
-                            Modifier
+        taskList.hasBrokenIndentation() -> {
+            BrokenListIndentationEmptyState(
+                onDeleteList = onDeleteTaskList,
+                onRepairList = onRepairTaskList,
+            )
+        }
+
+        else -> {
+            LazyColumn(
+                modifier = Modifier.testTag(TASKS_COLUMN),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                if (taskList.isEmptyRemainingTasksVisible) {
+                    item(key = "all_tasks_complete") {
+                        EmptyState(
+                            icon = LucideIcons.CheckCheck,
+                            title = stringResource(Res.string.task_list_pane_all_tasks_complete_title),
+                            description = stringResource(Res.string.task_list_pane_all_tasks_complete_desc),
+                            modifier = Modifier
                                 .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.background)
-                                .padding(horizontal = 12.dp, vertical = 8.dp)
-                        ) {
-                            Text(
-                                dateRange.toLabel(sectionLabel = true),
-                                style = MaterialTheme.typography.titleSmall,
-                                color = dateRange.toColor(),
-                            )
-                        }
+                                .padding(vertical = 24.dp)
+                                .testTag(ALL_COMPLETE_EMPTY_STATE),
+                        )
                     }
                 }
-                items(tasks, key = { it.id.value }) { task ->
-                    RemainingTaskRow(
-                        taskLists,
-                        task,
-                        // TODO could come from the UI mapper/UI state
-                        showDate = when {
-                            taskList.sorting == TaskListSorting.Manual -> true
-                            taskList.sorting == TaskListSorting.Title -> true
-                            dateRange is DateRange.Overdue -> true
-                            else -> false
-                        }
-                    ) { action ->
-                        when (action) {
-                            TaskAction.ToggleCompletion -> onToggleCompletionState(task)
-                            TaskAction.Edit -> onEditTask(task)
-                            TaskAction.UpdateDueDate -> onUpdateDueDate(task)
-                            TaskAction.AddSubTask -> onNewSubTask(task)
-                            TaskAction.Unindent -> onUnindent(task)
-                            TaskAction.Indent -> onIndent(task)
-                            TaskAction.MoveToTop -> onMoveToTop(task)
-                            is TaskAction.MoveToList -> onMoveToList(task, action.targetParentList)
-                            TaskAction.MoveToNewList -> onMoveToNewList(task)
-                            TaskAction.Delete -> onDeleteTask(task)
-                        }
-                    }
-                }
-            }
 
-            if (taskList.hasCompletedTasks) {
-                stickyHeader(key = "completed") {
-                    Box(
-                        Modifier
-                            .clip(MaterialTheme.shapes.large)
-                            .fillMaxWidth()
-                            .clickable { showCompleted = !showCompleted }
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
-                            .testTag(COMPLETED_TASKS_TOGGLE)
-                    ) {
-                        RowWithIcon(
-                            icon = {
-                                when {
-                                    showCompleted -> Icon(LucideIcons.ChevronDown, null)
-                                    else -> Icon(LucideIcons.ChevronRight, null)
-                                }
+                taskList.remainingTasks.forEach { (dateRange, tasks) ->
+                    if (dateRange != null) {
+                        stickyHeader(key = dateRange.key) {
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.background)
+                                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                            ) {
+                                Text(
+                                    dateRange.toLabel(sectionLabel = true),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = dateRange.toColor(),
+                                )
                             }
-                        ) {
-                            Text(
-                                stringResource(Res.string.task_list_pane_completed_section_title_with_count, taskList.completedTasks.size),
-                                modifier = Modifier.testTag(COMPLETED_TASKS_TOGGLE_LABEL),
-                                style = MaterialTheme.typography.titleSmall
-                            )
                         }
                     }
-                }
-            }
-
-            if (showCompleted) {
-                items(taskList.completedTasks, key = { it.id.value }) { task ->
-                    CompletedTaskRow(
-                        task,
-                        onAction = { action ->
+                    items(tasks, key = { it.id.value }) { task ->
+                        RemainingTaskRow(
+                            taskLists,
+                            task,
+                            // TODO could come from the UI mapper/UI state
+                            showDate = when {
+                                taskList.sorting == TaskListSorting.Manual -> true
+                                taskList.sorting == TaskListSorting.Title -> true
+                                dateRange is DateRange.Overdue -> true
+                                else -> false
+                            }
+                        ) { action ->
                             when (action) {
                                 TaskAction.ToggleCompletion -> onToggleCompletionState(task)
                                 TaskAction.Edit -> onEditTask(task)
                                 TaskAction.UpdateDueDate -> onUpdateDueDate(task)
+                                TaskAction.AddSubTask -> onNewSubTask(task)
+                                TaskAction.Unindent -> onUnindent(task)
+                                TaskAction.Indent -> onIndent(task)
+                                TaskAction.MoveToTop -> onMoveToTop(task)
+                                is TaskAction.MoveToList -> onMoveToList(task, action.targetParentList)
+                                TaskAction.MoveToNewList -> onMoveToNewList(task)
                                 TaskAction.Delete -> onDeleteTask(task)
-                                else -> Unit
                             }
-                        },
-                    )
+                        }
+                    }
+                }
+
+                if (taskList.hasCompletedTasks) {
+                    stickyHeader(key = "completed") {
+                        Box(
+                            Modifier
+                                .clip(MaterialTheme.shapes.large)
+                                .fillMaxWidth()
+                                .clickable { showCompleted = !showCompleted }
+                                .background(MaterialTheme.colorScheme.background)
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
+                                .testTag(COMPLETED_TASKS_TOGGLE)
+                        ) {
+                            RowWithIcon(
+                                icon = {
+                                    when {
+                                        showCompleted -> Icon(LucideIcons.ChevronDown, null)
+                                        else -> Icon(LucideIcons.ChevronRight, null)
+                                    }
+                                }
+                            ) {
+                                Text(
+                                    stringResource(Res.string.task_list_pane_completed_section_title_with_count, taskList.completedTasks.size),
+                                    modifier = Modifier.testTag(COMPLETED_TASKS_TOGGLE_LABEL),
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                            }
+                        }
+                    }
+                }
+
+                if (showCompleted) {
+                    items(taskList.completedTasks, key = { it.id.value }) { task ->
+                        CompletedTaskRow(
+                            task,
+                            onAction = { action ->
+                                when (action) {
+                                    TaskAction.ToggleCompletion -> onToggleCompletionState(task)
+                                    TaskAction.Edit -> onEditTask(task)
+                                    TaskAction.UpdateDueDate -> onUpdateDueDate(task)
+                                    TaskAction.Delete -> onDeleteTask(task)
+                                    else -> Unit
+                                }
+                            },
+                        )
+                    }
                 }
             }
         }

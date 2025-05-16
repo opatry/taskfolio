@@ -192,9 +192,11 @@ fun TaskListDetail(
         },
         // FIXME should be driven by the NavigationRail
         floatingActionButton = {
-            // FIXME hides bottom of screen
-            FloatingActionButton(onClick = { showNewTaskSheet = true }) {
-                Icon(LucideIcons.Plus, null)
+            if (!taskList.hasBrokenIndentation()) {
+                // FIXME hides bottom of screen
+                FloatingActionButton(onClick = { showNewTaskSheet = true }) {
+                    Icon(LucideIcons.Plus, null)
+                }
             }
         }
     ) { innerPadding ->
@@ -202,6 +204,8 @@ fun TaskListDetail(
             TasksColumn(
                 taskLists,
                 taskList,
+                onDeleteTaskList = { showDeleteTaskListDialog = true },
+                onRepairTaskList = { viewModel.repairTaskList(taskList.id) },
                 onToggleCompletionState = { viewModel.toggleTaskCompletionState(it.id) },
                 onEditTask = {
                     taskOfInterest = it

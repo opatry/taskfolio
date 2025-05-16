@@ -45,7 +45,6 @@ import kotlinx.coroutines.launch
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.asLabel
-import net.opatry.tasks.app.ui.component.BrokenListIndentationEmptyState
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.app.ui.component.NoTaskListEmptyState
@@ -140,12 +139,6 @@ fun TaskListsMasterDetail(
                     when {
                         list == null -> LoadingPane()
                         selectedList == null -> NoTaskListSelectedEmptyState()
-                        selectedList.hasBrokenIndentation() -> {
-                            BrokenListIndentationEmptyState(
-                                onDeleteList = { viewModel.deleteTaskList(selectedList.id) },
-                                onRepairList = { viewModel.repairTaskList(selectedList.id) },
-                            )
-                        }
                         else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
                             scope.launch {
                                 when (targetedTaskList) {
