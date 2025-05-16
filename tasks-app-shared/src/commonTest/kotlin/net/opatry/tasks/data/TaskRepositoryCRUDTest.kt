@@ -159,6 +159,12 @@ class TaskRepositoryCRUDTest {
         assertTrue(tasks.first().isCompleted)
     }
 
+    // TODO add test for parent task to complete children
+    // TODO add test for task restoration (1st position)
+    // TODO add test for task restoration (1st position, not restore children)
+    // TODO add test for child task restoration with parent uncompleted (1st position in parent task)
+    // TODO add test for child task restoration with parent completed (1st position in list)
+
     @Test
     fun `delete task`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
