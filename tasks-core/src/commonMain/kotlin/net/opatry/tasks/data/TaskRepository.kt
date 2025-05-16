@@ -60,11 +60,16 @@ private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.So
     )
 }
 
-private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?, parentTaskLocalId: Long?): TaskEntity {
+// TODO invert taskId & parentTaskId parameters
+// Do it so that:
+//  no risk of tedious conflict
+//  replace call site with name=
+//  ensure call site order is properly switch accordingly (/!\ IDEA "flip ','" doesn't do it for us)
+private fun Task.asTaskEntity(parentListLocalId: Long, taskLocalId: Long?, parentTaskLocalId: Long?): TaskEntity {
     return TaskEntity(
-        id = localId ?: 0,
+        id = taskLocalId ?: 0,
         remoteId = id,
-        parentListLocalId = parentLocalId,
+        parentListLocalId = parentListLocalId,
         parentTaskLocalId = parentTaskLocalId,
         parentTaskRemoteId = parent,
         etag = etag,
