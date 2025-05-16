@@ -50,7 +50,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.presentation.model.DateRange
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
-import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
@@ -76,16 +75,7 @@ fun TasksColumn(
     taskList: TaskListUIModel,
     onDeleteList: () -> Unit = {},
     onRepairList: () -> Unit = {},
-    onToggleTaskCompletionState: (TaskUIModel) -> Unit = {},
-    onEditTask: (TaskUIModel) -> Unit = {},
-    onUpdateTaskDueDate: (TaskUIModel) -> Unit = {},
-    onNewSubTask: (TaskUIModel) -> Unit = {},
-    onUnindentTask: (TaskUIModel) -> Unit = {},
-    onIndentTask: (TaskUIModel) -> Unit = {},
-    onMoveTaskToTop: (TaskUIModel) -> Unit = {},
-    onMoveTaskToList: (TaskUIModel, TaskListUIModel) -> Unit = { _, _ -> },
-    onMoveTaskToNewList: (TaskUIModel) -> Unit = {},
-    onDeleteTask: (TaskUIModel) -> Unit = {},
+    onTaskAction: (TaskAction) -> Unit = {},
     showCompletedDefaultValue: Boolean = false,
 ) {
     var showCompleted by remember(taskList.id) { mutableStateOf(showCompletedDefaultValue) }
@@ -149,21 +139,9 @@ fun TasksColumn(
                                 taskList.sorting == TaskListSorting.Title -> true
                                 dateRange is DateRange.Overdue -> true
                                 else -> false
-                            }
-                        ) { action ->
-                            when (action) {
-                                TaskAction.ToggleCompletion -> onToggleTaskCompletionState(task)
-                                TaskAction.Edit -> onEditTask(task)
-                                TaskAction.UpdateDueDate -> onUpdateTaskDueDate(task)
-                                TaskAction.AddSubTask -> onNewSubTask(task)
-                                TaskAction.Unindent -> onUnindentTask(task)
-                                TaskAction.Indent -> onIndentTask(task)
-                                TaskAction.MoveToTop -> onMoveTaskToTop(task)
-                                is TaskAction.MoveToList -> onMoveTaskToList(task, action.targetParentList)
-                                TaskAction.MoveToNewList -> onMoveTaskToNewList(task)
-                                TaskAction.Delete -> onDeleteTask(task)
-                            }
-                        }
+                            },
+                            onAction = onTaskAction,
+                        )
                     }
                 }
 
@@ -200,15 +178,7 @@ fun TasksColumn(
                     items(taskList.completedTasks, key = { it.id.value }) { task ->
                         CompletedTaskRow(
                             task,
-                            onAction = { action ->
-                                when (action) {
-                                    TaskAction.ToggleCompletion -> onToggleTaskCompletionState(task)
-                                    TaskAction.Edit -> onEditTask(task)
-                                    TaskAction.UpdateDueDate -> onUpdateTaskDueDate(task)
-                                    TaskAction.Delete -> onDeleteTask(task)
-                                    else -> Unit
-                                }
-                            },
+                            onAction = onTaskAction,
                         )
                     }
                 }

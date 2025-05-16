@@ -152,10 +152,10 @@ fun RemainingTaskRow(
     Row(
         Modifier
             .testTag(REMAINING_TASK_ROW)
-            .clickable(onClick = { onAction(TaskAction.Edit) })
+            .clickable(onClick = { onAction(TaskAction.Edit(task)) })
     ) {
         IconButton(
-            onClick = { onAction(TaskAction.ToggleCompletion) },
+            onClick = { onAction(TaskAction.ToggleCompletion(task)) },
             modifier = Modifier
                 .testTag(REMAINING_TASK_ICON)
                 .padding(start = 36.dp * task.indent)
@@ -185,7 +185,7 @@ fun RemainingTaskRow(
             }
             if (showDate && task.dueDate != null) {
                 AssistChip(
-                    onClick = { onAction(TaskAction.UpdateDueDate) },
+                    onClick = { onAction(TaskAction.UpdateDueDate(task)) },
                     label = {
                         Text(
                             task.dateRange.toLabel(),

@@ -81,6 +81,7 @@ import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.EditTextDialog
+import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
 import net.opatry.tasks.app.ui.component.TaskListScaffold
 import net.opatry.tasks.app.ui.component.toColor
@@ -169,10 +170,12 @@ fun TaskListDetail(
         taskLists = taskLists,
         taskList = taskList,
         snackbarHostState = snackbarHostState,
-        onListSort = { sorting ->
+        onDeleteList = { showDeleteTaskListDialog = true },
+        onRepairList = { viewModel.repairTaskList(taskList.id) },
+        onSortList = { sorting ->
             viewModel.sortBy(taskList.id, sorting)
         },
-        onListEdit = { action ->
+        onEditList = { action ->
             when (action) {
                 TaskListEditMenuAction.Rename -> showRenameTaskListDialog = true
                 TaskListEditMenuAction.ClearCompletedTasks -> showClearTaskListCompletedTasksDialog = true
@@ -180,33 +183,54 @@ fun TaskListDetail(
             }
         },
         onNewTask = { showNewTaskSheet = true },
-        onDeleteList = { showDeleteTaskListDialog = true },
-        onRepairList = { viewModel.repairTaskList(taskList.id) },
-        onToggleTaskCompletionState = { viewModel.toggleTaskCompletionState(it.id) },
-        onEditTask = {
-            taskOfInterest = it
-            showEditTaskSheet = true
-        },
-        onUpdateTaskDueDate = {
-            taskOfInterest = it
-            showDatePickerDialog = true
-        },
-        onNewSubTask = {
-            taskOfInterest = it
-            showNewSubTaskSheet = true
-        },
-        onUnindentTask = { viewModel.unindentTask(it.id) },
-        onIndentTask = { viewModel.indentTask(it.id) },
-        onMoveTaskToTop = { viewModel.moveToTop(it.id) },
-        onMoveTaskToList = { task, taskList -> viewModel.moveToList(task.id, taskList.id) },
-        onMoveTaskToNewList = {
-            taskOfInterest = it
-            showNewTaskListAlert = true
-        },
-        onDeleteTask = {
-            taskOfInterest = it
-            showUndoTaskDeletionSnackbar = true
-            viewModel.deleteTask(it.id)
+        onTaskAction = { action ->
+            when (action) {
+                is TaskAction.ToggleCompletion -> {
+                    viewModel.toggleTaskCompletionState(action.task.id)
+                }
+
+                is TaskAction.Edit -> {
+                    taskOfInterest = action.task
+                    showEditTaskSheet = true
+                }
+
+                is TaskAction.UpdateDueDate -> {
+                    taskOfInterest = action.task
+                    showDatePickerDialog = true
+                }
+
+                is TaskAction.AddSubTask -> {
+                    taskOfInterest = action.task
+                    showNewSubTaskSheet = true
+                }
+
+                is TaskAction.Unindent -> {
+                    viewModel.unindentTask(action.task.id)
+                }
+
+                is TaskAction.Indent -> {
+                    viewModel.unindentTask(action.task.id)
+                }
+
+                is TaskAction.MoveToTop -> {
+                    viewModel.moveToTop(action.task.id)
+                }
+
+                is TaskAction.MoveToList -> {
+                    viewModel.moveToList(action.task.id, action.targetParentList.id)
+                }
+
+                is TaskAction.MoveToNewList -> {
+                    taskOfInterest = action.task
+                    showNewTaskListAlert = true
+                }
+
+                is TaskAction.Delete -> {
+                    taskOfInterest = action.task
+                    showUndoTaskDeletionSnackbar = true
+                    viewModel.deleteTask(action.task.id)
+                }
+            }
         },
     )
 

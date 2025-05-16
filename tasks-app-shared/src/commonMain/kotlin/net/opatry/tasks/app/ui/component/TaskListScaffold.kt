@@ -37,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
-import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TaskListScaffoldTestTag.ADD_TASK_FAB
 import net.opatry.tasks.data.TaskListSorting
 
@@ -51,25 +50,16 @@ fun TaskListScaffold(
     taskLists: List<TaskListUIModel>,
     taskList: TaskListUIModel,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    onListSort: (TaskListSorting) -> Unit = {},
-    onListEdit: (TaskListEditMenuAction) -> Unit = {},
-    onNewTask: () -> Unit = {},
     onDeleteList: () -> Unit = {},
     onRepairList: () -> Unit = {},
-    onToggleTaskCompletionState: (TaskUIModel) -> Unit = {},
-    onEditTask: (TaskUIModel) -> Unit = {},
-    onUpdateTaskDueDate: (TaskUIModel) -> Unit = {},
-    onNewSubTask: (TaskUIModel) -> Unit = {},
-    onUnindentTask: (TaskUIModel) -> Unit = {},
-    onIndentTask: (TaskUIModel) -> Unit = {},
-    onMoveTaskToTop: (TaskUIModel) -> Unit = {},
-    onMoveTaskToList: (TaskUIModel, TaskListUIModel) -> Unit = { _, _ -> },
-    onMoveTaskToNewList: (TaskUIModel) -> Unit = {},
-    onDeleteTask: (TaskUIModel) -> Unit = {},
+    onSortList: (TaskListSorting) -> Unit = {},
+    onEditList: (TaskListEditMenuAction) -> Unit = {},
+    onNewTask: () -> Unit = {},
+    onTaskAction: (TaskAction) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
-            TaskListTopAppBar(taskList, onListSort, onListEdit)
+            TaskListTopAppBar(taskList, onSortList, onEditList)
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
@@ -93,16 +83,7 @@ fun TaskListScaffold(
                 taskList = taskList,
                 onDeleteList = onDeleteList,
                 onRepairList = onRepairList,
-                onToggleTaskCompletionState = onToggleTaskCompletionState,
-                onEditTask = onEditTask,
-                onUpdateTaskDueDate = onUpdateTaskDueDate,
-                onNewSubTask = onNewSubTask,
-                onUnindentTask = onUnindentTask,
-                onIndentTask = onIndentTask,
-                onMoveTaskToTop = onMoveTaskToTop,
-                onMoveTaskToList = onMoveTaskToList,
-                onMoveTaskToNewList = onMoveTaskToNewList,
-                onDeleteTask = onDeleteTask,
+                onTaskAction = onTaskAction,
             )
         }
     }

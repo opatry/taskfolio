@@ -71,16 +71,16 @@ internal object TaskMenuTestTag {
 }
 
 sealed class TaskAction {
-    data object ToggleCompletion : TaskAction()
-    data object Edit : TaskAction()
-    data object UpdateDueDate : TaskAction()
-    data object AddSubTask : TaskAction()
-    data object MoveToTop : TaskAction()
-    data object Unindent : TaskAction()
-    data object Indent : TaskAction()
-    data class MoveToList(val targetParentList: TaskListUIModel) : TaskAction()
-    data object MoveToNewList : TaskAction()
-    data object Delete : TaskAction()
+    data class ToggleCompletion(val task: TaskUIModel) : TaskAction()
+    data class Edit(val task: TaskUIModel) : TaskAction()
+    data class UpdateDueDate(val task: TaskUIModel) : TaskAction()
+    data class AddSubTask(val task: TaskUIModel) : TaskAction()
+    data class MoveToTop(val task: TaskUIModel) : TaskAction()
+    data class Unindent(val task: TaskUIModel) : TaskAction()
+    data class Indent(val task: TaskUIModel) : TaskAction()
+    data class MoveToList(val task: TaskUIModel, val targetParentList: TaskListUIModel) : TaskAction()
+    data class MoveToNewList(val task: TaskUIModel) : TaskAction()
+    data class Delete(val task: TaskUIModel) : TaskAction()
 }
 
 @Composable
@@ -102,7 +102,7 @@ fun TaskMenu(
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_move_to_top))
                 },
-                onClick = { onAction(TaskAction.MoveToTop) },
+                onClick = { onAction(TaskAction.MoveToTop(task)) },
                 modifier = Modifier.testTag(MOVE_TO_TOP),
             )
         }
@@ -112,7 +112,7 @@ fun TaskMenu(
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_add_subtask), LucideIcons.CopyPlus)
                 },
-                onClick = { onAction(TaskAction.AddSubTask) },
+                onClick = { onAction(TaskAction.AddSubTask(task)) },
                 modifier = Modifier.testTag(ADD_SUBTASK),
             )
         }
@@ -122,7 +122,7 @@ fun TaskMenu(
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_indent))
                 },
-                onClick = { onAction(TaskAction.Indent) },
+                onClick = { onAction(TaskAction.Indent(task)) },
                 modifier = Modifier.testTag(INDENT),
                 enabled = false // TODO support indentation
             )
@@ -133,7 +133,7 @@ fun TaskMenu(
                 text = {
                     RowWithIcon(stringResource(Res.string.task_menu_unindent))
                 },
-                onClick = { onAction(TaskAction.Unindent) },
+                onClick = { onAction(TaskAction.Unindent(task)) },
                 modifier = Modifier.testTag(UNINDENT),
                 enabled = false // TODO support indentation
             )
@@ -153,7 +153,7 @@ fun TaskMenu(
             text = {
                 RowWithIcon(stringResource(Res.string.task_menu_new_list), LucideIcons.ListPlus)
             },
-            onClick = { onAction(TaskAction.MoveToNewList) },
+            onClick = { onAction(TaskAction.MoveToNewList(task)) },
             modifier = Modifier.testTag(MOVE_TO_NEW_LIST),
         )
 
@@ -172,7 +172,7 @@ fun TaskMenu(
                     },
                     modifier = Modifier.testTag(MOVE_TO_LIST),
                     enabled = !isCurrentList,
-                    onClick = { onAction(TaskAction.MoveToList(taskList)) }
+                    onClick = { onAction(TaskAction.MoveToList(task, taskList)) }
                 )
             }
         }
@@ -186,7 +186,7 @@ fun TaskMenu(
                 }
             },
             modifier = Modifier.testTag(DELETE),
-            onClick = { onAction(TaskAction.Delete) }
+            onClick = { onAction(TaskAction.Delete(task)) }
         )
     }
 }
