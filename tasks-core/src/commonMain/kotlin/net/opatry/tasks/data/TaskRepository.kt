@@ -526,13 +526,58 @@ class TaskRepository(
     }
 
     suspend fun toggleTaskCompletionState(taskId: Long) {
-        applyTaskUpdate(taskId) { taskEntity, updateTime ->
-            // TODO should update position when changed/restored to not completed, what should it be?
+        val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
+        val now = nowProvider.now()
+
+        // TODO find all child tasks and toggle as well if complete parent task
+
+        val wasCompleted = taskEntity.isCompleted
+        val updatedTaskEntity = if (wasCompleted) {
             taskEntity.copy(
-                isCompleted = !taskEntity.isCompleted,
-                completionDate = if (taskEntity.isCompleted) null else updateTime,
-                lastUpdateDate = updateTime,
+                isCompleted = false,
+                completionDate = null,
+                lastUpdateDate = now,
+                position = 0.toTaskPosition()
             )
+        } else {
+            taskEntity.copy(
+                isCompleted = true,
+                completionDate = now,
+                lastUpdateDate = now,
+                position = now.asCompletedTaskPosition()
+            )
+        }
+
+        if (wasCompleted) {
+            val tasksToUpdate =
+                taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.parentTaskLocalId, updatedTaskEntity.position)
+                    .toMutableList()
+            tasksToUpdate.add(0, updatedTaskEntity)
+            val updatedTasks = computeTaskPositions(tasksToUpdate, newPositionStart = 0)
+
+            taskDao.upsertAll(updatedTasks)
+        } else {
+            taskDao.upsert(updatedTaskEntity)
+        }
+
+        // FIXME should already be available in entity, quick & dirty workaround
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
+            val task = withContext(Dispatchers.IO) {
+                try {
+                    tasksApi.update(
+                        taskListRemoteId,
+                        updatedTaskEntity.remoteId,
+                        updatedTaskEntity.asTask()
+                    )
+                } catch (_: Exception) {
+                    null
+                }
+            }
+
+            if (task != null) {
+                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId, updatedTaskEntity.parentTaskLocalId))
+            }
         }
     }
 
