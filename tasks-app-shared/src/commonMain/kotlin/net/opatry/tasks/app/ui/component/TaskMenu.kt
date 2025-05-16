@@ -152,7 +152,7 @@ fun TaskMenu(
             text = {
                 Text(stringResource(Res.string.task_menu_move_to), style = MaterialTheme.typography.titleSmall)
             },
-            enabled = false, // TODO support task move to list
+            enabled = false,
             onClick = {}
         )
 
