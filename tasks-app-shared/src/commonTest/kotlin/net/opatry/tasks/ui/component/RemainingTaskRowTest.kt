@@ -61,7 +61,6 @@ import net.opatry.tasks.app.ui.component.TaskMenuTestTag.UNINDENT
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
 import org.jetbrains.compose.resources.pluralStringResource
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -420,7 +419,6 @@ class RemainingTaskRowTest {
             .assertDoesNotExist()
     }
 
-    @Ignore("TODO restore once enabled")
     @Test
     fun `when canUnindent=true then UNINDENT menu should be enabled and trigger Unindent action`() = runComposeUiTest {
         val taskList = createTaskList().copy(

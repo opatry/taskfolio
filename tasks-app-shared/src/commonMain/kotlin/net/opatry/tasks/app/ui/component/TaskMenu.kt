@@ -141,7 +141,6 @@ fun TaskMenu(
                 },
                 onClick = { onAction(TaskAction.Unindent(task)) },
                 modifier = Modifier.testTag(UNINDENT),
-                enabled = false // TODO support indentation
             )
         }
 
