@@ -166,22 +166,19 @@ fun TaskMenu(
 
         // FIXME not ideal when a lot of list, maybe ask for a dialog or bottom sheet in which to choose?
         //  or using a submenu?
-        val enableMoveTaskList = true // TODO should it be hidden when 1 list only?
-        if (enableMoveTaskList) {
-            taskLists.forEach { taskList ->
-                val isCurrentList = taskList.id == currentTaskList?.id
-                DropdownMenuItem(
-                    text = {
-                        RowWithIcon(
-                            icon = LucideIcons.Check.takeIf { isCurrentList },
-                            text = taskList.title,
-                        )
-                    },
-                    modifier = Modifier.testTag(MOVE_TO_LIST),
-                    enabled = !isCurrentList,
-                    onClick = { onAction(TaskAction.MoveToList(task, taskList)) }
-                )
-            }
+        taskLists.forEach { taskList ->
+            val isCurrentList = taskList.id == currentTaskList?.id
+            DropdownMenuItem(
+                text = {
+                    RowWithIcon(
+                        icon = LucideIcons.Check.takeIf { isCurrentList },
+                        text = taskList.title,
+                    )
+                },
+                modifier = Modifier.testTag(MOVE_TO_LIST),
+                enabled = !isCurrentList,
+                onClick = { onAction(TaskAction.MoveToList(task, taskList)) }
+            )
         }
 
         HorizontalDivider()
