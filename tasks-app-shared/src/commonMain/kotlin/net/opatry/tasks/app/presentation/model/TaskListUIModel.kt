@@ -22,11 +22,8 @@
 
 package net.opatry.tasks.app.presentation.model
 
-import net.opatry.tasks.data.TaskListSorting
-
-
-@JvmInline
-value class TaskListId(val value: Long)
+import net.opatry.tasks.domain.TaskListId
+import net.opatry.tasks.domain.TaskListSorting
 
 data class TaskListUIModel(
     val id: TaskListId,

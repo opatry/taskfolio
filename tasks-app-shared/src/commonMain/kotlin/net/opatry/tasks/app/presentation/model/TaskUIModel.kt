@@ -28,6 +28,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.data.toTaskPosition
+import net.opatry.tasks.domain.TaskId
 import java.math.BigInteger
 
 sealed class DateRange {
@@ -52,9 +53,6 @@ operator fun DateRange.compareTo(other: DateRange): Int {
         else -> lhsNumberOfDays.compareTo(rhsNumberOfDays)
     }
 }
-
-@JvmInline
-value class TaskId(val value: Long)
 
 sealed interface TaskUIModel {
     val id: TaskId
