@@ -29,6 +29,7 @@ import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.TaskDao
@@ -52,6 +53,7 @@ class DesktopDITest {
     fun `verify all modules`() {
         val allModules = module {
             includes(
+                utilModule,
                 loggingModule,
                 platformModule(),
                 dataModule,
@@ -65,8 +67,7 @@ class DesktopDITest {
                 definition<HttpClient>(HttpClientEngine::class, HttpClientConfig::class),
                 definition<TaskListsViewModel>(Duration::class),
                 definition<File>(URI::class),
-                definition<TaskRepository>(Function0::class),
-                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
+                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class),
             )
         )
     }
@@ -108,9 +109,9 @@ class DesktopDITest {
     fun `verify app module`() {
         tasksAppModule.verify(
             injections = injectedParameters(
-                definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class, Function0::class),
+                definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class, NowProvider::class),
                 definition<TaskListsViewModel>(Duration::class, Logger::class),
-                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, Function0::class),
+                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, NowProvider::class),
             )
         )
     }

@@ -29,6 +29,7 @@ import net.opatry.tasks.app.di.loggingModule
 import net.opatry.tasks.app.di.networkModule
 import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksAppModule
+import net.opatry.tasks.app.di.utilModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androix.startup.KoinStartup
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -42,6 +43,7 @@ class TasksApplication : Application(), KoinStartup {
     override fun onKoinStartup() = koinConfiguration {
         androidContext(this@TasksApplication)
         modules(
+            utilModule,
             loggingModule,
             platformModule(),
             dataModule,

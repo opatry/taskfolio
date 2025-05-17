@@ -22,14 +22,13 @@
 
 package net.opatry
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import net.opatry.tasks.NowProvider
 
 class PrintLogger(
-    private val clockNow: () -> Instant = Clock.System::now,
+    private val nowProvider: NowProvider,
 ) : Logger {
     private fun log(level: String, message: String) {
-        println("[${clockNow()}][$level] $message")
+        println("[${nowProvider.now()}][$level] $message")
     }
 
     override fun logInfo(message: String) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -25,9 +25,11 @@ package net.opatry.tasks.data.util
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Clock
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.InMemoryTasksApi
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.TaskRepository
 
 
@@ -42,7 +44,7 @@ internal fun runTaskRepositoryTest(
         .build()
 
     try {
-        val repository = TaskRepository(db.getTaskListDao(), db.getTaskDao(), taskListsApi, tasksApi)
+        val repository = TaskRepository(db.getTaskListDao(), db.getTaskDao(), taskListsApi, tasksApi, NowProvider(Clock.System::now))
 
         test(repository)
     } finally {

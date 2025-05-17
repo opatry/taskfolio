@@ -41,6 +41,7 @@ import net.opatry.tasks.app.di.loggingModule
 import net.opatry.tasks.app.di.networkModule
 import net.opatry.tasks.app.di.platformModule
 import net.opatry.tasks.app.di.tasksAppModule
+import net.opatry.tasks.app.di.utilModule
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.presentation.UserViewModel
@@ -105,6 +106,7 @@ fun main() {
 
             KoinApplication(application = {
                 modules(
+                    utilModule,
                     loggingModule,
                     platformModule(),
                     dataModule,
