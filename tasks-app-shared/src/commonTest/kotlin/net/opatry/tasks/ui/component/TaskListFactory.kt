@@ -44,25 +44,34 @@ fun createTaskList(
     id = TaskListId(TASK_LIST_ID++),
     title = title,
     remainingTasks = mapOf(null to List(remainingTaskCount) { createTask() }),
-    completedTasks = List(completedTaskCount) { createTask(isCompleted = true) }
+    completedTasks = List(completedTaskCount) { createCompletedTask() }
 )
 
 private var TASK_ID = 0L
 fun createTask(
     title: String = "Task",
     dueDate: LocalDate = today,
-    isCompleted: Boolean = false,
     canMoveToTop: Boolean = false,
     canUnindent: Boolean = false,
     canIndent: Boolean = false,
     canCreateSubTask: Boolean = false,
-) = TaskUIModel(
+) = TaskUIModel.Todo(
     id = TaskId(TASK_ID++),
     title = title,
     dueDate = dueDate,
-    isCompleted = isCompleted,
     canMoveToTop = canMoveToTop,
     canUnindent = canUnindent,
     canIndent = canIndent,
     canCreateSubTask = canCreateSubTask,
+)
+
+fun createCompletedTask(
+    title: String = "Task",
+    dueDate: LocalDate = today,
+    completionDate: LocalDate = today,
+) = TaskUIModel.Done(
+    id = TaskId(TASK_ID++),
+    title = title,
+    dueDate = dueDate,
+    completionDate = completionDate,
 )

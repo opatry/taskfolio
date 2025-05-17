@@ -40,59 +40,50 @@ import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 private class RemainingTaskRowPreviewDataProvider :
     PreviewParameterProvider<TaskUIModel> {
     override val values = sequenceOf(
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "Without due date",
             dueDate = null,
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date",
             dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With notes",
             notes = "Some notes\nthat are long enough\nto be wrapped on multiple lines",
             dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With very very very very very very very very long title",
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date in the past",
             dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(3, DateTimeUnit.MONTH),
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date today",
             dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date yesterday",
             dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(1, DateTimeUnit.DAY),
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date tomorrow",
             dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(1, DateTimeUnit.DAY),
-            isCompleted = false,
         ),
-        TaskUIModel(
+        TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date in distant future",
             dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(1, DateTimeUnit.MONTH),
-            isCompleted = false,
         ),
     )
 }
@@ -100,7 +91,8 @@ private class RemainingTaskRowPreviewDataProvider :
 @PreviewLightDark
 @Composable
 private fun CompletedTaskRowPreview(
-    @PreviewParameter(RemainingTaskRowPreviewDataProvider::class) task: TaskUIModel,
+    @PreviewParameter(RemainingTaskRowPreviewDataProvider::class)
+    task: TaskUIModel.Todo,
 ) {
     TaskfolioThemedPreview {
         RemainingTaskRow(

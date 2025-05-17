@@ -28,6 +28,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.data.toTaskPosition
+import java.math.BigInteger
 
 sealed class DateRange {
     open val date: LocalDate? = null
@@ -55,20 +56,13 @@ operator fun DateRange.compareTo(other: DateRange): Int {
 @JvmInline
 value class TaskId(val value: Long)
 
-data class TaskUIModel(
-    val id: TaskId,
-    val title: String,
-    val dueDate: LocalDate? = null,
-    val notes: String = "",
-    val isCompleted: Boolean = false,
-    val completionDate: LocalDate? = null,
-    val position: String = 0.toTaskPosition(),
-    val indent: Int = 0,
-    val canMoveToTop: Boolean = false,
-    val canUnindent: Boolean = false,
-    val canIndent: Boolean = false,
-    val canCreateSubTask: Boolean = false,
-) {
+sealed interface TaskUIModel {
+    val id: TaskId
+    val title: String
+    val notes: String
+    val position: String
+    val dueDate: LocalDate?
+
     val dateRange: DateRange
         get() {
             val now = Clock.System.now()
@@ -84,4 +78,26 @@ data class TaskUIModel(
                 else -> DateRange.Today(dueLocalDate)
             }
         }
+
+    data class Todo(
+        override val id: TaskId,
+        override val title: String,
+        override val dueDate: LocalDate? = null,
+        override val notes: String = "",
+        override val position: String = 0.toTaskPosition(),
+        val indent: Int = 0,
+        val canMoveToTop: Boolean = false,
+        val canUnindent: Boolean = false,
+        val canIndent: Boolean = false,
+        val canCreateSubTask: Boolean = false,
+    ) : TaskUIModel
+
+    data class Done(
+        override val id: TaskId,
+        override val title: String,
+        override val notes: String = "",
+        override val position: String = BigInteger("9999999999999999999").toTaskPosition(),
+        override val dueDate: LocalDate? = null,
+        val completionDate: LocalDate,
+    ) : TaskUIModel
 }

@@ -37,30 +37,21 @@ import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 private class CompletedTaskRowPreviewDataProvider :
     PreviewParameterProvider<TaskUIModel> {
     override val values = sequenceOf(
-        TaskUIModel(
+        TaskUIModel.Done(
             id = TaskId(0),
             title = "Completed with this year completion date",
-            isCompleted = true,
             completionDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
         ),
-        TaskUIModel(
+        TaskUIModel.Done(
             id = TaskId(0),
             title = "Completed with notes",
-            isCompleted = true,
             notes = "• This is a \n• multiline note",
             completionDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
         ),
-        TaskUIModel(
+        TaskUIModel.Done(
             id = TaskId(0),
             title = "Completed with +1y old completion date",
-            isCompleted = true,
             completionDate = LocalDate.parse("2024-01-01"),
-        ),
-        TaskUIModel(
-            id = TaskId(0),
-            title = "Completed without completion date",
-            isCompleted = true,
-            completionDate = null,
         ),
     )
 }
@@ -68,7 +59,8 @@ private class CompletedTaskRowPreviewDataProvider :
 @PreviewLightDark
 @Composable
 private fun CompletedTaskRowPreview(
-    @PreviewParameter(CompletedTaskRowPreviewDataProvider::class) task: TaskUIModel,
+    @PreviewParameter(CompletedTaskRowPreviewDataProvider::class)
+    task: TaskUIModel.Done,
 ) {
     TaskfolioThemedPreview {
         CompletedTaskRow(

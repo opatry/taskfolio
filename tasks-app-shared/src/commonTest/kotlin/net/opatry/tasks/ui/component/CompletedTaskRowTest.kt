@@ -47,29 +47,10 @@ import kotlin.test.assertEquals
 @Suppress("TestFunctionName")
 @OptIn(ExperimentalTestApi::class)
 class CompletedTaskRowTest {
-    @Test
-    fun CompletedTaskRow_Layout() = runComposeUiTest {
-        val task = createTask("My Completed Task", isCompleted = true).copy(
-            notes = "",
-            completionDate = null
-        )
-        setContent {
-            CompletedTaskRow(task) {}
-        }
-
-        onNodeWithText("My Completed Task")
-            .assertIsDisplayed()
-
-        onNodeWithTag(COMPLETED_TASK_NOTES)
-            .assertDoesNotExist()
-
-        onNodeWithTag(COMPLETED_TASK_COMPLETION_DATE)
-            .assertDoesNotExist()
-    }
 
     @Test
     fun CompletedTaskRow_LayoutFull() = runComposeUiTest {
-        val task = createTask("My Completed Task With notes & date", isCompleted = true).copy(
+        val task = createCompletedTask("My Completed Task With notes & date").copy(
             notes = "My notes",
             completionDate = LocalDate.parse("2023-10-01")
         )
@@ -95,7 +76,7 @@ class CompletedTaskRowTest {
 
     @Test
     fun CompletedTaskRow_UnComplete() = runComposeUiTest {
-        val task = createTask(isCompleted = true)
+        val task = createCompletedTask()
         var action: TaskAction? = null
         setContent {
             CompletedTaskRow(task) {
@@ -112,7 +93,7 @@ class CompletedTaskRowTest {
 
     @Test
     fun CompletedTaskRow_Delete() = runComposeUiTest {
-        val task = createTask(isCompleted = true)
+        val task = createCompletedTask()
         var action: TaskAction? = null
         setContent {
             CompletedTaskRow(task) {
@@ -129,7 +110,7 @@ class CompletedTaskRowTest {
 
     @Test
     fun CompletedTaskRow_Edit() = runComposeUiTest {
-        val task = createTask(isCompleted = true)
+        val task = createCompletedTask()
         var action: TaskAction? = null
         setContent {
             CompletedTaskRow(task) {

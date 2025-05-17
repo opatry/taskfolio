@@ -47,10 +47,9 @@ class TaskListPreviewParameterProvider : PreviewParameterProvider<TaskListUIMode
             title = "Broken indentation",
             remainingTasks = mapOf(
                 null to listOf(
-                    TaskUIModel(
+                    TaskUIModel.Todo(
                         id = TaskId(1L),
                         title = "Task 1",
-                        isCompleted = false,
                         indent = 42,
                     ),
                 )
@@ -63,10 +62,10 @@ class TaskListPreviewParameterProvider : PreviewParameterProvider<TaskListUIMode
             title = "All done",
             remainingTasks = emptyMap(),
             completedTasks = listOf(
-                TaskUIModel(
+                TaskUIModel.Done(
                     id = TaskId(1L),
                     title = "Task 1",
-                    isCompleted = true,
+                    completionDate = LocalDate.parse("2023-01-01"),
                 ),
             )
         ),
@@ -77,22 +76,19 @@ class TaskListPreviewParameterProvider : PreviewParameterProvider<TaskListUIMode
             sorting = TaskListSorting.Manual,
             remainingTasks = mapOf(
                 DateRange.None to listOf(
-                    TaskUIModel(
+                    TaskUIModel.Todo(
                         id = TaskId(1L),
                         title = "Task 1",
-                        isCompleted = false,
                     ),
                 ),
                 DateRange.Overdue(LocalDate.parse("2023-01-01"), 40) to listOf(
-                    TaskUIModel(
+                    TaskUIModel.Todo(
                         id = TaskId(2L),
                         title = "Task 2",
-                        isCompleted = false,
                     ),
-                    TaskUIModel(
+                    TaskUIModel.Todo(
                         id = TaskId(3L),
                         title = "Task 3",
-                        isCompleted = false,
                         indent = 1,
                     ),
                 ),

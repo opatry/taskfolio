@@ -178,12 +178,11 @@ class TaskListsViewModelTest {
         assertEquals(
             mapOf<DateRange?, List<TaskUIModel>>(
                 DateRange.Overdue(date = LocalDate(1970, 1, 1), numberOfDays = -1) to listOf(
-                    TaskUIModel(
+                    TaskUIModel.Todo(
                         id = TaskId(value = 102),
                         title = "task2",
                         dueDate = LastWeek,
                         notes = "notes2",
-                        isCompleted = false,
                         position = "00000000000000000001",
                         indent = 0,
                         canMoveToTop = true,
@@ -193,12 +192,11 @@ class TaskListsViewModelTest {
                     )
                 ),
                 DateRange.Later(date = NextWeek, numberOfDays = 7) to listOf(
-                    TaskUIModel(
+                    TaskUIModel.Todo(
                         id = TaskId(value = 101),
                         title = "task1",
                         dueDate = NextWeek,
                         notes = "notes1",
-                        isCompleted = false,
                         position = "00000000000000000000",
                         indent = 0,
                         canMoveToTop = false,
@@ -213,19 +211,13 @@ class TaskListsViewModelTest {
         )
         assertEquals(
             listOf(
-                TaskUIModel(
+                TaskUIModel.Done(
                     id = TaskId(value = 103),
                     title = "task3",
                     dueDate = null,
                     notes = "notes3",
-                    isCompleted = true,
                     completionDate = yesterday,
                     position = "09999999999999999999",
-                    indent = 0,
-                    canMoveToTop = false,
-                    canUnindent = false,
-                    canIndent = false,
-                    canCreateSubTask = false,
                 )
             ),
             taskList.completedTasks

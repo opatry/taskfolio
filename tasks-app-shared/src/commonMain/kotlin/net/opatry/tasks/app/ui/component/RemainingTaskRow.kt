@@ -143,7 +143,7 @@ internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (th
 @Composable
 fun RemainingTaskRow(
     taskLists: List<TaskListUIModel>,
-    task: TaskUIModel,
+    task: TaskUIModel.Todo,
     showDate: Boolean = true,
     onAction: (TaskAction) -> Unit,
 ) {
