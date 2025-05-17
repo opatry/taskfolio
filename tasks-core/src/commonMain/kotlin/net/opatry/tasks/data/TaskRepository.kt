@@ -42,6 +42,7 @@ import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import net.opatry.tasks.domain.TaskListSorting
 import java.math.BigInteger
 
 enum class TaskListSorting {

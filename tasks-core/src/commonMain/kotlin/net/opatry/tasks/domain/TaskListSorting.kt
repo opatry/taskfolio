@@ -20,15 +20,10 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.data.model
+package net.opatry.tasks.domain
 
-import kotlinx.datetime.Instant
-import net.opatry.tasks.domain.TaskListSorting
-
-data class TaskListDataModel(
-    val id: Long,
-    val title: String,
-    val lastUpdate: Instant,
-    val tasks: List<TaskDataModel>,
-    val sorting: TaskListSorting,
-)
+enum class TaskListSorting {
+    Manual,
+    DueDate,
+    Title,
+}

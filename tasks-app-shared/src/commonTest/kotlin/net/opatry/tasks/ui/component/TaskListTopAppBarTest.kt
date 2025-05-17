@@ -38,7 +38,7 @@ import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_TITLE
 import net.opatry.tasks.app.ui.component.TaskListTopAppBar
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.MORE_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.SORT_MENU_ICON
-import net.opatry.tasks.data.TaskListSorting
+import net.opatry.tasks.domain.TaskListSorting
 import org.junit.Test
 import kotlin.test.assertEquals
 

@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.util.runTaskRepositoryTest
+import net.opatry.tasks.domain.TaskListSorting
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

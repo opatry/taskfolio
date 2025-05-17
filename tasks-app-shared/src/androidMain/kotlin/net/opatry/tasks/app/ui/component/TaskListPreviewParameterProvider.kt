@@ -29,7 +29,7 @@ import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
-import net.opatry.tasks.data.TaskListSorting
+import net.opatry.tasks.domain.TaskListSorting
 
 
 class TaskListPreviewParameterProvider : PreviewParameterProvider<TaskListUIModel> {

@@ -36,7 +36,7 @@ import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_DUE_DATE
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MANUAL
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MENU
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_TITLE
-import net.opatry.tasks.data.TaskListSorting
+import net.opatry.tasks.domain.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_menu_sort_by
 import net.opatry.tasks.resources.task_list_menu_sort_due_date

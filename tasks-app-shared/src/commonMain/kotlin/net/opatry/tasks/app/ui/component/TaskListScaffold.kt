@@ -38,7 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListScaffoldTestTag.ADD_TASK_FAB
-import net.opatry.tasks.data.TaskListSorting
+import net.opatry.tasks.domain.TaskListSorting
 
 @VisibleForTesting
 internal object TaskListScaffoldTestTag {

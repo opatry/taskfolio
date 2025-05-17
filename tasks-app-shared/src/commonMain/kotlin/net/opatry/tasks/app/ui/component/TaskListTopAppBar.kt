@@ -47,7 +47,7 @@ import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.MORE_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.SORT_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.TITLE
-import net.opatry.tasks.data.TaskListSorting
+import net.opatry.tasks.domain.TaskListSorting
 
 @VisibleForTesting
 internal object TaskListTopAppBarTestTag {

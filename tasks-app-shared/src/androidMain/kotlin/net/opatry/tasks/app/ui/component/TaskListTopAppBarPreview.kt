@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
-import net.opatry.tasks.data.TaskListSorting
+import net.opatry.tasks.domain.TaskListSorting
 
 private class SortingPreviewParameterProvider(
     override val values: Sequence<TaskListSorting> = TaskListSorting.entries.asSequence()
