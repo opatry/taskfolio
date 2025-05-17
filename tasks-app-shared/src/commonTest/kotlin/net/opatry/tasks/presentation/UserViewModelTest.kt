@@ -30,6 +30,7 @@ import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.presentation.UserViewModel
@@ -63,7 +64,7 @@ class UserViewModelTest {
     private lateinit var userInfoApi: UserInfoApi
 
     @Mock
-    private lateinit var clockNow: () -> Instant
+    private lateinit var clockNow: NowProvider
 
     private lateinit var viewModel: UserViewModel
 

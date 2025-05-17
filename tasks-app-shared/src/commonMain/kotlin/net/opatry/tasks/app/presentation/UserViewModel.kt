@@ -28,11 +28,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.TokenCache
 import net.opatry.tasks.data.UserDao
 import net.opatry.tasks.data.entity.UserEntity
@@ -63,7 +63,7 @@ class UserViewModel(
     private val userDao: UserDao,
     private val credentialsStorage: CredentialsStorage,
     private val userInfoApi: UserInfoApi,
-    private val clockNow: () -> Instant = Clock.System::now,
+    private val clockNow: NowProvider = Clock.System::now,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UserState?>(null)

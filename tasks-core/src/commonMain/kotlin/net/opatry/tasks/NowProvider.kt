@@ -20,32 +20,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry
+package net.opatry.tasks
 
-import kotlinx.datetime.Clock
-import net.opatry.tasks.NowProvider
+import kotlinx.datetime.Instant
 
-class PrintLogger(
-    private val clockNow: NowProvider = Clock.System::now,
-) : Logger {
-    private fun log(level: String, message: String) {
-        println("[${clockNow()}][$level] $message")
-    }
-
-    override fun logInfo(message: String) {
-        log("info", message)
-    }
-
-    override fun logError(message: String) {
-        log("error", message)
-    }
-
-    override fun logError(message: String, e: Exception) {
-        logError(message)
-        e.printStackTrace()
-    }
-
-    override fun logError(e: Exception) {
-        logError(e.message ?: "", e)
-    }
-}
+typealias NowProvider = () -> Instant

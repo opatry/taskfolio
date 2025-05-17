@@ -37,6 +37,7 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
@@ -246,7 +247,7 @@ class TaskRepository(
     private val taskDao: TaskDao,
     private val taskListsApi: TaskListsApi,
     private val tasksApi: TasksApi,
-    private val clockNow: () -> Instant = Clock.System::now,
+    private val clockNow: NowProvider = Clock.System::now,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTaskLists() = taskListDao.getAllTaskListsWithTasksAsFlow()
