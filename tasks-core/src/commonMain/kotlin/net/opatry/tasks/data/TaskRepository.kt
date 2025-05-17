@@ -32,6 +32,8 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
@@ -40,6 +42,10 @@ import net.opatry.google.tasks.model.TaskList
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
+import net.opatry.tasks.domain.CreateTaskListUseCase
+import net.opatry.tasks.domain.CreateTaskUseCase
+import net.opatry.tasks.domain.TaskId
+import net.opatry.tasks.domain.TaskListId
 import net.opatry.tasks.domain.TaskListSorting
 import java.math.BigInteger
 
@@ -239,19 +245,8 @@ class TaskRepository(
     }
 
     suspend fun createTaskList(title: String): Long {
-        val now = clockNow()
-        val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
-        val taskList = withContext(Dispatchers.IO) {
-            try {
-                taskListsApi.insert(TaskList(title = title, updatedDate = now))
-            } catch (_: Exception) {
-                null
-            }
-        }
-        if (taskList != null) {
-            taskListDao.upsert(taskList.asTaskListEntity(taskListId, TaskListEntity.Sorting.UserDefined))
-        }
-        return taskListId
+        // FIXME very quick & very dirty reuse use case here until moveToNewList is extracted as a use case as well
+        return CreateTaskListUseCase(taskListDao, taskListsApi, clockNow).invoke(title).value
     }
 
     suspend fun deleteTaskList(taskListId: Long) {
@@ -331,43 +326,14 @@ class TaskRepository(
     }
 
     suspend fun createTask(taskListId: Long, parentTaskId: Long? = null, title: String, notes: String = "", dueDate: Instant? = null): Long {
-        val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
-        val parentTaskEntity = parentTaskId?.let { requireNotNull(taskDao.getById(it)) { "Invalid parent task id $parentTaskId" } }
-        val now = clockNow()
-        val firstPosition = 0.toTaskPosition()
-        val currentTasks = taskDao.getTasksFromPositionOnward(taskListId, parentTaskId, firstPosition)
-            .toMutableList()
-        val taskEntity = TaskEntity(
-            parentListLocalId = taskListId,
-            parentTaskLocalId = parentTaskId,
-            title = title,
-            notes = notes,
-            lastUpdateDate = now,
-            dueDate = dueDate,
-            position = firstPosition,
-        )
-        val taskId = taskDao.insert(taskEntity)
-        if (currentTasks.isNotEmpty()) {
-            val updatedTasks = computeTaskPositions(currentTasks, newPositionStart = 1)
-            taskDao.upsertAll(updatedTasks)
-        }
-
-        // FIXME should already be available in entity, quick & dirty workaround
-        val parentTaskRemoteId = parentTaskEntity?.remoteId
-            ?: parentTaskId?.let { taskListDao.getById(it) }?.remoteId
-        if (taskListEntity.remoteId != null) {
-            val task = withContext(Dispatchers.IO) {
-                try {
-                    tasksApi.insert(taskListEntity.remoteId, taskEntity.asTask(), parentTaskRemoteId)
-                } catch (_: Exception) {
-                    null
-                }
-            }
-            if (task != null) {
-                taskDao.upsert(task.asTaskEntity(taskListId, taskId, parentTaskId))
-            }
-        }
-        return taskId
+        // FIXME very quick & very dirty reuse use case here until createSubTask is extracted as a use case as well
+        return CreateTaskUseCase(taskListDao, taskDao, tasksApi, clockNow).invoke(
+            taskListId.let(::TaskListId),
+            parentTaskId?.let(::TaskId),
+            title,
+            notes,
+            dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
+        ).value
     }
 
     suspend fun deleteTask(taskId: Long) {
