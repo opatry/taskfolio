@@ -73,11 +73,9 @@ class CreateTaskUseCase(
             dueDate = dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()),
             position = firstPosition,
         )
-        val taskId = taskDao.insert(taskEntity)
-        if (currentTasks.isNotEmpty()) {
-            val updatedTasks = computeTaskPositions(currentTasks, newPositionStart = 1)
-            taskDao.upsertAll(updatedTasks)
-        }
+        currentTasks.add(0, taskEntity)
+        val updatedTasks = computeTaskPositions(currentTasks)
+        val taskId = taskDao.upsertAll(updatedTasks).first()
 
         // FIXME should already be available in entity, quick & dirty workaround
         val parentTaskRemoteId = parentTaskEntity?.remoteId
