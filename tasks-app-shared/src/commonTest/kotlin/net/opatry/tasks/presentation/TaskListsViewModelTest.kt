@@ -66,7 +66,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private val Today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+private val Today = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
 private val LastWeek = Today - DatePeriod(days = 7)
 private val NextWeek = Today + DatePeriod(days = 7)
 val ISO8601Formatter = LocalDate.Format {
@@ -79,7 +79,7 @@ val ISO8601Formatter = LocalDate.Format {
 
 private fun buildMoments(dateStr: String = LastWeek.format(ISO8601Formatter)): Pair<LocalDate, Instant> {
     val date = LocalDate.parse(dateStr)
-    val instant = LocalDateTime.parse("${date}T00:00:00").toInstant(TimeZone.currentSystemDefault())
+    val instant = LocalDateTime.parse("${date}T00:00:00").toInstant(TimeZone.UTC)
     return date to instant
 }
 
@@ -118,10 +118,10 @@ class TaskListsViewModelTest {
         }
         advanceUntilIdle()
 
-        val pastInstant = LastWeek.atTime(0, 0, 0).toInstant(TimeZone.currentSystemDefault())
-        val futureInstant = NextWeek.atTime(0, 0, 0).toInstant(TimeZone.currentSystemDefault())
+        val pastInstant = LastWeek.atTime(0, 0, 0).toInstant(TimeZone.UTC)
+        val futureInstant = NextWeek.atTime(0, 0, 0).toInstant(TimeZone.UTC)
         val yesterday = Today - DatePeriod(days = 1)
-        val updateInstant = yesterday.atTime(0, 0, 0).toInstant(TimeZone.currentSystemDefault())
+        val updateInstant = yesterday.atTime(0, 0, 0).toInstant(TimeZone.UTC)
         taskListsFlow.emit(
             listOf(
                 TaskListDataModel(

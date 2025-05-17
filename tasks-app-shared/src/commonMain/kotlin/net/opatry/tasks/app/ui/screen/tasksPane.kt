@@ -487,7 +487,7 @@ fun TaskListDetail(
 
     if (showDatePickerDialog) {
         taskOfInterest?.let { task ->
-            val state = rememberDatePickerState(task.dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())?.toEpochMilliseconds())
+            val state = rememberDatePickerState(task.dueDate?.atStartOfDayIn(TimeZone.UTC)?.toEpochMilliseconds())
             DatePickerDialog(
                 onDismissRequest = {
                     taskOfInterest = null
@@ -507,7 +507,7 @@ fun TaskListDetail(
                         showDatePickerDialog = false
                         val newDate = state.selectedDateMillis
                             ?.let(Instant::fromEpochMilliseconds)
-                            ?.toLocalDateTime(TimeZone.currentSystemDefault())
+                            ?.toLocalDateTime(TimeZone.UTC)
                             ?.date
                         viewModel.updateTaskDueDate(task.id, dueDate = newDate)
                     }) {

@@ -113,7 +113,7 @@ internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (th
     is DateRange.Later -> when {
         numberOfDays == 1 -> stringResource(Res.string.task_due_date_label_tomorrow)
         // TODO localize names & format
-        date.year == Clock.System.todayIn(TimeZone.currentSystemDefault()).year -> LocalDate.Format {
+        date.year == Clock.System.todayIn(TimeZone.UTC).year -> LocalDate.Format {
             // FIXME doesn't work with more than 2 dd or MM
             //  byUnicodePattern("ddd', 'MMM' 'yyyy")
             dayOfWeek(DayOfWeekNames.ENGLISH_ABBREVIATED) // TODO translation
