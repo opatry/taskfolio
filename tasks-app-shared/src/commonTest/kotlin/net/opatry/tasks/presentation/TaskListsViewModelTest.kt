@@ -51,7 +51,11 @@ import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import net.opatry.tasks.domain.CreateTaskListUseCase
+import net.opatry.tasks.domain.CreateTaskUseCase
+import net.opatry.tasks.domain.TaskEditor
 import net.opatry.tasks.domain.TaskId
+import net.opatry.tasks.domain.TaskListEditor
 import net.opatry.tasks.domain.TaskListId
 import net.opatry.tasks.domain.TaskListSorting
 import net.opatry.test.MainDispatcherRule
@@ -95,8 +99,16 @@ class TaskListsViewModelTest {
     private lateinit var taskRepository: TaskRepository
 
     @Mock
+    private lateinit var createTaskListUseCase: CreateTaskListUseCase
+
+    @Mock
+    private lateinit var createTaskUseCase: CreateTaskUseCase
+
+    @Mock
     private lateinit var logger: Logger
 
+    private lateinit var taskListEditor: TaskListEditor
+    private lateinit var taskEditor: TaskEditor
     private lateinit var viewModel: TaskListsViewModel
 
     @BeforeTest
@@ -104,7 +116,9 @@ class TaskListsViewModelTest {
         `when`(taskRepository.getTaskLists()).thenReturn(taskListsFlow)
 
         // ViewModel must be created **AFTER** `taskRepository.getTaskLists()` is mocked
-        viewModel = TaskListsViewModel(logger, taskRepository)
+        taskListEditor = TaskListEditor(createTaskListUseCase)
+        taskEditor = TaskEditor(createTaskUseCase)
+        viewModel = TaskListsViewModel(logger, taskRepository, taskListEditor, taskEditor)
     }
 
     @Test
@@ -231,13 +245,13 @@ class TaskListsViewModelTest {
         viewModel.createTaskList("tasks")
         advanceUntilIdle()
 
-        then(taskRepository).should().createTaskList("tasks")
+        then(taskListEditor.create).should().invoke("tasks")
     }
 
     @Test
     fun `createTaskList failure when calling repository should log error`() = runTest {
         val e = mock(RuntimeException::class.java)
-        `when`(taskRepository.createTaskList("tasks"))
+        `when`(taskListEditor.create("tasks"))
             .thenThrow(e)
 
         val events = mutableListOf<TaskEvent>()
@@ -262,13 +276,14 @@ class TaskListsViewModelTest {
         viewModel.createTask(taskListId, "task")
         advanceUntilIdle()
 
-        then(taskRepository).should().createTask(100, null, "task")
+        then(taskEditor.create).should().invoke(taskListId, null, "task")
     }
 
     @Test
     fun `createTask failure when calling repository should log error`() = runTest {
+        val taskListId = TaskListId(100)
         val e = mock(RuntimeException::class.java)
-        `when`(taskRepository.createTask(100, null, "task"))
+        `when`(taskEditor.create(taskListId, null, "task"))
             .thenThrow(e)
 
         val events = mutableListOf<TaskEvent>()
@@ -276,7 +291,7 @@ class TaskListsViewModelTest {
             viewModel.eventFlow.toList(events)
         }
 
-        viewModel.createTask(TaskListId(100), "task")
+        viewModel.createTask(taskListId, "task")
         advanceUntilIdle()
 
         then(logger).should().logError("Error while creating task (TaskListId(value=100))", e)
@@ -288,12 +303,13 @@ class TaskListsViewModelTest {
 
     @Test
     fun `createTask with extra parameters should update repository accordingly`() = runTest {
-        val (date, instant) = buildMoments()
+        val taskListId = TaskListId(100)
+        val date = Today
 
-        viewModel.createTask(TaskListId(100), "task", "notes", date)
+        viewModel.createTask(taskListId, "task", "notes", date)
         advanceUntilIdle()
 
-        then(taskRepository).should().createTask(100, null, "task", "notes", instant)
+        then(taskEditor.create).should().invoke(taskListId, null, "task", "notes", date)
     }
 
     @Test
