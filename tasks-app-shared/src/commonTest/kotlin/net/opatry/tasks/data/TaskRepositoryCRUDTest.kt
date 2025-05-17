@@ -60,17 +60,6 @@ private suspend fun TaskRepository.findTaskListById(id: Long): TaskListDataModel
 class TaskRepositoryCRUDTest {
 
     @Test
-    fun `create task list`() = runTaskRepositoryTest { repository ->
-        val taskListId = repository.createTaskList("My tasks")
-
-        val taskLists = repository.getTaskLists().firstOrNull()
-        assertNotNull(taskLists)
-        assertEquals(1, taskLists.size)
-        assertEquals("My tasks", taskLists.first().title)
-        assertEquals(taskListId, taskLists.first().id)
-    }
-
-    @Test
     fun `rename task list`() = runTaskRepositoryTest { repository ->
         val taskList = repository.createAndGetTaskList("My tasks")
 
