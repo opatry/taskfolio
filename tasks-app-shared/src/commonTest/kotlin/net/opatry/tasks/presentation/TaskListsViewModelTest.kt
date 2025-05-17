@@ -45,14 +45,14 @@ import kotlinx.datetime.toLocalDateTime
 import net.opatry.Logger
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.model.DateRange
-import net.opatry.tasks.app.presentation.model.TaskId
-import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import net.opatry.tasks.domain.TaskId
+import net.opatry.tasks.domain.TaskListId
 import net.opatry.tasks.domain.TaskListSorting
 import net.opatry.test.MainDispatcherRule
 import org.junit.Rule

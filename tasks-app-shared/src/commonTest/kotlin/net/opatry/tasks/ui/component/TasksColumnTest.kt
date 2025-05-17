@@ -32,7 +32,6 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ROW
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_DELETE_BUTTON
@@ -45,6 +44,7 @@ import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_S
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
+import net.opatry.tasks.domain.TaskId
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_count
 import org.jetbrains.compose.resources.stringResource

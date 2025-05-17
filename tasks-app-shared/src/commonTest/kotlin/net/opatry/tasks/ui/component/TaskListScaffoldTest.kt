@@ -27,12 +27,12 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
-import net.opatry.tasks.app.presentation.model.TaskId
-import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TaskListScaffold
 import net.opatry.tasks.app.ui.component.TaskListScaffoldTestTag.ADD_TASK_FAB
+import net.opatry.tasks.domain.TaskId
+import net.opatry.tasks.domain.TaskListId
 import kotlin.test.Test
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.MORE_MENU_ICON as TASK_LIST_MORE_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.SORT_MENU_ICON as TASK_LIST_SORT_MENU_ICON

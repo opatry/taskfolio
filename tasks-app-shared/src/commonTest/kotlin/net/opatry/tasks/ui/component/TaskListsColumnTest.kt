@@ -34,10 +34,10 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.screen.TaskListsColumn
 import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag
+import net.opatry.tasks.domain.TaskListId
 import org.junit.Test
 import kotlin.test.assertEquals
 
