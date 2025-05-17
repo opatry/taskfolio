@@ -56,10 +56,21 @@ import org.jetbrains.annotations.VisibleForTesting
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+private inline fun <reified T1, reified T2> List<*>.partitionByType(): Pair<List<T1>, List<T2>> {
+    val first = mutableListOf<T1>()
+    val second = mutableListOf<T2>()
+    for (item in this) {
+        when (item) {
+            is T1 -> first.add(item)
+            is T2 -> second.add(item)
+        }
+    }
+    return first.toList() to second.toList()
+}
+
 private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
     val tasksUIModels = tasks.map(TaskDataModel::asTaskUIModel)
-    val completedTasks = tasksUIModels.filterIsInstance<TaskUIModel.Done>()
-    val remainingTasks = tasksUIModels.filterIsInstance<TaskUIModel.Todo>()
+    val (completedTasks, remainingTasks) = tasksUIModels.partitionByType<TaskUIModel.Done, TaskUIModel.Todo>()
 
     val taskGroups = when (sorting) {
         // no grouping
