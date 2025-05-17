@@ -38,12 +38,16 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
+import net.opatry.tasks.app.ui.component.DueDateUpdate
 import net.opatry.tasks.app.ui.component.RemainingTaskRow
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_DUE_DATE_CHIP
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ICON
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_MENU_ICON
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_NOTES
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.MENU_ICON
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.NOTES
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_TOMORROW_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_TASK_DUE_DATE_TODAY_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.TOGGLE_ICON
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.ADD_SUBTASK
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.DELETE
@@ -78,10 +82,10 @@ class RemainingTaskRowTest {
         onNodeWithText("My Task")
             .assertIsDisplayed()
 
-        onNodeWithTag(REMAINING_TASK_NOTES)
+        onNodeWithTag(NOTES)
             .assertDoesNotExist()
 
-        onNodeWithTag(REMAINING_TASK_DUE_DATE_CHIP)
+        onNodeWithTag(DUE_DATE_CHIP)
             .assertDoesNotExist()
     }
 
@@ -103,12 +107,12 @@ class RemainingTaskRowTest {
             .assertIsDisplayed()
 
         // FIXME why useUnmergedTree is needed?
-        onNodeWithTag(REMAINING_TASK_NOTES, useUnmergedTree = true)
+        onNodeWithTag(NOTES, useUnmergedTree = true)
             .assertIsDisplayed()
             .assertTextEquals("My notes")
 
         // FIXME why useUnmergedTree is needed?
-        onNodeWithTag(REMAINING_TASK_DUE_DATE_CHIP, useUnmergedTree = true)
+        onNodeWithTag(DUE_DATE_CHIP, useUnmergedTree = true)
             .assertIsDisplayed()
             .onChildren()
             .assertCountEquals(1)
@@ -117,7 +121,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun `when clicking task REMAINING_TASK_ICON then should trigger ToggleCompletion action`() = runComposeUiTest {
+    fun `when clicking task TOGGLE_ICON then should trigger ToggleCompletion action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
@@ -127,7 +131,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_ICON)
+        onNodeWithTag(TOGGLE_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -135,7 +139,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun `when clicking REMAINING_TASK_MENU_ICON then should display task menu`() = runComposeUiTest {
+    fun `when clicking MENU_ICON then should display task menu`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         setContent {
@@ -145,7 +149,7 @@ class RemainingTaskRowTest {
         onNodeWithTag(TASK_MENU)
             .assertDoesNotExist()
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -164,14 +168,34 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_ROW)
+        onNodeWithTag(ROW)
             .performClick()
 
         assertEquals(TaskAction.Edit(task), action, "Click on row should trigger Edit action")
     }
 
     @Test
-    fun `when clicking REMAINING_TASK_DUE_DATE_CHIP then should trigger UpdateDueDate action`() = runComposeUiTest {
+    fun `when task with due date then should have due date chip`() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 1)
+        val task = taskList.allRemainingTasks.first()
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {}
+        }
+
+        onNodeWithTag(DUE_DATE_CHIP)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+
+        onNodeWithTag(SET_TASK_DUE_DATE_TODAY_CHIP)
+            .assertDoesNotExist()
+        onNodeWithTag(SET_DUE_DATE_TOMORROW_CHIP)
+            .assertDoesNotExist()
+        onNodeWithTag(SET_DUE_DATE_CHIP)
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun `when clicking DUE_DATE_CHIP then should trigger UpdateDueDate with Pick action`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         var action: TaskAction? = null
@@ -181,10 +205,91 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_DUE_DATE_CHIP)
+        onNodeWithTag(DUE_DATE_CHIP)
+            .assertIsDisplayed()
             .performClick()
 
-        assertEquals(TaskAction.UpdateDueDate(task), action, "UpdateDueDate action should have been triggered")
+        assertEquals(TaskAction.UpdateDueDate(task, DueDateUpdate.Pick), action, "UpdateDueDate Pick action should have been triggered")
+    }
+
+    @Test
+    fun `when task without due date then should have edit shortcut chips`() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 1)
+        val task = taskList.allRemainingTasks.first()
+            .copy(dueDate = null)
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {}
+        }
+
+        onNodeWithTag(DUE_DATE_CHIP)
+            .assertDoesNotExist()
+
+        onNodeWithTag(SET_TASK_DUE_DATE_TODAY_CHIP)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+        onNodeWithTag(SET_DUE_DATE_TOMORROW_CHIP)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+        onNodeWithTag(SET_DUE_DATE_CHIP)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+    }
+
+    @Test
+    fun `when clicking SET_TASK_DUE_DATE_TODAY_CHIP then should trigger UpdateDueDate with Today action`() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 1)
+        val task = taskList.allRemainingTasks.first()
+            .copy(dueDate = null)
+        var action: TaskAction? = null
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {
+                action = it
+            }
+        }
+
+        onNodeWithTag(SET_TASK_DUE_DATE_TODAY_CHIP)
+            .assertIsDisplayed()
+            .performClick()
+
+        assertEquals(TaskAction.UpdateDueDate(task, DueDateUpdate.Today), action, "UpdateDueDate Today action should have been triggered")
+    }
+
+    @Test
+    fun `when clicking SET_DUE_DATE_TOMORROW_CHIP then should trigger UpdateDueDate with Tomorrow action`() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 1)
+        val task = taskList.allRemainingTasks.first()
+            .copy(dueDate = null)
+        var action: TaskAction? = null
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {
+                action = it
+            }
+        }
+
+        onNodeWithTag(SET_DUE_DATE_TOMORROW_CHIP)
+            .assertIsDisplayed()
+            .performClick()
+
+        assertEquals(TaskAction.UpdateDueDate(task, DueDateUpdate.Tomorrow), action, "UpdateDueDate Tomorrow action should have been triggered")
+    }
+
+    @Test
+    fun `when clicking SET_DUE_DATE_CHIP then should trigger UpdateDueDate with Pick action`() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 1)
+        val task = taskList.allRemainingTasks.first()
+            .copy(dueDate = null)
+        var action: TaskAction? = null
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {
+                action = it
+            }
+        }
+
+        onNodeWithTag(SET_DUE_DATE_CHIP)
+            .assertIsDisplayed()
+            .performClick()
+
+        assertEquals(TaskAction.UpdateDueDate(task, DueDateUpdate.Pick), action, "UpdateDueDate Pick action should have been triggered")
     }
 
     @Test
@@ -197,7 +302,7 @@ class RemainingTaskRowTest {
             RemainingTaskRow(listOf(taskList), task) {}
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -218,7 +323,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -240,7 +345,7 @@ class RemainingTaskRowTest {
             RemainingTaskRow(listOf(taskList), task) {}
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -261,7 +366,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -283,7 +388,7 @@ class RemainingTaskRowTest {
             RemainingTaskRow(listOf(taskList), task) {}
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -305,7 +410,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -327,7 +432,7 @@ class RemainingTaskRowTest {
             RemainingTaskRow(listOf(taskList), task) {}
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -349,7 +454,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -372,7 +477,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -396,7 +501,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 
@@ -426,7 +531,7 @@ class RemainingTaskRowTest {
             }
         }
 
-        onNodeWithTag(REMAINING_TASK_MENU_ICON)
+        onNodeWithTag(MENU_ICON)
             .assertIsDisplayed()
             .performClick()
 

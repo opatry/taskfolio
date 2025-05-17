@@ -137,6 +137,7 @@ fun TasksColumn(
                             showDate = when {
                                 taskList.sorting == TaskListSorting.Manual -> true
                                 taskList.sorting == TaskListSorting.Title -> true
+                                taskList.sorting == TaskListSorting.DueDate && dateRange is DateRange.None -> true
                                 dateRange is DateRange.Overdue -> true
                                 else -> false
                             },

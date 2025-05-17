@@ -22,15 +22,19 @@
 
 package net.opatry.tasks.app.ui.component
 
+import CalendarPlus
 import Circle
 import EllipsisVertical
 import LucideIcons
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -56,11 +60,14 @@ import kotlinx.datetime.todayIn
 import net.opatry.tasks.app.presentation.model.DateRange
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_DUE_DATE_CHIP
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ICON
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_MENU_ICON
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_NOTES
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.MENU_ICON
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.NOTES
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_TOMORROW_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_TASK_DUE_DATE_TODAY_CHIP
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.TOGGLE_ICON
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_days_ago
 import net.opatry.tasks.resources.task_due_date_label_no_date
@@ -69,6 +76,7 @@ import net.opatry.tasks.resources.task_due_date_label_today
 import net.opatry.tasks.resources.task_due_date_label_tomorrow
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
 import net.opatry.tasks.resources.task_due_date_label_yesterday
+import net.opatry.tasks.resources.task_due_date_set
 import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
 import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.pluralStringResource
@@ -77,11 +85,14 @@ import kotlin.math.abs
 
 @VisibleForTesting
 internal object RemainingTaskRowTestTag {
-    const val REMAINING_TASK_ROW = "REMAINING_TASK_ROW"
-    const val REMAINING_TASK_ICON = "REMAINING_TASK_ICON"
-    const val REMAINING_TASK_NOTES = "REMAINING_TASK_NOTES"
-    const val REMAINING_TASK_DUE_DATE_CHIP = "REMAINING_TASK_DUE_DATE_CHIP"
-    const val REMAINING_TASK_MENU_ICON = "REMAINING_TASK_MENU_ICON"
+    const val ROW = "REMAINING_TASK_ROW"
+    const val TOGGLE_ICON = "REMAINING_TASK_TOGGLE_ICON"
+    const val MENU_ICON = "REMAINING_TASK_MENU_ICON"
+    const val NOTES = "REMAINING_TASK_NOTES"
+    const val DUE_DATE_CHIP = "REMAINING_TASK_DUE_DATE_CHIP"
+    const val SET_TASK_DUE_DATE_TODAY_CHIP = "REMAINING_TASK_SET_TASK_DUE_DATE_TODAY_CHIP"
+    const val SET_DUE_DATE_TOMORROW_CHIP = "REMAINING_TASK_SET_DUE_DATE_TOMORROW_CHIP"
+    const val SET_DUE_DATE_CHIP = "REMAINING_TASK_SET_DUE_DATE_CHIP"
 }
 
 @VisibleForTesting
@@ -151,13 +162,13 @@ fun RemainingTaskRow(
 
     Row(
         Modifier
-            .testTag(REMAINING_TASK_ROW)
+            .testTag(ROW)
             .clickable(onClick = { onAction(TaskAction.Edit(task)) })
     ) {
         IconButton(
             onClick = { onAction(TaskAction.ToggleCompletion(task)) },
             modifier = Modifier
-                .testTag(REMAINING_TASK_ICON)
+                .testTag(TOGGLE_ICON)
                 .padding(start = 36.dp * task.indent)
         ) {
             Icon(LucideIcons.Circle, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
@@ -177,28 +188,66 @@ fun RemainingTaskRow(
             if (task.notes.isNotBlank()) {
                 Text(
                     task.notes,
-                    modifier = Modifier.testTag(REMAINING_TASK_NOTES),
+                    modifier = Modifier.testTag(NOTES),
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
             }
             if (showDate && task.dueDate != null) {
-                AssistChip(
-                    onClick = { onAction(TaskAction.UpdateDueDate(task)) },
-                    label = {
-                        Text(
-                            task.dateRange.toLabel(),
-                            color = task.dateRange.toColor()
-                        )
-                    },
-                    modifier = Modifier.testTag(REMAINING_TASK_DUE_DATE_CHIP),
-                    shape = MaterialTheme.shapes.large,
-                )
+                    AssistChip(
+                        onClick = { onAction(TaskAction.UpdateDueDate(task, DueDateUpdate.Pick)) },
+                        label = {
+                            Text(task.dateRange.toLabel())
+                        },
+                        modifier = Modifier.testTag(DUE_DATE_CHIP),
+                        shape = MaterialTheme.shapes.large,
+                        colors = AssistChipDefaults.assistChipColors(
+                            labelColor = task.dateRange.toColor(),
+                        ),
+                    )
+            } else if (showDate) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val colors = AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    )
+                    AssistChip(
+                        onClick = { onAction(TaskAction.UpdateDueDate(task, DueDateUpdate.Today)) },
+                        label = {
+                            Text(stringResource(Res.string.task_due_date_label_today))
+                        },
+                        modifier = Modifier.testTag(SET_TASK_DUE_DATE_TODAY_CHIP),
+                        shape = MaterialTheme.shapes.large,
+                        colors = colors,
+                    )
+                    AssistChip(
+                        onClick = { onAction(TaskAction.UpdateDueDate(task, DueDateUpdate.Tomorrow)) },
+                        label = {
+                            Text(stringResource(Res.string.task_due_date_label_tomorrow))
+                        },
+                        modifier = Modifier.testTag(SET_DUE_DATE_TOMORROW_CHIP),
+                        shape = MaterialTheme.shapes.large,
+                        colors = colors,
+                    )
+                    AssistChip(
+                        onClick = { onAction(TaskAction.UpdateDueDate(task, DueDateUpdate.Pick)) },
+                        label = {
+                            Icon(
+                                LucideIcons.CalendarPlus,
+                                stringResource(Res.string.task_due_date_set),
+                                Modifier.size(16.dp),
+                            )
+                        },
+                        modifier = Modifier.testTag(SET_DUE_DATE_CHIP),
+                        shape = MaterialTheme.shapes.large,
+                        colors = colors,
+                    )
+                }
             }
         }
         Box {
-            IconButton(onClick = { showContextualMenu = true }, Modifier.testTag(REMAINING_TASK_MENU_ICON)) {
+            IconButton(onClick = { showContextualMenu = true }, Modifier.testTag(MENU_ICON)) {
                 Icon(LucideIcons.EllipsisVertical, stringResource(Res.string.task_list_pane_task_options_icon_content_desc))
             }
             TaskMenu(taskLists, task, showContextualMenu) { action ->

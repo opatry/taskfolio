@@ -70,10 +70,16 @@ internal object TaskMenuTestTag {
     const val DELETE = "DELETE"
 }
 
+enum class DueDateUpdate {
+    Pick,
+    Today,
+    Tomorrow,
+}
+
 sealed class TaskAction {
     data class ToggleCompletion(val task: TaskUIModel) : TaskAction()
     data class Edit(val task: TaskUIModel) : TaskAction()
-    data class UpdateDueDate(val task: TaskUIModel) : TaskAction()
+    data class UpdateDueDate(val task: TaskUIModel, val update: DueDateUpdate) : TaskAction()
     data class AddSubTask(val task: TaskUIModel.Todo) : TaskAction()
     data class MoveToTop(val task: TaskUIModel.Todo) : TaskAction()
     data class Unindent(val task: TaskUIModel.Todo) : TaskAction()

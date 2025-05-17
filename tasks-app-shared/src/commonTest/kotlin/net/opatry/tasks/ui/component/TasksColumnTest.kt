@@ -39,7 +39,6 @@ import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_DELETE_B
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_REPAIR_BUTTON
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASKS_EMPTY_STATE
-import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.REMAINING_TASK_ROW
 import net.opatry.tasks.app.ui.component.TasksColumn
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
@@ -50,6 +49,7 @@ import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_co
 import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertTrue
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW as REMAINING_TASK_ROW
 
 @Suppress("TestFunctionName")
 @OptIn(ExperimentalTestApi::class)
