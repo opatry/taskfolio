@@ -22,30 +22,37 @@
 
 package net.opatry.tasks.app.di
 
+import kotlinx.datetime.Clock
 import net.opatry.google.profile.HttpUserInfoApi
 import net.opatry.google.profile.UserInfoApi
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.TaskRepository
+import net.opatry.tasks.domain.CreateTaskListUseCase
+import net.opatry.tasks.domain.CreateTaskUseCase
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-
 val tasksAppModule = module {
-    single {
-        TaskRepository(get(), get(), get(), get())
-    }
+    single<NowProvider> { Clock.System::now }
+
+    singleOf(::TaskRepository)
+
+    singleOf(::CreateTaskListUseCase)
+
+    singleOf(::CreateTaskUseCase)
 
     viewModel {
-        TaskListsViewModel(get(), get())
+        TaskListsViewModel(get(), get(), get(), get())
     }
 
     single<UserInfoApi> {
         HttpUserInfoApi(get(named(HttpClientName.Tasks)))
     }
 
-    viewModel {
-        UserViewModel(get(), get(), get())
-    }
+    viewModelOf(::UserViewModel)
 }

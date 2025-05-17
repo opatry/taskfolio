@@ -40,98 +40,9 @@ import net.opatry.google.tasks.model.TaskList
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
-import net.opatry.tasks.data.model.TaskDataModel
-import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.domain.TaskListSorting
 import java.math.BigInteger
 
-enum class TaskListSorting {
-    Manual,
-    DueDate,
-    Title,
-}
-
-private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.Sorting): TaskListEntity {
-    return TaskListEntity(
-        id = localId ?: 0,
-        remoteId = id,
-        etag = etag,
-        title = title,
-        lastUpdateDate = updatedDate,
-        sorting = sorting,
-    )
-}
-
-private fun Task.asTaskEntity(parentLocalId: Long, localId: Long?, parentTaskLocalId: Long?): TaskEntity {
-    return TaskEntity(
-        id = localId ?: 0,
-        remoteId = id,
-        parentListLocalId = parentLocalId,
-        parentTaskLocalId = parentTaskLocalId,
-        parentTaskRemoteId = parent,
-        etag = etag,
-        title = title,
-        notes = notes ?: "",
-        dueDate = dueDate,
-        lastUpdateDate = updatedDate,
-        completionDate = completedDate,
-        isCompleted = isCompleted,
-        position = position,
-    )
-}
-
-private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskListDataModel {
-    val (sorting, sortedTasks) = when (sorting) {
-        TaskListEntity.Sorting.UserDefined -> TaskListSorting.Manual to sortTasksManualOrdering(tasks).map { (task, indent) ->
-            task.asTaskDataModel(indent)
-        }
-
-        TaskListEntity.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
-            task.asTaskDataModel(0)
-        }
-
-        TaskListEntity.Sorting.Title -> TaskListSorting.Title to sortTasksTitleOrdering(tasks).map { task ->
-            task.asTaskDataModel(0)
-        }
-    }
-    return TaskListDataModel(
-        id = id,
-        title = title,
-        lastUpdate = lastUpdateDate,
-        tasks = sortedTasks,
-        sorting = sorting
-    )
-}
-
-private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
-    return TaskDataModel(
-        id = id,
-        title = title,
-        notes = notes,
-        isCompleted = isCompleted,
-        dueDate = dueDate,
-        lastUpdateDate = lastUpdateDate,
-        completionDate = completionDate,
-        position = position,
-        indent = indent,
-    )
-}
-
-private fun TaskEntity.asTask(): Task {
-    return Task(
-        id = remoteId ?: "",
-        title = title,
-        notes = notes,
-        dueDate = dueDate,
-        updatedDate = lastUpdateDate,
-        status = if (isCompleted) Task.Status.Completed else Task.Status.NeedsAction,
-        completedDate = completionDate,
-        // doc says it's a read only field, but status is not hidden when syncing local only completed tasks
-        // forcing the hidden status works and makes everything more consistent (position following 099999... pattern, hidden status)
-        isHidden = isCompleted,
-        position = position,
-    )
-}
 
 fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
     // Step 1: Create a map of tasks by their IDs for easy lookup
