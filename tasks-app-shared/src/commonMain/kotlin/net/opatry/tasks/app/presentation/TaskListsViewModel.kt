@@ -49,9 +49,9 @@ import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.toTaskPosition
-import net.opatry.tasks.domain.CreateTaskListUseCase
-import net.opatry.tasks.domain.CreateTaskUseCase
+import net.opatry.tasks.domain.TaskEditor
 import net.opatry.tasks.domain.TaskId
+import net.opatry.tasks.domain.TaskListEditor
 import net.opatry.tasks.domain.TaskListId
 import net.opatry.tasks.domain.TaskListSorting
 import org.jetbrains.annotations.VisibleForTesting
@@ -130,10 +130,8 @@ internal fun TaskDataModel.asTaskUIModel(): TaskUIModel {
 class TaskListsViewModel(
     private val logger: Logger,
     private val taskRepository: TaskRepository,
-    // FIXME naming
-    //  Maybe extract a facade to group them all which would declutter the ctor and solve the name conflict issue
-    private val _createTaskList: CreateTaskListUseCase,
-    private val _createTask: CreateTaskUseCase,
+    private val taskListEditor: TaskListEditor,
+    private val taskEditor: TaskEditor,
     private val autoRefreshPeriod: Duration = 10.seconds
 ) : ViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -170,7 +168,7 @@ class TaskListsViewModel(
     fun createTaskList(title: String) {
         viewModelScope.launch {
             try {
-                _createTaskList(title)
+                taskListEditor.create(title)
             } catch (e: Exception) {
                 logger.logError("Error while creating task list", e)
                 _eventFlow.emit(TaskEvent.Error.TaskList.Create)
@@ -229,7 +227,7 @@ class TaskListsViewModel(
     fun createTask(taskListId: TaskListId, title: String, notes: String = "", dueDate: LocalDate? = null) {
         viewModelScope.launch {
             try {
-                _createTask(taskListId, null, title, notes, dueDate)
+                taskEditor.create(taskListId, null, title, notes, dueDate)
             } catch (e: Exception) {
                 logger.logError("Error while creating task ($taskListId)", e)
                 _eventFlow.emit(TaskEvent.Error.Task.Create)

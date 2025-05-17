@@ -31,6 +31,8 @@ import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.domain.CreateTaskListUseCase
 import net.opatry.tasks.domain.CreateTaskUseCase
+import net.opatry.tasks.domain.TaskEditor
+import net.opatry.tasks.domain.TaskListEditor
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -43,8 +45,9 @@ val tasksAppModule = module {
     singleOf(::TaskRepository)
 
     singleOf(::CreateTaskListUseCase)
-
     singleOf(::CreateTaskUseCase)
+    singleOf(::TaskListEditor)
+    singleOf(::TaskEditor)
 
     viewModel {
         TaskListsViewModel(get(), get(), get(), get())
