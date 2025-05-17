@@ -47,7 +47,13 @@ class CreateTaskUseCase(
     private val tasksApi: TasksApi,
     private val clockNow: NowProvider = Clock.System::now,
 ) {
-    suspend operator fun invoke(taskListId: TaskListId, parentTaskId: TaskId?, title: String, notes: String, dueDate: LocalDate?): TaskId {
+    suspend operator fun invoke(
+        taskListId: TaskListId,
+        parentTaskId: TaskId?,
+        title: String,
+        notes: String = "",
+        dueDate: LocalDate? = null
+    ): TaskId {
         return delegate(taskListId.value, parentTaskId?.value, title, notes, dueDate).let(::TaskId)
     }
 
