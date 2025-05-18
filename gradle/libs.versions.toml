@@ -21,6 +21,7 @@ koin = "4.0.4"
 coil = "3.1.0"
 about-libraries = "12.1.2"
 mockito = "5.17.0"
+kover = "0.9.1"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -122,3 +123,4 @@ androidx-room = { id = "androidx.room", version.ref = "room" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.3" }
 about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

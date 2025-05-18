@@ -22,8 +22,8 @@
 
 package net.opatry.tasks.app.di
 
-import net.opatry.Logger
-import net.opatry.PrintLogger
+import net.opatry.logging.Logger
+import net.opatry.logging.PrintLogger
 import org.koin.dsl.module
 
 val loggingModule = module {

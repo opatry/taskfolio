@@ -50,7 +50,7 @@ import net.opatry.tasks.TokenCache
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.time.Duration.Companion.seconds
-import net.opatry.Logger as TaskfolioLogger
+import net.opatry.logging.Logger as TaskfolioLogger
 
 
 enum class HttpClientName {
