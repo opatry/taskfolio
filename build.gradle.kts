@@ -35,4 +35,49 @@ plugins {
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.about.libraries) apply false
+    alias(libs.plugins.kover)
+}
+
+dependencies {
+    kover(projects.tasksAppShared)
+    kover(projects.tasksCore)
+    kover(projects.google.tasks)
+}
+
+kover {
+    currentProject {
+        createVariant("custom") {}
+    }
+
+    reports {
+        filters {
+            excludes {
+                androidGeneratedClasses()
+                classes(
+                    "net.opatry.logging.*",
+                    "net.opatry.google.tasks.model.*",
+                    "net.opatry.tasks.TokenCache*",
+                    "net.opatry.tasks.FileCredentialsStorage*",
+                    "net.opatry.tasks.app.auth.*",
+                    "net.opatry.tasks.app.di.*",
+                    "net.opatry.tasks.app.presentation.model.*",
+                    "net.opatry.tasks.app.ui.*",
+                    "net.opatry.tasks.app.ui.icon.*",
+                    "net.opatry.tasks.app.ui.screen.*",
+                    "net.opatry.tasks.app.ui.theme.*",
+                    "net.opatry.tasks.app.ui.tooling.*",
+                    "net.opatry.tasks.data.entity.*",
+                    "net.opatry.tasks.data.model.*",
+                    "net.opatry.tasks.data.TasksAppDatabase*",
+                    "net.opatry.tasks.resources.*",
+                )
+            }
+        }
+
+        verify.rule {
+            bound {
+                minValue = 85
+            }
+        }
+    }
 }

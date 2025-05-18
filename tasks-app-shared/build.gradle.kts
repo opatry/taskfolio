@@ -34,6 +34,7 @@ plugins {
     alias(libs.plugins.compose.hot.reload)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kover)
 }
 
 compose.resources {
@@ -157,6 +158,15 @@ android {
             all {
                 it.exclude("**/ui/**", "**/data/**")
             }
+        }
+    }
+}
+
+kover {
+    currentProject {
+        createVariant("custom") {
+            add("jvm")
+            addWithDependencies("debug")
         }
     }
 }

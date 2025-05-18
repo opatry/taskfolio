@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,7 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -45,6 +46,14 @@ kotlin {
 
         commonTest.dependencies {
             implementation(kotlin("test"))
+        }
+    }
+}
+
+kover {
+    currentProject {
+        createVariant("custom") {
+            add("jvm")
         }
     }
 }
