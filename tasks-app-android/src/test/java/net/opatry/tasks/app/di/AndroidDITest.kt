@@ -24,10 +24,10 @@ package net.opatry.tasks.app.di
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
-import net.opatry.Logger
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
+import net.opatry.logging.Logger
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.app.presentation.TaskListsViewModel

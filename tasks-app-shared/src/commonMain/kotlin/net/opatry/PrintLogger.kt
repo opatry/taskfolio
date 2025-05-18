@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry
+package net.opatry.logging
 
 import net.opatry.tasks.NowProvider
 
