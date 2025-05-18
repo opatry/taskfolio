@@ -48,13 +48,13 @@ private class RemainingTaskRowPreviewDataProvider :
         TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date",
-            dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+            dueDate = Clock.System.todayIn(TimeZone.UTC),
         ),
         TaskUIModel.Todo(
             id = TaskId(0),
             title = "With notes",
             notes = "Some notes\nthat are long enough\nto be wrapped on multiple lines",
-            dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+            dueDate = Clock.System.todayIn(TimeZone.UTC),
         ),
         TaskUIModel.Todo(
             id = TaskId(0),
@@ -63,27 +63,27 @@ private class RemainingTaskRowPreviewDataProvider :
         TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date in the past",
-            dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(3, DateTimeUnit.MONTH),
+            dueDate = Clock.System.todayIn(TimeZone.UTC).minus(3, DateTimeUnit.MONTH),
         ),
         TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date today",
-            dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+            dueDate = Clock.System.todayIn(TimeZone.UTC),
         ),
         TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date yesterday",
-            dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).minus(1, DateTimeUnit.DAY),
+            dueDate = Clock.System.todayIn(TimeZone.UTC).minus(1, DateTimeUnit.DAY),
         ),
         TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date tomorrow",
-            dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(1, DateTimeUnit.DAY),
+            dueDate = Clock.System.todayIn(TimeZone.UTC).plus(1, DateTimeUnit.DAY),
         ),
         TaskUIModel.Todo(
             id = TaskId(0),
             title = "With due date in distant future",
-            dueDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(1, DateTimeUnit.MONTH),
+            dueDate = Clock.System.todayIn(TimeZone.UTC).plus(1, DateTimeUnit.MONTH),
         ),
     )
 }

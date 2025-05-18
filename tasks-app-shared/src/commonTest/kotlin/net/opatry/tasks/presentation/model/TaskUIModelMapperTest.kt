@@ -40,7 +40,7 @@ import kotlin.test.assertTrue
 
 private fun buildMoments(dateStr: String = "2024-10-16"): Pair<LocalDate, Instant> {
     val date = LocalDate.parse(dateStr)
-    val instant = LocalDateTime.parse("${date}T00:00:00").toInstant(TimeZone.currentSystemDefault())
+    val instant = LocalDateTime.parse("${date}T00:00:00").toInstant(TimeZone.UTC)
     return date to instant
 }
 

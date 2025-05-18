@@ -33,7 +33,7 @@ import net.opatry.tasks.app.presentation.model.TaskUIModel
 
 
 val today: LocalDate
-    get() = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    get() = Clock.System.todayIn(TimeZone.UTC)
 
 private var TASK_LIST_ID = 0L
 fun createTaskList(

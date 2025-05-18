@@ -40,13 +40,13 @@ private class CompletedTaskRowPreviewDataProvider :
         TaskUIModel.Done(
             id = TaskId(0),
             title = "Completed with this year completion date",
-            completionDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+            completionDate = Clock.System.todayIn(TimeZone.UTC),
         ),
         TaskUIModel.Done(
             id = TaskId(0),
             title = "Completed with notes",
             notes = "• This is a \n• multiline note",
-            completionDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+            completionDate = Clock.System.todayIn(TimeZone.UTC),
         ),
         TaskUIModel.Done(
             id = TaskId(0),

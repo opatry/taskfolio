@@ -98,14 +98,14 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
 
 @VisibleForTesting
 internal fun TaskDataModel.asTaskUIModel(): TaskUIModel {
-    val dueDate =  dueDate?.toLocalDateTime(TimeZone.currentSystemDefault())?.date
+    val dueDate = dueDate?.toLocalDateTime(TimeZone.UTC)?.date
     return if (isCompleted) {
         TaskUIModel.Done(
             id = TaskId(id),
             title = title,
             notes = notes,
             dueDate = dueDate,
-            completionDate = requireNotNull(completionDate).toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            completionDate = requireNotNull(completionDate).toLocalDateTime(TimeZone.UTC).date,
             position = position,
         )
     } else {
@@ -223,7 +223,7 @@ class TaskListsViewModel(
     fun createTask(taskListId: TaskListId, title: String, notes: String = "", dueDate: LocalDate? = null) {
         viewModelScope.launch {
             try {
-                taskRepository.createTask(taskListId.value, null, title, notes, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
+                taskRepository.createTask(taskListId.value, null, title, notes, dueDate?.atStartOfDayIn(TimeZone.UTC))
             } catch (e: Exception) {
                 logger.logError("Error while creating task ($taskListId)", e)
                 _eventFlow.emit(TaskEvent.Error.Task.Create)
@@ -239,7 +239,7 @@ class TaskListsViewModel(
                     parentTaskId.value,
                     title,
                     notes,
-                    dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())
+                    dueDate?.atStartOfDayIn(TimeZone.UTC)
                 )
             } catch (e: Exception) {
                 logger.logError("Error while creating sub task ($taskListId > ${parentTaskId})", e)
@@ -292,7 +292,7 @@ class TaskListsViewModel(
                     taskId.value,
                     title.trim(),
                     notes.trim(),
-                    dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault())
+                    dueDate?.atStartOfDayIn(TimeZone.UTC)
                 )
             } catch (e: Exception) {
                 logger.logError("Error while updating task ($taskId)", e)
@@ -326,7 +326,7 @@ class TaskListsViewModel(
     fun updateTaskDueDate(taskId: TaskId, dueDate: LocalDate?) {
         viewModelScope.launch {
             try {
-                taskRepository.updateTaskDueDate(taskId.value, dueDate?.atStartOfDayIn(TimeZone.currentSystemDefault()))
+                taskRepository.updateTaskDueDate(taskId.value, dueDate?.atStartOfDayIn(TimeZone.UTC))
             } catch (e: Exception) {
                 logger.logError("Error while updating task due date ($taskId)", e)
                 _eventFlow.emit(TaskEvent.Error.Task.Update)

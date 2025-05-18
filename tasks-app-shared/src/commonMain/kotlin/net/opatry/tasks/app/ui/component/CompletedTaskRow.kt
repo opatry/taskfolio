@@ -71,7 +71,7 @@ internal object CompletedTaskRowTestTag {
 
 private fun LocalDate.toLabel(): String {
     // TODO localize names & format
-    return if (year == Clock.System.todayIn(TimeZone.currentSystemDefault()).year) {
+    return if (year == Clock.System.todayIn(TimeZone.UTC).year) {
         LocalDate.Format {
             // FIXME doesn't work with more than 2 dd or MM
             //  byUnicodePattern("ddd', 'MMM' 'yyyy")
