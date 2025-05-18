@@ -133,15 +133,15 @@ private fun TaskEntity.asTask(): Task {
 
 fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
     // Step 1: Create a map of tasks by their IDs for easy lookup
-    val taskMap = tasks.associateBy { it.remoteId ?: it.id.toString() }.toMutableMap()
+    val taskMap = tasks.associateBy(TaskEntity::id).toMutableMap()
 
     // Step 2: Build a tree structure with parent-child relationships
-    val tree = mutableMapOf<String, MutableList<TaskEntity>>()
+    val tree = mutableMapOf<Long, MutableList<TaskEntity>>()
     tasks.forEach { task ->
-        val parentId = task.parentTaskRemoteId ?: task.parentTaskLocalId?.toString()
+        val parentId = task.parentTaskLocalId
         if (parentId == null) {
             // Tasks with no parent go directly into the root of the tree
-            tree.getOrPut(task.remoteId ?: task.id.toString()) { mutableListOf() }
+            tree.getOrPut(task.id) { mutableListOf() }
         } else {
             // Add child task under its parent's list of children
             tree.getOrPut(parentId) { mutableListOf() }.add(task)
@@ -154,12 +154,12 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
     }
 
     // Step 4: Recursive function to traverse tasks and assign indentation levels
-    fun traverseTasks(taskId: String, level: Int, result: MutableList<Pair<TaskEntity, Int>>) {
+    fun traverseTasks(taskId: Long, level: Int, result: MutableList<Pair<TaskEntity, Int>>) {
         val task = taskMap[taskId] ?: return
         result.add(task to level)
         val children = tree[taskId] ?: return
         for (child in children) {
-            traverseTasks(child.remoteId ?: child.id.toString(), level + 1, result)
+            traverseTasks(child.id, level + 1, result)
         }
     }
 
@@ -439,7 +439,6 @@ class TaskRepository(
             taskDao.upsertAll(updatedTasks)
         }
 
-        // FIXME should already be available in entity, quick & dirty workaround
         val parentTaskRemoteId = parentTaskEntity?.remoteId
             ?: parentTaskId?.let { taskListDao.getById(it) }?.remoteId
         if (taskListEntity.remoteId != null) {
@@ -468,9 +467,7 @@ class TaskRepository(
             taskDao.upsertAll(updatedTasks)
         }
 
-        // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = taskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && taskEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
@@ -493,9 +490,7 @@ class TaskRepository(
 
         taskDao.upsert(updatedTaskEntity)
 
-        // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
@@ -590,9 +585,7 @@ class TaskRepository(
         val updatedTaskEntities = computeTaskPositions(tasksToUpdate)
         taskDao.upsertAll(updatedTaskEntities)
 
-        // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
