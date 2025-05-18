@@ -30,6 +30,7 @@ import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.TokenCache
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.presentation.UserViewModel
@@ -63,7 +64,7 @@ class UserViewModelTest {
     private lateinit var userInfoApi: UserInfoApi
 
     @Mock
-    private lateinit var clockNow: () -> Instant
+    private lateinit var nowProvider: NowProvider
 
     private lateinit var viewModel: UserViewModel
 
@@ -73,7 +74,7 @@ class UserViewModelTest {
             userDao = userDao,
             credentialsStorage = credentialsStorage,
             userInfoApi = userInfoApi,
-            clockNow = clockNow,
+            nowProvider = nowProvider,
         )
     }
 
@@ -94,7 +95,7 @@ class UserViewModelTest {
 
     @Test
     fun `signIn stores token and updates state on successful user info fetch`() = runTest {
-        `when`(clockNow.invoke())
+        `when`(nowProvider.now())
             .thenReturn(Instant.fromEpochMilliseconds(42L))
         `when`(userInfoApi.getUserInfo()).thenReturn(
             UserInfo(
@@ -145,7 +146,7 @@ class UserViewModelTest {
 
     @Test
     fun `signIn stores token but updates state to Unsigned on failed user info fetch`() = runTest {
-        `when`(clockNow.invoke())
+        `when`(nowProvider.now())
             .thenReturn(Instant.fromEpochMilliseconds(42L))
         `when`(userInfoApi.getUserInfo()).thenThrow(RuntimeException("Network error"))
 

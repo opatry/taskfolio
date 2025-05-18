@@ -20,17 +20,10 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks
 
-import net.opatry.Logger
-import net.opatry.PrintLogger
-import org.koin.dsl.module
+import kotlinx.datetime.Instant
 
-val loggingModule = module {
-    // TODO replace with a more sophisticated logger (standard & KMP compatible ideally)
-    //  On Android, should also log in Firebase Crashlytics
-    //  see #118
-    single<Logger> {
-        PrintLogger(get())
-    }
+fun interface NowProvider {
+    fun now(): Instant
 }

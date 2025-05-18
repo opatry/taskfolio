@@ -27,15 +27,15 @@ import net.opatry.google.profile.UserInfoApi
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.TaskRepository
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 
 val tasksAppModule = module {
-    single {
-        TaskRepository(get(), get(), get(), get())
-    }
+    singleOf(::TaskRepository)
 
     viewModel {
         TaskListsViewModel(get(), get())
@@ -45,7 +45,5 @@ val tasksAppModule = module {
         HttpUserInfoApi(get(named(HttpClientName.Tasks)))
     }
 
-    viewModel {
-        UserViewModel(get(), get(), get())
-    }
+    viewModelOf(::UserViewModel)
 }

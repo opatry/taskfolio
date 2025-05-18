@@ -73,13 +73,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
+import net.opatry.tasks.app.ui.component.DueDateUpdate.Pick
+import net.opatry.tasks.app.ui.component.DueDateUpdate.Reset
+import net.opatry.tasks.app.ui.component.DueDateUpdate.Today
+import net.opatry.tasks.app.ui.component.DueDateUpdate.Tomorrow
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
@@ -195,8 +203,16 @@ fun TaskListDetail(
                 }
 
                 is TaskAction.UpdateDueDate -> {
-                    taskOfInterest = action.task
-                    showDatePickerDialog = true
+                    when (action.update) {
+                        Pick -> {
+                            taskOfInterest = action.task
+                            showDatePickerDialog = true
+                        }
+
+                        Reset -> viewModel.updateTaskDueDate(action.task.id, null)
+                        Today -> viewModel.updateTaskDueDate(action.task.id, Clock.System.todayIn(TimeZone.UTC))
+                        Tomorrow -> viewModel.updateTaskDueDate(action.task.id, Clock.System.todayIn(TimeZone.UTC).plus(1, DateTimeUnit.DAY))
+                    }
                 }
 
                 is TaskAction.AddSubTask -> {

@@ -30,13 +30,13 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
+import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
@@ -246,7 +246,7 @@ class TaskRepository(
     private val taskDao: TaskDao,
     private val taskListsApi: TaskListsApi,
     private val tasksApi: TasksApi,
-    private val clockNow: () -> Instant = Clock.System::now,
+    private val nowProvider: NowProvider,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTaskLists() = taskListDao.getAllTaskListsWithTasksAsFlow()
@@ -326,7 +326,7 @@ class TaskRepository(
     }
 
     suspend fun createTaskList(title: String): Long {
-        val now = clockNow()
+        val now = nowProvider.now()
         val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
         val taskList = withContext(Dispatchers.IO) {
             try {
@@ -357,7 +357,7 @@ class TaskRepository(
     }
 
     suspend fun renameTaskList(taskListId: Long, newTitle: String) {
-        val now = clockNow()
+        val now = nowProvider.now()
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
             .copy(
                 title = newTitle,
@@ -420,7 +420,7 @@ class TaskRepository(
     suspend fun createTask(taskListId: Long, parentTaskId: Long? = null, title: String, notes: String = "", dueDate: Instant? = null): Long {
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         val parentTaskEntity = parentTaskId?.let { requireNotNull(taskDao.getById(it)) { "Invalid parent task id $parentTaskId" } }
-        val now = clockNow()
+        val now = nowProvider.now()
         val firstPosition = 0.toTaskPosition()
         val currentTasks = taskDao.getTasksFromPositionOnward(taskListId, parentTaskId, firstPosition)
             .toMutableList()
@@ -487,7 +487,7 @@ class TaskRepository(
     }
 
     private suspend fun applyTaskUpdate(taskId: Long, updateLogic: suspend (TaskEntity, Instant) -> TaskEntity?) {
-        val now = clockNow()
+        val now = nowProvider.now()
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val updatedTaskEntity = updateLogic(taskEntity, now) ?: return
 
@@ -566,18 +566,18 @@ class TaskRepository(
 
     suspend fun indentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = clockNow()
+        val now = nowProvider.now()
     }
 
     suspend fun unindentTask(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
-        val now = clockNow()
+        val now = nowProvider.now()
     }
 
     suspend fun moveToTop(taskId: Long) {
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         require(!taskEntity.isCompleted) { "Can't move completed tasks" }
-        val now = clockNow()
+        val now = nowProvider.now()
         val updatedTaskEntity = taskEntity.copy(
             position = 0.toTaskPosition(),
             lastUpdateDate = now,
@@ -618,7 +618,7 @@ class TaskRepository(
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val destinationTaskListEntity = requireNotNull(taskListDao.getById(destinationListId)) { "Invalid task list id $destinationListId" }
 
-        val now = clockNow()
+        val now = nowProvider.now()
         val updatedTaskEntity = taskEntity.copy(
             parentListLocalId = destinationListId,
             lastUpdateDate = now,

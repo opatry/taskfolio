@@ -108,6 +108,8 @@
     <string name="task_due_date_label_past">Past</string>
     <string name="task_due_date_label_no_date">No date</string>
     <string name="task_due_date_update_cta">Update</string>
+    <string name="task_due_date_set">Set due date</string>
+    <string name="task_due_date_reset">Reset due date</string>
 
     <string name="task_editor_sheet_edit_title">Edit task</string>
     <string name="task_editor_sheet_new_task_title">New task</string>

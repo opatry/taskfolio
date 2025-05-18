@@ -22,15 +22,12 @@
 
 package net.opatry.tasks.app.di
 
-import net.opatry.Logger
-import net.opatry.PrintLogger
+import kotlinx.datetime.Clock
+import net.opatry.tasks.NowProvider
 import org.koin.dsl.module
 
-val loggingModule = module {
-    // TODO replace with a more sophisticated logger (standard & KMP compatible ideally)
-    //  On Android, should also log in Firebase Crashlytics
-    //  see #118
-    single<Logger> {
-        PrintLogger(get())
+val utilModule = module {
+    single<NowProvider> {
+        NowProvider(Clock.System::now)
     }
 }
