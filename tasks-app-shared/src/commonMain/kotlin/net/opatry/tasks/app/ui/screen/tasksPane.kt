@@ -85,6 +85,7 @@ import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.DueDateUpdate.Pick
+import net.opatry.tasks.app.ui.component.DueDateUpdate.Reset
 import net.opatry.tasks.app.ui.component.DueDateUpdate.Today
 import net.opatry.tasks.app.ui.component.DueDateUpdate.Tomorrow
 import net.opatry.tasks.app.ui.component.EditTextDialog
@@ -208,6 +209,7 @@ fun TaskListDetail(
                             showDatePickerDialog = true
                         }
 
+                        Reset -> viewModel.updateTaskDueDate(action.task.id, null)
                         Today -> viewModel.updateTaskDueDate(action.task.id, Clock.System.todayIn(TimeZone.UTC))
                         Tomorrow -> viewModel.updateTaskDueDate(action.task.id, Clock.System.todayIn(TimeZone.UTC).plus(1, DateTimeUnit.DAY))
                     }

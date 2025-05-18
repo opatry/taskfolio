@@ -43,6 +43,7 @@ import net.opatry.tasks.app.ui.component.RemainingTaskRow
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.MENU_ICON
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.NOTES
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.RESET_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_TOMORROW_CHIP
@@ -175,7 +176,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun `when task with due date then should have due date chip`() = runComposeUiTest {
+    fun `when task with due date then should have due date and reset chips`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first()
         setContent {
@@ -183,6 +184,9 @@ class RemainingTaskRowTest {
         }
 
         onNodeWithTag(DUE_DATE_CHIP)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+        onNodeWithTag(RESET_DUE_DATE_CHIP)
             .assertIsDisplayed()
             .assertIsEnabled()
 
@@ -223,6 +227,8 @@ class RemainingTaskRowTest {
 
         onNodeWithTag(DUE_DATE_CHIP)
             .assertDoesNotExist()
+        onNodeWithTag(RESET_DUE_DATE_CHIP)
+            .assertDoesNotExist()
 
         onNodeWithTag(SET_TASK_DUE_DATE_TODAY_CHIP)
             .assertIsDisplayed()
@@ -233,6 +239,24 @@ class RemainingTaskRowTest {
         onNodeWithTag(SET_DUE_DATE_CHIP)
             .assertIsDisplayed()
             .assertIsEnabled()
+    }
+
+    @Test
+    fun `when clicking RESET_DUE_DATE_CHIP then should trigger UpdateDueDate with Reset action`() = runComposeUiTest {
+        val taskList = createTaskList(remainingTaskCount = 1)
+        val task = taskList.allRemainingTasks.first()
+        var action: TaskAction? = null
+        setContent {
+            RemainingTaskRow(listOf(taskList), task) {
+                action = it
+            }
+        }
+
+        onNodeWithTag(RESET_DUE_DATE_CHIP)
+            .assertIsDisplayed()
+            .performClick()
+
+        assertEquals(TaskAction.UpdateDueDate(task, DueDateUpdate.Reset), action, "UpdateDueDate Reset action should have been triggered")
     }
 
     @Test

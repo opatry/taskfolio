@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.component
 
 import CalendarPlus
+import CalendarX2
 import Circle
 import EllipsisVertical
 import LucideIcons
@@ -63,6 +64,7 @@ import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.MENU_ICON
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.NOTES
+import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.RESET_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_TOMORROW_CHIP
@@ -76,6 +78,7 @@ import net.opatry.tasks.resources.task_due_date_label_today
 import net.opatry.tasks.resources.task_due_date_label_tomorrow
 import net.opatry.tasks.resources.task_due_date_label_weeks_ago
 import net.opatry.tasks.resources.task_due_date_label_yesterday
+import net.opatry.tasks.resources.task_due_date_reset
 import net.opatry.tasks.resources.task_due_date_set
 import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
 import org.jetbrains.annotations.VisibleForTesting
@@ -90,6 +93,7 @@ internal object RemainingTaskRowTestTag {
     const val MENU_ICON = "REMAINING_TASK_MENU_ICON"
     const val NOTES = "REMAINING_TASK_NOTES"
     const val DUE_DATE_CHIP = "REMAINING_TASK_DUE_DATE_CHIP"
+    const val RESET_DUE_DATE_CHIP = "REMAINING_TASK_RESET_DUE_DATE_CHIP"
     const val SET_TASK_DUE_DATE_TODAY_CHIP = "REMAINING_TASK_SET_TASK_DUE_DATE_TODAY_CHIP"
     const val SET_DUE_DATE_TOMORROW_CHIP = "REMAINING_TASK_SET_DUE_DATE_TOMORROW_CHIP"
     const val SET_DUE_DATE_CHIP = "REMAINING_TASK_SET_DUE_DATE_CHIP"
@@ -195,6 +199,7 @@ fun RemainingTaskRow(
                 )
             }
             if (showDate && task.dueDate != null) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AssistChip(
                         onClick = { onAction(TaskAction.UpdateDueDate(task, DueDateUpdate.Pick)) },
                         label = {
@@ -206,6 +211,22 @@ fun RemainingTaskRow(
                             labelColor = task.dateRange.toColor(),
                         ),
                     )
+                    AssistChip(
+                        onClick = { onAction(TaskAction.UpdateDueDate(task, DueDateUpdate.Reset)) },
+                        label = {
+                            Icon(
+                                LucideIcons.CalendarX2,
+                                stringResource(Res.string.task_due_date_reset),
+                                Modifier.size(16.dp),
+                            )
+                        },
+                        modifier = Modifier.testTag(RESET_DUE_DATE_CHIP),
+                        shape = MaterialTheme.shapes.large,
+                        colors = AssistChipDefaults.assistChipColors(
+                            labelColor = MaterialTheme.colorScheme.error,
+                        ),
+                    )
+                }
             } else if (showDate) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     val colors = AssistChipDefaults.assistChipColors(

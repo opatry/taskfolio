@@ -72,6 +72,7 @@ internal object TaskMenuTestTag {
 
 enum class DueDateUpdate {
     Pick,
+    Reset,
     Today,
     Tomorrow,
 }
