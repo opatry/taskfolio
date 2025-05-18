@@ -439,7 +439,6 @@ class TaskRepository(
             taskDao.upsertAll(updatedTasks)
         }
 
-        // FIXME should already be available in entity, quick & dirty workaround
         val parentTaskRemoteId = parentTaskEntity?.remoteId
             ?: parentTaskId?.let { taskListDao.getById(it) }?.remoteId
         if (taskListEntity.remoteId != null) {
@@ -468,9 +467,7 @@ class TaskRepository(
             taskDao.upsertAll(updatedTasks)
         }
 
-        // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = taskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(taskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && taskEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
@@ -493,9 +490,7 @@ class TaskRepository(
 
         taskDao.upsert(updatedTaskEntity)
 
-        // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
@@ -590,9 +585,7 @@ class TaskRepository(
         val updatedTaskEntities = computeTaskPositions(tasksToUpdate)
         taskDao.upsertAll(updatedTaskEntities)
 
-        // FIXME should already be available in entity, quick & dirty workaround
-        val taskListRemoteId = updatedTaskEntity.parentTaskRemoteId
-            ?: taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
+        val taskListRemoteId = taskListDao.getById(updatedTaskEntity.parentListLocalId)?.remoteId
         if (taskListRemoteId != null && updatedTaskEntity.remoteId != null) {
             val task = withContext(Dispatchers.IO) {
                 try {
