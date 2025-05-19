@@ -38,15 +38,21 @@ plugins {
     alias(libs.plugins.kover)
 }
 
+val koverProjects = listOf(
+    projects.tasksAppShared,
+    projects.tasksCore,
+    projects.google.tasks,
+)
+
 dependencies {
-    kover(projects.tasksAppShared)
-    kover(projects.tasksCore)
-    kover(projects.google.tasks)
+    koverProjects.onEach { koverProject ->
+        kover(koverProject)
+    }
 }
 
 kover {
     currentProject {
-        createVariant("custom") {}
+        createVariant("coverage") {}
     }
 
     reports {
@@ -77,6 +83,22 @@ kover {
         verify.rule {
             bound {
                 minValue = 85
+            }
+        }
+    }
+}
+
+subprojects {
+    if (project.name in koverProjects.map { it.name }) {
+        project.afterEvaluate {
+            apply(plugin = libs.plugins.kover.get().pluginId)
+            kover {
+                currentProject {
+                    createVariant("coverage") {
+                        add("jvm")
+                        addWithDependencies("debug", optional = true)
+                    }
+                }
             }
         }
     }
