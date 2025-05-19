@@ -75,17 +75,15 @@ jobs:
               -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
 
     # allows Bundler gem installation (used for fastlane gem)
-    - name: 💎 Setup Ruby 3.0
+    - name: 💎 Setup Ruby 3.1
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.0
+        ruby-version: 3.1
+        bundler-cache: true
 
     - name: 🚀 Play Store publish
       run: |
             sudo apt -y install libxml2-utils
-            gem install bundler
-            bundle config set --local path .bundler
-            bundle install --jobs "$(nproc)"
             ./_ci/playstore.sh "${{ inputs.track }}" ${{ inputs.upload_binary }} ${{ inputs.upload_assets }} "${{ inputs.in_app_update_level }}"
 
     - name: 📌 Tag Release
