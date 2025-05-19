@@ -13,7 +13,8 @@ xml_report=${1:-"${root}/build/reports/kover/report.xml"}
 [ -f "${xml_report}" ] || step_error "Kover XML report not found at '${YELLOW}${xml_report}${RESET}'"
 
 covered=$(xmllint --xpath "string(/report/counter[@type='INSTRUCTION']/@covered)" "${xml_report}")
-total=$(xmllint --xpath "string(/report/counter[@type='INSTRUCTION']/@missed)" "${xml_report}")
+missed=$(xmllint --xpath "string(/report/counter[@type='INSTRUCTION']/@missed)" "${xml_report}")
+total=$((covered + missed))
 percent=$((100 * covered / total))
 
 info "Kover coverage: ${MAGENTA}${percent}%${RESET} (${GREEN}${covered}${RESET}/${BLUE}${total}${RESET})"

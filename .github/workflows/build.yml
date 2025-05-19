@@ -142,12 +142,12 @@ jobs:
     - name: 📊 Check coverage
       if: github.event_name == 'pull_request'
       run: |
-        ./gradlew koverVerifyCoverage
+        ./gradlew koverLogCoverage koverVerifyCoverage
 
     - name: 📊 Check coverage & update badge
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        ./gradlew koverXmlReport koverVerifyCoverage
+        ./gradlew koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
         ./_ci/replace_coverage_badge.sh build/reports/kover/report.xml
         if [[ $(git status --porcelain README.md) ]]; then
           git config user.name "github-actions[bot]"
