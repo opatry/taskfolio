@@ -1,5 +1,5 @@
 [![Build & Test](https://github.com/opatry/tasks-app/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/tasks-app/actions/workflows/build.yml)
-![Coverage 428%](https://img.shields.io/badge/Coverage-428%25-rgb%2860%2C179%2C113%29)
+![Coverage 81%](https://img.shields.io/badge/Coverage-81%25-rgb%28225%2C215%2C0%29)
 
 # Taskfolio
 
