@@ -20,50 +20,55 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.screen
+package net.opatry.tasks.app.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
-
-private val dataSet = listOf(
-    TaskListUIModel(
-        id = TaskListId(0L),
-        title = "My task list",
-    ),
-    TaskListUIModel(
-        id = TaskListId(0L),
-        title = "My selected task list",
-    ),
-    TaskListUIModel(
-        id = TaskListId(0L),
-        title = "This is a task list with a very very very long name",
-    ),
-)
-
-private class TaskListPreviewParameterProvider(
-    override val values: Sequence<TaskListUIModel> = dataSet.asSequence()
-) : PreviewParameterProvider<TaskListUIModel>
-
-@PreviewLightDark
-@Composable
-private fun TaskListRowPreview(
-    @PreviewParameter(TaskListPreviewParameterProvider::class)
-    taskList: TaskListUIModel
-) {
-    TaskfolioThemedPreview {
-        TaskListRow(taskList, isSelected = taskList.title.contains("selected")) {}
-    }
-}
 
 @PreviewLightDark
 @Composable
 private fun TaskListsColumnPreview() {
+    val taskLists = listOf(
+        TaskListUIModel(
+            id = TaskListId(0L),
+            title = "My task list",
+            remainingTasks = mapOf(
+                null to List(12) {
+                    TaskUIModel.Todo(
+                        id = TaskId(it.toLong()),
+                        title = "Task $it",
+                    )
+                },
+            )
+        ),
+        TaskListUIModel(
+            id = TaskListId(1L),
+            title = "My selected task list",
+        ),
+        TaskListUIModel(
+            id = TaskListId(2L),
+            title = "This is a task list with a very very very long name",
+        ),
+        TaskListUIModel(
+            id = TaskListId(3L),
+            title = "This with remaining task count",
+            remainingTasks = mapOf(
+                null to List(1500) {
+                    TaskUIModel.Todo(
+                        id = TaskId(it.toLong()),
+                        title = "Task $it",
+                    )
+                },
+            )
+        ),
+    )
+
     TaskfolioThemedPreview {
-        TaskListsColumn(dataSet, dataSet.last(), {}, {})
+        TaskListsColumn(taskLists, taskLists.first { it.title.contains("selected") }, {}, {})
     }
 }

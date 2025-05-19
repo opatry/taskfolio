@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.screen
+package net.opatry.tasks.app.ui.component
 
 import CircleFadingPlus
 import LucideIcons
@@ -34,25 +34,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.selected
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
-import net.opatry.tasks.app.ui.component.RowWithIcon
-import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
-import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag.TASK_LIST_ROW
+import net.opatry.tasks.app.ui.component.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
+import net.opatry.tasks.app.ui.component.TaskListsPaneTestTag.TASK_LIST_ROW
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_add_task_list_cta
 import org.jetbrains.compose.resources.stringResource
@@ -96,39 +87,13 @@ fun TaskListsColumn(
         items(taskLists, { it.id.value }) { taskList ->
             TaskListRow(
                 taskList,
-                Modifier.padding(horizontal = 8.dp).animateItem(),
+                Modifier
+                    .testTag(TASK_LIST_ROW)
+                    .padding(horizontal = 8.dp)
+                    .animateItem(),
                 isSelected = taskList.id == selectedItem?.id,
                 onClick = { onItemClick(taskList) }
             )
         }
-    }
-}
-
-@Composable
-fun TaskListRow(
-    taskList: TaskListUIModel,
-    modifier: Modifier = Modifier,
-    isSelected: Boolean = false,
-    onClick: () -> Unit
-) {
-    val cellBackground = when {
-        isSelected -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .3f)
-        else -> Color.Unspecified
-    }
-
-    Card(
-        onClick = onClick,
-        modifier = modifier
-            .testTag(TASK_LIST_ROW)
-            .semantics { selected = isSelected },
-    ) {
-        ListItem(
-            headlineContent = {
-                Text(taskList.title, overflow = TextOverflow.MiddleEllipsis, maxLines = 1)
-            },
-            colors = ListItemDefaults.colors(
-                containerColor = cellBackground
-            )
-        )
     }
 }
