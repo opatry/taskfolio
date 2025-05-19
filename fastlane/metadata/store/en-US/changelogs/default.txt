@@ -1,2 +1,8 @@
-• Support for sorting tasks by date
-• General under-the-hood improvements for enhanced performance.
+• Enable task move actions (to top, to list, to new list)
+• Support subtask creation
+• Allow setting due dates directly from a task cell
+• Fix 1-day offset issue in the date picker
+• Add support for sorting tasks by title
+• Enhance task sorting functionality
+• Introduce "Per-app language preferences" on Android
+• General performance improvements and under-the-hood optimizations
