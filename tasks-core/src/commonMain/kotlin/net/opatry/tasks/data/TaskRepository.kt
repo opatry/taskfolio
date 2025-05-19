@@ -267,15 +267,18 @@ class TaskRepository(
 
     suspend fun sync() {
         val taskListIds = mutableMapOf<Long, String>()
-        val remoteTaskLists = withContext(Dispatchers.IO) {
+        // TODO add a flag somewhere (either in task_list table or user settings) the default list
+        val (defaultTaskListId, remoteTaskLists) = withContext(Dispatchers.IO) {
             try {
-                taskListsApi.listAll()
+                val defaultTaskList = taskListsApi.default()
+                val taskLists = taskListsApi.listAll()
+                defaultTaskList.id to taskLists
             } catch (_: Exception) {
-                null
+                null to null
             }
         }
 
-        if (remoteTaskLists == null) {
+        if (defaultTaskListId == null || remoteTaskLists == null) {
             // most likely not internet, can't fetch data, nothing to sync
             return
         }

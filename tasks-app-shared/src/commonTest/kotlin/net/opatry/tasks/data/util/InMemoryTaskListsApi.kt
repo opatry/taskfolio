@@ -71,7 +71,17 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
     override suspend fun default(): TaskList {
         return handleRequest("default") {
             synchronized(this) {
-                storage["1"] ?: error("Task list (@default / 1) not found")
+                // if there is no default task list, need to create one to simulate Google Tasks
+                storage.getOrPut("1") {
+                    TaskList(
+                        kind = ResourceType.TaskList,
+                        id = taskListId.addAndFetch(1).toString(),
+                        etag = "etag",
+                        title = "My tasks",
+                        updatedDate = Clock.System.now(),
+                        selfLink = "selfLink"
+                    )
+                }
             }
         }
     }

@@ -69,7 +69,13 @@ class InMemoryTasksApi(
     override suspend fun clear(taskListId: String) {
         handleRequest("clear") {
             synchronized(this) {
-                val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
+                val tasks = storage[taskListId] ?: run {
+                    if (taskListId == "1") {
+                        mutableListOf()
+                    } else {
+                        error("Task list ($taskListId) not found")
+                    }
+                }
                 if (tasks.isEmpty()) {
                     return@handleRequest
                 }
@@ -88,6 +94,9 @@ class InMemoryTasksApi(
     override suspend fun delete(taskListId: String, taskId: String) {
         handleRequest("delete") {
             synchronized(this) {
+                if (taskListId == "1") {
+                    error("Default task list cannot be deleted")
+                }
                 val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
                 if (tasks.none { it.id == taskId }) {
                     error("Task ($taskId) not found in task list ($taskListId)")
@@ -107,7 +116,13 @@ class InMemoryTasksApi(
     override suspend fun get(taskListId: String, taskId: String): Task {
         return handleRequest("get") {
             val tasks = synchronized(this) {
-                storage[taskListId] ?: error("Task list ($taskListId) not found")
+                storage[taskListId] ?: run {
+                    if (taskListId == "1") {
+                        mutableListOf()
+                    } else {
+                        error("Task list ($taskListId) not found")
+                    }
+                }
             }
             tasks.find { task -> task.id == taskId } ?: error("Task ($taskId) not found in task list ($taskListId)")
         }
@@ -154,7 +169,13 @@ class InMemoryTasksApi(
         return handleRequest("list") {
             // TODO maxResults & token handling
             val tasks = synchronized(this) {
-                storage[taskListId] ?: error("Task list ($taskListId) not found")
+                storage[taskListId] ?: run {
+                    if (taskListId == "1") {
+                        mutableListOf()
+                    } else {
+                        error("Task list ($taskListId) not found")
+                    }
+                }
             }
             val filteredTasks = tasks.filter { task ->
                 // Check if completed tasks should be shown
@@ -219,11 +240,23 @@ class InMemoryTasksApi(
     ): Task {
         return handleRequest("move") {
             synchronized(this) {
-                val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
+                val tasks = storage[taskListId] ?: run {
+                    if (taskListId == "1") {
+                        mutableListOf()
+                    } else {
+                        error("Task list ($taskListId) not found")
+                    }
+                }
                 val task = tasks.find { task -> task.id == taskId } ?: error("Task ($taskId) not found in task list ($taskListId)")
                 val targetListId = destinationTaskListId ?: taskListId
                 val destinationTasks = if (taskListId != targetListId) {
-                    storage[targetListId] ?: error("Task list ($targetListId) not found")
+                    storage[targetListId] ?: run {
+                        if (targetListId == "1") {
+                            mutableListOf()
+                        } else {
+                            error("Task list ($targetListId) not found")
+                        }
+                    }
                 } else tasks
 
                 if (parentTaskId != null && destinationTasks.none { it.id == parentTaskId }) {
@@ -255,7 +288,13 @@ class InMemoryTasksApi(
     override suspend fun update(taskListId: String, taskId: String, task: Task): Task {
         return handleRequest("update") {
             synchronized(this) {
-                val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
+                val tasks = storage[taskListId] ?: run {
+                    if (taskListId == "1") {
+                        mutableListOf()
+                    } else {
+                        error("Task list ($taskListId) not found")
+                    }
+                }
                 tasks.map { task ->
                     if (task.id == taskId) {
                         task.copy(updatedDate = Clock.System.now())

@@ -45,8 +45,8 @@ class TaskRepositorySyncTest {
 
             repository.sync()
 
-            assertEquals(1, taskListsApi.requestCount)
-            assertContentEquals(listOf("list"), taskListsApi.requests)
+            assertEquals(2, taskListsApi.requestCount)
+            assertContentEquals(listOf("default", "list"), taskListsApi.requests)
             assertEquals(2, tasksApi.requestCount)
             assertContentEquals(listOf("list", "list"), tasksApi.requests)
 
@@ -94,8 +94,8 @@ class TaskRepositorySyncTest {
             // network is considered back, sync should trigger fetch & push requests
             taskListsApi.isNetworkAvailable = true
             repository.sync()
-            assertEquals(2, taskListsApi.requestCount)
-            assertContentEquals(listOf("list", "insert"), taskListsApi.requests)
+            assertEquals(3, taskListsApi.requestCount)
+            assertContentEquals(listOf("default", "list", "insert"), taskListsApi.requests)
         }
     }
 }
