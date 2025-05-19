@@ -164,6 +164,7 @@ class TaskListsViewModelTest {
                         ),
                     ),
                     sorting = TaskListSorting.DueDate,
+                    isDefault = true,
                 )
             )
         )

@@ -97,7 +97,15 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
         title = title,
         lastUpdate = lastUpdateDate,
         tasks = sortedTasks,
-        sorting = sorting
+        sorting = sorting,
+        // FIXME quick & dirty inferred hack to determine the default task list
+        //  remote ID seems to be 32 chars for default list while it is 22 for others.
+        // TODO add a column boolean is_default using TaskListsApi.default() for proper impl
+        isDefault = if (remoteId != null) {
+            remoteId.length > 22
+        } else {
+            id == 1L
+        }
     )
 }
 

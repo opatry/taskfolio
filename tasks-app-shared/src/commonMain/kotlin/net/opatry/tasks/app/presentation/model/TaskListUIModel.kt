@@ -34,6 +34,7 @@ data class TaskListUIModel(
     val remainingTasks: Map<DateRange?, List<TaskUIModel.Todo>> = emptyMap(),
     val completedTasks: List<TaskUIModel.Done> = emptyList(),
     val sorting: TaskListSorting = TaskListSorting.Manual,
+    val canDelete: Boolean = false,
 ) {
     fun containsTask(task: TaskUIModel, includeCompleted: Boolean = false): Boolean {
         return allRemainingTasks.contains(task)
@@ -47,5 +48,4 @@ data class TaskListUIModel(
     val isEmpty: Boolean = allRemainingTasks.isEmpty() && completedTasks.isEmpty()
     val hasCompletedTasks: Boolean = completedTasks.isNotEmpty()
     val isEmptyRemainingTasksVisible: Boolean = allRemainingTasks.isEmpty() && hasCompletedTasks
-    val canDelete: Boolean = true // FIXME default list can't be deleted, how to know it?
 }
