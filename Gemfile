@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'fastlane', '~> 2.223.0'
+gem 'fastlane', '>= 2.223.0'
 
 gem 'jekyll', '~> 3.10.0'
 
