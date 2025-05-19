@@ -36,8 +36,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
-import net.opatry.tasks.app.ui.screen.TaskListsColumn
-import net.opatry.tasks.app.ui.screen.TaskListsPaneTestTag
+import net.opatry.tasks.app.ui.component.TaskListsColumn
+import net.opatry.tasks.app.ui.component.TaskListsPaneTestTag
 import org.junit.Test
 import kotlin.test.assertEquals
 
