@@ -139,6 +139,11 @@ jobs:
         require_tests: true
         report_paths: '**/build/test-results/**/TEST-*.xml'
 
+    - name: 📊 Check coverage
+      if: github.event_name == 'pull_request'
+      run: |
+        ./gradlew koverVerifyCoverage
+
     - name: 📊 Check coverage & update badge
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
