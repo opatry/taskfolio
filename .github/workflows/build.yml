@@ -19,7 +19,7 @@ jobs:
     # run on macOS to use Skiko mac for credits checks
     runs-on: macos-latest
     permissions:
-        contents: read
+        contents: write
         checks: write
         id-token: write
         pull-requests: write
@@ -138,3 +138,21 @@ jobs:
         require_passed_tests: true
         require_tests: true
         report_paths: '**/build/test-results/**/TEST-*.xml'
+
+    - name: 📊 Check coverage
+      if: github.event_name == 'pull_request'
+      run: |
+        ./gradlew koverVerifyCoverage
+
+    - name: 📊 Check coverage & update badge
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        ./gradlew koverXmlReport koverVerifyCoverage
+        ./_ci/replace_coverage_badge.sh build/reports/kover/report.xml
+        if [[ $(git status --porcelain README.md) ]]; then
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update coverage badge in README.md"
+          git push
+        fi

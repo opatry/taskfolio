@@ -52,6 +52,36 @@ dependencies {
     }
 }
 
+val koverExcludedClasses = listOf(
+    "net.opatry.logging.*",
+    "net.opatry.google.tasks.model.*",
+    "net.opatry.tasks.TokenCache*",
+    "net.opatry.tasks.FileCredentialsStorage*",
+    "net.opatry.tasks.app.auth.*",
+    "net.opatry.tasks.app.di.*",
+    "net.opatry.tasks.app.presentation.model.*",
+    "net.opatry.tasks.app.ui.AppTasksScreen*",
+    "net.opatry.tasks.app.ui.Singletons*",
+    "net.opatry.tasks.app.ui.ComposableSingletons*",
+    "net.opatry.tasks.app.ui.TaskEvent*",
+    "net.opatry.tasks.app.ui.TasksApp*",
+    "net.opatry.tasks.app.ui.*PreviewKt*",
+    "net.opatry.tasks.app.ui.*PreviewParameterProvider*",
+    "net.opatry.tasks.app.ui.*PreviewDataProvider*",
+    "net.opatry.tasks.app.ui.component.ComposableSingletons*",
+    "net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton*",
+    "net.opatry.tasks.app.ui.component.BackHandler*",
+    "net.opatry.tasks.app.ui.component.EmptyStateParam*",
+    "net.opatry.tasks.app.ui.icon.*",
+    "net.opatry.tasks.app.ui.screen.*",
+    "net.opatry.tasks.app.ui.theme.*",
+    "net.opatry.tasks.app.ui.tooling.*",
+    "net.opatry.tasks.data.entity.*",
+    "net.opatry.tasks.data.model.*",
+    "net.opatry.tasks.data.TasksAppDatabase*",
+    "net.opatry.tasks.resources.*",
+)
+
 kover {
     currentProject {
         createVariant("coverage") {}
@@ -61,50 +91,24 @@ kover {
         filters {
             excludes {
                 androidGeneratedClasses()
-                classes(
-                    "net.opatry.logging.*",
-                    "net.opatry.google.tasks.model.*",
-                    "net.opatry.tasks.TokenCache*",
-                    "net.opatry.tasks.FileCredentialsStorage*",
-                    "net.opatry.tasks.app.auth.*",
-                    "net.opatry.tasks.app.di.*",
-                    "net.opatry.tasks.app.presentation.model.*",
-                    "net.opatry.tasks.app.ui.AppTasksScreen*",
-                    "net.opatry.tasks.app.ui.Singletons*",
-                    "net.opatry.tasks.app.ui.ComposableSingletons*",
-                    "net.opatry.tasks.app.ui.TaskEvent*",
-                    "net.opatry.tasks.app.ui.TasksApp*",
-                    "net.opatry.tasks.app.ui.*PreviewKt*",
-                    "net.opatry.tasks.app.ui.*PreviewParameterProvider*",
-                    "net.opatry.tasks.app.ui.*PreviewDataProvider*",
-                    "net.opatry.tasks.app.ui.component.ComposableSingletons*",
-                    "net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton*",
-                    "net.opatry.tasks.app.ui.component.BackHandler*",
-                    "net.opatry.tasks.app.ui.component.EmptyStateParam*",
-                    "net.opatry.tasks.app.ui.icon.*",
-                    "net.opatry.tasks.app.ui.screen.*",
-                    "net.opatry.tasks.app.ui.theme.*",
-                    "net.opatry.tasks.app.ui.tooling.*",
-                    "net.opatry.tasks.data.entity.*",
-                    "net.opatry.tasks.data.model.*",
-                    "net.opatry.tasks.data.TasksAppDatabase*",
-                    "net.opatry.tasks.resources.*",
-                )
+                classes(*koverExcludedClasses.toTypedArray())
             }
         }
 
-        verify {
-            rule("Instruction coverage") {
-                minBound(
-                    minValue = 80,
-                    coverageUnits = CoverageUnit.INSTRUCTION
-                )
-            }
-            rule("Line coverage") {
-                minBound(
-                    minValue = 85,
-                    coverageUnits = CoverageUnit.LINE
-                )
+        variant("coverage") {
+            verify {
+                rule("Instruction coverage") {
+                    minBound(
+                        minValue = 80,
+                        coverageUnits = CoverageUnit.INSTRUCTION
+                    )
+                }
+                rule("Line coverage") {
+                    minBound(
+                        minValue = 85,
+                        coverageUnits = CoverageUnit.LINE
+                    )
+                }
             }
         }
     }
