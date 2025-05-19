@@ -93,6 +93,7 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
         remainingTasks = taskGroups.toMap(),
         completedTasks = completedTasks,
         sorting = sorting,
+        canDelete = !isDefault,
     )
 }
 

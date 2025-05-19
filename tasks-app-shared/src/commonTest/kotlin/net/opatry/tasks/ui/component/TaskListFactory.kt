@@ -40,11 +40,13 @@ fun createTaskList(
     title: String = "Task List",
     remainingTaskCount: Int = 0,
     completedTaskCount: Int = 0,
+    canBeDeleted: Boolean = true,
 ) = TaskListUIModel(
     id = TaskListId(TASK_LIST_ID++),
     title = title,
     remainingTasks = mapOf(null to List(remainingTaskCount) { createTask() }),
-    completedTasks = List(completedTaskCount) { createCompletedTask() }
+    completedTasks = List(completedTaskCount) { createCompletedTask() },
+    canDelete = canBeDeleted,
 )
 
 private var TASK_ID = 0L
