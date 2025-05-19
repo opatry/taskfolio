@@ -68,6 +68,14 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
         }
     }
 
+    override suspend fun default(): TaskList {
+        return handleRequest("default") {
+            synchronized(this) {
+                storage["1"] ?: error("Task list (@default / 1) not found")
+            }
+        }
+    }
+
     override suspend fun get(taskListId: String): TaskList {
         return handleRequest("get") {
             synchronized(this) {

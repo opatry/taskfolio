@@ -53,6 +53,14 @@ interface TaskListsApi {
     suspend fun delete(taskListId: String)
 
     /**
+     * [Returns the authenticated user's default task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/get).
+     * It uses the special `taskListId` value `@default`.
+     *
+     * @return the instance of [TaskList] of the default task list.
+     */
+    suspend fun default(): TaskList
+
+    /**
      * [Returns the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/get).
      *
      * @param taskListId Task list identifier.
@@ -113,6 +121,8 @@ class HttpTaskListsApi(
             throw ClientRequestException(response, response.bodyAsText())
         }
     }
+
+    override suspend fun default() = get("@default")
 
     override suspend fun get(taskListId: String): TaskList {
         val response = httpClient.get("tasks/v1/users/@me/lists/${taskListId}")

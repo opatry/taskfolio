@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -170,6 +170,45 @@ class HttpTaskListsApiTest {
                 assertThrows(ClientRequestException::class.java) {
                     runBlocking {
                         taskListsApi.get("")
+                    }
+                }
+            }
+
+            assertEquals(1, mockEngine.responseHistory.size)
+            assertEquals(HttpStatusCode.BadRequest, mockEngine.responseHistory.first().statusCode)
+        }
+    }
+
+    @Test
+    fun `TaskListsApi default`() {
+        MockEngine {
+            respondJsonResource("/tasklist.json")
+        }.use { mockEngine ->
+            runTaskListsApi(mockEngine) { taskListsApi ->
+                val taskList = taskListsApi.default()
+
+                assertEquals(1, mockEngine.requestHistory.size)
+                val request = mockEngine.requestHistory.first()
+                val queryParams = request.url.parameters
+                assertEquals("/tasks/v1/users/@me/lists/@default", request.url.encodedPath)
+                assertEquals(0, queryParams.names().size)
+                assertEquals(HttpMethod.Get, request.method)
+                assertEquals(ResourceType.TaskList, taskList.kind)
+                assertEquals("Other tasks", taskList.title)
+                assertEquals("OXl0d1JibXgyeW1zWWFIMw", taskList.id)
+            }
+        }
+    }
+
+    @Test
+    fun `TaskListsApi default failure`() {
+        MockEngine {
+            respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
+        }.use { mockEngine ->
+            runTaskListsApi(mockEngine) { taskListsApi ->
+                assertThrows(ClientRequestException::class.java) {
+                    runBlocking {
+                        taskListsApi.default()
                     }
                 }
             }
