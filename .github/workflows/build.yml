@@ -148,7 +148,7 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         ./gradlew koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
-        ./_ci/replace_coverage_badge.sh build/reports/kover/report.xml
+        ./_ci/replace_coverage_badge.sh build/reports/kover/reportCoverage.xml
         if [[ $(git status --porcelain README.md) ]]; then
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
