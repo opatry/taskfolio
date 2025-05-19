@@ -23,7 +23,6 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -39,14 +38,6 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.ktor.client.mock)
             implementation(libs.kotlinx.coroutines.test)
-        }
-    }
-}
-
-kover {
-    currentProject {
-        createVariant("custom") {
-            add("jvm")
         }
     }
 }

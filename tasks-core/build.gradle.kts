@@ -24,7 +24,6 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -46,14 +45,6 @@ kotlin {
 
         commonTest.dependencies {
             implementation(kotlin("test"))
-        }
-    }
-}
-
-kover {
-    currentProject {
-        createVariant("custom") {
-            add("jvm")
         }
     }
 }

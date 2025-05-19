@@ -20,6 +20,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
+
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
@@ -38,15 +40,21 @@ plugins {
     alias(libs.plugins.kover)
 }
 
+val koverProjects = listOf(
+    projects.tasksAppShared,
+    projects.tasksCore,
+    projects.google.tasks,
+)
+
 dependencies {
-    kover(projects.tasksAppShared)
-    kover(projects.tasksCore)
-    kover(projects.google.tasks)
+    koverProjects.onEach { koverProject ->
+        kover(koverProject)
+    }
 }
 
 kover {
     currentProject {
-        createVariant("custom") {}
+        createVariant("coverage") {}
     }
 
     reports {
@@ -61,7 +69,18 @@ kover {
                     "net.opatry.tasks.app.auth.*",
                     "net.opatry.tasks.app.di.*",
                     "net.opatry.tasks.app.presentation.model.*",
-                    "net.opatry.tasks.app.ui.*",
+                    "net.opatry.tasks.app.ui.AppTasksScreen*",
+                    "net.opatry.tasks.app.ui.Singletons*",
+                    "net.opatry.tasks.app.ui.ComposableSingletons*",
+                    "net.opatry.tasks.app.ui.TaskEvent*",
+                    "net.opatry.tasks.app.ui.TasksApp*",
+                    "net.opatry.tasks.app.ui.*PreviewKt*",
+                    "net.opatry.tasks.app.ui.*PreviewParameterProvider*",
+                    "net.opatry.tasks.app.ui.*PreviewDataProvider*",
+                    "net.opatry.tasks.app.ui.component.ComposableSingletons*",
+                    "net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton*",
+                    "net.opatry.tasks.app.ui.component.BackHandler*",
+                    "net.opatry.tasks.app.ui.component.EmptyStateParam*",
                     "net.opatry.tasks.app.ui.icon.*",
                     "net.opatry.tasks.app.ui.screen.*",
                     "net.opatry.tasks.app.ui.theme.*",
@@ -74,9 +93,34 @@ kover {
             }
         }
 
-        verify.rule {
-            bound {
-                minValue = 85
+        verify {
+            rule("Instruction coverage") {
+                minBound(
+                    minValue = 80,
+                    coverageUnits = CoverageUnit.INSTRUCTION
+                )
+            }
+            rule("Line coverage") {
+                minBound(
+                    minValue = 85,
+                    coverageUnits = CoverageUnit.LINE
+                )
+            }
+        }
+    }
+}
+
+subprojects {
+    if (project.name in koverProjects.map { it.name }) {
+        project.afterEvaluate {
+            apply(plugin = libs.plugins.kover.get().pluginId)
+            kover {
+                currentProject {
+                    createVariant("coverage") {
+                        add("jvm")
+                        addWithDependencies("debug", optional = true)
+                    }
+                }
             }
         }
     }
