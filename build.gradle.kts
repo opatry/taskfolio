@@ -20,6 +20,8 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
+
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
@@ -80,9 +82,18 @@ kover {
             }
         }
 
-        verify.rule {
-            bound {
-                minValue = 85
+        verify {
+            rule("Instruction coverage") {
+                minBound(
+                    minValue = 80,
+                    coverageUnits = CoverageUnit.INSTRUCTION
+                )
+            }
+            rule("Line coverage") {
+                minBound(
+                    minValue = 85,
+                    coverageUnits = CoverageUnit.LINE
+                )
             }
         }
     }
