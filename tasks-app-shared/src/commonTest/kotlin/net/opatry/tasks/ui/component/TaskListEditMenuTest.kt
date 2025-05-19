@@ -36,6 +36,7 @@ import net.opatry.tasks.app.ui.component.TaskListEditMenu
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.CLEAR_COMPLETED_TASKS
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE_NOT_ALLOWED_NOTICE
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.EDIT_MENU
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.RENAME
 import org.junit.Test
@@ -219,6 +220,28 @@ class TaskListEditMenuTest {
         onNodeWithTag(DELETE)
             .performClick()
 
+        onNodeWithTag(DELETE_NOT_ALLOWED_NOTICE)
+            .assertDoesNotExist()
+
         assertEquals(TaskListEditMenuAction.Delete, action)
+    }
+
+    @Test
+    fun `when list can't be delete then DELETE should be disabled with a notice`() = runComposeUiTest {
+        val taskList = createTaskList(canBeDeleted = false)
+        setContent {
+            TaskListEditMenu(
+                taskList = taskList,
+                expanded = true,
+                onDismiss = {},
+                onAction = {},
+            )
+        }
+
+        onNodeWithTag(DELETE, useUnmergedTree = true)
+            .assertIsNotEnabled()
+
+        onNodeWithTag(DELETE_NOT_ALLOWED_NOTICE, useUnmergedTree = true)
+            .assertIsDisplayed()
     }
 }

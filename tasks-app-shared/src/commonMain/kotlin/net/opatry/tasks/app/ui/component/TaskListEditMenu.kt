@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.CLEAR_COMPLETED_TASKS
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE
+import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.DELETE_NOT_ALLOWED_NOTICE
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.EDIT_MENU
 import net.opatry.tasks.app.ui.component.TaskListEditMenuTestTag.RENAME
 import net.opatry.tasks.resources.Res
@@ -57,6 +58,7 @@ internal object TaskListEditMenuTestTag {
     const val RENAME = "TASK_LIST_RENAME"
     const val CLEAR_COMPLETED_TASKS = "TASK_LIST_CLEAR_COMPLETED_TASKS"
     const val DELETE = "TASK_LIST_DELETE"
+    const val DELETE_NOT_ALLOWED_NOTICE = "TASK_LIST_DELETE_NOT_ALLOWED_NOTICE"
 }
 
 enum class TaskListEditMenuAction {
@@ -108,7 +110,8 @@ fun TaskListEditMenu(
                         RowWithIcon(stringResource(Res.string.task_list_menu_delete), LucideIcons.Trash2)
                         if (!isDeletedAllowed) {
                             Text(
-                                stringResource(Res.string.task_list_menu_default_list_cannot_be_deleted),
+                                text = stringResource(Res.string.task_list_menu_default_list_cannot_be_deleted),
+                                modifier = Modifier.testTag(DELETE_NOT_ALLOWED_NOTICE),
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
