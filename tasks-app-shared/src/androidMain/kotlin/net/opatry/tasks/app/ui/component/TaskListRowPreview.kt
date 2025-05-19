@@ -26,11 +26,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
-private class TaskListPreviewParameterProvider(
+private class TaskListSimplePreviewParameterProvider(
 ) : PreviewParameterProvider<TaskListUIModel> {
     override val values: Sequence<TaskListUIModel>
         get() = sequenceOf(
@@ -46,13 +48,37 @@ private class TaskListPreviewParameterProvider(
                 id = TaskListId(0L),
                 title = "This is a task list with a very very very long name",
             ),
+            TaskListUIModel(
+                id = TaskListId(0L),
+                title = "This is a task list with a very very very long name",
+                remainingTasks = mapOf(
+                    null to listOf(
+                        TaskUIModel.Todo(
+                            id = TaskId(0L),
+                            title = "Task 1",
+                        ),
+                    ),
+                )
+            ),
+            TaskListUIModel(
+                id = TaskListId(0L),
+                title = "This is a task list with a very very very long name",
+                remainingTasks = mapOf(
+                    null to List(1500) {
+                        TaskUIModel.Todo(
+                            id = TaskId(it.toLong()),
+                            title = "Task $it",
+                        )
+                    }
+                )
+            ),
         )
 }
 
 @PreviewLightDark
 @Composable
 private fun TaskListRowPreview(
-    @PreviewParameter(TaskListPreviewParameterProvider::class)
+    @PreviewParameter(TaskListSimplePreviewParameterProvider::class)
     taskList: TaskListUIModel
 ) {
     TaskfolioThemedPreview {

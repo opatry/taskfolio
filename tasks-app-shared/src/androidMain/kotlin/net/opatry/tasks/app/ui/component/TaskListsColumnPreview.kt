@@ -24,8 +24,10 @@ package net.opatry.tasks.app.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
 @PreviewLightDark
@@ -35,18 +37,38 @@ private fun TaskListsColumnPreview() {
         TaskListUIModel(
             id = TaskListId(0L),
             title = "My task list",
+            remainingTasks = mapOf(
+                null to List(12) {
+                    TaskUIModel.Todo(
+                        id = TaskId(it.toLong()),
+                        title = "Task $it",
+                    )
+                },
+            )
         ),
         TaskListUIModel(
-            id = TaskListId(0L),
+            id = TaskListId(1L),
             title = "My selected task list",
         ),
         TaskListUIModel(
-            id = TaskListId(0L),
+            id = TaskListId(2L),
             title = "This is a task list with a very very very long name",
+        ),
+        TaskListUIModel(
+            id = TaskListId(3L),
+            title = "This with remaining task count",
+            remainingTasks = mapOf(
+                null to List(1500) {
+                    TaskUIModel.Todo(
+                        id = TaskId(it.toLong()),
+                        title = "Task $it",
+                    )
+                },
+            )
         ),
     )
 
     TaskfolioThemedPreview {
-        TaskListsColumn(taskLists, taskLists.last(), {}, {})
+        TaskListsColumn(taskLists, taskLists.first { it.title.contains("selected") }, {}, {})
     }
 }

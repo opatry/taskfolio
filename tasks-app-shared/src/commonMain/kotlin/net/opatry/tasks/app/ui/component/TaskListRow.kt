@@ -22,21 +22,40 @@
 
 package net.opatry.tasks.app.ui.component
 
+import androidx.annotation.VisibleForTesting
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
-import net.opatry.tasks.app.ui.component.TaskListsPaneTestTag.TASK_LIST_ROW
+import net.opatry.tasks.app.ui.component.TaskListRowTestTag.LABEL
+import net.opatry.tasks.app.ui.component.TaskListRowTestTag.REMAINING_TASKS_COUNT_BADGE
+import net.opatry.tasks.app.ui.component.TaskListRowTestTag.REMAINING_TASKS_COUNT_BADGE_LABEL
 
+@VisibleForTesting
+internal object TaskListRowTestTag {
+    const val LABEL = "TASK_LIST_LABEL"
+    const val REMAINING_TASKS_COUNT_BADGE = "TASK_LIST_REMAINING_TASKS_COUNT_BADGE"
+    const val REMAINING_TASKS_COUNT_BADGE_LABEL = "TASK_LIST_REMAINING_TASKS_COUNT_BADGE_LABEL"
+}
 
 @Composable
 fun TaskListRow(
@@ -45,6 +64,7 @@ fun TaskListRow(
     isSelected: Boolean = false,
     onClick: () -> Unit
 ) {
+    val remainingTasksCount = taskList.allRemainingTasks.size
     val cellBackground = when {
         isSelected -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .3f)
         else -> Color.Unspecified
@@ -57,7 +77,38 @@ fun TaskListRow(
     ) {
         ListItem(
             headlineContent = {
-                Text(taskList.title, overflow = TextOverflow.MiddleEllipsis, maxLines = 1)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = taskList.title,
+                        modifier = Modifier
+                            .weight(1f)
+                            .testTag(LABEL),
+                        overflow = TextOverflow.MiddleEllipsis,
+                        maxLines = 1,
+                    )
+                    AnimatedVisibility(
+                        visible = !isSelected && remainingTasksCount > 0,
+                        enter = fadeIn() + scaleIn(),
+                        exit = fadeOut() + scaleOut(),
+                    ) {
+                        Badge(
+                            modifier = Modifier.testTag(REMAINING_TASKS_COUNT_BADGE),
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ) {
+                            Text(
+                                text = when {
+                                    remainingTasksCount > 999 -> "999+"
+                                    else -> remainingTasksCount.toString()
+                                },
+                                modifier = Modifier.testTag(REMAINING_TASKS_COUNT_BADGE_LABEL)
+                            )
+                        }
+                    }
+                }
             },
             colors = ListItemDefaults.colors(
                 containerColor = cellBackground
