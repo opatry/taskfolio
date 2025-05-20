@@ -24,40 +24,42 @@ package net.opatry.tasks.data
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.util.inMemoryTasksAppDatabaseBuilder
+import org.junit.After
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-
-private fun runWithInMemoryDatabase(
-    test: suspend TestScope.(TaskListDao, TaskDao) -> Unit
-) = runTest {
-    val db = inMemoryTasksAppDatabaseBuilder()
-        .setDriver(BundledSQLiteDriver())
-        .setQueryCoroutineContext(backgroundScope.coroutineContext)
-        .build()
-
-    try {
-        test(db.getTaskListDao(), db.getTaskDao())
-    } finally {
-        db.close()
-    }
-}
 
 class TaskListDaoTest {
 
     private val now: Instant
         get() = Clock.System.now()
 
+    private lateinit var db: TasksAppDatabase
+    private lateinit var taskListDao: TaskListDao
+    private lateinit var taskDao: TaskDao
+
+    @BeforeTest
+    fun createDb() {
+        db = inMemoryTasksAppDatabaseBuilder()
+            .setDriver(BundledSQLiteDriver())
+            .build()
+        taskListDao = db.getTaskListDao()
+        taskDao = db.getTaskDao()
+    }
+
+    @After
+    fun closeDb() = db.close()
+
     @Test
-    fun `when insert then GetById should return the created task list`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when insert then GetById should return the created task list`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "Test",
@@ -72,8 +74,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when insertAll local task lists then getLocalOnlyTaskLists should return all local task lists`() =
-        runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when insertAll local task lists then getLocalOnlyTaskLists should return all local task lists`() = runTest {
         val items = listOf(
             TaskListEntity(
                 id = 1L,
@@ -96,7 +97,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when upsert with updated title then getById should return updated task list`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when upsert with updated title then getById should return updated task list`() = runTest {
         val original = TaskListEntity(
             id = 1L,
             title = "Old",
@@ -112,7 +113,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when upsert with new task list then getById should return created task list`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when upsert with new task list then getById should return created task list`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "List",
@@ -127,7 +128,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when upsertAll then getLocalOnlyTaskLists should return updated task lists`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when upsertAll then getLocalOnlyTaskLists should return updated task lists`() = runTest {
         val items = listOf(
             TaskListEntity(
                 id = 1L,
@@ -154,7 +155,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when deleteTaskList then getById should return null`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when deleteTaskList then getById should return null`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "ToDelete",
@@ -169,8 +170,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when deleteStaleTaskLists then should delete all task lists not in the list of valid remote ids`() =
-        runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when deleteStaleTaskLists then should delete all task lists not in the list of valid remote ids`() = runTest {
         taskListDao.insertAll(
             listOf(
                 TaskListEntity(
@@ -197,7 +197,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when sortTasksBy(DueDate) then sorting should be updated to DueDate`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when sortTasksBy(DueDate) then sorting should be updated to DueDate`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "Sortable",
@@ -214,7 +214,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when sortTasksBy(UserDefined) then sorting should be updated to UserDefined`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when sortTasksBy(UserDefined) then sorting should be updated to UserDefined`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "Sortable",
@@ -231,7 +231,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when getAllAsFlow then should emit value for new task lists when collecting`() = runWithInMemoryDatabase { taskListDao, _ ->
+    fun `when getAllAsFlow then should emit value for new task lists when collecting`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "List",
@@ -245,7 +245,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when getAllTaskListsWithTasksAsFlow then should return task lists with tasks in order`() = runWithInMemoryDatabase { taskListDao, taskDao ->
+    fun `when getAllTaskListsWithTasksAsFlow then should return task lists with tasks in order`() = runTest {
         val taskList1 = TaskListEntity(
             id = 1L,
             title = "List 1",

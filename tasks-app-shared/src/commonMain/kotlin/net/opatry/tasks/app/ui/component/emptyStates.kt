@@ -46,6 +46,7 @@ import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_EMPTY_ST
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_REPAIR_BUTTON
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASKS_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LISTS_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LISTS_EMPTY_STATE_CREATE_LIST_BUTTON
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LIST_SELECTED_EMPTY_STATE
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
@@ -63,9 +64,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
 internal object EmptyStatesTestTag {
-    const val NO_TASKS_EMPTY_STATE = "FULLY_EMPTY_STATE"
+    const val NO_TASKS_EMPTY_STATE = "NO_TASKS_EMPTY_STATE"
     const val NO_TASK_LIST_SELECTED_EMPTY_STATE = "NO_TASK_LIST_SELECTED_EMPTY_STATE"
-    const val NO_TASK_LISTS_EMPTY_STATE = "NO_TASKS_EMPTY_STATE"
+    const val NO_TASK_LISTS_EMPTY_STATE = "NO_TASK_LISTS_EMPTY_STATE"
+    const val NO_TASK_LISTS_EMPTY_STATE_CREATE_LIST_BUTTON = "NO_TASK_LISTS_EMPTY_STATE_CREATE_LIST_BUTTON"
     const val BROKEN_LIST_EMPTY_STATE = "BROKEN_LIST_EMPTY_STATE"
     const val BROKEN_LIST_DELETE_BUTTON = "BROKEN_LIST_DELETE_BUTTON"
     const val BROKEN_LIST_REPAIR_BUTTON = "BROKEN_LIST_REPAIR_BUTTON"
@@ -107,7 +109,10 @@ fun NoTaskListsEmptyState(onNewTaskListClick: () -> Unit) {
             description = stringResource(Res.string.task_lists_screen_empty_state_desc),
             modifier = Modifier.fillMaxWidth(1f)
         )
-        Button(onClick = onNewTaskListClick) {
+        Button(
+            onClick = onNewTaskListClick,
+            modifier = Modifier.testTag(NO_TASK_LISTS_EMPTY_STATE_CREATE_LIST_BUTTON),
+        ) {
             Text(stringResource(Res.string.task_lists_screen_empty_state_cta))
         }
     }

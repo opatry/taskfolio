@@ -24,8 +24,10 @@ package net.opatry.tasks.ui.component
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
@@ -34,6 +36,7 @@ import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TaskListScaffold
 import net.opatry.tasks.app.ui.component.TaskListScaffoldTestTag.ADD_TASK_FAB
 import kotlin.test.Test
+import kotlin.test.assertTrue
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.MORE_MENU_ICON as TASK_LIST_MORE_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.SORT_MENU_ICON as TASK_LIST_SORT_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.TITLE as TASK_LIST_PANE_TITLE
@@ -91,5 +94,27 @@ class TaskListScaffoldTest {
 
         onNodeWithTag(ADD_TASK_FAB)
             .assertDoesNotExist()
+    }
+
+    @Test
+    fun `when add task FAB is clicked then add task action should be triggered`() = runComposeUiTest {
+        val list = createTaskList()
+        var addTaskClicked = false
+        setContent {
+            TaskListScaffold(
+                taskLists = emptyList(),
+                taskList = list,
+                onNewTask = {
+                    addTaskClicked = true
+                }
+            )
+        }
+
+        onNodeWithTag(ADD_TASK_FAB)
+            .assertIsDisplayed()
+            .assertIsEnabled()
+            .performClick()
+
+        assertTrue(addTaskClicked, "Add task action was not triggered")
     }
 }

@@ -23,6 +23,8 @@
 package net.opatry.tasks.data
 
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.util.runTaskRepositoryTest
@@ -30,7 +32,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.days
 
 private suspend fun TaskRepository.createAndGetTaskList(title: String): TaskListDataModel {
     createTaskList(title)
@@ -136,6 +140,21 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `edit task with all parameters`() = runTaskRepositoryTest { repository ->
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
+
+        val updatedDate = Instant.DISTANT_FUTURE
+        repository.updateTask(task.id, "new title", "new notes", updatedDate)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals("new title", tasks.first().title)
+        assertEquals("new notes", tasks.first().notes)
+        assertEquals(updatedDate, tasks.first().dueDate)
+    }
+
+    @Test
     fun `edit task notes`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
@@ -145,6 +164,31 @@ class TaskRepositoryCRUDTest {
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("These are some notes", tasks.first().notes)
+    }
+
+    @Test
+    fun `edit task due date`() = runTaskRepositoryTest { repository ->
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
+
+        val updatedDate = Instant.DISTANT_FUTURE
+        repository.updateTaskDueDate(task.id, updatedDate)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals(updatedDate, tasks.first().dueDate)
+    }
+
+    @Test
+    fun `reset task due date`() = runTaskRepositoryTest { repository ->
+        val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
+
+        repository.updateTaskDueDate(task.id, null)
+
+        val tasks = repository.findTaskListById(taskList.id)?.tasks
+        assertNotNull(tasks)
+        assertEquals(1, tasks.size)
+        assertEquals(null, tasks.first().dueDate)
     }
 
     @Test
@@ -278,4 +322,23 @@ class TaskRepositoryCRUDTest {
             assertEquals(task3.id, tasks[2].id, "third task should be t100")
             assertEquals(task4.id, tasks[3].id, "fourth task should be t2")
         }
+
+    @Test
+    fun `sorting tasks by due date should put no due date last`() = runTaskRepositoryTest { repository ->
+        val (taskList, task1) = repository.createAndGetTask("list", "task1")
+        val t1 = Clock.System.now() + 1.days
+        repository.updateTaskDueDate(task1.id, t1)
+        val task2 = repository.createAndGetTask(taskList.id, "task2")
+        repository.updateTaskDueDate(task2.id, null)
+
+        repository.sortTasksBy(taskList.id, TaskListSorting.DueDate)
+
+        val updatedTaskList = repository.findTaskListById(taskList.id)
+        assertNotNull(updatedTaskList)
+        val tasks = updatedTaskList.tasks
+        assertEquals(task1.id, tasks[0].id, "task with due date should come first")
+        assertEquals(t1, tasks[0].dueDate)
+        assertEquals(task2.id, tasks[1].id, "task without due date should come last")
+        assertNull(tasks[1].dueDate)
+    }
 }
