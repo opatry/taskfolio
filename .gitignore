@@ -38,3 +38,4 @@ _site/
 .idea/AndroidProjectSystem.xml
 .idea/androidTestResultsUserPreferences.xml
 .idea/studiobot.xml
+tasks-app-desktop/bin/
