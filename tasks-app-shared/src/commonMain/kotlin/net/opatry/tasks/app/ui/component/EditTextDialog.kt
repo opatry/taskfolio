@@ -45,6 +45,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -72,12 +74,19 @@ fun EditTextDialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
-        var newTitle by remember { mutableStateOf(initialText) }
+        var titleFieldState by remember {
+            mutableStateOf(
+                TextFieldValue(
+                    text = initialText,
+                    selection = TextRange(initialText.length)
+                )
+            )
+        }
         // avoid displaying an error message when user didn't even started to write content
         var alreadyHadSomeContent by remember { mutableStateOf(initialText.isNotBlank()) }
-        val hasError by remember(newTitle, allowBlank) {
+        val hasError by remember(titleFieldState, allowBlank) {
             derivedStateOf {
-                !allowBlank && newTitle.isBlank()
+                !allowBlank && titleFieldState.text.isBlank()
             }
         }
 
@@ -90,10 +99,10 @@ fun EditTextDialog(
                     Text(dialogTitle, style = MaterialTheme.typography.titleLarge)
                 }
                 OutlinedTextField(
-                    value = newTitle,
+                    value = titleFieldState,
                     onValueChange = {
-                        alreadyHadSomeContent = alreadyHadSomeContent || it.isNotBlank()
-                        newTitle = it
+                        alreadyHadSomeContent = alreadyHadSomeContent || it.text.isNotBlank()
+                        titleFieldState = it
                     },
                     modifier = Modifier
                         .focusRequester(focusRequester),
@@ -117,7 +126,7 @@ fun EditTextDialog(
                         Text(stringResource(Res.string.dialog_cancel))
                     }
                     Button(
-                        onClick = { onValidate(newTitle) },
+                        onClick = { onValidate(titleFieldState.text) },
                         enabled = allowBlank || !hasError
                     ) {
                         Text(validateLabel)
