@@ -35,3 +35,6 @@ _ci/api-*.json
 bundletool-*.jar
 
 _site/
+.idea/AndroidProjectSystem.xml
+.idea/androidTestResultsUserPreferences.xml
+.idea/studiobot.xml
