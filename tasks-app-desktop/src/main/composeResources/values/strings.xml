@@ -24,4 +24,6 @@
     <string name="app_menu_edit">Edit</string>
     <string name="app_menu_edit_new_task_list">New task list…</string>
     <string name="app_menu_edit_new_task">New task…</string>
+    <string name="app_menu_tools">Tools</string>
+    <string name="app_menu_tools_show_network_logs">Show network logs</string>
 </resources>

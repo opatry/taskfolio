@@ -2999,6 +2999,20 @@
             "organization": {
                 "name": "QOS.ch"
             }
+        },
+        {
+            "uniqueId": "ro.cosminmihu.ktor:ktor-monitor-logging-no-op",
+            "developers": [
+                {
+                    "name": "Cosmin Mihu"
+                }
+            ],
+            "artifactVersion": "1.7.1",
+            "description": "Powerful tools to log Ktor Client requests and responses, making it easier to debug and analyze network communication.",
+            "name": "Ktor Monitor",
+            "licenses": [
+                "Apache-2.0"
+            ]
         }
     ],
     "licenses": {

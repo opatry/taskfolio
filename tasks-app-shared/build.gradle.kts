@@ -42,6 +42,8 @@ compose.resources {
     generateResClass = auto
 }
 
+val ciBuild = (findProperty("ci") as? String).toBoolean()
+
 kotlin {
     jvm()
 
@@ -108,6 +110,14 @@ kotlin {
             implementation(projects.tasksCore)
 
             implementation(projects.lucideIcons)
+        }
+
+        commonMain.dependencies {
+            if (ciBuild) {
+                implementation(libs.ktor.monitor.logging.no.op)
+            } else {
+                implementation(libs.ktor.monitor.logging)
+            }
         }
 
         commonTest.dependencies {

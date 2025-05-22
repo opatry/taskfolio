@@ -46,7 +46,7 @@ jobs:
     - name: ©️ Generate credits for ':tasks-app-desktop'
       id: check_desktop_app_credits
       run: |
-            ./gradlew --no-daemon :tasks-app-desktop:exportLibraryDefinitions
+            ./gradlew --no-daemon :tasks-app-desktop:exportLibraryDefinitions -Pci=true
             stale_credits=$(git diff tasks-app-desktop/src/main/resources/licenses_desktop.json)
             if [ -n "${stale_credits}" ]; then
                 {
@@ -79,7 +79,7 @@ jobs:
     - name: ©️ Generate credits for ':tasks-app-android'
       id: check_android_app_credits
       run: |
-            ./gradlew --no-daemon :tasks-app-android:exportLibraryDefinitions
+            ./gradlew --no-daemon :tasks-app-android:exportLibraryDefinitions -Pci=true
             stale_credits=$(git diff tasks-app-android/src/main/assets/licenses_android.json)
             if [ -n "${stale_credits}" ]; then
                 {

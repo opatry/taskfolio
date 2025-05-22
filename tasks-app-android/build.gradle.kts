@@ -105,7 +105,7 @@ android {
             manifestPlaceholders["crashlyticsEnabled"] = true
 
             // we allow dev signing config in release build when not in CI to allow release builds on dev machine
-            val ciBuild = (findProperty("ci") as? String)?.toBoolean() ?: false
+            val ciBuild = (findProperty("ci") as? String).toBoolean()
             signingConfig = if (signingConfigs.getByName("store").storeFile == null && !ciBuild) {
                 signingConfigs.getByName("dev")
             } else {
@@ -175,7 +175,7 @@ dependencies {
 
 aboutLibraries {
     // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
-    // - `./gradlew :tasks-app-android:exportLibraryDefinitions`
+    // - `./gradlew :tasks-app-android:exportLibraryDefinitions -Pci=true`
     // - the resulting file can for example be added as part of the SCM
     collect {
         configPath = file("$rootDir/license_config")

@@ -60,6 +60,7 @@ import net.opatry.tasks.app.ui.screen.AuthorizationScreen
 import net.opatry.tasks.app.ui.theme.TaskfolioTheme
 import org.koin.compose.KoinApplication
 import org.koin.compose.viewmodel.koinViewModel
+import ro.cosminmihu.ktor.monitor.KtorMonitorWindow
 import java.awt.Dimension
 import java.awt.Toolkit
 import javax.swing.UIManager
@@ -75,6 +76,7 @@ fun main() {
     val appName = System.getProperty("app.name") ?: "Taskfolio"
     val fullVersion = System.getProperty("app.version.full") ?: "0.0.0.0"
     val versionLabel = System.getProperty("app.version")?.let { " v$it" } ?: ""
+    val releaseBuild = System.getProperty("build.release").toBoolean()
     application {
         val screenSize by remember {
             mutableStateOf(Toolkit.getDefaultToolkit().screenSize)
@@ -90,6 +92,13 @@ fun main() {
         var showNewTaskListDialog by remember { mutableStateOf(false) }
         var showNewTaskEditorSheet by remember { mutableStateOf(false) }
         var selectedTaskList by remember { mutableStateOf<TaskListUIModel?>(null) }
+        var showKtorMonitor by remember { mutableStateOf(false) }
+        if (!releaseBuild) {
+            KtorMonitorWindow(
+                show = showKtorMonitor,
+                onCloseRequest = { showKtorMonitor = false }
+            )
+        }
 
         Window(
             onCloseRequest = ::exitApplication,
@@ -117,9 +126,11 @@ fun main() {
             }
 
             AppMenuBar(
+                showDevelopmentTools = !releaseBuild,
                 onNewTaskListClick = { showNewTaskListDialog = true },
                 canCreateTask = selectedTaskList != null,
                 onNewTaskClick = { showNewTaskEditorSheet = true },
+                onNetworkLogClick = { showKtorMonitor = true },
             )
 
             KoinApplication(application = {
