@@ -23,4 +23,5 @@
 <resources>
     <string name="app_menu_edit">Édition</string>
     <string name="app_menu_edit_new_task_list">Nouvelle liste de tâches…</string>
+    <string name="app_menu_edit_new_task">Nouvelle tâche…</string>
 </resources>

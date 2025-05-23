@@ -29,6 +29,7 @@ import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.MenuBar
 import net.opatry.tasks.app.resources.Res
 import net.opatry.tasks.app.resources.app_menu_edit
+import net.opatry.tasks.app.resources.app_menu_edit_new_task
 import net.opatry.tasks.app.resources.app_menu_edit_new_task_list
 import net.opatry.tasks.app.util.OS
 import net.opatry.tasks.app.util.currentOS
@@ -37,6 +38,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun FrameWindowScope.AppMenuBar(
     onNewTaskListClick: () -> Unit,
+    canCreateTask: Boolean,
+    onNewTaskClick: () -> Unit,
 ) {
     MenuBar {
         Menu(stringResource(Res.string.app_menu_edit), mnemonic = 'E') {
@@ -48,6 +51,16 @@ fun FrameWindowScope.AppMenuBar(
                     OS.Windows -> KeyShortcut(key = Key.N, ctrl = true, shift = true)
                 },
                 onClick = onNewTaskListClick
+            )
+            Item(
+                text = stringResource(Res.string.app_menu_edit_new_task),
+                shortcut = when (currentOS) {
+                    OS.Mac -> KeyShortcut(key = Key.N, meta = true)
+                    OS.Linux,
+                    OS.Windows -> KeyShortcut(key = Key.N, ctrl = true)
+                },
+                enabled = canCreateTask,
+                onClick = onNewTaskClick
             )
         }
     }

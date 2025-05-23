@@ -20,6 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,11 +47,14 @@ import net.opatry.tasks.app.di.utilModule
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.presentation.UserViewModel
+import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.TasksApp
 import net.opatry.tasks.app.ui.component.AppMenuBar
 import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.NewTaskListDialog
+import net.opatry.tasks.app.ui.component.TaskEditMode
+import net.opatry.tasks.app.ui.component.TaskEditorBottomSheet
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
 import net.opatry.tasks.app.ui.theme.TaskfolioTheme
@@ -64,6 +68,7 @@ private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95
 
 object MainApp
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
@@ -83,6 +88,8 @@ fun main() {
         )
 
         var showNewTaskListDialog by remember { mutableStateOf(false) }
+        var showNewTaskEditorSheet by remember { mutableStateOf(false) }
+        var selectedTaskList by remember { mutableStateOf<TaskListUIModel?>(null) }
 
         Window(
             onCloseRequest = ::exitApplication,
@@ -111,6 +118,8 @@ fun main() {
 
             AppMenuBar(
                 onNewTaskListClick = { showNewTaskListDialog = true },
+                canCreateTask = selectedTaskList != null,
+                onNewTaskClick = { showNewTaskEditorSheet = true },
             )
 
             KoinApplication(application = {
@@ -147,6 +156,8 @@ fun main() {
                                     MainApp::class.java.getResource("/licenses_desktop.json")?.readText() ?: ""
                                 }
                                 val tasksViewModel = koinViewModel<TaskListsViewModel>()
+                                val taskLists by tasksViewModel.taskLists.collectAsState(emptyList())
+                                selectedTaskList = taskLists.firstOrNull(TaskListUIModel::isSelected)
 
                                 if (showNewTaskListDialog) {
                                     NewTaskListDialog(
@@ -155,6 +166,22 @@ fun main() {
                                             showNewTaskListDialog = false
                                             tasksViewModel.createTaskList(title)
                                         },
+                                    )
+                                }
+
+                                val taskList = selectedTaskList
+                                if (showNewTaskEditorSheet && taskList != null) {
+                                    TaskEditorBottomSheet(
+                                        editMode = TaskEditMode.NewTask,
+                                        task = null,
+                                        allTaskLists = taskLists,
+                                        selectedTaskList = taskList,
+                                        onDismiss = { showNewTaskEditorSheet = false },
+                                        onEditDueDate = { /* TODO */ },
+                                        onValidate = { taskList, title, notes, dueDate ->
+                                            showNewTaskEditorSheet = false
+                                            tasksViewModel.createTask(taskList.id, title, notes, dueDate)
+                                        }
                                     )
                                 }
 
