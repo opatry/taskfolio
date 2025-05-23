@@ -1,5 +1,6 @@
 ---
 layout: home
+title: Taskfolio
 ---
 
 **Taskfolio** is a personal project designed to showcase my Android development skills.
@@ -71,5 +72,6 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 ## 🔗 Links
 
-- <span style="fill: currentcolor;" class="icon icon--github">{% include icon-github.svg %}</span> [opatry/taskfolio](https://github.com/opatry/taskfolio)
-- [Privacy Policy]({{ site.baseurl }}{% link legal/privacy-policy.md %})
+- <span class="svg-icon">{% include lucide-icon-github-1px.svg %}</span> [opatry/taskfolio](https://github.com/opatry/taskfolio)
+- <span class="svg-icon">{% include lucide-icon-twitter-1px.svg %}</span> [o_patry](https://twitter.com/opatry)
+- <span class="svg-icon">{% include lucide-icon-scale-1px.svg %}</span> [Privacy Policy]({% link legal/privacy-policy.md %})

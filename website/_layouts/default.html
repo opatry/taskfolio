@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title | default: site.title | escape }}</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ site.description | escape }}">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <link rel="stylesheet" href="{{ "/assets/styles.css" | relative_url }}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans:400,400i,600,600i">
+  <link rel="shortcut icon" href="{{ "/favicon.ico" | prepend: site.baseurl | prepend: site.url }}" />
+</head>
+
+<body>
+  <div class="container">
+    {%- unless page.url == "/" -%}
+    <header class="site-header">
+      <a class="site-title" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+    </header>
+    {%- endunless -%}
+
+    <main class="page-content">
+      {{ content }}
+    </main>
+    
+    <footer class="site-footer">
+      <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}.</p>
+    </footer>
+  </div>
+</body>
+</html>
