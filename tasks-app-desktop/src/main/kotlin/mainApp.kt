@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -46,8 +47,10 @@ import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.app.ui.TasksApp
+import net.opatry.tasks.app.ui.component.AppMenuBar
 import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
 import net.opatry.tasks.app.ui.component.LoadingPane
+import net.opatry.tasks.app.ui.component.NewTaskListDialog
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
 import net.opatry.tasks.app.ui.theme.TaskfolioTheme
@@ -79,6 +82,8 @@ fun main() {
             position = WindowPosition(Alignment.Center), width = defaultSize.width, height = defaultSize.height
         )
 
+        var showNewTaskListDialog by remember { mutableStateOf(false) }
+
         Window(
             onCloseRequest = ::exitApplication,
             state = windowState,
@@ -103,6 +108,10 @@ fun main() {
                     )
                 }
             }
+
+            AppMenuBar(
+                onNewTaskListClick = { showNewTaskListDialog = true },
+            )
 
             KoinApplication(application = {
                 modules(
@@ -138,6 +147,17 @@ fun main() {
                                     MainApp::class.java.getResource("/licenses_desktop.json")?.readText() ?: ""
                                 }
                                 val tasksViewModel = koinViewModel<TaskListsViewModel>()
+
+                                if (showNewTaskListDialog) {
+                                    NewTaskListDialog(
+                                        onDismissRequest = { showNewTaskListDialog = false },
+                                        onCreate = { title ->
+                                            showNewTaskListDialog = false
+                                            tasksViewModel.createTaskList(title)
+                                        },
+                                    )
+                                }
+
                                 TasksApp(aboutApp, userViewModel, tasksViewModel)
                             }
 

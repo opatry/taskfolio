@@ -39,6 +39,12 @@ val appName = "Taskfolio"
 val appVersion = libs.versions.tasksApp.name.get()
 val appVersionCode = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
 
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "net.opatry.tasks.app.resources"
+    generateResClass = always
+}
+
 kotlin {
     jvmToolchain(17)
 
