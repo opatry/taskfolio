@@ -58,7 +58,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Kotlin multiplatform](https://kotlinlang.org/docs/multiplatform.html) (aka KMP)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
-- [Room](https://developer.android.com/training/data-storage/room) (local persistance)
+- [Room](https://developer.android.com/training/data-storage/room) for local persistance
 - [Koin](https://insert-koin.io/) for dependency injection
 - [Material Design Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
