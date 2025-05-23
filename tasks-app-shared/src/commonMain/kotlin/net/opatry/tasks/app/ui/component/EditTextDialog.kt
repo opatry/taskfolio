@@ -65,15 +65,15 @@ fun EditTextDialog(
     initialText: String = "",
     allowBlank: Boolean = true,
 ) {
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
+
         var titleFieldState by remember {
             mutableStateOf(
                 TextFieldValue(
