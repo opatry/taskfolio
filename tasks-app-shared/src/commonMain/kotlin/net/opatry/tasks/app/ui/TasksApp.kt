@@ -59,8 +59,8 @@ import androidx.navigation.compose.rememberNavController
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.presentation.UserViewModel
-import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.MissingScreen
+import net.opatry.tasks.app.ui.component.NewTaskListDialog
 import net.opatry.tasks.app.ui.component.ProfileIcon
 import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AboutScreen
@@ -71,8 +71,6 @@ import net.opatry.tasks.resources.navigation_about
 import net.opatry.tasks.resources.navigation_calendar
 import net.opatry.tasks.resources.navigation_search
 import net.opatry.tasks.resources.navigation_tasks
-import net.opatry.tasks.resources.task_lists_screen_create_task_list_dialog_confirm
-import net.opatry.tasks.resources.task_lists_screen_create_task_list_dialog_title
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -149,16 +147,13 @@ fun TasksApp(aboutApp: AboutApp, userViewModel: UserViewModel, tasksViewModel: T
                     }
 
                     if (showNewTaskListDialog) {
-                        EditTextDialog(
+                        NewTaskListDialog(
+                            defaultTitle = newTaskListDefaultTitle,
                             onDismissRequest = { showNewTaskListDialog = false },
-                            validateLabel = stringResource(Res.string.task_lists_screen_create_task_list_dialog_confirm),
-                            onValidate = { title ->
+                            onCreate = { title ->
                                 showNewTaskListDialog = false
                                 tasksViewModel.createTaskList(title)
                             },
-                            dialogTitle = stringResource(Res.string.task_lists_screen_create_task_list_dialog_title),
-                            initialText = newTaskListDefaultTitle,
-                            allowBlank = false
                         )
                     }
                 }
