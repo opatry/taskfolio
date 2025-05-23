@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.app.ui.component
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,16 +46,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.CANCEL_BUTTON
+import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.DIALOG_TITLE
+import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.ERROR_MESSAGE
+import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.TEXT_FIELD
+import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.VALIDATE_BUTTON
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
 import net.opatry.tasks.resources.edit_text_dialog_empty_title_error
 import net.opatry.tasks.resources.edit_text_dialog_title
 import org.jetbrains.compose.resources.stringResource
+
+@VisibleForTesting
+internal object EditTextDialogTestTag {
+    const val DIALOG_TITLE = "EDIT_TEXT_DIALOG_TITLE"
+    const val TEXT_FIELD = "EDIT_TEXT_DIALOG_TEXT_FIELD"
+    const val ERROR_MESSAGE = "EDIT_TEXT_DIALOG_ERROR_MESSAGE"
+    const val CANCEL_BUTTON = "EDIT_TEXT_DIALOG_CANCEL_BUTTON"
+    const val VALIDATE_BUTTON = "EDIT_TEXT_DIALOG_VALIDATE_BUTTON"
+}
 
 @Composable
 fun EditTextDialog(
@@ -65,15 +81,15 @@ fun EditTextDialog(
     initialText: String = "",
     allowBlank: Boolean = true,
 ) {
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
-
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
+
         var titleFieldState by remember {
             mutableStateOf(
                 TextFieldValue(
@@ -96,7 +112,11 @@ fun EditTextDialog(
         ) {
             Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 if (dialogTitle != null) {
-                    Text(dialogTitle, style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = dialogTitle,
+                        modifier = Modifier.testTag(DIALOG_TITLE),
+                        style = MaterialTheme.typography.titleLarge
+                    )
                 }
                 OutlinedTextField(
                     value = titleFieldState,
@@ -105,13 +125,17 @@ fun EditTextDialog(
                         titleFieldState = it
                     },
                     modifier = Modifier
-                        .focusRequester(focusRequester),
+                        .focusRequester(focusRequester)
+                        .testTag(TEXT_FIELD),
                     label = { Text(stringResource(Res.string.edit_text_dialog_title)) },
                     maxLines = 1,
                     supportingText = if (allowBlank) null else {
                         {
                             AnimatedVisibility(visible = hasError && alreadyHadSomeContent) {
-                                Text(stringResource(Res.string.edit_text_dialog_empty_title_error))
+                                Text(
+                                    text = stringResource(Res.string.edit_text_dialog_empty_title_error),
+                                    modifier = Modifier.testTag(ERROR_MESSAGE)
+                                )
                             }
                         }
                     },
@@ -122,11 +146,12 @@ fun EditTextDialog(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    TextButton(onClick = onDismissRequest) {
+                    TextButton(onClick = onDismissRequest, Modifier.testTag(CANCEL_BUTTON)) {
                         Text(stringResource(Res.string.dialog_cancel))
                     }
                     Button(
                         onClick = { onValidate(titleFieldState.text) },
+                        modifier = Modifier.testTag(VALIDATE_BUTTON),
                         enabled = allowBlank || !hasError
                     ) {
                         Text(validateLabel)
