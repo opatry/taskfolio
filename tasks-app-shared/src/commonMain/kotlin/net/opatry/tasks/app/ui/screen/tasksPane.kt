@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.screen
 
 import CalendarDays
+import CalendarX2
 import ListPlus
 import LucideIcons
 import NotepadText
@@ -30,6 +31,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -41,12 +43,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -89,6 +93,7 @@ import net.opatry.tasks.app.ui.component.DueDateUpdate.Reset
 import net.opatry.tasks.app.ui.component.DueDateUpdate.Today
 import net.opatry.tasks.app.ui.component.DueDateUpdate.Tomorrow
 import net.opatry.tasks.app.ui.component.EditTextDialog
+import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
 import net.opatry.tasks.app.ui.component.TaskListScaffold
@@ -96,6 +101,7 @@ import net.opatry.tasks.app.ui.component.toColor
 import net.opatry.tasks.app.ui.component.toLabel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
+import net.opatry.tasks.resources.task_due_date_reset
 import net.opatry.tasks.resources.task_due_date_update_cta
 import net.opatry.tasks.resources.task_editor_sheet_edit_title
 import net.opatry.tasks.resources.task_editor_sheet_list_dropdown_label
@@ -502,6 +508,7 @@ fun TaskListDetail(
     }
 
     if (showDatePickerDialog) {
+        val initialTaskDueDate = taskOfInterest?.dueDate
         taskOfInterest?.let { task ->
             val state = rememberDatePickerState(task.dueDate?.atStartOfDayIn(TimeZone.UTC)?.toEpochMilliseconds())
             DatePickerDialog(
@@ -518,20 +525,40 @@ fun TaskListDetail(
                     }
                 },
                 confirmButton = {
-                    Button(onClick = {
-                        taskOfInterest = null
-                        showDatePickerDialog = false
-                        val newDate = state.selectedDateMillis
-                            ?.let(Instant::fromEpochMilliseconds)
-                            ?.toLocalDateTime(TimeZone.UTC)
-                            ?.date
-                        viewModel.updateTaskDueDate(task.id, dueDate = newDate)
-                    }) {
+                    Button(
+                        onClick = {
+                            taskOfInterest = null
+                            showDatePickerDialog = false
+                            val newDate = state.selectedDateMillis
+                                ?.let(Instant::fromEpochMilliseconds)
+                                ?.toLocalDateTime(TimeZone.UTC)
+                                ?.date
+                            viewModel.updateTaskDueDate(task.id, dueDate = newDate)
+                        }
+                    ) {
                         Text(stringResource(Res.string.task_due_date_update_cta))
                     }
                 },
             ) {
-                DatePicker(state)
+                Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    DatePicker(state = state, modifier = Modifier.weight(1f))
+                    if (initialTaskDueDate != null) {
+                        HorizontalDivider()
+                        TextButton(
+                            onClick = {
+                                showDatePickerDialog = false
+                                viewModel.updateTaskDueDate(task.id, null)
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                        ) {
+                            RowWithIcon(
+                                text = stringResource(Res.string.task_due_date_reset),
+                                icon = LucideIcons.CalendarX2,
+                            )
+                        }
+                    }
+                }
             }
         }
     }
