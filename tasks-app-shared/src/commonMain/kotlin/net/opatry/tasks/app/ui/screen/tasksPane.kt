@@ -22,59 +22,33 @@
 
 package net.opatry.tasks.app.ui.screen
 
-import CalendarDays
 import CalendarX2
-import ListPlus
 import LucideIcons
-import NotepadText
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.datetime.Clock
@@ -95,25 +69,14 @@ import net.opatry.tasks.app.ui.component.DueDateUpdate.Tomorrow
 import net.opatry.tasks.app.ui.component.EditTextDialog
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
+import net.opatry.tasks.app.ui.component.TaskEditMode
+import net.opatry.tasks.app.ui.component.TaskEditorBottomSheet
 import net.opatry.tasks.app.ui.component.TaskListEditMenuAction
 import net.opatry.tasks.app.ui.component.TaskListScaffold
-import net.opatry.tasks.app.ui.component.toColor
-import net.opatry.tasks.app.ui.component.toLabel
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
 import net.opatry.tasks.resources.task_due_date_reset
 import net.opatry.tasks.resources.task_due_date_update_cta
-import net.opatry.tasks.resources.task_editor_sheet_edit_title
-import net.opatry.tasks.resources.task_editor_sheet_list_dropdown_label
-import net.opatry.tasks.resources.task_editor_sheet_new_subtask_title
-import net.opatry.tasks.resources.task_editor_sheet_new_task_title
-import net.opatry.tasks.resources.task_editor_sheet_no_due_date_fallback
-import net.opatry.tasks.resources.task_editor_sheet_notes_field_label
-import net.opatry.tasks.resources.task_editor_sheet_notes_field_placeholder
-import net.opatry.tasks.resources.task_editor_sheet_title_field_empty_error
-import net.opatry.tasks.resources.task_editor_sheet_title_field_label
-import net.opatry.tasks.resources.task_editor_sheet_title_field_placeholder
-import net.opatry.tasks.resources.task_editor_sheet_validate
 import net.opatry.tasks.resources.task_list_pane_clear_completed_confirm_dialog_confirm
 import net.opatry.tasks.resources.task_list_pane_clear_completed_confirm_dialog_message
 import net.opatry.tasks.resources.task_list_pane_clear_completed_confirm_dialog_title
@@ -147,7 +110,6 @@ fun TaskListDetail(
 
     var showEditTaskSheet by remember { mutableStateOf(false) }
     var showDatePickerDialog by remember { mutableStateOf(false) }
-    val taskEditorSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showNewTaskSheet by remember { mutableStateOf(false) }
     var showNewSubTaskSheet by remember { mutableStateOf(false) }
     var showNewTaskListAlert by remember { mutableStateOf(false) }
@@ -324,187 +286,48 @@ fun TaskListDetail(
     // FIXME extract a reusable dialog with proper callbacks instead of putting `if`s everywhere
     if (showEditTaskSheet || showNewTaskSheet || showNewSubTaskSheet) {
         val task = taskOfInterest
-        ModalBottomSheet(
-            sheetState = taskEditorSheetState,
-            onDismissRequest = {
+        TaskEditorBottomSheet(
+            task = task,
+            editMode = when {
+                showEditTaskSheet -> TaskEditMode.Edit
+                showNewSubTaskSheet -> TaskEditMode.NewSubTask
+                else -> TaskEditMode.NewTask
+            },
+            allTaskLists = taskLists,
+            taskList = taskList,
+            // TODO deal with due date and nested alert dialogs
+            onEditDueDate = { showDatePickerDialog = true },
+            onDismiss = {
                 taskOfInterest = null
                 showEditTaskSheet = false
                 showNewTaskSheet = false
                 showNewSubTaskSheet = false
-            }
-        ) {
-            val sheetTitleRes = when {
-                showEditTaskSheet -> Res.string.task_editor_sheet_edit_title
-                showNewSubTaskSheet -> Res.string.task_editor_sheet_new_subtask_title
-                else -> Res.string.task_editor_sheet_new_task_title
-            }
-            // FIXME remembers from 1 dialog to the other
-            val initialTitle = task?.title.takeUnless { showNewSubTaskSheet }.orEmpty()
-            var newTitle by remember { mutableStateOf(initialTitle) }
-            // avoid displaying an error message when user didn't even started to write content
-            var alreadyHadSomeContent by remember { mutableStateOf(initialTitle.isNotBlank()) }
-            val titleHasError by remember {
-                derivedStateOf {
-                    newTitle.isBlank()
-                }
-            }
-            // FIXME remembers from 1 dialog to the other
-            val initialNotes = task?.notes?.takeUnless { showNewSubTaskSheet }.orEmpty()
-            var newNotes by remember { mutableStateOf(initialNotes) }
-            var expandTaskListsDropDown by remember { mutableStateOf(false) }
-            var targetList by remember { mutableStateOf(taskList) }
-
-            // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
-            Column(
-                Modifier
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 8.dp)
-                    .fillMaxWidth()
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .imePadding()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(stringResource(sheetTitleRes), style = MaterialTheme.typography.titleLarge)
-
-                OutlinedTextField(
-                    newTitle,
-                    onValueChange = {
-                        alreadyHadSomeContent = alreadyHadSomeContent || it.isNotBlank()
-                        newTitle = it
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(Res.string.task_editor_sheet_title_field_label)) },
-                    placeholder = { Text(stringResource(Res.string.task_editor_sheet_title_field_placeholder)) },
-                    maxLines = 1,
-                    supportingText = {
-                        AnimatedVisibility(visible = titleHasError && alreadyHadSomeContent) {
-                            Text(stringResource(Res.string.task_editor_sheet_title_field_empty_error))
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next,
-                    ),
-                    isError = titleHasError && alreadyHadSomeContent,
-                )
-
-                OutlinedTextField(
-                    newNotes,
-                    onValueChange = { newNotes = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text(stringResource(Res.string.task_editor_sheet_notes_field_label)) },
-                    placeholder = { Text(stringResource(Res.string.task_editor_sheet_notes_field_placeholder)) },
-                    leadingIcon = { Icon(LucideIcons.NotepadText, null) },
-                    singleLine = false,
-                    minLines = 2,
-                    maxLines = 4,
-                )
-
-                // TODO one of top of the other or side by side Date|TaskList
-                //  if one on top of the other, need to revise expansion height to display all content
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    // TODO Add shortcuts for Today, Tomorrow, Next Week
-                    // FIXME when dialog is dismissed, current state is reset but shouldn't need to extract date picker dialog use
-                    val dueDateLabel = task?.dateRange?.toLabel()?.takeUnless(String::isBlank)
-                        ?: stringResource(Res.string.task_editor_sheet_no_due_date_fallback)
-                    AssistChip(
-                        onClick = { showDatePickerDialog = true },
-                        enabled = false, // TODO not supported for now, super imposed dialogs breaks the flow
-                        shape = MaterialTheme.shapes.large,
-                        leadingIcon = { Icon(LucideIcons.CalendarDays, null) },
-                        label = { Text(dueDateLabel, color = task?.dateRange.toColor()) },
-                    )
-
-                    val enableAdvancedTaskEdit = false // TODO implement advanced task edit
-                    if (enableAdvancedTaskEdit && showEditTaskSheet) {
-                        ExposedDropdownMenuBox(
-                            expanded = expandTaskListsDropDown,
-                            onExpandedChange = { expandTaskListsDropDown = it }
-                        ) {
-                            OutlinedTextField(
-                                targetList.title,
-                                onValueChange = {},
-                                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
-                                label = { Text(stringResource(Res.string.task_editor_sheet_list_dropdown_label)) },
-                                readOnly = true,
-                                trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandTaskListsDropDown)
-                                },
-                            )
-
-                            ExposedDropdownMenu(
-                                expanded = expandTaskListsDropDown,
-                                onDismissRequest = { expandTaskListsDropDown = false }
-                            ) {
-                                taskLists.forEach { taskList ->
-                                    DropdownMenuItem(
-                                        text = { Text(taskList.title) },
-                                        onClick = {
-                                            targetList = taskList
-                                            expandTaskListsDropDown = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-
-                        // TODO instead of a button opening a dialog, TextField could be editable to let user
-                        //  enter the new list name, if targetList isn't part of taskLists, then, it's a new one
-                        IconButton(onClick = {}) {
-                            Icon(LucideIcons.ListPlus, null)
-                        }
-                    }
-                }
-
-                Row(
-                    Modifier.align(Alignment.End),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    TextButton(onClick = {
+            },
+            onValidate = { targetList, title, notes, dueDate ->
+                when {
+                    showEditTaskSheet -> {
                         taskOfInterest = null
                         showEditTaskSheet = false
-                        showNewTaskSheet = false
-                        showNewSubTaskSheet = false
-                    }) {
-                        Text(stringResource(Res.string.dialog_cancel))
+
+                        viewModel.updateTask(requireNotNull(task).id, title, notes, dueDate)
                     }
-                    Button(
-                        onClick = {
-                            when {
-                                showEditTaskSheet -> {
-                                    taskOfInterest = null
-                                    showEditTaskSheet = false
 
-                                    // TODO deal with due date and nested alert dialogs
-                                    viewModel.updateTask(requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
-                                }
+                    showNewSubTaskSheet -> {
+                        taskOfInterest = null
+                        showNewSubTaskSheet = false
 
-                                showNewSubTaskSheet -> {
-                                    taskOfInterest = null
-                                    showNewSubTaskSheet = false
+                        viewModel.createSubTask(targetList.id, requireNotNull(task).id, title, notes, dueDate)
+                    }
 
-                                    // TODO deal with due date and nested alert dialogs
-                                    viewModel.createSubTask(targetList.id, requireNotNull(task).id, newTitle, newNotes, task.dueDate /*FIXME*/)
-                                }
+                    showNewTaskSheet -> {
+                        showNewTaskSheet = false
 
-                                showNewTaskSheet -> {
-                                    showNewTaskSheet = false
-
-                                    onNavigateTo(targetList)
-                                    viewModel.createTask(targetList.id, newTitle, newNotes, null /*TODO*/)
-                                }
-                            }
-                        },
-                        enabled = newTitle.isNotBlank()
-                    ) {
-                        Text(stringResource(Res.string.task_editor_sheet_validate))
+                        onNavigateTo(targetList)
+                        viewModel.createTask(targetList.id, title, notes, dueDate)
                     }
                 }
             }
-        }
+        )
     }
 
     if (showDatePickerDialog) {
