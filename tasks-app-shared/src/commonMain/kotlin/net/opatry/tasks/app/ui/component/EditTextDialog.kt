@@ -72,7 +72,7 @@ fun EditTextDialog(
 
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
         var titleFieldState by remember {
             mutableStateOf(
