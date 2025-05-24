@@ -140,6 +140,7 @@ class TaskListsViewModelTest {
                             completionDate = null,
                             position = "00000000000000000000",
                             indent = 0,
+                            isParentTask = false,
                         ),
                         TaskDataModel(
                             id = 102,
@@ -151,6 +152,7 @@ class TaskListsViewModelTest {
                             completionDate = null,
                             position = "00000000000000000001",
                             indent = 0,
+                            isParentTask = false,
                         ),
                         TaskDataModel(
                             id = 103,
@@ -162,6 +164,7 @@ class TaskListsViewModelTest {
                             completionDate = updateInstant,
                             position = "09999999999999999999",
                             indent = 0,
+                            isParentTask = false,
                         ),
                     ),
                     sorting = TaskListSorting.DueDate,

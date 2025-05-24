@@ -84,17 +84,18 @@ private fun Task.asTaskEntity(parentListLocalId: Long, taskLocalId: Long?, paren
 }
 
 private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskListDataModel {
+    val parentIds = tasks.map(TaskEntity::parentTaskLocalId).toSet()
     val (sorting, sortedTasks) = when (sorting) {
         TaskListEntity.Sorting.UserDefined -> TaskListSorting.Manual to sortTasksManualOrdering(tasks).map { (task, indent) ->
-            task.asTaskDataModel(indent)
+            task.asTaskDataModel(indent, !task.isCompleted && task.id in parentIds)
         }
 
         TaskListEntity.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
-            task.asTaskDataModel(0)
+            task.asTaskDataModel(0, !task.isCompleted && task.id in parentIds)
         }
 
         TaskListEntity.Sorting.Title -> TaskListSorting.Title to sortTasksTitleOrdering(tasks).map { task ->
-            task.asTaskDataModel(0)
+            task.asTaskDataModel(0, !task.isCompleted && task.id in parentIds)
         }
     }
     return TaskListDataModel(
@@ -114,7 +115,7 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
     )
 }
 
-private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
+private fun TaskEntity.asTaskDataModel(indent: Int, isParentTask: Boolean): TaskDataModel {
     return TaskDataModel(
         id = id,
         title = title,
@@ -125,6 +126,7 @@ private fun TaskEntity.asTaskDataModel(indent: Int): TaskDataModel {
         completionDate = completionDate,
         position = position,
         indent = indent,
+        isParentTask = isParentTask,
     )
 }
 
