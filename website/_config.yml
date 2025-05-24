@@ -6,8 +6,3 @@ description: >-
   UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
 baseurl: '/taskfolio'
 url: 'https://opatry.github.io'
-twitter_username: o_patry
-github_username:  opatry
-
-markdown: kramdown
-theme: jekyll-theme-basically-basic
