@@ -76,6 +76,18 @@ fun TaskListsMasterDetail(
         }
     }
 
+    MyBackHandler(navigator::canNavigateBack) {
+        scope.launch {
+            // FIXME still a bit fragile depending on contentKey use depending on destination
+            //  it might be 2 destinations using the same value as contentKey
+            //  will be good enough to begin with
+            if (navigator.currentDestination?.contentKey == selectedTaskListId?.value) {
+                viewModel.selectTaskList(null)
+            }
+            navigator.navigateBack()
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
             // Only display error for now
@@ -90,12 +102,6 @@ fun TaskListsMasterDetail(
         LaunchedEffect(errorString) {
             snackbarHostState.showSnackbar(errorString)
             errorEvent = null
-        }
-    }
-
-    MyBackHandler(navigator::canNavigateBack) {
-        scope.launch {
-            navigator.navigateBack()
         }
     }
 
