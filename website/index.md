@@ -74,4 +74,4 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 - <span class="svg-icon">{% include lucide-icon-github-1px.svg %}</span> [opatry/taskfolio](https://github.com/opatry/taskfolio)
 - <span class="svg-icon">{% include lucide-icon-twitter-1px.svg %}</span> [o_patry](https://twitter.com/opatry)
-- <span class="svg-icon">{% include lucide-icon-scale-1px.svg %}</span> [Privacy Policy]({% link legal/privacy-policy.md %})
+- <span class="svg-icon">{% include lucide-icon-shield-check-1px.svg %}</span> [Privacy Policy]({% link legal/privacy-policy.md %})
