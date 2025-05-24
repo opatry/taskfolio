@@ -73,14 +73,14 @@ class InMemoryTasksApi(
                 if (tasks.isEmpty()) {
                     return@handleRequest
                 }
-                tasks.map { task ->
+
+                storage[taskListId] = tasks.map { task ->
                     if (task.isCompleted) {
                         task.copy(isHidden = true)
                     } else {
                         task
                     }
-                }
-                storage[taskListId] = tasks
+                }.toMutableList()
             }
         }
     }
@@ -92,14 +92,14 @@ class InMemoryTasksApi(
                 if (tasks.none { it.id == taskId }) {
                     error("Task ($taskId) not found in task list ($taskListId)")
                 }
-                tasks.map { task ->
+                val updatedTasks = tasks.map { task ->
                     if (task.id == taskId) {
                         task.copy(isDeleted = true, isHidden = true)
                     } else {
                         task
                     }
                 }
-                storage[taskListId] = recomputeTaskPositions(tasks).toMutableList()
+                storage[taskListId] = recomputeTaskPositions(updatedTasks).toMutableList()
             }
         }
     }
@@ -256,14 +256,13 @@ class InMemoryTasksApi(
         return handleRequest("update") {
             synchronized(this) {
                 val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
-                tasks.map { task ->
-                    if (task.id == taskId) {
+                storage[taskListId] = tasks.map { initialTask ->
+                    if (initialTask.id == taskId) {
                         task.copy(updatedDate = Clock.System.now())
                     } else {
-                        task
+                        initialTask
                     }
-                }
-                storage[taskListId] = tasks
+                }.toMutableList()
                 task
             }
         }
