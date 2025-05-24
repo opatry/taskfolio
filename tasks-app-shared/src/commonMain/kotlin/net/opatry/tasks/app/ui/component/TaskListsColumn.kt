@@ -58,7 +58,6 @@ internal object TaskListsPaneTestTag {
 @Composable
 fun TaskListsColumn(
     taskLists: List<TaskListUIModel>,
-    selectedItem: TaskListUIModel? = null,
     onNewTaskList: () -> Unit,
     onItemClick: (TaskListUIModel) -> Unit
 ) {
@@ -91,7 +90,6 @@ fun TaskListsColumn(
                     .testTag(TASK_LIST_ROW)
                     .padding(horizontal = 8.dp)
                     .animateItem(),
-                isSelected = taskList.id == selectedItem?.id,
                 onClick = { onItemClick(taskList) }
             )
         }

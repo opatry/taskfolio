@@ -128,7 +128,7 @@ private fun TaskEditorBottomSheetPreview(
                     task = previewData.task,
                     allTaskLists = previewData.taskLists,
                     sheetState = sheetState,
-                    taskList = previewData.taskList,
+                    selectedTaskList = previewData.taskList,
                     onDismiss = {},
                     onEditDueDate = {},
                     onValidate = { _, _, _, _ -> },

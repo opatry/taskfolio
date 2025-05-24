@@ -72,9 +72,9 @@ class TaskListRowTest {
 
     @Test
     fun `when task list has remaining tasks and is selected then badge counter should be hidden`() = runComposeUiTest {
-        val taskList = createTaskList(remainingTaskCount = 0)
+        val taskList = createTaskList(remainingTaskCount = 0, isSelected = true)
         setContent {
-            TaskListRow(taskList, isSelected = true) {}
+            TaskListRow(taskList) {}
         }
 
         onNodeWithTag(REMAINING_TASKS_COUNT_BADGE, useUnmergedTree = true)

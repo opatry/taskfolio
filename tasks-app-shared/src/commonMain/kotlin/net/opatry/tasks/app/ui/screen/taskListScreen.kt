@@ -47,7 +47,6 @@ import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.asLabel
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.MyBackHandler
-import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.NoTaskListsEmptyState
 import net.opatry.tasks.app.ui.component.TaskListsColumn
 import net.opatry.tasks.resources.Res
@@ -61,6 +60,7 @@ fun TaskListsMasterDetail(
     onNewTaskList: (String) -> Unit
 ) {
     val taskLists by viewModel.taskLists.collectAsStateWithLifecycle(null)
+    val selectedTaskListId by viewModel.selectedTaskListId.collectAsStateWithLifecycle(null)
 
     // need to store a saveable (Serializable/Parcelable) object
     // rememberListDetailPaneScaffoldNavigator, under the hood uses rememberSaveable with it
@@ -69,6 +69,16 @@ fun TaskListsMasterDetail(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var errorEvent by remember { mutableStateOf<TaskEvent.Error?>(null) }
+
+    LaunchedEffect(taskLists, selectedTaskListId) {
+        if (selectedTaskListId == null && !taskLists.isNullOrEmpty()) {
+            viewModel.selectTaskList(taskLists?.firstOrNull()?.id)
+        }
+    }
+
+    LaunchedEffect(selectedTaskListId) {
+        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, selectedTaskListId?.value)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
@@ -117,12 +127,9 @@ fun TaskListsMasterDetail(
                         else -> Row {
                             TaskListsColumn(
                                 lists,
-                                selectedItem = lists.find { it.id.value == navigator.currentDestination?.contentKey },
                                 onNewTaskList = { onNewTaskList("") },
                                 onItemClick = { taskList ->
-                                    scope.launch {
-                                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, taskList.id.value)
-                                    }
+                                    viewModel.selectTaskList(taskList.id)
                                 }
                             )
 
@@ -134,22 +141,7 @@ fun TaskListsMasterDetail(
                 }
             },
             detailPane = {
-                AnimatedPane {
-                    val list = taskLists
-                    val selectedList = list?.find { it.id.value == navigator.currentDestination?.contentKey }
-                    when {
-                        list == null -> LoadingPane()
-                        selectedList == null -> NoTaskListSelectedEmptyState()
-                        else -> TaskListDetail(viewModel, selectedList) { targetedTaskList ->
-                            scope.launch {
-                                when (targetedTaskList) {
-                                    null -> navigator.navigateBack()
-                                    else -> navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, targetedTaskList.id.value)
-                                }
-                            }
-                        }
-                    }
-                }
+                TaskListDetail(viewModel)
             }
         )
     }

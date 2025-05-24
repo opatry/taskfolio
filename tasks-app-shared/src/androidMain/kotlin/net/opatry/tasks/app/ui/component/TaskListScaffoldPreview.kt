@@ -37,7 +37,7 @@ private fun TaskListScaffoldPreview(
     TaskfolioThemedPreview {
         TaskListScaffold(
             taskLists = emptyList(),
-            taskList = taskList,
+            selectedTaskList = taskList,
         )
     }
 }

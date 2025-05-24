@@ -48,7 +48,7 @@ class TaskListsColumnTest {
     fun TaskListsColumn_NewTaskListButton() = runComposeUiTest {
         var newTaskClickCount = 0
         setContent {
-            TaskListsColumn(emptyList(), selectedItem = null, onNewTaskList = { ++newTaskClickCount }, onItemClick = {})
+            TaskListsColumn(emptyList(), onNewTaskList = { ++newTaskClickCount }, onItemClick = {})
         }
 
         onNodeWithTag(TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON)
@@ -64,7 +64,7 @@ class TaskListsColumnTest {
         val taskList = TaskListUIModel(TaskListId(1), "Task list 1")
         var selectedList: TaskListUIModel? = null
         setContent {
-            TaskListsColumn(listOf(taskList), selectedItem = null, onNewTaskList = {}, onItemClick = { selectedList = it })
+            TaskListsColumn(listOf(taskList), onNewTaskList = {}, onItemClick = { selectedList = it })
         }
 
         onAllNodesWithTag(TaskListsPaneTestTag.TASK_LIST_ROW)
@@ -77,10 +77,10 @@ class TaskListsColumnTest {
 
     @Test
     fun TaskListsColumn_SelectedTaskList() = runComposeUiTest {
-        val taskList1 = TaskListUIModel(TaskListId(1), "Task list 1")
+        val taskList1 = TaskListUIModel(TaskListId(1), "Task list 1", isSelected = true)
         val taskList2 = TaskListUIModel(TaskListId(2), "Task list 2")
         setContent {
-            TaskListsColumn(listOf(taskList1, taskList2), selectedItem = taskList1, onNewTaskList = {}, onItemClick = {})
+            TaskListsColumn(listOf(taskList1, taskList2), onNewTaskList = {}, onItemClick = {})
         }
 
         onAllNodesWithTag(TaskListsPaneTestTag.TASK_LIST_ROW)

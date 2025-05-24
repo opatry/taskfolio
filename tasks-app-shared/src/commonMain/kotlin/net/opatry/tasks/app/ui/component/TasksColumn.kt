@@ -72,20 +72,20 @@ internal object TasksColumnTestTag {
 @Composable
 fun TasksColumn(
     taskLists: List<TaskListUIModel>,
-    taskList: TaskListUIModel,
+    selectedTaskList: TaskListUIModel,
     onDeleteList: () -> Unit = {},
     onRepairList: () -> Unit = {},
     onTaskAction: (TaskAction) -> Unit = {},
     showCompletedDefaultValue: Boolean = false,
 ) {
-    var showCompleted by remember(taskList.id) { mutableStateOf(showCompletedDefaultValue) }
+    var showCompleted by remember(selectedTaskList.id) { mutableStateOf(showCompletedDefaultValue) }
 
     when {
-        taskList.isEmpty -> {
+        selectedTaskList.isEmpty -> {
             NoTasksEmptyState()
         }
 
-        taskList.hasBrokenIndentation() -> {
+        selectedTaskList.hasBrokenIndentation() -> {
             BrokenListIndentationEmptyState(
                 onDeleteList = onDeleteList,
                 onRepairList = onRepairList,
@@ -98,7 +98,7 @@ fun TasksColumn(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (taskList.isEmptyRemainingTasksVisible) {
+                if (selectedTaskList.isEmptyRemainingTasksVisible) {
                     item(key = "all_tasks_complete") {
                         EmptyState(
                             icon = LucideIcons.CheckCheck,
@@ -112,7 +112,7 @@ fun TasksColumn(
                     }
                 }
 
-                taskList.remainingTasks.forEach { (dateRange, tasks) ->
+                selectedTaskList.remainingTasks.forEach { (dateRange, tasks) ->
                     if (dateRange != null) {
                         stickyHeader(key = dateRange.key) {
                             Box(
@@ -135,9 +135,9 @@ fun TasksColumn(
                             task,
                             // TODO could come from the UI mapper/UI state
                             showDate = when {
-                                taskList.sorting == TaskListSorting.Manual -> true
-                                taskList.sorting == TaskListSorting.Title -> true
-                                taskList.sorting == TaskListSorting.DueDate && dateRange is DateRange.None -> true
+                                selectedTaskList.sorting == TaskListSorting.Manual -> true
+                                selectedTaskList.sorting == TaskListSorting.Title -> true
+                                selectedTaskList.sorting == TaskListSorting.DueDate && dateRange is DateRange.None -> true
                                 dateRange is DateRange.Overdue -> true
                                 else -> false
                             },
@@ -146,7 +146,7 @@ fun TasksColumn(
                     }
                 }
 
-                if (taskList.hasCompletedTasks) {
+                if (selectedTaskList.hasCompletedTasks) {
                     stickyHeader(key = "completed") {
                         Box(
                             Modifier
@@ -166,7 +166,10 @@ fun TasksColumn(
                                 }
                             ) {
                                 Text(
-                                    stringResource(Res.string.task_list_pane_completed_section_title_with_count, taskList.completedTasks.size),
+                                    stringResource(
+                                        Res.string.task_list_pane_completed_section_title_with_count,
+                                        selectedTaskList.completedTasks.size
+                                    ),
                                     modifier = Modifier.testTag(COMPLETED_TASKS_TOGGLE_LABEL),
                                     style = MaterialTheme.typography.titleSmall
                                 )
@@ -176,7 +179,7 @@ fun TasksColumn(
                 }
 
                 if (showCompleted) {
-                    items(taskList.completedTasks, key = { it.id.value }) { task ->
+                    items(selectedTaskList.completedTasks, key = { it.id.value }) { task ->
                         CompletedTaskRow(
                             task,
                             onAction = onTaskAction,

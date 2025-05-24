@@ -67,6 +67,8 @@ import net.opatry.tasks.app.ui.component.DueDateUpdate.Reset
 import net.opatry.tasks.app.ui.component.DueDateUpdate.Today
 import net.opatry.tasks.app.ui.component.DueDateUpdate.Tomorrow
 import net.opatry.tasks.app.ui.component.EditTextDialog
+import net.opatry.tasks.app.ui.component.LoadingPane
+import net.opatry.tasks.app.ui.component.NoTaskListSelectedEmptyState
 import net.opatry.tasks.app.ui.component.RowWithIcon
 import net.opatry.tasks.app.ui.component.TaskAction
 import net.opatry.tasks.app.ui.component.TaskEditMode
@@ -94,13 +96,27 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun TaskListDetail(viewModel: TaskListsViewModel) {
+    val taskLists by viewModel.taskLists.collectAsStateWithLifecycle(null)
+    val selectedTaskListId by viewModel.selectedTaskListId.collectAsStateWithLifecycle(null)
+    val selectedTaskList = taskLists?.firstOrNull { it.id == selectedTaskListId }
+
+    val lists = taskLists
+    val selected = selectedTaskList
+    when {
+        lists == null -> LoadingPane()
+        selected == null -> NoTaskListSelectedEmptyState()
+        else -> TaskListDetail(viewModel, lists, selected)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun TaskListDetail(
     viewModel: TaskListsViewModel,
-    taskList: TaskListUIModel,
-    onNavigateTo: (TaskListUIModel?) -> Unit
+    taskLists: List<TaskListUIModel>,
+    selectedTaskList: TaskListUIModel,
 ) {
-    val taskLists by viewModel.taskLists.collectAsStateWithLifecycle(emptyList())
-
     // TODO extract a smart state for all this mess
     var taskOfInterest by remember { mutableStateOf<TaskUIModel?>(null) }
 
@@ -144,12 +160,12 @@ fun TaskListDetail(
 
     TaskListScaffold(
         taskLists = taskLists,
-        taskList = taskList,
+        selectedTaskList = selectedTaskList,
         snackbarHostState = snackbarHostState,
         onDeleteList = { showDeleteTaskListDialog = true },
-        onRepairList = { viewModel.repairTaskList(taskList.id) },
+        onRepairList = { viewModel.repairTaskList(selectedTaskList.id) },
         onSortList = { sorting ->
-            viewModel.sortBy(taskList.id, sorting)
+            viewModel.sortBy(selectedTaskList.id, sorting)
         },
         onEditList = { action ->
             when (action) {
@@ -223,11 +239,11 @@ fun TaskListDetail(
             onDismissRequest = { showRenameTaskListDialog = false },
             onValidate = { newTitle ->
                 showRenameTaskListDialog = false
-                viewModel.renameTaskList(taskList.id, newTitle)
+                viewModel.renameTaskList(selectedTaskList.id, newTitle)
             },
             validateLabel = stringResource(Res.string.task_list_pane_rename_dialog_cta),
             dialogTitle = stringResource(Res.string.task_list_pane_rename_dialog_title),
-            initialText = taskList.title,
+            initialText = selectedTaskList.title,
             allowBlank = false,
         )
     }
@@ -249,7 +265,7 @@ fun TaskListDetail(
             confirmButton = {
                 Button(onClick = {
                     showClearTaskListCompletedTasksDialog = false
-                    viewModel.clearTaskListCompletedTasks(taskList.id)
+                    viewModel.clearTaskListCompletedTasks(selectedTaskList.id)
                 }) {
                     Text(stringResource(Res.string.task_list_pane_clear_completed_confirm_dialog_confirm))
                 }
@@ -274,8 +290,7 @@ fun TaskListDetail(
             confirmButton = {
                 Button(onClick = {
                     showDeleteTaskListDialog = false
-                    viewModel.deleteTaskList(taskList.id)
-                    onNavigateTo(null)
+                    viewModel.deleteTaskList(selectedTaskList.id)
                 }) {
                     Text(stringResource(Res.string.task_list_pane_delete_list_confirm_dialog_confirm))
                 }
@@ -294,7 +309,7 @@ fun TaskListDetail(
                 else -> TaskEditMode.NewTask
             },
             allTaskLists = taskLists,
-            taskList = taskList,
+            selectedTaskList = selectedTaskList,
             // TODO deal with due date and nested alert dialogs
             onEditDueDate = { showDatePickerDialog = true },
             onDismiss = {
@@ -322,7 +337,6 @@ fun TaskListDetail(
                     showNewTaskSheet -> {
                         showNewTaskSheet = false
 
-                        onNavigateTo(targetList)
                         viewModel.createTask(targetList.id, title, notes, dueDate)
                     }
                 }

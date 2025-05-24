@@ -65,6 +65,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 private val Today = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
 private val LastWeek = Today - DatePeriod(days = 7)
@@ -228,11 +229,50 @@ class TaskListsViewModelTest {
     }
 
     @Test
+    fun `no task list should be selected by default`() = runTest {
+        advanceUntilIdle()
+        assertNull(viewModel.selectedTaskListId.value)
+    }
+
+    @Test
+    fun `selectTaskList null should reset selected task list`() = runTest {
+        val taskListId = TaskListId(1)
+        viewModel.selectTaskList(taskListId)
+        advanceUntilIdle()
+
+        viewModel.selectTaskList(null)
+        advanceUntilIdle()
+
+        assertNull(viewModel.selectedTaskListId.value)
+    }
+
+    @Test
+    fun `selectTaskList should update selected task list`() = runTest {
+        val taskListId = TaskListId(1)
+
+        viewModel.selectTaskList(taskListId)
+        advanceUntilIdle()
+
+        assertEquals(taskListId, viewModel.selectedTaskListId.value)
+    }
+
+    @Test
     fun `createTaskList should update repository`() = runTest {
         viewModel.createTaskList("tasks")
         advanceUntilIdle()
 
         then(taskRepository).should().createTaskList("tasks")
+    }
+
+    @Test
+    fun `createTaskList should select created list`() = runTest {
+        `when`(taskRepository.createTaskList("tasks"))
+            .thenReturn(100)
+
+        viewModel.createTaskList("tasks")
+        advanceUntilIdle()
+
+        assertEquals(TaskListId(100), viewModel.selectedTaskListId.value)
     }
 
     @Test
@@ -264,6 +304,18 @@ class TaskListsViewModelTest {
         advanceUntilIdle()
 
         then(taskRepository).should().createTask(100, null, "task")
+    }
+
+    @Test
+    fun `createTask should select the task list of the created task`() = runTest {
+        val taskListId = TaskListId(100)
+        `when`(taskRepository.createTask(taskListId.value, null, "task"))
+            .thenReturn(1)
+
+        viewModel.createTask(taskListId, "task")
+        advanceUntilIdle()
+
+        assertEquals(taskListId, viewModel.selectedTaskListId.value)
     }
 
     @Test
@@ -371,6 +423,17 @@ class TaskListsViewModelTest {
         advanceUntilIdle()
 
         then(taskRepository).should().deleteTaskList(1)
+    }
+
+    @Test
+    fun `deleteTaskList when selected should reset selected task list`() = runTest {
+        val taskListId = TaskListId(1)
+        viewModel.selectTaskList(taskListId)
+
+        viewModel.deleteTaskList(taskListId)
+        advanceUntilIdle()
+
+        assertNull(viewModel.selectedTaskListId.value)
     }
 
     @Test
