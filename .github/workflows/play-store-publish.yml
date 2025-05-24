@@ -75,10 +75,10 @@ jobs:
               -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
 
     # allows Bundler gem installation (used for fastlane gem)
-    - name: 💎 Setup Ruby 3.1
+    - name: 💎 Setup Ruby 3.2
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: 3.2
         bundler-cache: true
 
     - name: 🚀 Play Store publish

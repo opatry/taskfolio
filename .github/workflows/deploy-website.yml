@@ -32,10 +32,10 @@ jobs:
           fetch-depth: 1
 
       # allows Bundler gem installation (used for jekyll gem)
-      - name: 💎 Setup Ruby 3.1
+      - name: 💎 Setup Ruby 3.2
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.1
+          ruby-version: 3.2
           bundler-cache: true
 
       - name: 🐙 Setup Github Pages
