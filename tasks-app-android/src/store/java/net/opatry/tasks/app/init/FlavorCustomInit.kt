@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,12 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.app.init
 
-import org.koin.core.module.Module
+import android.app.Application
 
-expect fun platformModule(flavor: String): Module
+object FlavorCustomInit {
+    fun Application.init() {
+        // Nothing custom is needed for this flavor
+    }
+}

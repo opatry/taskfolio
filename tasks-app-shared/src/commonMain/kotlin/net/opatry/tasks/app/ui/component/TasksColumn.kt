@@ -62,7 +62,7 @@ import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_co
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
-internal object TasksColumnTestTag {
+object TasksColumnTestTag {
     const val ALL_COMPLETE_EMPTY_STATE = "ALL_COMPLETE_EMPTY_STATE"
     const val TASKS_COLUMN = "TASKS_COLUMN"
     const val COMPLETED_TASKS_TOGGLE = "COMPLETED_TASKS_TOGGLE"

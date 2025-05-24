@@ -31,11 +31,18 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.io.File
 
-actual fun platformModule(): Module = module {
+actual fun platformModule(flavor: String): Module = module {
     single {
+        val dbNameSuffix = when (flavor) {
+            "store" -> ""
+            else -> "_$flavor"
+        }
         val context = get<Context>()
         val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath("tasks.db")
+        val dbFile = appContext.getDatabasePath("tasks${dbNameSuffix}.db")
+        if (flavor == "demo") {
+            dbFile.delete()
+        }
         Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
     }
 

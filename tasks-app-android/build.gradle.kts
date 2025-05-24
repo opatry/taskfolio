@@ -48,6 +48,8 @@ android {
         versionName = libs.versions.tasksApp.name.get()
 
         androidResources.localeFilters += listOf("en", "fr")
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     androidResources {
@@ -72,6 +74,11 @@ android {
             dimension = "target"
 
             manifestPlaceholders["crashlyticsEnabled"] = false
+        }
+
+        create("demo") {
+            initWith(getByName("dev"))
+            applicationIdSuffix = ".demo"
         }
 
         create("store") {
@@ -163,6 +170,10 @@ dependencies {
     implementation(projects.google.tasks)
     implementation(projects.tasksAppShared)
 
+    "demoImplementation"(projects.tasksCore) {
+        because("needed for prefilled content for screenshot generation")
+    }
+
     testImplementation(kotlin("test"))
     testImplementation(libs.koin.test)
     testImplementation(libs.ktor.client.core) {
@@ -171,6 +182,9 @@ dependencies {
     testImplementation(projects.tasksCore) {
         because("needed for Koin DI tests injectedParameters")
     }
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.uiautomator)
 }
 
 aboutLibraries {

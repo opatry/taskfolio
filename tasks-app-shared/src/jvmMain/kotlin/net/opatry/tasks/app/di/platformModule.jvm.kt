@@ -31,7 +31,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
 
-actual fun platformModule(): Module = module {
+actual fun platformModule(flavor: String): Module = module {
     single(named("app_root_dir")) {
         val userHome = File(System.getProperty("user.home"))
         val legacyRootDir = File(userHome, ".tasksApp")
