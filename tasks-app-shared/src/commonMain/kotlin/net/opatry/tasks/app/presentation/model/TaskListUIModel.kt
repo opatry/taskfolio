@@ -35,6 +35,7 @@ data class TaskListUIModel(
     val completedTasks: List<TaskUIModel.Done> = emptyList(),
     val sorting: TaskListSorting = TaskListSorting.Manual,
     val canDelete: Boolean = false,
+    val isSelected: Boolean = false,
 ) {
     fun containsTask(task: TaskUIModel, includeCompleted: Boolean = false): Boolean {
         return allRemainingTasks.contains(task)

@@ -43,6 +43,7 @@ private class TaskListSimplePreviewParameterProvider(
             TaskListUIModel(
                 id = TaskListId(0L),
                 title = "My selected task list",
+                isSelected = true,
             ),
             TaskListUIModel(
                 id = TaskListId(0L),
@@ -82,6 +83,6 @@ private fun TaskListRowPreview(
     taskList: TaskListUIModel
 ) {
     TaskfolioThemedPreview {
-        TaskListRow(taskList, isSelected = taskList.title.contains("selected")) {}
+        TaskListRow(taskList) {}
     }
 }

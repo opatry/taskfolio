@@ -61,9 +61,9 @@ internal object TaskListRowTestTag {
 fun TaskListRow(
     taskList: TaskListUIModel,
     modifier: Modifier = Modifier,
-    isSelected: Boolean = false,
     onClick: () -> Unit
 ) {
+    val isSelected = taskList.isSelected
     val remainingTasksCount = taskList.allRemainingTasks.size
     val cellBackground = when {
         isSelected -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = .3f)

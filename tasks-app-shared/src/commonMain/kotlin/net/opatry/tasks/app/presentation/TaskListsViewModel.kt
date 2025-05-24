@@ -29,9 +29,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -68,7 +70,7 @@ private inline fun <reified T1, reified T2> List<*>.partitionByType(): Pair<List
     return first.toList() to second.toList()
 }
 
-private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
+private fun TaskListDataModel.asTaskListUIModel(isSelected: Boolean): TaskListUIModel {
     val tasksUIModels = tasks.map(TaskDataModel::asTaskUIModel)
     val (completedTasks, remainingTasks) = tasksUIModels.partitionByType<TaskUIModel.Done, TaskUIModel.Todo>()
 
@@ -94,6 +96,7 @@ private fun TaskListDataModel.asTaskListUIModel(): TaskListUIModel {
         completedTasks = completedTasks,
         sorting = sorting,
         canDelete = !isDefault,
+        isSelected = isSelected,
     )
 }
 
@@ -131,9 +134,19 @@ class TaskListsViewModel(
     private val taskRepository: TaskRepository,
     private val autoRefreshPeriod: Duration = 10.seconds
 ) : ViewModel() {
+    private val _selectedTaskListId = MutableStateFlow<TaskListId?>(null)
+    val selectedTaskListId = _selectedTaskListId.asStateFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val taskLists: Flow<List<TaskListUIModel>> = taskRepository.getTaskLists().mapLatest { allLists ->
-        allLists.map(TaskListDataModel::asTaskListUIModel)
+    val taskLists: Flow<List<TaskListUIModel>> = combine(
+        selectedTaskListId,
+        taskRepository.getTaskLists()
+    ) { selectedId, taskLists ->
+        taskLists.map { taskList ->
+            taskList.asTaskListUIModel(
+                isSelected = taskList.id == selectedId?.value
+            )
+        }
     }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _eventFlow = MutableSharedFlow<TaskEvent>()
@@ -162,10 +175,17 @@ class TaskListsViewModel(
         }
     }
 
+    fun selectTaskList(taskListId: TaskListId?) {
+        viewModelScope.launch {
+            _selectedTaskListId.value = taskListId
+        }
+    }
+
     fun createTaskList(title: String) {
         viewModelScope.launch {
             try {
-                taskRepository.createTaskList(title)
+                val taskListId = taskRepository.createTaskList(title)
+                _selectedTaskListId.value = TaskListId(taskListId)
             } catch (e: Exception) {
                 logger.logError("Error while creating task list", e)
                 _eventFlow.emit(TaskEvent.Error.TaskList.Create)
@@ -176,6 +196,10 @@ class TaskListsViewModel(
     fun deleteTaskList(taskListId: TaskListId) {
         viewModelScope.launch {
             try {
+                // TODO select the previous or next one if any
+                if (_selectedTaskListId.value == taskListId) {
+                    _selectedTaskListId.value = null
+                }
                 taskRepository.deleteTaskList(taskListId.value)
             } catch (e: Exception) {
                 logger.logError("Error while deleting task list (${taskListId})", e)
@@ -224,6 +248,7 @@ class TaskListsViewModel(
     fun createTask(taskListId: TaskListId, title: String, notes: String = "", dueDate: LocalDate? = null) {
         viewModelScope.launch {
             try {
+                _selectedTaskListId.value = taskListId
                 taskRepository.createTask(taskListId.value, null, title, notes, dueDate?.atStartOfDayIn(TimeZone.UTC))
             } catch (e: Exception) {
                 logger.logError("Error while creating task ($taskListId)", e)

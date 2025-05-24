@@ -115,7 +115,7 @@ fun TaskEditorBottomSheet(
     editMode: TaskEditMode,
     task: TaskUIModel?,
     allTaskLists: List<TaskListUIModel>,
-    taskList: TaskListUIModel,
+    selectedTaskList: TaskListUIModel,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismiss: () -> Unit,
     onEditDueDate: () -> Unit,
@@ -144,7 +144,7 @@ fun TaskEditorBottomSheet(
         val initialNotes = task?.notes?.takeUnless { editMode == TaskEditMode.NewSubTask }.orEmpty()
         var newNotes by remember { mutableStateOf(initialNotes) }
         var expandTaskListsDropDown by remember { mutableStateOf(false) }
-        var targetList by remember { mutableStateOf(taskList) }
+        var targetList by remember { mutableStateOf(selectedTaskList) }
 
         // FIXME doesn't work as expected BottomSheetDefaults.windowInsets.asPaddingValues()
         Column(

@@ -49,6 +49,7 @@ private fun TaskListsColumnPreview() {
         TaskListUIModel(
             id = TaskListId(1L),
             title = "My selected task list",
+            isSelected = true,
         ),
         TaskListUIModel(
             id = TaskListId(2L),
@@ -69,6 +70,6 @@ private fun TaskListsColumnPreview() {
     )
 
     TaskfolioThemedPreview {
-        TaskListsColumn(taskLists, taskLists.first { it.title.contains("selected") }, {}, {})
+        TaskListsColumn(taskLists, {}, {})
     }
 }

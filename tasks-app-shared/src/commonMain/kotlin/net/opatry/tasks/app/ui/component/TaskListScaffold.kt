@@ -48,7 +48,7 @@ internal object TaskListScaffoldTestTag {
 @Composable
 fun TaskListScaffold(
     taskLists: List<TaskListUIModel>,
-    taskList: TaskListUIModel,
+    selectedTaskList: TaskListUIModel,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onDeleteList: () -> Unit = {},
     onRepairList: () -> Unit = {},
@@ -59,14 +59,14 @@ fun TaskListScaffold(
 ) {
     Scaffold(
         topBar = {
-            TaskListTopAppBar(taskList, onSortList, onEditList)
+            TaskListTopAppBar(selectedTaskList, onSortList, onEditList)
         },
         snackbarHost = {
             SnackbarHost(snackbarHostState)
         },
         // FIXME should be driven by the NavigationRail
         floatingActionButton = {
-            if (!taskList.hasBrokenIndentation()) {
+            if (!selectedTaskList.hasBrokenIndentation()) {
                 // FIXME hides bottom of screen
                 FloatingActionButton(
                     onClick = onNewTask,
@@ -80,7 +80,7 @@ fun TaskListScaffold(
         Box(Modifier.padding(innerPadding)) {
             TasksColumn(
                 taskLists = taskLists,
-                taskList = taskList,
+                selectedTaskList = selectedTaskList,
                 onDeleteList = onDeleteList,
                 onRepairList = onRepairList,
                 onTaskAction = onTaskAction,

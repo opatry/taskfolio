@@ -60,7 +60,7 @@ class TasksColumnTest {
         setContent {
             TasksColumn(
                 taskLists = listOf(taskList),
-                taskList = taskList,
+                selectedTaskList = taskList,
             )
         }
 
@@ -77,7 +77,7 @@ class TasksColumnTest {
         setContent {
             TasksColumn(
                 taskLists = listOf(taskList),
-                taskList = taskList,
+                selectedTaskList = taskList,
             )
         }
 
@@ -107,7 +107,7 @@ class TasksColumnTest {
         setContent {
             TasksColumn(
                 taskLists = listOf(taskList),
-                taskList = taskList,
+                selectedTaskList = taskList,
                 onDeleteList = {
                     deleteCalled = true
                 },
@@ -147,7 +147,7 @@ class TasksColumnTest {
         setContent {
             TasksColumn(
                 taskLists = listOf(taskList),
-                taskList = taskList,
+                selectedTaskList = taskList,
             )
         }
 
@@ -167,7 +167,7 @@ class TasksColumnTest {
         setContent {
             TasksColumn(
                 taskLists = listOf(taskList),
-                taskList = taskList,
+                selectedTaskList = taskList,
             )
         }
 
@@ -186,7 +186,7 @@ class TasksColumnTest {
             completedTaskLabel = stringResource(Res.string.task_list_pane_completed_section_title_with_count, 2)
             TasksColumn(
                 taskLists = listOf(taskList),
-                taskList = taskList,
+                selectedTaskList = taskList,
             )
         }
 

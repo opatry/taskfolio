@@ -37,7 +37,7 @@ private fun TasksColumnPreview(
     TaskfolioThemedPreview {
         TasksColumn(
             taskLists = listOf(taskList),
-            taskList = taskList,
+            selectedTaskList = taskList,
             showCompletedDefaultValue = true
         )
     }

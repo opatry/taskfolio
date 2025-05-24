@@ -103,7 +103,7 @@ class TaskListScaffoldTest {
         setContent {
             TaskListScaffold(
                 taskLists = emptyList(),
-                taskList = list,
+                selectedTaskList = list,
                 onNewTask = {
                     addTaskClicked = true
                 }
