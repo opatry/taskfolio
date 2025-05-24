@@ -35,6 +35,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.HttpHeaders
 import io.ktor.http.URLBuilder
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
@@ -49,6 +50,9 @@ import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import ro.cosminmihu.ktor.monitor.ContentLength
+import ro.cosminmihu.ktor.monitor.KtorMonitorLogging
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 import net.opatry.logging.Logger as TaskfolioLogger
 
@@ -81,6 +85,12 @@ val networkModule = module {
                         taskfolioLogger.logInfo(message)
                     }
                 }
+            }
+            install(KtorMonitorLogging) {
+                sanitizeHeader { header -> header == HttpHeaders.Authorization }
+                showNotification = true
+                retentionPeriod = 1.hours
+                maxContentLength = ContentLength.Default
             }
             install(HttpCache)
             install(Auth) {

@@ -8,11 +8,11 @@ set -euo pipefail
 case "$1" in
   ":tasks-app-android")
   diff=$(git diff tasks-app-android/src/main/assets/licenses_android.json | awk '{printf "%s\\n", $0}')
-  update_cmd="./gradlew :tasks-app-android:exportLibraryDefinitions"
+  update_cmd="./gradlew :tasks-app-android:exportLibraryDefinitions -Pci=true"
   ;;
   ":tasks-app-desktop")
   diff=$(git diff tasks-app-desktop/src/main/resources/licenses_desktop.json | awk '{printf "%s\\n", $0}')
-  update_cmd="./gradlew :tasks-app-desktop:exportLibraryDefinitions"
+  update_cmd="./gradlew :tasks-app-desktop:exportLibraryDefinitions -Pci=true"
   ;;
   *)
   echo "Unsupported app module"

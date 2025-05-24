@@ -31,15 +31,19 @@ import net.opatry.tasks.app.resources.Res
 import net.opatry.tasks.app.resources.app_menu_edit
 import net.opatry.tasks.app.resources.app_menu_edit_new_task
 import net.opatry.tasks.app.resources.app_menu_edit_new_task_list
+import net.opatry.tasks.app.resources.app_menu_tools
+import net.opatry.tasks.app.resources.app_menu_tools_show_network_logs
 import net.opatry.tasks.app.util.OS
 import net.opatry.tasks.app.util.currentOS
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun FrameWindowScope.AppMenuBar(
+    showDevelopmentTools: Boolean,
     onNewTaskListClick: () -> Unit,
     canCreateTask: Boolean,
     onNewTaskClick: () -> Unit,
+    onNetworkLogClick: () -> Unit,
 ) {
     MenuBar {
         Menu(stringResource(Res.string.app_menu_edit), mnemonic = 'E') {
@@ -62,6 +66,19 @@ fun FrameWindowScope.AppMenuBar(
                 enabled = canCreateTask,
                 onClick = onNewTaskClick
             )
+        }
+        if (showDevelopmentTools) {
+            Menu(stringResource(Res.string.app_menu_tools), mnemonic = 'T') {
+                Item(
+                    text = stringResource(Res.string.app_menu_tools_show_network_logs),
+                    shortcut = when (currentOS) {
+                        OS.Mac -> KeyShortcut(key = Key.L, meta = true, shift = true)
+                        OS.Linux,
+                        OS.Windows -> KeyShortcut(key = Key.L, ctrl = true, shift = true)
+                    },
+                    onClick = onNetworkLogClick
+                )
+            }
         }
     }
 }

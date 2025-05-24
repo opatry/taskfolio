@@ -38,6 +38,7 @@ plugins {
 val appName = "Taskfolio"
 val appVersion = libs.versions.tasksApp.name.get()
 val appVersionCode = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
+val ciBuild = (findProperty("ci") as? String).toBoolean()
 
 compose.resources {
     publicResClass = false
@@ -69,6 +70,12 @@ kotlin {
         implementation(projects.google.tasks)
         implementation(projects.tasksAppShared)
 
+        if (ciBuild) {
+            implementation(libs.ktor.monitor.logging.no.op)
+        } else {
+            implementation(libs.ktor.monitor.logging)
+        }
+
         testImplementation(kotlin("test"))
         testImplementation(libs.koin.test)
         testImplementation(libs.ktor.client.core) {
@@ -95,6 +102,7 @@ compose.desktop {
             "-Dapp.name=$appName",
             "-Dapp.version=$appVersion",
             "-Dapp.version.full=${appVersion}.${appVersionCode}",
+            "-Dbuild.release=$ciBuild"
         )
 
         nativeDistributions {
@@ -161,7 +169,7 @@ compose.desktop {
 
 aboutLibraries {
     // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
-    // - `./gradlew :tasks-app-desktop:exportLibraryDefinitions`
+    // - `./gradlew :tasks-app-desktop:exportLibraryDefinitions -Pci=true`
     // - the resulting file can for example be added as part of the SCM
     collect {
         configPath = file("$rootDir/license_config")
