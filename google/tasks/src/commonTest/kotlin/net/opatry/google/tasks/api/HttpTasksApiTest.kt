@@ -22,6 +22,7 @@
 
 package net.opatry.google.tasks.api
 
+import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
@@ -35,7 +36,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import net.opatry.google.tasks.HttpTasksApi
+import net.opatry.google.tasks.ClientRequestExceptionConverterFactory
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
@@ -56,7 +57,14 @@ class HttpTasksApiTest {
             }
         }.use { httpClient ->
             runTest {
-                test(HttpTasksApi(httpClient))
+                test(
+                    Ktorfit.Builder()
+                        .httpClient(httpClient)
+                        .baseUrl("http://localhost/")
+                        .converterFactories(ClientRequestExceptionConverterFactory)
+                        .build()
+                        .create()
+                )
             }
         }
     }

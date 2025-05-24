@@ -261,6 +261,20 @@
             }
         },
         {
+            "uniqueId": "de.jensklingenberg.ktorfit:ktorfit-lib",
+            "developers": [
+                {
+                    "name": "Jens Klingenberg"
+                }
+            ],
+            "artifactVersion": "2.5.1",
+            "description": "Ktorfit",
+            "name": "Ktorfit",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "io.coil-kt.coil3:coil",
             "developers": [
                 {

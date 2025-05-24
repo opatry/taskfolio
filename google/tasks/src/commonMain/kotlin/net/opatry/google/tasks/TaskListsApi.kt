@@ -22,21 +22,15 @@
 
 package net.opatry.google.tasks
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.compression.compress
-import io.ktor.client.request.delete
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.request.patch
-import io.ktor.client.request.post
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import io.ktor.http.isSuccess
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Headers
+import de.jensklingenberg.ktorfit.http.PATCH
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.TaskList
@@ -45,12 +39,8 @@ import net.opatry.google.tasks.model.TaskList
  * Service for interacting with the [Google Task Lists REST API](https://developers.google.com/tasks/reference/rest/v1/tasklists).
  */
 interface TaskListsApi {
-    /**
-     * [Deletes the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/delete). If the list contains assigned tasks, both the assigned tasks and the original tasks in the assignment surface (Docs, Chat Spaces) are deleted.
-     *
-     * @param taskListId Task list identifier.
-     */
-    suspend fun delete(taskListId: String)
+    @DELETE("tasks/v1/users/@me/lists/{taskListId}")
+    suspend fun delete(@Path("taskListId") taskListId: String)
 
     /**
      * [Returns the authenticated user's default task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/get).
@@ -58,7 +48,7 @@ interface TaskListsApi {
      *
      * @return the instance of [TaskList] of the default task list.
      */
-    suspend fun default(): TaskList
+    suspend fun default() = get("@default")
 
     /**
      * [Returns the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/get).
@@ -67,7 +57,8 @@ interface TaskListsApi {
      *
      * @return an instance of [TaskList].
      */
-    suspend fun get(taskListId: String): TaskList
+    @GET("tasks/v1/users/@me/lists/{taskListId}")
+    suspend fun get(@Path("taskListId") taskListId: String): TaskList
 
     /**
      * [Creates a new task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/insert) and adds it to the authenticated user's task lists. A user can have up to 2000 lists at a time.
@@ -76,7 +67,12 @@ interface TaskListsApi {
      *
      * @return a newly created instance of [TaskList].
      */
-    suspend fun insert(taskList: TaskList): TaskList
+    @Headers(
+        "Content-Type: application/json",
+        "Content-Encoding: gzip",
+    )
+    @POST("tasks/v1/users/@me/lists")
+    suspend fun insert(@Body taskList: TaskList): TaskList
 
     /**
      * [Returns all the authenticated user's task lists](https://developers.google.com/tasks/reference/rest/v1/tasklists/list). A user can have up to 2000 lists at a time.
@@ -86,7 +82,11 @@ interface TaskListsApi {
      *
      * @return an instance of [ResourceListResponse] of type [TaskList], whose type is always [ResourceType.TaskLists].
      */
-    suspend fun list(maxResults: Int = 20, pageToken: String? = null): ResourceListResponse<TaskList>
+    @GET("tasks/v1/users/@me/lists")
+    suspend fun list(
+        @Query("maxResults") maxResults: Int = 20,
+        @Query("pageToken") pageToken: String? = null
+    ): ResourceListResponse<TaskList>
 
     /**
      * [Updates the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/patch). This method supports patch semantics.
@@ -96,7 +96,12 @@ interface TaskListsApi {
      *
      * @return an instance of [TaskList].
      */
-    suspend fun patch(taskListId: String, taskList: TaskList): TaskList
+    @Headers("Content-Type: application/json")
+    @PATCH("tasks/v1/users/@me/lists/{taskListId}")
+    suspend fun patch(
+        @Path("taskListId") taskListId: String,
+        @Body taskList: TaskList
+    ): TaskList
 
     /**
      * [Updates the authenticated user's specified task list](https://developers.google.com/tasks/reference/rest/v1/tasklists/update).
@@ -106,87 +111,12 @@ interface TaskListsApi {
      *
      * @return an instance of [TaskList].
      */
-    suspend fun update(taskListId: String, taskList: TaskList): TaskList
-}
-
-class HttpTaskListsApi(
-    private val httpClient: HttpClient
-) : TaskListsApi {
-    override suspend fun delete(taskListId: String) {
-        val response = httpClient.delete("tasks/v1/users/@me/lists/${taskListId}")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
-
-    override suspend fun default() = get("@default")
-
-    override suspend fun get(taskListId: String): TaskList {
-        val response = httpClient.get("tasks/v1/users/@me/lists/${taskListId}")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
-
-    override suspend fun insert(taskList: TaskList): TaskList {
-        val response = httpClient.post("tasks/v1/users/@me/lists") {
-            contentType(ContentType.Application.Json)
-            compress("gzip")
-            setBody(taskList)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
-
-    override suspend fun list(maxResults: Int, pageToken: String?): ResourceListResponse<TaskList> {
-        val response = httpClient.get("tasks/v1/users/@me/lists") {
-            parameter("maxResults", maxResults.coerceIn(0, 100))
-            if (pageToken != null) {
-                parameter("pageToken", pageToken)
-            }
-        }
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
-
-    override suspend fun patch(taskListId: String, taskList: TaskList): TaskList {
-        val response = httpClient.patch("tasks/v1/users/@me/lists/${taskListId}") {
-            contentType(ContentType.Application.Json)
-            setBody(taskList)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
-
-    override suspend fun update(taskListId: String, taskList: TaskList): TaskList {
-        val response = httpClient.put("tasks/v1/users/@me/lists/${taskListId}") {
-            contentType(ContentType.Application.Json)
-            setBody(taskList)
-        }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
-    }
+    @Headers("Content-Type: application/json")
+    @PUT("tasks/v1/users/@me/lists/{taskListId}")
+    suspend fun update(
+        @Path("taskListId") taskListId: String,
+        @Body taskList: TaskList
+    ): TaskList
 }
 
 /**
