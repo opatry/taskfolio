@@ -53,6 +53,7 @@ import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.DATE_RANGE_STICKY_HEADER
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
@@ -65,6 +66,7 @@ import org.jetbrains.compose.resources.stringResource
 internal object TasksColumnTestTag {
     const val ALL_COMPLETE_EMPTY_STATE = "ALL_COMPLETE_EMPTY_STATE"
     const val TASKS_COLUMN = "TASKS_COLUMN"
+    const val DATE_RANGE_STICKY_HEADER = "DATE_RANGE_STICKY_HEADER_"
     const val COMPLETED_TASKS_TOGGLE = "COMPLETED_TASKS_TOGGLE"
     const val COMPLETED_TASKS_TOGGLE_LABEL = "COMPLETED_TASKS_TOGGLE_LABEL"
 }
@@ -122,7 +124,8 @@ fun TasksColumn(
                                     .padding(horizontal = 12.dp, vertical = 8.dp)
                             ) {
                                 Text(
-                                    dateRange.toLabel(sectionLabel = true),
+                                    text = dateRange.toLabel(sectionLabel = true),
+                                    modifier = Modifier.testTag(DATE_RANGE_STICKY_HEADER + dateRange.key),
                                     style = MaterialTheme.typography.titleSmall,
                                     color = dateRange.toColor(),
                                 )

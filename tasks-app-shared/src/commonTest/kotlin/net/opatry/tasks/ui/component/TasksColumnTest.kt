@@ -32,6 +32,14 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
+import net.opatry.tasks.app.presentation.model.DateRange
 import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ROW
@@ -40,13 +48,19 @@ import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_EMPTY_ST
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_REPAIR_BUTTON
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASKS_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumn
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
 import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.task_due_date_label_no_date
+import net.opatry.tasks.resources.task_due_date_label_past
+import net.opatry.tasks.resources.task_due_date_label_today
+import net.opatry.tasks.resources.task_due_date_label_tomorrow
 import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_count
 import org.jetbrains.compose.resources.stringResource
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW as REMAINING_TASK_ROW
@@ -54,6 +68,9 @@ import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW as REMAININ
 @Suppress("TestFunctionName")
 @OptIn(ExperimentalTestApi::class)
 class TasksColumnTest {
+    private val today: LocalDate
+        get() = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+
     @Test
     fun TasksColumn_TaskRows() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 2, completedTaskCount = 1)
@@ -212,5 +229,179 @@ class TasksColumnTest {
 
         onAllNodesWithTag(COMPLETED_TASK_ROW)
             .assertCountEquals(0)
+    }
+
+    @Test
+    fun TasksColumn_WithDateRange_None() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.None to listOf(createTask()),
+                )
+            )
+        lateinit var noDateStr: String
+        setContent {
+            noDateStr = stringResource(Res.string.task_due_date_label_no_date)
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "none")
+            .assertIsDisplayed()
+            .assertTextEquals(noDateStr)
+    }
+
+    @Test
+    fun TasksColumn_WithDateRange_WeekOld() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.Overdue(today.minus(4, DateTimeUnit.WEEK), -28) to listOf(createTask()),
+                )
+            )
+        lateinit var pastStr: String
+        setContent {
+            pastStr = stringResource(Res.string.task_due_date_label_past)
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "overdue-28")
+            .assertIsDisplayed()
+            .assertTextEquals(pastStr)
+    }
+
+    @Test
+    fun TasksColumn_WithDateRange_ThisWeek() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.Overdue(today.minus(4, DateTimeUnit.DAY), -4) to listOf(createTask()),
+                )
+            )
+        lateinit var pastStr: String
+        setContent {
+            pastStr = stringResource(Res.string.task_due_date_label_past)
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "overdue-4")
+            .assertIsDisplayed()
+            .assertTextEquals(pastStr)
+    }
+
+    @Test
+    fun TasksColumn_WithDateRange_Yesterday() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.Overdue(today.minus(1, DateTimeUnit.DAY), -1) to listOf(createTask()),
+                )
+            )
+        lateinit var pastStr: String
+        setContent {
+            pastStr = stringResource(Res.string.task_due_date_label_past)
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "overdue-1")
+            .assertIsDisplayed()
+            .assertTextEquals(pastStr)
+    }
+
+    @Test
+    fun TasksColumn_WithDateRange_Today() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.Today(today) to listOf(createTask()),
+                )
+            )
+        lateinit var todayStr: String
+        setContent {
+            todayStr = stringResource(Res.string.task_due_date_label_today)
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "today")
+            .assertIsDisplayed()
+            .assertTextEquals(todayStr)
+    }
+
+    @Test
+    fun TasksColumn_WithDateRange_Tomorrow() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.Later(today.plus(1, DateTimeUnit.DAY), 1) to listOf(createTask()),
+                )
+            )
+        lateinit var tomorrowStr: String
+        setContent {
+            tomorrowStr = stringResource(Res.string.task_due_date_label_tomorrow)
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "later1")
+            .assertIsDisplayed()
+            .assertTextEquals(tomorrowStr)
+    }
+
+    @Ignore("TODO complicated to test relative date range in test and missing localization")
+    @Test
+    fun TasksColumn_WithDateRange_ThisMonth() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.Later(today.plus(1, DateTimeUnit.MONTH), 30) to listOf(createTask()),
+                )
+            )
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "later30")
+            .assertIsDisplayed()
+        // TODO complicated to do in test
+        //  .assertTextEquals(tomorrowStr)
+    }
+
+    @Test
+    fun TasksColumn_WithDateRange_InManyYears() = runComposeUiTest {
+        val taskList = createTaskList()
+            .copy(
+                remainingTasks = mapOf(
+                    DateRange.Later(LocalDate(2500, 1, 1), 1000) to listOf(createTask()),
+                )
+            )
+        setContent {
+            TasksColumn(
+                taskLists = listOf(taskList),
+                selectedTaskList = taskList,
+            )
+        }
+
+        onNodeWithTag(TasksColumnTestTag.DATE_RANGE_STICKY_HEADER + "later1000")
+            .assertIsDisplayed()
+            .assertTextEquals("January 1, 2500")
     }
 }
