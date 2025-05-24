@@ -23,19 +23,27 @@
 package net.opatry.tasks.app.ui.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 
-@PreviewLightDark
+// FIXME using dark & light preview with popup doesn't work
+@Preview
 @Composable
-private fun ProfileIconPreview() {
-    TaskfolioThemedPreview {
+private fun ProfileIconSignedWithoutEmailMenuPreview() {
+    TaskfolioThemedPreview(Modifier.size(width = 350.dp, height = 300.dp)) {
         Column {
             ProfileIcon(
-                userState = UserState.Newcomer,
-            )
+                userState = UserState.SignedIn(
+                    name = "Jane Doe",
+                    email = null,
+                ),
+                showUserMenu = true,
+            ) {}
         }
     }
 }
