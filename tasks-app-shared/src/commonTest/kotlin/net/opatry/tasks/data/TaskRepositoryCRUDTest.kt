@@ -30,6 +30,7 @@ import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.util.runTaskRepositoryTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -85,6 +86,13 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `rename unavailable task list should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task list id 42") {
+            repository.renameTaskList(42L, "toto")
+        }
+    }
+
+    @Test
     fun `delete task list`() = runTaskRepositoryTest { repository ->
         val taskList = repository.createAndGetTaskList("My tasks")
 
@@ -93,6 +101,13 @@ class TaskRepositoryCRUDTest {
         val taskLists = repository.getTaskLists().firstOrNull()
         assertNotNull(taskLists)
         assertEquals(0, taskLists.size, "No task list expected")
+    }
+
+    @Test
+    fun `delete unavailable task list should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task list id 42") {
+            repository.deleteTaskList(42L)
+        }
     }
 
     @Test
@@ -128,6 +143,21 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `create task in an unavailable task list should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task list id 42") {
+            repository.createTask(42L, null, "toto")
+        }
+    }
+
+    @Test
+    fun `create task with an unavailable parent task should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        val taskList = repository.createAndGetTaskList("My tasks")
+        assertFailsWith<IllegalArgumentException>("Invalid parent task id 42") {
+            repository.createTask(taskList.id, 42L, "toto")
+        }
+    }
+
+    @Test
     fun `rename task`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
@@ -137,6 +167,13 @@ class TaskRepositoryCRUDTest {
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("My renamed task", tasks.first().title)
+    }
+
+    @Test
+    fun `rename unavailable task should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.updateTaskTitle(42L, "toto")
+        }
     }
 
     @Test
@@ -155,6 +192,13 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `edit unavailable task should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.updateTask(42L, "toto", "titi", null)
+        }
+    }
+
+    @Test
     fun `edit task notes`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
@@ -164,6 +208,13 @@ class TaskRepositoryCRUDTest {
         assertNotNull(tasks)
         assertEquals(1, tasks.size)
         assertEquals("These are some notes", tasks.first().notes)
+    }
+
+    @Test
+    fun `edit unavailable task notes should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.updateTaskNotes(42L, "toto")
+        }
     }
 
     @Test
@@ -192,6 +243,13 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `edit unavailable task due date should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.updateTaskDueDate(42L, null)
+        }
+    }
+
+    @Test
     fun `complete task`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
@@ -204,6 +262,13 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `toggle unavailable task completion state should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.toggleTaskCompletionState(42L)
+        }
+    }
+
+    @Test
     fun `delete task`() = runTaskRepositoryTest { repository ->
         val (taskList, task) = repository.createAndGetTask("My tasks", "My task")
 
@@ -212,6 +277,13 @@ class TaskRepositoryCRUDTest {
         val tasks = repository.findTaskListById(taskList.id)?.tasks
         assertNotNull(tasks)
         assertEquals(0, tasks.size, "Task should have been deleted")
+    }
+
+    @Test
+    fun `delete unavailable task should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.deleteTask(42L)
+        }
     }
 
     @Test
@@ -245,6 +317,23 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `move unavailable task to top should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.moveToTop(42L)
+        }
+    }
+
+    @Test
+    fun `move completed task to top should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        val (_, task1) = repository.createAndGetTask("tasks", "t1")
+        repository.toggleTaskCompletionState(task1.id)
+
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.moveToTop(task1.id)
+        }
+    }
+
+    @Test
     fun `move task to list`() = runTaskRepositoryTest { repository ->
         val (taskList1, task1) = repository.createAndGetTask("list1", "t1")
         val task2 = repository.createAndGetTask(taskList1.id, "t2")
@@ -271,6 +360,22 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `move unavailable task to list should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        val taskList = repository.createAndGetTaskList("list1")
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.moveToList(42L, taskList.id)
+        }
+    }
+
+    @Test
+    fun `move task to unavailable list should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        val (_, task) = repository.createAndGetTask("list1", "task1")
+        assertFailsWith<IllegalArgumentException>("Invalid task list id 42") {
+            repository.moveToList(task.id, 42L)
+        }
+    }
+
+    @Test
     fun `move task to new list`() = runTaskRepositoryTest { repository ->
         val (taskList1, task1) = repository.createAndGetTask("list1", "t1")
         val task2 = repository.createAndGetTask(taskList1.id, "t2")
@@ -290,6 +395,13 @@ class TaskRepositoryCRUDTest {
         val updatedTask = taskList2.tasks.first()
         assertEquals(task2.id, updatedTask.id)
         assertEquals("00000000000000000000", updatedTask.position, "task should be moved at first position")
+    }
+
+    @Test
+    fun `move unavailable task to new list should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task id 42") {
+            repository.moveToNewList(42L, "toto")
+        }
     }
 
     @Test

@@ -23,6 +23,7 @@
 package net.opatry.tasks.data.util
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
@@ -32,6 +33,21 @@ import net.opatry.tasks.InMemoryTasksApi
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.TaskRepository
 
+internal suspend fun TaskRepository.printTaskTree() {
+    getTaskLists().firstOrNull()?.let { taskLists ->
+        if (taskLists.isEmpty()) {
+            println("No task lists found.")
+            return
+        }
+        for (taskList in taskLists) {
+            println("- ${taskList.title} (#${taskList.tasks.count()})")
+            taskList.tasks.forEach { task ->
+                val tabs = "  ".repeat(task.indent + 1)
+                println("$tabs- ${task.title} (@{${task.position}} >[${task.indent}])")
+            }
+        }
+    } ?: println("Task lists not ready.")
+}
 
 internal fun runTaskRepositoryTest(
     taskListsApi: TaskListsApi = InMemoryTaskListsApi(),
@@ -43,10 +59,12 @@ internal fun runTaskRepositoryTest(
         .setQueryCoroutineContext(backgroundScope.coroutineContext)
         .build()
 
+    val repository = TaskRepository(db.getTaskListDao(), db.getTaskDao(), taskListsApi, tasksApi, NowProvider(Clock.System::now))
     try {
-        val repository = TaskRepository(db.getTaskListDao(), db.getTaskDao(), taskListsApi, tasksApi, NowProvider(Clock.System::now))
-
         test(repository)
+    } catch (e: AssertionError) {
+        repository.printTaskTree()
+        throw e
     } finally {
         db.close()
     }
