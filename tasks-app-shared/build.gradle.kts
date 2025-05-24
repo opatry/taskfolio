@@ -45,13 +45,13 @@ compose.resources {
 kotlin {
     jvm()
 
+    jvmToolchain(17)
+
     androidTarget {
         // useful to allow using commonTest in Android instrumentation tests
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
-
-    jvmToolchain(17)
 
     sourceSets {
         androidMain.dependencies {

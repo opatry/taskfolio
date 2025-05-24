@@ -28,6 +28,8 @@ plugins {
 kotlin {
     jvm()
 
+    jvmToolchain(17)
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.datetime)
