@@ -68,6 +68,7 @@ val koverExcludedClasses = listOf(
     "net.opatry.tasks.app.ui.*PreviewKt*",
     "net.opatry.tasks.app.ui.*PreviewParameterProvider*",
     "net.opatry.tasks.app.ui.*PreviewDataProvider*",
+    "net.opatry.tasks.app.ui.*PreviewData*",
     "net.opatry.tasks.app.ui.component.LoadingIndicator*",
     "net.opatry.tasks.app.ui.component.LoadingPane*",
     "net.opatry.tasks.app.ui.component.MissingScreen*",
