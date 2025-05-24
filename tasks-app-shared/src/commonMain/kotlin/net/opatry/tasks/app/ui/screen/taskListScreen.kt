@@ -70,14 +70,10 @@ fun TaskListsMasterDetail(
     val snackbarHostState = remember { SnackbarHostState() }
     var errorEvent by remember { mutableStateOf<TaskEvent.Error?>(null) }
 
-    LaunchedEffect(taskLists, selectedTaskListId) {
-        if (selectedTaskListId == null && !taskLists.isNullOrEmpty()) {
-            viewModel.selectTaskList(taskLists?.firstOrNull()?.id)
-        }
-    }
-
     LaunchedEffect(selectedTaskListId) {
-        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, selectedTaskListId?.value)
+        if (selectedTaskListId != null) {
+            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, selectedTaskListId?.value)
+        }
     }
 
     LaunchedEffect(Unit) {
