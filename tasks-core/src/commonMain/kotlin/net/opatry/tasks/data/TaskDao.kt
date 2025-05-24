@@ -92,4 +92,24 @@ interface TaskDao {
 
     @Query("SELECT * FROM task WHERE local_id = :id")
     suspend fun getById(id: Long): TaskEntity?
+
+    @Query(
+        """
+            SELECT * FROM task
+            WHERE parent_list_local_id = :taskListLocalId
+              AND ((parent_local_id IS NULL AND :parentTaskLocalId IS NULL) OR parent_local_id = :parentTaskLocalId)
+              AND position < :position
+            ORDER BY position DESC
+            LIMIT 1
+        """
+    )
+    suspend fun getPreviousSiblingTask(
+        taskListLocalId: Long,
+        parentTaskLocalId: Long?,
+        position: String
+    ): TaskEntity?
+
+    suspend fun getPreviousSiblingTask(
+        taskEntity: TaskEntity,
+    ): TaskEntity? = getPreviousSiblingTask(taskEntity.parentListLocalId, taskEntity.parentTaskLocalId, taskEntity.position)
 }

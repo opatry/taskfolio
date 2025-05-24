@@ -60,6 +60,7 @@ class TaskUIModelMapperTest {
             completionDate = null,
             position = "00000000000000000042",
             indent = 1,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -82,6 +83,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -99,6 +101,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "09999999999999999999",
             indent = 0,
+            isParentTask = false,
         )
 
         assertFailsWith<IllegalArgumentException> {
@@ -117,6 +120,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -134,6 +138,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000001",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -151,6 +156,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -168,6 +174,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000001",
             indent = 1,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -185,6 +192,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000001",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -202,6 +210,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -219,6 +228,25 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000001",
             indent = 1,
+            isParentTask = false,
+        )
+
+        val taskUIModel = task.asTaskUIModel()
+
+        assertIs<TaskUIModel.Todo>(taskUIModel)
+        assertFalse(taskUIModel.canIndent)
+    }
+
+    @Test
+    fun `canIndent when a parent task should be false`() {
+        val task = TaskDataModel(
+            id = 0L,
+            title = "title",
+            isCompleted = false,
+            lastUpdateDate = Clock.System.now(),
+            position = "00000000000000000001",
+            indent = 0,
+            isParentTask = true,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -236,6 +264,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 1,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -253,6 +282,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 1,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -270,6 +300,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -287,6 +318,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 0,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()
@@ -304,6 +336,7 @@ class TaskUIModelMapperTest {
             lastUpdateDate = Clock.System.now(),
             position = "00000000000000000000",
             indent = 1,
+            isParentTask = false,
         )
 
         val taskUIModel = task.asTaskUIModel()

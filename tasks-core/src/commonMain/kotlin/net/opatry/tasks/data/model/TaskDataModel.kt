@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -35,4 +35,12 @@ data class TaskDataModel(
     val completionDate: Instant? = null,
     val position: String,
     val indent: Int,
-)
+    val isParentTask: Boolean,
+) {
+    init {
+        when {
+            isCompleted -> require(!isParentTask) { "Completed tasks cannot be parent tasks." }
+            isParentTask -> require(indent == 0) { "Parent tasks must have an indent of 0." }
+        }
+    }
+}

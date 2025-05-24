@@ -490,4 +490,110 @@ class TaskDaoTest {
         assertEquals(now, tasks.first().lastUpdateDate)
         assertEquals("00000000000000000000", tasks.first().position)
     }
+
+    @Test
+    fun `when getPreviousSiblingTask(task) with mixed tasks and subtasks then should return root level task before task`() = runTest {
+        val task1 = TaskEntity(
+            parentListLocalId = 0L,
+            title = "task1",
+            position = "00000000000000000000",
+            lastUpdateDate = now,
+        )
+        val task2 = task1.copy(
+            title = "task2",
+            position = "00000000000000000001",
+        )
+        val subtask1 = task1.copy(
+            title = "subtask1",
+            position = "00000000000000000000",
+        )
+        val subtask2 = task1.copy(
+            title = "subtask2",
+            position = "00000000000000000001",
+        )
+        val task1Id = taskDao.insert(task1)
+        val insertedTask2 = taskDao.insert(task2)
+            .let { taskDao.getById(it) }
+            ?: error("Task not found")
+        taskDao.insert(subtask1.copy(parentTaskLocalId = task1Id))
+        taskDao.insert(subtask2.copy(parentTaskLocalId = task1Id))
+
+        val result = taskDao.getPreviousSiblingTask(insertedTask2)
+
+        assertNotNull(result)
+        assertEquals(task1Id, result.id)
+    }
+
+    @Test
+    fun `when getPreviousSiblingTask(task) without previous sibling then should return null`() = runTest {
+        val task = TaskEntity(
+            parentListLocalId = 0L,
+            title = "task",
+            position = "00000000000000000000",
+            lastUpdateDate = now,
+        )
+        val insertedTask = taskDao.insert(task)
+            .let { taskDao.getById(it) }
+            ?: error("Task not found")
+
+        val result = taskDao.getPreviousSiblingTask(insertedTask)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `when getPreviousSiblingTask(subtask) with mixed tasks and subtasks then should return indented task before task`() = runTest {
+        val task1 = TaskEntity(
+            parentListLocalId = 0L,
+            title = "task1",
+            position = "00000000000000000000",
+            lastUpdateDate = now,
+        )
+        val task2 = task1.copy(
+            title = "task2",
+            position = "00000000000000000001",
+        )
+        val subtask1 = task1.copy(
+            title = "subtask1",
+            position = "00000000000000000000",
+        )
+        val subtask2 = task1.copy(
+            title = "subtask2",
+            position = "00000000000000000001",
+        )
+
+        val task1Id = taskDao.insert(task1)
+        taskDao.insert(task2)
+        val subtask1Id = taskDao.insert(subtask1.copy(parentTaskLocalId = task1Id))
+        val insertedSubtask2 = taskDao.insert(subtask2.copy(parentTaskLocalId = task1Id))
+            .let { taskDao.getById(it) }
+            ?: error("Task not found")
+
+        val result = taskDao.getPreviousSiblingTask(insertedSubtask2)
+
+        assertNotNull(result)
+        assertEquals(subtask1Id, result.id)
+    }
+
+    @Test
+    fun `when getPreviousSiblingTask(subtask) without previous sibling then should return null`() = runTest {
+        val task = TaskEntity(
+            parentListLocalId = 0L,
+            title = "task",
+            position = "00000000000000000000",
+            lastUpdateDate = now,
+        )
+        val subtask = task.copy(
+            title = "subtask",
+            position = "00000000000000000000",
+        )
+        val taskId = taskDao.insert(task)
+        val insertedSubtask = taskDao.insert(subtask.copy(parentTaskLocalId = taskId))
+            .let { taskDao.getById(it) }
+            ?: error("Task not found")
+
+        val result = taskDao.getPreviousSiblingTask(insertedSubtask)
+
+        assertNull(result)
+    }
 }

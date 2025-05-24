@@ -123,7 +123,7 @@ internal fun TaskDataModel.asTaskUIModel(): TaskUIModel {
             indent = indent,
             canMoveToTop = indent == 0 && !isFirstTask,
             canUnindent = indent > 0,
-            canIndent = indent == 0 && !isFirstTask,
+            canIndent = indent == 0 && !isParentTask && !isFirstTask,
             canCreateSubTask = indent == 0,
         )
     }
