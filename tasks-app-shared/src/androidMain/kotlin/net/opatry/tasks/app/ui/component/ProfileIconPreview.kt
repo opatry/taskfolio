@@ -35,7 +35,7 @@ private fun ProfileIconPreview() {
         Column {
             ProfileIcon(
                 userState = UserState.Newcomer,
-            )
+            ) {}
         }
     }
 }
