@@ -66,6 +66,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 - [GitHub Actions](https://docs.github.com/en/actions) for CI
   - build Android & Desktop apps
   - run tests
+  - compute code coverage & check threshold
   - publish app on Play Store
   - publish companion website on [Github pages](https://pages.github.com/)
 

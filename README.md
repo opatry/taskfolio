@@ -2,6 +2,29 @@
 [![Build & Test](https://github.com/opatry/tasks-app/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/tasks-app/actions/workflows/build.yml)
 ![Coverage 93%](https://img.shields.io/badge/Coverage-93%25-rgb%28154%2C205%2C50%29)
 
+<details>
+<summary>📊 Note about coverage…</summary>
+
+The coverage report excludes code not intended to be covered.
+
+This avoids the [“broken window” effect](https://blog.codinghorror.com/the-broken-window-theory/): whether coverage is at 43% or 56%, it’s perceived as equally low—so efforts to improve it are often dismissed. In contrast, high or near-100% coverage is seen as achievable and worth tracking.
+
+Refer to the root project's [`build.gradle.kts`](build.gradle.kts#L55-L90) for details.
+
+*Excluded elements include:*
+- Data models (no logic to test)
+-	Authentication (tedious to cover for now; may change later)
+- Dependency injection (limited relevance despite some graph tests)
+- Generated code that's untestable or irrelevant (that said, `*Dao_Impl` are retained)
+- Root screens (difficult to test due to navigation, `ViewModel`, DI, etc.); testable parts are extracted for UI tests
+- Compose UI previews
+- Dummy screens using only Material components without logic
+- Compose icons
+- Resources
+</details>
+
+---
+
 # Taskfolio
 
 [**Taskfolio**](https://opatry.github.io/taskfolio) is an Android task management app built using [Google Tasks API](https://developers.google.com/tasks/reference/rest). Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
@@ -60,6 +83,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 - [GitHub Actions](https://docs.github.com/en/actions) for CI
   - build Android & Desktop apps
   - run tests
+  - compute code coverage & check threshold
   - publish app on Play Store
   - publish companion website on [Github pages](https://pages.github.com/)
 
