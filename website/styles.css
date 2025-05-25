@@ -1,6 +1,6 @@
 body {
   font-family: "Fira Sans", sans-serif;
-  font-size:   18px;
+  font-size: 18px;
   line-height: 1.5;
   background-color: #011511;
   color: #ffffff;
@@ -30,34 +30,34 @@ hr {
   margin-bottom: 2em;
 }
 
- h1, h2, h3, h4, h5, h6,
- p, blockquote, pre,
- ul, ol, dl, figure {
-   margin-top: .5rem;
-   margin-bottom: 1.5rem;
- }
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+ul, ol, dl, figure {
+  margin-top: .5rem;
+  margin-bottom: 1.5rem;
+}
 
- img {
-   max-width: 100%;
-   vertical-align: middle;
- }
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
  
- figure > img {
-   display: block;
- }
+figure > img {
+  display: block;
+}
  
- figcaption {
-   font-size: .8em;
- }
- 
- h1 {
-    font-size: 4em;
- }
- 
- h2 {
-    font-size: 2.5em;
- }
- 
+figcaption {
+  font-size: .8em;
+}
+
+h1 {
+  font-size: 4em;
+}
+
+h2 {
+  font-size: 2.5em;
+}
+
 a {
   color: #6BEACA;
   text-decoration: none;
@@ -67,7 +67,7 @@ a:hover {
   color: #ffffff;
   text-decoration: underline;
 }
- 
+
 .svg-icon {
   width: 16px;
   height: 16px;
