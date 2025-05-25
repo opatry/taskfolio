@@ -11,9 +11,19 @@ body {
 }
 
 .container {
-  width: 1024px;
-  margin: 0 auto 0 60px;
-  padding: 20px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1080px;
+  padding: 20px 80px;
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+  }
 }
 
 .site-footer {
@@ -39,6 +49,7 @@ ul, ol, dl, figure {
 
 img {
   max-width: 100%;
+  height: auto;
   vertical-align: middle;
 }
  
@@ -52,10 +63,22 @@ figcaption {
 
 h1 {
   font-size: 4em;
+  transition: font-size 0.3s ease;
 }
 
 h2 {
   font-size: 2.5em;
+  transition: font-size 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3em;
+  }
+   
+  h2 {
+    font-size: 2em;
+  }
 }
 
 a {
@@ -85,6 +108,13 @@ a:hover {
   transition: width 0.3s ease;
 }
 
+@media (max-width: 768px) {
+  .svg-icon-big {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 ul, ol {
   list-style-position: inside;
   margin-left: 0;
@@ -98,9 +128,28 @@ ul ul, ol ol {
 table {
   margin-bottom: 1.5rem;
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
-th, td {
+td {
   padding: .5em;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+  }
+
+  tr {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  td {
+    display: flex;
+    width: 50%;
+    box-sizing: border-box;
+  }
 }
