@@ -1,0 +1,18 @@
+{
+  "name": "Taskfolio — An Android task management app built using Google Tasks API.",
+  "short_name": "Taskfolio",
+  "icons": [
+    {
+      "src": "/taskfolio/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "background_color": "#011511",
+  "theme_color": "#006B58",
+  "start_url": "/?utm_source=a2hs",
+  "display": "standalone",
+  "orientation": "portrait",
+  "description": "Taskfolio is an Android task management app built using Google Tasks API. Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface."
+}
