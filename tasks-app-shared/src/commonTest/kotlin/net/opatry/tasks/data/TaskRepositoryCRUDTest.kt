@@ -405,6 +405,27 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
+    fun `clear list completed tasks should remove completed tasks from list`() = runTaskRepositoryTest { repository ->
+        val (taskList1, task1) = repository.createAndGetTask("list1", "t1")
+        val task2 = repository.createAndGetTask(taskList1.id, "t2")
+        repository.toggleTaskCompletionState(task2.id)
+
+        repository.clearTaskListCompletedTasks(taskList1.id)
+
+        val updatedList = repository.findTaskListById(taskList1.id)
+        assertNotNull(updatedList)
+        assertEquals(1, updatedList.tasks.size)
+        assertEquals(task1.id, updatedList.tasks.first().id, "Only non-completed task should remain in the list")
+    }
+
+    @Test
+    fun `clear unavailable list completed tasks should throw IllegalArgumentException`() = runTaskRepositoryTest { repository ->
+        assertFailsWith<IllegalArgumentException>("Invalid task list id 42") {
+            repository.clearTaskListCompletedTasks(42L)
+        }
+    }
+
+    @Test
     fun `sorting tasks by title should honor title (ignore case) and ignore parent task link and indentation`() =
         runTaskRepositoryTest { repository ->
             val (taskList, task1) = repository.createAndGetTask("list", "t1")
