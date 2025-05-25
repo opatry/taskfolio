@@ -85,6 +85,16 @@ a:hover {
   transition: width 0.3s ease;
 }
 
+ul, ol {
+  list-style-position: inside;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+ul ul, ol ol {
+  padding-left: 1.5rem;
+}
+
 table {
   margin-bottom: 1.5rem;
   width: 100%;
