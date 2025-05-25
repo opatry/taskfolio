@@ -32,6 +32,7 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.InMemoryTasksApi
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.TaskRepository
+import net.opatry.tasks.data.model.TaskDataModel
 
 internal suspend fun TaskRepository.printTaskTree() {
     getTaskLists().firstOrNull()?.let { taskLists ->
@@ -41,9 +42,18 @@ internal suspend fun TaskRepository.printTaskTree() {
         }
         for (taskList in taskLists) {
             println("- ${taskList.title} (#${taskList.tasks.count()})")
-            taskList.tasks.forEach { task ->
-                val tabs = "  ".repeat(task.indent + 1)
-                println("$tabs- ${task.title} (@{${task.position}} >[${task.indent}])")
+            var completedSectionShown = false
+            taskList.tasks.sortedBy(TaskDataModel::position).forEach { task ->
+                if (task.isCompleted) {
+                    if (!completedSectionShown) {
+                        println("  -------- COMPLETED (${taskList.tasks.count(TaskDataModel::isCompleted)}) --------")
+                        completedSectionShown = true
+                    }
+                    println("  - ${task.title} (@{${task.position}})")
+                } else {
+                    val tabs = "  ".repeat(task.indent + 1)
+                    println("$tabs- ${task.title} (@{${task.position}} >[${task.indent}])")
+                }
             }
         }
     } ?: println("Task lists not ready.")
