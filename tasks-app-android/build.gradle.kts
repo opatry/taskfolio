@@ -162,15 +162,6 @@ dependencies {
     implementation(projects.google.oauth)
     implementation(projects.google.tasks)
     implementation(projects.tasksAppShared)
-
-    testImplementation(kotlin("test"))
-    testImplementation(libs.koin.test)
-    testImplementation(libs.ktor.client.core) {
-        because("needed for Koin DI tests injectedParameters")
-    }
-    testImplementation(projects.tasksCore) {
-        because("needed for Koin DI tests injectedParameters")
-    }
 }
 
 aboutLibraries {

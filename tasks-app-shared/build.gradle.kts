@@ -132,6 +132,8 @@ kotlin {
             implementation(libs.androidx.room.testing)
 
             implementation(libs.bundles.mockito)
+
+            implementation(libs.koin.test)
         }
 
         jvmTest.dependencies {
