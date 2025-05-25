@@ -1,0 +1,155 @@
+body {
+  font-family: "Fira Sans", sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  background-color: #011511;
+  color: #ffffff;
+}
+
+.site-header {
+  min-height: 80px;
+}
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1080px;
+  padding: 20px 80px;
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+  }
+}
+
+.site-footer {
+  border-top: 1px solid #ffffff;
+  margin-top: 2em;
+  padding-top: 2em;
+  padding-bottom: 1.5rem;
+}
+
+hr {
+  height: 1px;
+  border: 0 none;
+  background-color: #ffffff;
+  margin-bottom: 2em;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+ul, ol, dl, figure {
+  margin-top: .5rem;
+  margin-bottom: 1.5rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+ 
+figure > img {
+  display: block;
+}
+ 
+figcaption {
+  font-size: .8em;
+}
+
+h1 {
+  font-size: 4em;
+  transition: font-size 0.3s ease;
+}
+
+h2 {
+  font-size: 2.5em;
+  transition: font-size 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3em;
+  }
+   
+  h2 {
+    font-size: 2em;
+  }
+}
+
+a {
+  color: #6BEACA;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.svg-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  padding-right: 4px;
+  vertical-align: text-top;
+}
+
+.svg-icon-big {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  padding-right: 8px;
+  vertical-align: baseline;
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .svg-icon-big {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+ul, ol {
+  list-style-position: inside;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+ul ul, ol ol {
+  padding-left: 1.5rem;
+}
+
+table {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+td {
+  padding: .5em;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+  }
+
+  tr {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  td {
+    display: flex;
+    width: 50%;
+    box-sizing: border-box;
+  }
+}
