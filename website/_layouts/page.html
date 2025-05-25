@@ -4,7 +4,12 @@ layout: default
 <article class="page">
 
   <header class="page-header">
-    <h1 class="page-title">{{ page.title | escape }}</h1>
+    <h1 class="page-title">
+      {%- if  page.url == "/privacy-policy/" -%}
+      <span class="svg-icon-big">{% include lucide-icon-shield-check-1px.svg %}</span>
+      {%- endif -%}
+      {{ page.title | escape }}
+    </h1>
   </header>
 
   <div class="page-content">
