@@ -14,10 +14,10 @@ This project highlights the breadth of my Android knowledge, from API integratio
 It’s designed not just as a functioning task manager, but as a demonstration of my ability to deliver well-structured, maintainable,
 and scalable Android apps.
 
-[![Taskfolio Android Application]({{ site.baseurl }}/assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
+[![Taskfolio Android Application](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
 
 | --------------------------------------- |--------------------------------------- |--------------------------------------- | ---------------------------------- |
-| ![]({{ site.baseurl }}/assets/screens/task_lists_light.png) | ![]({{ site.baseurl }}/assets/screens/groceries_light.png) | ![]({{ site.baseurl }}/assets/screens/add_task_light.png) | ![](assets/screens/home_dark.png)  |
+| ![](assets/screens/task_lists_light.png) | ![](assets/screens/groceries_light.png) | ![](assets/screens/add_task_light.png) | ![](assets/screens/home_dark.png)  |
 
 ## 🎯 Project intentions
 

@@ -4,7 +4,7 @@ layout: default
 
 <div class="home">
   {%- if page.title -%}
-  <h1 class="page-heading">{{ page.title }}</h1>
+  <h1 class="page-heading"><span class="svg-icon-big">{% include lucide-icon-circle-check-big-1px.svg %}</span> {{ page.title }}</h1>
   {%- endif -%}
 
   {{ content }}

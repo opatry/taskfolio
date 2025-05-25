@@ -1,6 +1,5 @@
 ---
 layout: page
-title: Privacy Policy Taskfolio
 title: Privacy Policy
 permalink: /privacy-policy/
 ---
