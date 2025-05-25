@@ -1,0 +1,22 @@
+---
+layout: null
+permalink: /manifest.json
+---
+{
+  "name": "{{ site.title }} — An Android task management app built using Google Tasks API.",
+  "short_name": "{{ site.title }}",
+  "icons": [
+    {
+      "src": "{{ "/icon.png" | relative_url }}",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "background_color": "#011511",
+  "theme_color": "#006B58",
+  "start_url": "/?utm_source=a2hs",
+  "display": "standalone",
+  "orientation": "portrait",
+  "description": "{{ site.description }}"
+}
