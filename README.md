@@ -70,6 +70,9 @@ I do not aim to implement advanced features beyond what is supported by the Goog
   - [`:oauth`](google/oauth/) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
     - [Google OAuth2](https://developers.google.com/identity/protocols/oauth2) authentication with Kotlin & Ktor
     - KMP
+  - [`:oauth-http`](google/oauth-http/) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
+    - OAuth2 HTTP redirection for desktop without deep links using Ktor server
+    - KMP
   - [`:tasks`](google/tasks) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
     - [Google Tasks REST API](https://developers.google.com/tasks/reference/rest) bindings for Kotlin using Ktor HTTP client 
     - KMP
