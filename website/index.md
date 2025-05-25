@@ -49,7 +49,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 - No drag'n'drop to re-order tasks nor move them between lists ([#133](https://github.com/opatry/taskfolio/issues/133)).
 - Task deletion undo is not implemented ([#149](https://github.com/opatry/taskfolio/issues/149)).
 - Local action sync failure might not be synced again ([#150](https://github.com/opatry/taskfolio/issues/150)).
-- Setting due date isn't properly supported ([#155](https://github.com/opatry/taskfolio/issues/155)).
+- Setting due date is partially supported ([#155](https://github.com/opatry/taskfolio/issues/155)).
 
 ## 🛠️ Tech stack
 
