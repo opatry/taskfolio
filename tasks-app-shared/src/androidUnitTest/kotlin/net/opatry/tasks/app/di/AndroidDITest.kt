@@ -19,6 +19,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package net.opatry.tasks.app.di
 
 import io.ktor.client.HttpClient
@@ -41,14 +42,11 @@ import org.koin.dsl.module
 import org.koin.test.verify.definition
 import org.koin.test.verify.injectedParameters
 import org.koin.test.verify.verify
-import java.io.File
-import java.net.URI
 import kotlin.test.Test
 import kotlin.time.Duration
 
-
 @OptIn(KoinExperimentalAPI::class)
-class DesktopDITest {
+class AndroidDITest {
     @Test
     fun `verify all modules`() {
         val allModules = module {
@@ -66,8 +64,8 @@ class DesktopDITest {
             injections = injectedParameters(
                 definition<HttpClient>(HttpClientEngine::class, HttpClientConfig::class),
                 definition<TaskListsViewModel>(Duration::class),
-                definition<File>(URI::class),
-                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class),
+                definition<TaskRepository>(NowProvider::class),
+                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, NowProvider::class),
             )
         )
     }
@@ -79,11 +77,7 @@ class DesktopDITest {
 
     @Test
     fun `verify platform module`() {
-        platformModule().verify(
-            injections = injectedParameters(
-                definition<File>(URI::class),
-            )
-        )
+        platformModule().verify()
     }
 
     @Test
