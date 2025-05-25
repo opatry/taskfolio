@@ -76,6 +76,14 @@ a:hover {
   vertical-align: text-top;
 }
 
+.svg-icon-big {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  vertical-align: baseline;
+  transition: width 0.3s ease;
+}
+
 table {
   margin-bottom: 1.5rem;
   width: 100%;
