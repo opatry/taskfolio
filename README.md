@@ -25,6 +25,10 @@ Refer to the root project's [`build.gradle.kts`](build.gradle.kts#L55-L90) for d
 
 ---
 
+<div align="center">
+<img src="fastlane/metadata/store/en-US/images/featureGraphic.png" width="500">
+</div>
+
 # Taskfolio
 
 [**Taskfolio**](https://opatry.github.io/taskfolio) is an Android task management app built using [Google Tasks API](https://developers.google.com/tasks/reference/rest). Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
