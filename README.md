@@ -1,3 +1,4 @@
+[![MIT License](https://img.shields.io/badge/license-MIT-rgb%280%2C107%2C88%29)](https://github.com/opatry/taskfolio/blob/main/LICENSE)
 [![Build & Test](https://github.com/opatry/tasks-app/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/tasks-app/actions/workflows/build.yml)
 ![Coverage 92%](https://img.shields.io/badge/Coverage-92%25-rgb%28154%2C205%2C50%29)
 
