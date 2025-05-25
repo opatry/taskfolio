@@ -53,15 +53,14 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 ## 🛠️ Tech stack
 
-- [Kotlin](https://kotlinlang.org/), [Multiplatform (KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
+- [Kotlin](https://kotlinlang.org/), [Multiplatform (aka KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
   - iOS & Web are not planned any time soon (contribution are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
-- [Kotlin multiplatform](https://kotlinlang.org/docs/multiplatform.html) (aka KMP)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
 - [Room](https://developer.android.com/training/data-storage/room) for local persistance
 - [Koin](https://insert-koin.io/) for dependency injection
-- [Material Design Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
-- [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- [Material Design 3 Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
+- [Jetpack Compose](https://developer.android.com/jetpack/compose), [Multiplatform (aka CMP)](https://www.jetbrains.com/compose-multiplatform/)
 - Kinda follows [Google architecture guidelines](https://developer.android.com/topic/architecture)
 - [Coil](https://coil-kt.github.io/coil/)
 - [GitHub Actions](https://docs.github.com/en/actions) for CI
