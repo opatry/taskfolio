@@ -128,6 +128,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 <details>
 <summary>See details…</summary>
+
 Decrypt `*.gpg` files needed for development, and copy decrypted versions in proper places.
 
 ```bash
@@ -146,6 +147,7 @@ The `decrypt_secrets.sh` will take it into account.
 
 <details>
 <summary>See details…</summary>
+
 It is possible to use [Compose hot reload](https://github.com/JetBrains/compose-hot-reload) on
 desktop app by running the `:tasks-app-desktop:runHot` Gradle task.
 
