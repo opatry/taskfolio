@@ -38,14 +38,15 @@ import net.opatry.tasks.data.entity.UserEntity
 import kotlin.time.Duration.Companion.seconds
 
 
-sealed class UserState {
+sealed interface UserState {
     data class SignedIn(
         val name: String,
         val email: String? = null,
         val avatarUrl: String? = null,
-    ) : UserState()
-    data object Newcomer : UserState()
-    data object Unsigned : UserState()
+    ) : UserState
+
+    data object Newcomer : UserState
+    data object Unsigned : UserState
 }
 
 private fun UserInfo.asUserEntity(isSignedIn: Boolean): UserEntity {
