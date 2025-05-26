@@ -62,12 +62,12 @@ import org.jetbrains.compose.resources.stringResource
 internal object TaskMenuTestTag {
     const val TASK_MENU = "TASK_MENU"
     const val ADD_SUBTASK = "TASK_MENU_ADD_SUBTASK"
-    const val MOVE_TO_TOP = "MOVE_TO_TOP"
-    const val UNINDENT = "UNINDENT"
-    const val INDENT = "INDENT"
-    const val MOVE_TO_LIST = "MOVE_TO_LIST"
-    const val MOVE_TO_NEW_LIST = "MOVE_TO_NEW_LIST"
-    const val DELETE = "DELETE"
+    const val MOVE_TO_TOP = "TASK_MENU_MOVE_TO_TOP"
+    const val UNINDENT = "TASK_MENU_UNINDENT"
+    const val INDENT = "TASK_MENU_INDENT"
+    const val MOVE_TO_LIST = "TASK_MENU_MOVE_TO_LIST"
+    const val MOVE_TO_NEW_LIST = "TASK_MENU_MOVE_TO_NEW_LIST"
+    const val DELETE = "TASK_MENU_DELETE"
 }
 
 enum class DueDateUpdate {
