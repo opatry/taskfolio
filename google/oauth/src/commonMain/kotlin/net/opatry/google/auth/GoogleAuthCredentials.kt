@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -35,12 +35,12 @@ data class GoogleAuth(
     @SerialName("installed")
     val installedCredentials: Credentials.Installed? = null,
 ) {
-    sealed class Credentials {
-        abstract val clientId: String
-        abstract val projectId: String
-        abstract val authUri: String
-        abstract val tokenUri: String
-        abstract val authProviderX509CertUrl: String
+    sealed interface Credentials {
+        val clientId: String
+        val projectId: String
+        val authUri: String
+        val tokenUri: String
+        val authProviderX509CertUrl: String
 
         @Serializable
         data class Web(
@@ -58,7 +58,7 @@ data class GoogleAuth(
             val clientSecret: String,
             @SerialName("redirect_uris")
             val redirectUris: List<String>,
-        ) : Credentials()
+        ) : Credentials
 
         @Serializable
         data class Installed(
@@ -72,6 +72,6 @@ data class GoogleAuth(
             override val tokenUri: String,
             @SerialName("auth_provider_x509_cert_url")
             override val authProviderX509CertUrl: String,
-        ) : Credentials()
+        ) : Credentials
     }
 }
