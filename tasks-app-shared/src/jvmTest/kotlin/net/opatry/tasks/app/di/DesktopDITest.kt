@@ -55,7 +55,7 @@ class DesktopDITest {
             includes(
                 utilModule,
                 loggingModule,
-                platformModule(),
+                platformModule("platform"),
                 dataModule,
                 authModule("some_id"),
                 networkModule,
@@ -79,7 +79,7 @@ class DesktopDITest {
 
     @Test
     fun `verify platform module`() {
-        platformModule().verify(
+        platformModule("platform").verify(
             injections = injectedParameters(
                 definition<File>(URI::class),
             )

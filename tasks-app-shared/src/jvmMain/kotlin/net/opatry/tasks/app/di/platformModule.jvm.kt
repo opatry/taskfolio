@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
 
-actual fun platformModule(): Module = module {
+actual fun platformModule(target: String): Module = module {
     single(named("app_root_dir")) {
         val userHome = File(System.getProperty("user.home"))
         val legacyRootDir = File(userHome, ".tasksApp")

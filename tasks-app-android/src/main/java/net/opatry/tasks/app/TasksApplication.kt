@@ -38,14 +38,17 @@ import org.koin.dsl.koinConfiguration
 private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95.apps.googleusercontent.com"
 
 @OptIn(KoinExperimentalAPI::class)
-class TasksApplication : Application(), KoinStartup {
+open class TasksApplication : Application(), KoinStartup {
+
+    protected open val target: String
+        get() = BuildConfig.FLAVOR
 
     override fun onKoinStartup() = koinConfiguration {
         androidContext(this@TasksApplication)
         modules(
             utilModule,
             loggingModule,
-            platformModule(),
+            platformModule(target),
             dataModule,
             authModule(GCP_CLIENT_ID),
             networkModule,
