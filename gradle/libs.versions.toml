@@ -23,6 +23,7 @@ coil = "3.2.0"
 about-libraries = "12.1.2"
 mockito = "5.17.0"
 kover = "0.9.1"
+androidx-test-runner = "1.6.2"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -91,6 +92,7 @@ about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.re
 androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 

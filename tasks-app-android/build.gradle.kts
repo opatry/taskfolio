@@ -49,7 +49,7 @@ android {
 
         androidResources.localeFilters += listOf("en", "fr")
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "net.opatry.tasks.app.test.TaskfolioTestRunner"
     }
 
     androidResources {
@@ -168,6 +168,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.test.runner)
 }
 
 aboutLibraries {
