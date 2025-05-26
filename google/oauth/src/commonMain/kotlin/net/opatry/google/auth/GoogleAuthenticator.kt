@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -76,14 +76,14 @@ interface GoogleAuthenticator {
         }
     }
 
-    sealed class Grant {
-        abstract val type: String
+    sealed interface Grant {
+        val type: String
 
-        data class AuthorizationCode(val code: String) : Grant() {
+        data class AuthorizationCode(val code: String) : Grant {
             override val type: String = "authorization_code"
         }
 
-        data class RefreshToken(val refreshToken: String) : Grant() {
+        data class RefreshToken(val refreshToken: String) : Grant {
             override val type: String
                 get() = "refresh_token"
         }
