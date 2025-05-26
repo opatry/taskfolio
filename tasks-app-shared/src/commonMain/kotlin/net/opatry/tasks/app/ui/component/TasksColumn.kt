@@ -50,7 +50,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.presentation.model.DateRange
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
-import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_TASKS_COMPLETED_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.DATE_RANGE_STICKY_HEADER
@@ -64,7 +64,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
 internal object TasksColumnTestTag {
-    const val ALL_COMPLETE_EMPTY_STATE = "ALL_COMPLETE_EMPTY_STATE"
+    const val ALL_TASKS_COMPLETED_EMPTY_STATE = "ALL_TASKS_COMPLETED_EMPTY_STATE"
     const val TASKS_COLUMN = "TASKS_COLUMN"
     const val DATE_RANGE_STICKY_HEADER = "DATE_RANGE_STICKY_HEADER_"
     const val COMPLETED_TASKS_TOGGLE = "COMPLETED_TASKS_TOGGLE"
@@ -109,7 +109,7 @@ fun TasksColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 24.dp)
-                                .testTag(ALL_COMPLETE_EMPTY_STATE),
+                                .testTag(ALL_TASKS_COMPLETED_EMPTY_STATE),
                         )
                     }
                 }

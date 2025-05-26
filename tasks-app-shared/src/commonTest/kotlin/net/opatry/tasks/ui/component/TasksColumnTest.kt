@@ -49,7 +49,7 @@ import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.BROKEN_LIST_REPAIR_B
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASKS_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumn
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag
-import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_COMPLETE_EMPTY_STATE
+import net.opatry.tasks.app.ui.component.TasksColumnTestTag.ALL_TASKS_COMPLETED_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
@@ -171,7 +171,7 @@ class TasksColumnTest {
         onNodeWithTag(NO_TASKS_EMPTY_STATE)
             .assertDoesNotExist()
 
-        onNodeWithTag(ALL_COMPLETE_EMPTY_STATE)
+        onNodeWithTag(ALL_TASKS_COMPLETED_EMPTY_STATE)
             .assertIsDisplayed()
 
         onNodeWithTag(COMPLETED_TASKS_TOGGLE)
