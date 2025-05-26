@@ -87,7 +87,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs
 
 @VisibleForTesting
-internal object RemainingTaskRowTestTag {
+object RemainingTaskRowTestTag {
     const val ROW = "REMAINING_TASK_ROW"
     const val TOGGLE_ICON = "REMAINING_TASK_TOGGLE_ICON"
     const val MENU_ICON = "REMAINING_TASK_MENU_ICON"

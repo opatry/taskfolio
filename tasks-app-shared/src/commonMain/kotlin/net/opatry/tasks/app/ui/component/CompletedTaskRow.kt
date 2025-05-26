@@ -61,7 +61,7 @@ import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
-internal object CompletedTaskRowTestTag {
+object CompletedTaskRowTestTag {
     const val COMPLETED_TASK_ROW = "COMPLETED_TASK_ROW"
     const val COMPLETED_TASK_ICON = "COMPLETED_TASK_ICON"
     const val COMPLETED_TASK_NOTES = "COMPLETED_TASK_NOTES"

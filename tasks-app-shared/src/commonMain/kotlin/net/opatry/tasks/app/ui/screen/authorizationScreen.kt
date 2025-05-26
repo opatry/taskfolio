@@ -24,6 +24,7 @@ package net.opatry.tasks.app.ui.screen
 
 import LucideIcons
 import ShieldCheck
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,12 +40,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.screen.AuthorizationScreenTestTags.SKIP_BUTTON
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.onboarding_screen_authorize_explanation
 import net.opatry.tasks.resources.onboarding_screen_skip
 import org.jetbrains.compose.resources.stringResource
+
+@VisibleForTesting
+object AuthorizationScreenTestTags {
+    const val SKIP_BUTTON = "AUTHORIZATION_SCREEN_SKIP_BUTTON"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +65,7 @@ fun AuthorizationScreen(
             TopAppBar(
                 title = {},
                 actions = {
-                    TextButton(onClick = onSkip) {
+                    TextButton(onClick = onSkip, modifier = Modifier.testTag(SKIP_BUTTON)) {
                         Text(stringResource(Res.string.onboarding_screen_skip))
                     }
                 }

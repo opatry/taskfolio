@@ -63,7 +63,7 @@ import net.opatry.tasks.resources.task_lists_screen_empty_state_title
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
-internal object EmptyStatesTestTag {
+object EmptyStatesTestTag {
     const val NO_TASKS_EMPTY_STATE = "NO_TASKS_EMPTY_STATE"
     const val NO_TASK_LIST_SELECTED_EMPTY_STATE = "NO_TASK_LIST_SELECTED_EMPTY_STATE"
     const val NO_TASK_LISTS_EMPTY_STATE = "NO_TASK_LISTS_EMPTY_STATE"

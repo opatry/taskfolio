@@ -64,7 +64,7 @@ import net.opatry.tasks.resources.edit_text_dialog_title
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
-internal object EditTextDialogTestTag {
+object EditTextDialogTestTag {
     const val DIALOG_TITLE = "EDIT_TEXT_DIALOG_TITLE"
     const val TEXT_FIELD = "EDIT_TEXT_DIALOG_TEXT_FIELD"
     const val ERROR_MESSAGE = "EDIT_TEXT_DIALOG_ERROR_MESSAGE"
