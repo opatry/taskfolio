@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.ui.screen
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -40,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import net.opatry.tasks.app.presentation.TaskListsViewModel
@@ -109,7 +111,7 @@ fun TaskListsMasterDetail(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         }
-    ) {
+    ) { contentPadding ->
         ListDetailPaneScaffold(
             directive = navigator.scaffoldDirective,
             value = navigator.scaffoldValue,
@@ -144,7 +146,8 @@ fun TaskListsMasterDetail(
             },
             detailPane = {
                 TaskListDetail(viewModel)
-            }
+            },
+            modifier = Modifier.padding(contentPadding),
         )
     }
 }
