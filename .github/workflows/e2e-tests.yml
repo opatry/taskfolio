@@ -1,0 +1,66 @@
+on:
+  workflow_call:
+    secrets:
+      PLAYSTORE_SECRET_PASSPHRASE:
+        required: true
+
+jobs:
+  e2e-tests:
+    name: 📲 E2E tests
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: 🔓 Decrypt secrets
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: ./_ci/decrypt_secrets.sh
+
+    - name: 🔓 Enable KVM group permissions
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+
+    - name: 📦 AVD cache
+      uses: actions/cache@v4
+      id: avd-cache
+      with:
+        path: |
+          ~/.android/avd/*
+          ~/.android/adb*
+        key: avd-30
+
+    - name: Create AVD with cacheable snapshot
+      if: steps.avd-cache.outputs.cache-hit != 'true'
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 30
+        arch: x86_64
+        target: google_apis
+        force-avd-creation: false
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        disable-animations: false
+        script: echo "Generated AVD snapshot for caching."
+
+    - name: 📲 Happy path E2E test
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew --no-daemon --parallel :tasks-app-android:connectedStoreDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=net.opatry.tasks.app.test.e2e.TaskfolioE2ETest
+
+    - name: 🗒️ Publish Test Reports
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
+      with:
+        detailed_summary: true
+        require_passed_tests: true
+        require_tests: true
+        report_paths: '**/build/outputs/androidTest-results/connected/**/*.xml'
