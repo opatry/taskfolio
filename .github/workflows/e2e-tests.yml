@@ -53,7 +53,8 @@ jobs:
           target: google_apis
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
+          # FIXME disabling animations makes test failing (ironic!), at least in CI, to be investigated.
+          # disable-animations: true
           script: ./gradlew --no-daemon --parallel :tasks-app-android:connectedStoreDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=net.opatry.tasks.app.test.e2e.TaskfolioE2ETest
 
     - name: 🗒️ Publish Test Reports
