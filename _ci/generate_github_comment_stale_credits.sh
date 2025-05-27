@@ -21,9 +21,9 @@ case "$1" in
 esac
 
 cat << __END
-## ©️ Stale credits for \`$1\`\n\n
-\`\`\`diff\n
+## ©️ Stale credits for \\\`$1\\\`\n\n
+\\\`\\\`\\\`diff\n
 ${diff}\n
-\`\`\`\n\n
-Run \`${update_cmd}\` and commit resulting diff to fix the issue.
+\\\`\\\`\\\`\n\n
+Run \\\`${update_cmd}\\\` and commit resulting diff to fix the issue.
 __END
