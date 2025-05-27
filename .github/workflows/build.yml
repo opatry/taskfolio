@@ -14,6 +14,108 @@ on:
       - main
 
 jobs:
+  build:
+    name: 🔨 Build
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 📱 Android App
+            gradle_module: tasks-app-android
+          - name: 🖥️ Desktop App
+            gradle_module: tasks-app-desktop
+    permissions:
+        contents: write
+        checks: write
+        id-token: write
+        pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: 🔓 Decrypt secrets
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: ./_ci/decrypt_secrets.sh
+
+    - name: ${{ matrix.name }}
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+      run: |
+        gradle_module="${{ matrix.gradle_module }}"
+        if [ "${gradle_module}" = "tasks-app-desktop" ]; then
+          ./gradlew --no-daemon ":${gradle_module}:assemble"
+        elif [ "${gradle_module}" = "tasks-app-android" ]; then
+          ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
+            -Pci=true \
+            -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
+            -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+            -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+        fi
+
+  test:
+    name: ✅ Tests
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    # `test` to trigger as much Jvm tests as possible
+    # `:tasks-app-android:testStoreReleaseUnitTest` to restrict to only specific flavor(store)+variant(release) for `:tasks-app-android` module.
+    # `jvmTest` to execute Compose UI tests on Jvm
+    # `-x :tasks-app-android:test` to remove all tests from `:tasks-app-android` module not being covered by `:tasks-app-android:testStoreReleaseUnitTest`.
+    # `-x testDebugUnitTest` to avoid triggering tests both in debug & release build.
+    # `-x :tasks-app-android:build` to avoid triggering useless build tasks (typically for unused flavors).
+    #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
+    - name: ✅ Unit tests
+      run: |
+            jq '(.client[0].client_info.android_client_info.package_name) = "net.opatry.tasks.app"' \
+              tasks-app-android/src/dev/google-services.json > tasks-app-android/google-services.json
+            ./gradlew --no-daemon test :tasks-app-android:testStoreReleaseUnitTest jvmTest \
+              -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
+
+    - name: 🗒️ Publish Test Reports
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
+      with:
+        detailed_summary: true
+        require_passed_tests: true
+        require_tests: true
+        report_paths: '**/build/test-results/**/TEST-*.xml'
+
+  coverage:
+    name: 📊 Coverage
+    runs-on: ubuntu-24.04
+    permissions:
+        contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: 📊 Check coverage
+      if: github.event_name == 'pull_request'
+      run: |
+        ./gradlew koverLogCoverage koverVerifyCoverage
+
+    - name: 📊 Check coverage & update badge
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        ./gradlew koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
+        ./_ci/replace_coverage_badge.sh build/reports/kover/reportCoverage.xml
+        if [[ $(git status --porcelain README.md) ]]; then
+          git config user.name 'Github Actions'
+          git config user.email 'opatry-tasks-app@users.noreply.github.com'
+          git add README.md
+          git commit -m "Update coverage badge in README.md"
+          git push
+        fi
+
   licenses-check:
     name: ©️ Check licenses
     # run on macOS to use Skiko mac for credits checks
@@ -79,107 +181,3 @@ jobs:
             body: `${{ steps.check_credits.outputs.credits_diff_comment }}`
           })
           core.setFailed(`Stale credits detected in module ':${process.env.GRADLE_MODULE}:'`)
-
-  build:
-    name: 🔨 Build
-    runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: 📱 Android App
-            gradle_module: tasks-app-android
-          - name: 🖥️ Desktop App
-            gradle_module: tasks-app-desktop
-    permissions:
-        contents: write
-        checks: write
-        id-token: write
-        pull-requests: write
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: ./.github/actions/setup-jdk-gradle
-
-    - name: 🔓 Decrypt secrets
-      env:
-        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
-      run: ./_ci/decrypt_secrets.sh
-
-    - name: ${{ matrix.name }}
-      env:
-        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
-        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
-      run: |
-        gradle_module="${{ matrix.gradle_module }}"
-        if [ "${gradle_module}" = "tasks-app-desktop" ]; then
-          echo "RUN BUILD DESKTOP"
-          ./gradlew --no-daemon ":${gradle_module}:assemble"
-        elif [ "${gradle_module}" = "tasks-app-android" ]; then
-          echo "RUN BUILD ANDROID"
-        fi
-      # ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
-      #   -Pci=true \
-      #   -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
-      #   -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
-      #   -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
-
-  test:
-    name: ✅ Tests
-    runs-on: ubuntu-24.04
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: ./.github/actions/setup-jdk-gradle
-
-    # `test` to trigger as much Jvm tests as possible
-    # `:tasks-app-android:testStoreReleaseUnitTest` to restrict to only specific flavor(store)+variant(release) for `:tasks-app-android` module.
-    # `jvmTest` to execute Compose UI tests on Jvm
-    # `-x :tasks-app-android:test` to remove all tests from `:tasks-app-android` module not being covered by `:tasks-app-android:testStoreReleaseUnitTest`.
-    # `-x testDebugUnitTest` to avoid triggering tests both in debug & release build.
-    # `-x :tasks-app-android:build` to avoid triggering useless build tasks (typically for unused flavors).
-    #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
-    - name: ✅ Unit tests
-      run: |
-            jq '(.client[0].client_info.android_client_info.package_name) = "net.opatry.tasks.app"' \
-              tasks-app-android/src/dev/google-services.json > tasks-app-android/google-services.json
-            ./gradlew --no-daemon test :tasks-app-android:testStoreReleaseUnitTest jvmTest \
-              -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
-
-    - name: 🗒️ Publish Test Reports
-      uses: mikepenz/action-junit-report@v4
-      if: success() || failure()
-      with:
-        detailed_summary: true
-        require_passed_tests: true
-        require_tests: true
-        report_paths: '**/build/test-results/**/TEST-*.xml'
-
-  coverage:
-    name: 📊 Coverage
-    runs-on: ubuntu-24.04
-    permissions:
-        contents: write
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: ./.github/actions/setup-jdk-gradle
-
-    - name: 📊 Check coverage
-      if: github.event_name == 'pull_request'
-      run: |
-        ./gradlew koverLogCoverage koverVerifyCoverage
-
-    - name: 📊 Check coverage & update badge
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: |
-        ./gradlew koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
-        ./_ci/replace_coverage_badge.sh build/reports/kover/reportCoverage.xml
-        if [[ $(git status --porcelain README.md) ]]; then
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git commit -m "Update coverage badge in README.md"
-          git push
-        fi
