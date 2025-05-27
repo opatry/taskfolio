@@ -54,7 +54,11 @@ jobs:
           echo "::warning file=${license_file},title=Stale credits::Some licenses information are not up to date for ':${gradle_module}'"
           {
             echo "credits_diff_comment<<EOF"
-            ./_ci/generate_github_comment_stale_credits.sh ":${gradle_module}"
+            echo "## ©️ Stale credits for \\\`$1\\\`\n\n"
+            echo "\\\`\\\`\\\`diff\n"
+            echo "${stale_credits}\n"
+            echo "\\\`\\\`\\\`\n\n"
+            echo Run \\\`./gradlew :${gradle_module}:exportLibraryDefinitions -Pci=true\\\` and commit resulting diff to fix the issue.
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
         else
