@@ -27,7 +27,11 @@ import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondBadRequest
+import io.ktor.client.engine.mock.respondError
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.RedirectResponseException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.ContentType
@@ -37,6 +41,7 @@ import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.test.runTest
 import net.opatry.google.profile.model.UserInfo
+import net.opatry.google.tasks.TasksApiHttpResponseValidator
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -59,6 +64,8 @@ private suspend fun usingUserInfoApi(
             install(ContentNegotiation) {
                 json()
             }
+            expectSuccess = true
+            HttpResponseValidator(TasksApiHttpResponseValidator("localhost"))
         }.use { httpClient ->
             test(HttpUserInfoApi(httpClient))
         }
@@ -96,13 +103,39 @@ class HttpUserInfoApiTest {
     }
 
     @Test
-    fun `Failed user info retrieval`() = runTest {
+    fun `Failed user info retrieval with 304`() = runTest {
+        usingUserInfoApi(
+            response = {
+                respond("Not Modified", HttpStatusCode.NotModified)
+            }
+        ) { userInfoApi ->
+            assertFailsWith<RedirectResponseException> {
+                userInfoApi.getUserInfo()
+            }
+        }
+    }
+
+    @Test
+    fun `Failed user info retrieval with 400`() = runTest {
         usingUserInfoApi(
             response = {
                 respondBadRequest()
             }
         ) { userInfoApi ->
             assertFailsWith<ClientRequestException> {
+                userInfoApi.getUserInfo()
+            }
+        }
+    }
+
+    @Test
+    fun `Failed user info retrieval with 500`() = runTest {
+        usingUserInfoApi(
+            response = {
+                respondError(HttpStatusCode.InternalServerError)
+            }
+        ) { userInfoApi ->
+            assertFailsWith<ServerResponseException> {
                 userInfoApi.getUserInfo()
             }
         }

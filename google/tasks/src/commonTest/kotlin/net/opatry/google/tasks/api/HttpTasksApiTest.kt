@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondError
-import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -37,6 +37,8 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import net.opatry.google.tasks.HttpTasksApi
 import net.opatry.google.tasks.TasksApi
+import net.opatry.google.tasks.TasksApiException
+import net.opatry.google.tasks.TasksApiHttpResponseValidator
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.util.loadJson
@@ -44,6 +46,7 @@ import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class HttpTasksApiTest {
     private fun runTasksApi(
@@ -54,6 +57,9 @@ class HttpTasksApiTest {
             install(ContentNegotiation) {
                 json()
             }
+
+            expectSuccess = true
+            HttpResponseValidator(TasksApiHttpResponseValidator("localhost"))
         }.use { httpClient ->
             runTest {
                 test(HttpTasksApi(httpClient))
@@ -96,11 +102,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.list("")
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -135,11 +144,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.insert("", Task(""))
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -174,11 +186,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.get("", "")
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -211,11 +226,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.delete("", "")
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -250,11 +268,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.patch("", "", Task(""))
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -289,11 +310,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.update("", "", Task(""))
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -328,11 +352,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.move("", "")
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -364,11 +391,14 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         tasksApi.clear("")
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)

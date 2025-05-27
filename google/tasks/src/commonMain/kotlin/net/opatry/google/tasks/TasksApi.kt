@@ -24,7 +24,6 @@ package net.opatry.google.tasks
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.compression.compress
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -33,10 +32,8 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import kotlinx.datetime.Instant
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
@@ -164,34 +161,19 @@ class HttpTasksApi(
 ) : TasksApi {
     override suspend fun clear(taskListId: String) {
         val response = httpClient.post("tasks/v1/lists/${taskListId}/clear")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun delete(taskListId: String, taskId: String) {
         val response = httpClient.delete("tasks/v1/lists/${taskListId}/tasks/${taskId}")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun get(taskListId: String, taskId: String): Task {
         val response = httpClient.get("tasks/v1/lists/${taskListId}/tasks/${taskId}") {
             contentType(ContentType.Application.Json)
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun insert(taskListId: String, task: Task, parentTaskId: String?, previousTaskId: String?): Task {
@@ -206,12 +188,7 @@ class HttpTasksApi(
             compress("gzip")
             setBody(task)
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun list(
@@ -253,12 +230,7 @@ class HttpTasksApi(
             }
             parameter("showAssigned", showAssigned.toString())
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun move(
@@ -276,16 +248,10 @@ class HttpTasksApi(
                 parameter("previous", previousTaskId)
             }
             if (destinationTaskListId != null) {
-                @Suppress("SpellCheckingInspection")
                 parameter("destinationTasklist", destinationTaskListId)
             }
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun patch(taskListId: String, taskId: String, task: Task): Task {
@@ -293,12 +259,7 @@ class HttpTasksApi(
             contentType(ContentType.Application.Json)
             setBody(task)
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun update(taskListId: String, taskId: String, task: Task): Task {
@@ -306,12 +267,7 @@ class HttpTasksApi(
             contentType(ContentType.Application.Json)
             setBody(task)
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 }
 

@@ -24,7 +24,6 @@ package net.opatry.google.tasks
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.compression.compress
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -33,10 +32,8 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.TaskList
@@ -114,24 +111,14 @@ class HttpTaskListsApi(
 ) : TaskListsApi {
     override suspend fun delete(taskListId: String) {
         val response = httpClient.delete("tasks/v1/users/@me/lists/${taskListId}")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun default() = get("@default")
 
     override suspend fun get(taskListId: String): TaskList {
         val response = httpClient.get("tasks/v1/users/@me/lists/${taskListId}")
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun insert(taskList: TaskList): TaskList {
@@ -140,12 +127,7 @@ class HttpTaskListsApi(
             compress("gzip")
             setBody(taskList)
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun list(maxResults: Int, pageToken: String?): ResourceListResponse<TaskList> {
@@ -155,11 +137,7 @@ class HttpTaskListsApi(
                 parameter("pageToken", pageToken)
             }
         }
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun patch(taskListId: String, taskList: TaskList): TaskList {
@@ -167,12 +145,7 @@ class HttpTaskListsApi(
             contentType(ContentType.Application.Json)
             setBody(taskList)
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 
     override suspend fun update(taskListId: String, taskList: TaskList): TaskList {
@@ -180,12 +153,7 @@ class HttpTaskListsApi(
             contentType(ContentType.Application.Json)
             setBody(taskList)
         }
-
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 }
 

@@ -25,6 +25,7 @@ package net.opatry.tasks.app.di
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.CurlUserAgent
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -46,6 +47,7 @@ import net.opatry.google.tasks.HttpTaskListsApi
 import net.opatry.google.tasks.HttpTasksApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
+import net.opatry.google.tasks.TasksApiHttpResponseValidator
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.TokenCache
 import org.koin.core.qualifier.named
@@ -74,6 +76,8 @@ val networkModule = module {
             install(ContentNegotiation) {
                 json()
             }
+            expectSuccess = true
+            HttpResponseValidator(TasksApiHttpResponseValidator("tasks.googleapis.com"))
             install(ContentEncoding) {
                 gzip()
             }

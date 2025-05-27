@@ -27,7 +27,7 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondError
-import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -37,6 +37,8 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import net.opatry.google.tasks.HttpTaskListsApi
 import net.opatry.google.tasks.TaskListsApi
+import net.opatry.google.tasks.TasksApiException
+import net.opatry.google.tasks.TasksApiHttpResponseValidator
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.TaskList
 import net.opatry.google.tasks.util.loadJson
@@ -44,6 +46,7 @@ import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class HttpTaskListsApiTest {
     private fun runTaskListsApi(
@@ -54,6 +57,9 @@ class HttpTaskListsApiTest {
             install(ContentNegotiation) {
                 json()
             }
+
+            expectSuccess = true
+            HttpResponseValidator(TasksApiHttpResponseValidator("localhost"))
         }.use { httpClient ->
             runTest {
                 test(HttpTaskListsApi(httpClient))
@@ -89,11 +95,14 @@ class HttpTaskListsApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTaskListsApi(mockEngine) { taskListsApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         taskListsApi.list()
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -128,11 +137,14 @@ class HttpTaskListsApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTaskListsApi(mockEngine) { taskListsApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         taskListsApi.insert(TaskList(""))
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -167,11 +179,14 @@ class HttpTaskListsApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTaskListsApi(mockEngine) { taskListsApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         taskListsApi.get("")
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -206,11 +221,14 @@ class HttpTaskListsApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTaskListsApi(mockEngine) { taskListsApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         taskListsApi.default()
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -242,11 +260,14 @@ class HttpTaskListsApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTaskListsApi(mockEngine) { taskListsApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         taskListsApi.delete("")
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -281,11 +302,14 @@ class HttpTaskListsApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTaskListsApi(mockEngine) { taskListsApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         taskListsApi.patch("", TaskList(""))
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)
@@ -318,11 +342,14 @@ class HttpTaskListsApiTest {
     fun `TaskListsApi update failure`() {
         MockEngine { respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json")) }.use { mockEngine ->
             runTaskListsApi(mockEngine) { taskListsApi ->
-                assertThrows(ClientRequestException::class.java) {
+                val exception = assertThrows(TasksApiException::class.java) {
                     runBlocking {
                         taskListsApi.update("", TaskList(""))
                     }
                 }
+
+                assertIs<TasksApiException>(exception)
+                assertEquals(400, exception.errorResponse.error.code)
             }
 
             assertEquals(1, mockEngine.responseHistory.size)

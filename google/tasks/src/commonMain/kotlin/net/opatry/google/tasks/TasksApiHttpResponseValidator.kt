@@ -20,18 +20,29 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.google.profile
+package net.opatry.google.tasks
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import net.opatry.google.profile.model.UserInfo
+import io.ktor.client.plugins.HttpCallValidatorConfig
+import io.ktor.client.plugins.ResponseException
+import io.ktor.client.statement.bodyAsText
+import kotlinx.serialization.json.Json
+import net.opatry.google.tasks.model.ErrorResponse
 
-class HttpUserInfoApi(
-    private val httpClient: HttpClient,
-) : UserInfoApi {
-    override suspend fun getUserInfo(): UserInfo {
-        val response = httpClient.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json")
-        return response.body()
+class TasksApiHttpResponseValidator(private val host: String) : (HttpCallValidatorConfig) -> Unit {
+    override fun invoke(config: HttpCallValidatorConfig) {
+        config.handleResponseExceptionWithRequest { exception, request ->
+            when {
+                request.url.host == host && exception is ResponseException -> {
+                    // can't rely on default ktor deserialization for error responses
+                    // the ContentEncoding plugin is short-circuited for error responses
+                    // need to manually decode the error response body
+                    val errorBody = exception.response.bodyAsText()
+                    val error = Json.decodeFromString<ErrorResponse>(errorBody)
+                    throw TasksApiException(error)
+                }
+
+                else -> throw exception
+            }
+        }
     }
 }
