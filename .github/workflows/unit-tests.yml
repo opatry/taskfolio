@@ -1,0 +1,37 @@
+on:
+  workflow_call:
+
+jobs:
+  unit-tests:
+    name: ✅ Tests
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: Prepare google-services.json
+      run: |
+        jq '(.client[0].client_info.android_client_info.package_name) = "net.opatry.tasks.app"' \
+          tasks-app-android/src/dev/google-services.json > tasks-app-android/google-services.json
+
+    # `test` to trigger as much Jvm tests as possible
+    # `:tasks-app-android:testStoreReleaseUnitTest` to restrict to only specific flavor(store)+variant(release) for `:tasks-app-android` module.
+    # `jvmTest` to execute Compose UI tests on Jvm
+    # `-x :tasks-app-android:test` to remove all tests from `:tasks-app-android` module not being covered by `:tasks-app-android:testStoreReleaseUnitTest`.
+    # `-x testDebugUnitTest` to avoid triggering tests both in debug & release build.
+    # `-x :tasks-app-android:build` to avoid triggering useless build tasks (typically for unused flavors).
+    #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
+    - name: ✅ Unit tests
+      run: |
+        ./gradlew --no-daemon --parallel test :tasks-app-android:testStoreReleaseUnitTest jvmTest \
+          -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
+
+    - name: 🗒️ Publish Test Reports
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
+      with:
+        detailed_summary: true
+        require_passed_tests: true
+        require_tests: true
+        report_paths: '**/build/test-results/**/TEST-*.xml'
