@@ -106,7 +106,7 @@ kover {
             verify {
                 rule("Instruction coverage") {
                     minBound(
-                        minValue = 80,
+                        minValue = 99,
                         coverageUnits = CoverageUnit.INSTRUCTION
                     )
                 }
