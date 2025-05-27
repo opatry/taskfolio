@@ -20,11 +20,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: android
-            gradle_module: tasks-app-android
+          - gradle_module: tasks-app-android
             license_path: src/main/assets/licenses_android.json
-          - name: desktop
-            gradle_module: tasks-app-desktop
+          - gradle_module: tasks-app-desktop
             license_path: src/main/resources/licenses_desktop.json
     permissions:
         checks: write
@@ -86,9 +84,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: android
+          - name: 🔨 Build Android App 📱
             gradle_module: tasks-app-android
-          - name: desktop
+          - name: 🔨 Build Desktop App 🖥️
             gradle_module: tasks-app-desktop
     permissions:
         contents: write
@@ -110,27 +108,29 @@ jobs:
       with:
         add-job-summary-as-pr-comment: on-failure
 
-    - name: 🔨 Build Desktop App 🖥️
-      run: echo "RUN BUILD DESKTOP"
-      # run: ./gradlew --no-daemon :tasks-app-desktop:assemble
-
     - name: 🔓 Decrypt secrets
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
       run: ./_ci/decrypt_secrets.sh
 
-    - name: 🔨 Build Android App 📱
+    - name: ${{ matrix.name }}
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
       run: |
-            echo "RUN BUILD ANDROID"
-          # ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
-          #   -Pci=true \
-          #   -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
-          #   -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
-          #   -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+        gradle_module="${{ matrix.gradle_module }}"
+        if [ "${gradle_module}" = "tasks-app-desktop" ]; then
+          echo "RUN BUILD DESKTOP"
+          ./gradlew --no-daemon ":${gradle_module}:assemble"
+        elif [ "${gradle_module}" = "tasks-app-android" ]; then
+          echo "RUN BUILD ANDROID"
+        fi
+      # ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
+      #   -Pci=true \
+      #   -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
+      #   -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+      #   -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
 
   test:
     runs-on: ubuntu-24.04
