@@ -62,7 +62,7 @@ class EditTextDialogTest {
 
         onNodeWithTag(VALIDATE_BUTTON)
             .assertIsDisplayed()
-            .assertTextEquals("Ploip")
+            .assertTextEquals("Plop")
     }
 
     @Test
