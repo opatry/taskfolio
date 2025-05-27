@@ -55,7 +55,7 @@ jobs:
           echo "::error file=${license_file},title=Stale credits::Some licenses information are not up to date for ':${gradle_module}'"
           {
             echo "credits_diff_comment<<EOF"
-            echo "## ©️ Stale credits for \\\`${gradle_module}\\\`\n\n"
+            echo "## ©️ Stale credits for \\\`:${gradle_module}\\\`\n\n"
             echo "\\\`\\\`\\\`diff\n"
             echo "${stale_credits}\n"
             echo "\\\`\\\`\\\`\n\n"
