@@ -31,7 +31,8 @@ jobs:
         pull-requests: write
 
     steps:
-    - uses: ./.github/actions/checkout-jdk-gradle
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
 
     - name: ©️ Generate credits for ':${{ matrix.gradle_module }}'
       id: check_credits
@@ -86,7 +87,8 @@ jobs:
         pull-requests: write
 
     steps:
-    - uses: ./.github/actions/checkout-jdk-gradle
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
 
     - name: 🔓 Decrypt secrets
       env:
@@ -117,7 +119,8 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-    - uses: ./.github/actions/checkout-jdk-gradle
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
 
     # `test` to trigger as much Jvm tests as possible
     # `:tasks-app-android:testStoreReleaseUnitTest` to restrict to only specific flavor(store)+variant(release) for `:tasks-app-android` module.
@@ -149,7 +152,8 @@ jobs:
         contents: write
 
     steps:
-    - uses: ./.github/actions/checkout-jdk-gradle
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
 
     - name: 📊 Check coverage
       if: github.event_name == 'pull_request'
