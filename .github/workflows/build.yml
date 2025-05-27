@@ -15,6 +15,7 @@ on:
 
 jobs:
   licenses-check:
+    name: ©️ Check licenses
     # run on macOS to use Skiko mac for credits checks
     runs-on: macos-15
     strategy:
@@ -80,13 +81,14 @@ jobs:
           })
 
   build:
+    name: 🔨 Build
     runs-on: ubuntu-24.04
     strategy:
       matrix:
         include:
-          - name: 🔨 Build Android App 📱
+          - name: 📱 Android App
             gradle_module: tasks-app-android
-          - name: 🔨 Build Desktop App 🖥️
+          - name: 🖥️ Desktop App
             gradle_module: tasks-app-desktop
     permissions:
         contents: write
@@ -133,6 +135,7 @@ jobs:
       #   -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
 
   test:
+    name: ✅ Tests
     runs-on: ubuntu-24.04
 
     steps:
@@ -156,7 +159,7 @@ jobs:
     # `-x testDebugUnitTest` to avoid triggering tests both in debug & release build.
     # `-x :tasks-app-android:build` to avoid triggering useless build tasks (typically for unused flavors).
     #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
-    - name: ✅ Test
+    - name: ✅ Unit tests
       run: |
             jq '(.client[0].client_info.android_client_info.package_name) = "net.opatry.tasks.app"' \
               tasks-app-android/src/dev/google-services.json > tasks-app-android/google-services.json
@@ -173,6 +176,7 @@ jobs:
         report_paths: '**/build/test-results/**/TEST-*.xml'
 
   coverage:
+    name: 📊 Coverage
     runs-on: ubuntu-24.04
     permissions:
         contents: write
