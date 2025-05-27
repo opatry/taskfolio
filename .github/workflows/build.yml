@@ -64,6 +64,8 @@ jobs:
     - name: 🛎️ Notify stale credits for ':${{ matrix.gradle_module }}'
       if: github.event_name == 'pull_request' && steps.check_credits.outputs.credits_diff_comment != ''
       uses: actions/github-script@v7
+      env:
+        GRADLE_MODULE: ${{ matrix.gradle_module }}
       with:
         script: |
           github.rest.issues.createComment({
@@ -73,8 +75,6 @@ jobs:
             body: `${{ steps.check_credits.outputs.credits_diff_comment }}`
           })
           core.setFailed(`Stale credits detected in module: ${process.env.GRADLE_MODULE}`)
-        env:
-          GRADLE_MODULE: ${{ matrix.gradle_module }}
 
   build:
     name: 🔨 Build
