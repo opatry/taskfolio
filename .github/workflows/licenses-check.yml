@@ -1,0 +1,69 @@
+on:
+  workflow_call:
+
+jobs:
+  licenses-check:
+    name: ©️ Check licenses
+    # run on macOS to use Skiko mac for credits checks
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - gradle_module: tasks-app-android
+            license_path: src/main/assets/licenses_android.json
+          - gradle_module: tasks-app-desktop
+            license_path: src/main/resources/licenses_desktop.json
+    permissions:
+        checks: write
+        id-token: write
+        pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: ©️ Generate credits for ':${{ matrix.gradle_module }}'
+      id: check_credits
+      run: |
+        gradle_module="${{ matrix.gradle_module }}"
+        license_file="${gradle_module}/${{ matrix.license_path }}"
+
+        ./gradlew --no-daemon ":${gradle_module}:exportLibraryDefinitions" -Pci=true
+        stale_credits=$(git diff "${license_file}")
+
+        if [ -n "${stale_credits}" ]; then
+          {
+            echo "## ©️ Stale credits for \`:${gradle_module}\`"
+            echo '```diff'
+            echo "${stale_credits}"
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          {
+            echo "credits_diff_comment<<EOF"
+            echo "## ©️ Stale credits for \\\`:${gradle_module}\\\`\n\n"
+            echo "\\\`\\\`\\\`diff\n"
+            echo "${stale_credits}\n"
+            echo "\\\`\\\`\\\`\n\n"
+            echo Run \\\`./gradlew :${gradle_module}:exportLibraryDefinitions -Pci=true\\\` and commit resulting diff to fix the issue.
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+        else
+          echo "credits_diff_comment=" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: 🛎️ Notify stale credits for ':${{ matrix.gradle_module }}'
+      if: github.event_name == 'pull_request' && steps.check_credits.outputs.credits_diff_comment != ''
+      uses: actions/github-script@v7
+      env:
+        GRADLE_MODULE: ${{ matrix.gradle_module }}
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `${{ steps.check_credits.outputs.credits_diff_comment }}`
+          })
+          core.setFailed(`Stale credits detected in module ':${process.env.GRADLE_MODULE}:'`)

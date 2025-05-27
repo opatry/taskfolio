@@ -1,0 +1,53 @@
+on:
+  workflow_call:
+    secrets:
+      PLAYSTORE_SECRET_PASSPHRASE:
+        required: true
+      KEYSTORE_PASSWORD:
+        required: true
+      KEYSTORE_KEY_PASSWORD:
+        required: true
+
+jobs:
+  build:
+    name: 🔨 Build
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 📱 Android App
+            gradle_module: tasks-app-android
+          - name: 🖥️ Desktop App
+            gradle_module: tasks-app-desktop
+    permissions:
+        contents: write
+        checks: write
+        id-token: write
+        pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: 🔓 Decrypt secrets
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: ./_ci/decrypt_secrets.sh
+
+    - name: ${{ matrix.name }}
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+      run: |
+        gradle_module="${{ matrix.gradle_module }}"
+        if [ "${gradle_module}" = "tasks-app-desktop" ]; then
+          ./gradlew --no-daemon ":${gradle_module}:assemble"
+        elif [ "${gradle_module}" = "tasks-app-android" ]; then
+          ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
+            -Pci=true \
+            -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
+            -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+            -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+        fi
