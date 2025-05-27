@@ -24,7 +24,7 @@ jobs:
     #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
     - name: ✅ Unit tests
       run: |
-        ./gradlew --no-daemon test :tasks-app-android:testStoreReleaseUnitTest jvmTest \
+        ./gradlew --no-daemon --parallel test :tasks-app-android:testStoreReleaseUnitTest jvmTest \
           -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
 
     - name: 🗒️ Publish Test Reports

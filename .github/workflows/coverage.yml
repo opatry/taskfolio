@@ -12,16 +12,18 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-jdk-gradle
 
+    # Avoid using --parallel for coverage reporting, seems unreliable when doing it
     - name: 📊 Check coverage
       if: github.event_name == 'pull_request'
       run: |
-        ./gradlew koverLogCoverage koverVerifyCoverage
+        ./gradlew --no-daemon koverLogCoverage koverVerifyCoverage
 
+    # Avoid using --parallel for coverage reporting, seems unreliable when doing it
     - name: 📊 Check coverage & update badge
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         sudo apt -y install libxml2-utils
-        ./gradlew koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
+        ./gradlew --no-daemon koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
         ./_ci/replace_coverage_badge.sh build/reports/kover/reportCoverage.xml
         if [[ $(git status --porcelain README.md) ]]; then
           git config user.name 'Github Actions'

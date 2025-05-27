@@ -62,7 +62,7 @@ jobs:
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
         CI_BUILD_NUMBER: ${{ github.run_number }}
       run: |
-            ./gradlew --no-daemon :tasks-app-android:bundleStoreRelease \
+            ./gradlew --no-daemon --parallel :tasks-app-android:bundleStoreRelease \
               -Pci=true \
               -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
               -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \

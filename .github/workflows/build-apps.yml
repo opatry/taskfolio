@@ -43,9 +43,9 @@ jobs:
       run: |
         gradle_module="${{ matrix.gradle_module }}"
         if [ "${gradle_module}" = "tasks-app-desktop" ]; then
-          ./gradlew --no-daemon ":${gradle_module}:assemble"
+          ./gradlew --no-daemon --parallel ":${gradle_module}:assemble"
         elif [ "${gradle_module}" = "tasks-app-android" ]; then
-          ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
+          ./gradlew --no-daemon --parallel :tasks-app-android:assembleStoreRelease \
             -Pci=true \
             -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
             -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \

@@ -29,7 +29,7 @@ jobs:
         gradle_module="${{ matrix.gradle_module }}"
         license_file="${gradle_module}/${{ matrix.license_path }}"
 
-        ./gradlew --no-daemon ":${gradle_module}:exportLibraryDefinitions" -Pci=true
+        ./gradlew --no-daemon --parallel ":${gradle_module}:exportLibraryDefinitions" -Pci=true
         stale_credits=$(git diff "${license_file}")
 
         if [ -n "${stale_credits}" ]; then
