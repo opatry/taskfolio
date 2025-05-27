@@ -72,6 +72,9 @@ jobs:
             repo: context.repo.repo,
             body: `${{ steps.check_credits.outputs.credits_diff_comment }}`
           })
+          core.setFailed(`Stale credits detected in module: ${process.env.GRADLE_MODULE}`)
+        env:
+          GRADLE_MODULE: ${{ matrix.gradle_module }}
 
   build:
     name: 🔨 Build
