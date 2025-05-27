@@ -158,9 +158,10 @@ jobs:
     #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
     - name: ✅ Test
       run: |
-            cp tasks-app-android/src/dev/google-services.json tasks-app-android/google-services.json
+            jq '(.client[0].client_info.android_client_info.package_name) = "net.opatry.tasks.app"' \
+              tasks-app-android/src/dev/google-services.json > tasks-app-android/google-services.json
             ./gradlew --no-daemon test :tasks-app-android:testStoreReleaseUnitTest jvmTest \
-            -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
+              -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
 
     - name: 🗒️ Publish Test Reports
       uses: mikepenz/action-junit-report@v4
