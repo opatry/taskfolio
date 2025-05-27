@@ -15,9 +15,16 @@ on:
 
 jobs:
   build:
-
-    # run on macOS to use Skiko mac for credits checks
-    runs-on: macos-latest
+    name: 🔨 Build
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 📱 Android App
+            gradle_module: tasks-app-android
+          - name: 🖥️ Desktop App
+            gradle_module: tasks-app-desktop
     permissions:
         contents: write
         checks: write
@@ -26,97 +33,37 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: ☕ Setup JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-
-    - name: 🐘 Setup Gradle
-      uses: gradle/actions/setup-gradle@v4
-      with:
-        add-job-summary-as-pr-comment: on-failure
+    - uses: ./.github/actions/setup-jdk-gradle
 
     - name: 🔓 Decrypt secrets
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
       run: ./_ci/decrypt_secrets.sh
 
-    - name: ©️ Generate credits for ':tasks-app-desktop'
-      id: check_desktop_app_credits
-      run: |
-            ./gradlew --no-daemon :tasks-app-desktop:exportLibraryDefinitions -Pci=true
-            stale_credits=$(git diff tasks-app-desktop/src/main/resources/licenses_desktop.json)
-            if [ -n "${stale_credits}" ]; then
-                {
-                  echo "## Stale credits for \`:tasks-app-desktop\`"
-                  echo "\`\`\`diff"
-                  echo "${stale_credits}"
-                  echo "\`\`\`"
-                } >> "${GITHUB_STEP_SUMMARY}"
-              echo "::warning file=tasks-app-desktop/src/main/resources/licenses_desktop.json,title=Stale credits::Some licenses information are not up to date for ':tasks-app-desktop'"
-              # ::set-output is deprecated, but nothing works with multiline strings and GITHUB_OUTPUT :(
-              # see https://lab.amalitsky.com/posts/2022/github-actions-set-output-migration/
-              echo ::set-output name=credits_diff_comment::$(./_ci/generate_github_comment_stale_credits.sh ":tasks-app-desktop")
-            fi
-
-    - name: 🛎️ Notify stale credits for ':tasks-app-desktop'
-      if: github.event_name == 'pull_request' && steps.check_desktop_app_credits.outputs.credits_diff_comment != ''
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '${{ steps.check_desktop_app_credits.outputs.credits_diff_comment }}'
-          })
-
-    - name: 🔨 Build Desktop App 🖥️
-      run: ./gradlew --no-daemon :tasks-app-desktop:assemble
-
-    - name: ©️ Generate credits for ':tasks-app-android'
-      id: check_android_app_credits
-      run: |
-            ./gradlew --no-daemon :tasks-app-android:exportLibraryDefinitions -Pci=true
-            stale_credits=$(git diff tasks-app-android/src/main/assets/licenses_android.json)
-            if [ -n "${stale_credits}" ]; then
-                {
-                  echo "## Stale credits for \`:tasks-app-android\`"
-                  echo "\`\`\`diff"
-                  echo "${stale_credits}"
-                  echo "\`\`\`"
-                } >> "${GITHUB_STEP_SUMMARY}"
-              echo "::warning file=tasks-app-android/src/main/assets/licenses_android.json,title=Stale credits::Some licenses information are not up to date for ':tasks-app-android'"
-              # ::set-output is deprecated, but nothing works with multiline strings and GITHUB_OUTPUT :(
-              # see https://lab.amalitsky.com/posts/2022/github-actions-set-output-migration/
-              echo ::set-output name=credits_diff_comment::$(./_ci/generate_github_comment_stale_credits.sh ":tasks-app-android")
-            fi
-
-    - name: 🛎️ Notify stale credits for ':tasks-app-android'
-      if: github.event_name == 'pull_request' && steps.check_android_app_credits.outputs.credits_diff_comment != ''
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '${{ steps.check_android_app_credits.outputs.credits_diff_comment }}'
-          })
-
-    - name: 🔨 Build Android App 📱
+    - name: ${{ matrix.name }}
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
       run: |
-            ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
-              -Pci=true \
-              -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
-              -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
-              -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+        gradle_module="${{ matrix.gradle_module }}"
+        if [ "${gradle_module}" = "tasks-app-desktop" ]; then
+          ./gradlew --no-daemon ":${gradle_module}:assemble"
+        elif [ "${gradle_module}" = "tasks-app-android" ]; then
+          ./gradlew --no-daemon :tasks-app-android:assembleStoreRelease \
+            -Pci=true \
+            -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
+            -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+            -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+        fi
+
+  test:
+    name: ✅ Tests
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
 
     # `test` to trigger as much Jvm tests as possible
     # `:tasks-app-android:testStoreReleaseUnitTest` to restrict to only specific flavor(store)+variant(release) for `:tasks-app-android` module.
@@ -125,10 +72,12 @@ jobs:
     # `-x testDebugUnitTest` to avoid triggering tests both in debug & release build.
     # `-x :tasks-app-android:build` to avoid triggering useless build tasks (typically for unused flavors).
     #      Only rely on dependencies of `:tasks-app-android:testStoreReleaseUnitTest`.
-    - name: ✅ Test
+    - name: ✅ Unit tests
       run: |
+            jq '(.client[0].client_info.android_client_info.package_name) = "net.opatry.tasks.app"' \
+              tasks-app-android/src/dev/google-services.json > tasks-app-android/google-services.json
             ./gradlew --no-daemon test :tasks-app-android:testStoreReleaseUnitTest jvmTest \
-            -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
+              -x :tasks-app-android:test -x testDebugUnitTest -x :tasks-app-android:build
 
     - name: 🗒️ Publish Test Reports
       uses: mikepenz/action-junit-report@v4
@@ -139,6 +88,16 @@ jobs:
         require_tests: true
         report_paths: '**/build/test-results/**/TEST-*.xml'
 
+  coverage:
+    name: 📊 Coverage
+    runs-on: ubuntu-24.04
+    permissions:
+        contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
     - name: 📊 Check coverage
       if: github.event_name == 'pull_request'
       run: |
@@ -147,12 +106,79 @@ jobs:
     - name: 📊 Check coverage & update badge
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
+        sudo apt -y install libxml2-utils
         ./gradlew koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
         ./_ci/replace_coverage_badge.sh build/reports/kover/reportCoverage.xml
         if [[ $(git status --porcelain README.md) ]]; then
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name 'Github Actions'
+          git config user.email 'opatry-tasks-app@users.noreply.github.com'
           git add README.md
           git commit -m "Update coverage badge in README.md"
           git push
         fi
+
+  licenses-check:
+    name: ©️ Check licenses
+    # run on macOS to use Skiko mac for credits checks
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - gradle_module: tasks-app-android
+            license_path: src/main/assets/licenses_android.json
+          - gradle_module: tasks-app-desktop
+            license_path: src/main/resources/licenses_desktop.json
+    permissions:
+        checks: write
+        id-token: write
+        pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: ©️ Generate credits for ':${{ matrix.gradle_module }}'
+      id: check_credits
+      run: |
+        gradle_module="${{ matrix.gradle_module }}"
+        license_file="${gradle_module}/${{ matrix.license_path }}"
+
+        ./gradlew --no-daemon ":${gradle_module}:exportLibraryDefinitions" -Pci=true
+        stale_credits=$(git diff "${license_file}")
+
+        if [ -n "${stale_credits}" ]; then
+          {
+            echo "## ©️ Stale credits for \`:${gradle_module}\`"
+            echo '```diff'
+            echo "${stale_credits}"
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          {
+            echo "credits_diff_comment<<EOF"
+            echo "## ©️ Stale credits for \\\`:${gradle_module}\\\`\n\n"
+            echo "\\\`\\\`\\\`diff\n"
+            echo "${stale_credits}\n"
+            echo "\\\`\\\`\\\`\n\n"
+            echo Run \\\`./gradlew :${gradle_module}:exportLibraryDefinitions -Pci=true\\\` and commit resulting diff to fix the issue.
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+        else
+          echo "credits_diff_comment=" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: 🛎️ Notify stale credits for ':${{ matrix.gradle_module }}'
+      if: github.event_name == 'pull_request' && steps.check_credits.outputs.credits_diff_comment != ''
+      uses: actions/github-script@v7
+      env:
+        GRADLE_MODULE: ${{ matrix.gradle_module }}
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `${{ steps.check_credits.outputs.credits_diff_comment }}`
+          })
+          core.setFailed(`Stale credits detected in module ':${process.env.GRADLE_MODULE}:'`)
