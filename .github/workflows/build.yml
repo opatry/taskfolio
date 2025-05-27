@@ -46,7 +46,7 @@ jobs:
 
         if [ -n "${stale_credits}" ]; then
           {
-            echo "## Stale credits for \`:${gradle_module}\`"
+            echo "## ©️ Stale credits for \`:${gradle_module}\`"
             echo '```diff'
             echo "${stale_credits}"
             echo '```'
