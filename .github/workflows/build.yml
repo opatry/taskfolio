@@ -52,8 +52,11 @@ jobs:
           } >> "${GITHUB_STEP_SUMMARY}"
 
           echo "::warning file=${license_file},title=Stale credits::Some licenses information are not up to date for ':${gradle_module}'"
-
-          echo "credits_diff_comment=$(./_ci/generate_github_comment_stale_credits.sh \":${gradle_module}\")" >> "$GITHUB_OUTPUT"
+          {
+            echo "credits_diff_comment<<EOF"
+            ./_ci/generate_github_comment_stale_credits.sh ":${gradle_module}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
         else
           echo "credits_diff_comment=" >> "$GITHUB_OUTPUT"
         fi
