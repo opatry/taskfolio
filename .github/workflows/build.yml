@@ -19,6 +19,7 @@ jobs:
     # run on macOS to use Skiko mac for credits checks
     runs-on: macos-15
     strategy:
+      fail-fast: false
       matrix:
         include:
           - gradle_module: tasks-app-android
@@ -84,6 +85,7 @@ jobs:
     name: 🔨 Build
     runs-on: ubuntu-24.04
     strategy:
+      fail-fast: false
       matrix:
         include:
           - name: 📱 Android App
