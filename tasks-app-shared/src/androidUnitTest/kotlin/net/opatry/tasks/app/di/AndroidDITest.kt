@@ -105,7 +105,7 @@ class AndroidDITest {
             injections = injectedParameters(
                 definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class, NowProvider::class),
                 definition<TaskListsViewModel>(Duration::class, Logger::class),
-                definition<UserViewModel>(UserDao::class, CredentialsStorage::class, UserInfoApi::class, NowProvider::class),
+                definition<UserViewModel>(Logger::class, UserDao::class, CredentialsStorage::class, UserInfoApi::class, NowProvider::class),
             )
         )
     }

@@ -20,13 +20,13 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.google.tasks.model
+package net.opatry.google.profile
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ErrorResponse(
+data class UserInfoErrorResponse(
     @SerialName("error")
     val error: Error,
 ) {
@@ -36,17 +36,7 @@ data class ErrorResponse(
         val code: Int,
         @SerialName("message")
         val message: String,
-        @SerialName("errors")
-        val errors: List<ErrorDetail>,
-    ) {
-        @Serializable
-        data class ErrorDetail(
-            @SerialName("message")
-            val message: String,
-            @SerialName("domain")
-            val domain: String,
-            @SerialName("reason")
-            val reason: String,
-        )
-    }
+        @SerialName("status")
+        val status: String,
+    )
 }

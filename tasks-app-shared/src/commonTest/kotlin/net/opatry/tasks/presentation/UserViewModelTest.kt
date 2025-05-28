@@ -29,6 +29,7 @@ import kotlinx.datetime.Instant
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.profile.model.UserInfo
+import net.opatry.logging.Logger
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.TokenCache
@@ -41,10 +42,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.BDDMockito.then
+import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
-import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
 
@@ -66,17 +67,11 @@ class UserViewModelTest {
     @Mock
     private lateinit var nowProvider: NowProvider
 
-    private lateinit var viewModel: UserViewModel
+    @Mock
+    private lateinit var logger: Logger
 
-    @BeforeTest
-    fun setUp() {
-        viewModel = UserViewModel(
-            userDao = userDao,
-            credentialsStorage = credentialsStorage,
-            userInfoApi = userInfoApi,
-            nowProvider = nowProvider,
-        )
-    }
+    @InjectMocks
+    private lateinit var viewModel: UserViewModel
 
     @Test
     fun `skipSignIn updates state to Unsigned and inserts unsigned user`() = runTest {
