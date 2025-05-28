@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -34,8 +34,8 @@ val secondaryContainerLight = Color(0xFFBFEEDE)
 val onSecondaryContainerLight = Color(0xFF255145)
 val tertiaryLight = Color(0xFF366571)
 val onTertiaryLight = Color(0xFFFFFFFF)
-val tertiaryContainerLight = Color(0xFFCBF3FF)
-val onTertiaryContainerLight = Color(0xFF24545F)
+val tertiaryContainerLight = Color(0xFFFFF4CB)
+val onTertiaryContainerLight = Color(0xFF171D1B)
 val errorLight = Color(0xFFBA1A1A)
 val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFFDAD6)
@@ -70,8 +70,8 @@ val secondaryContainerDark = Color(0xFF1A473C)
 val onSecondaryContainerDark = Color(0xFFB0DFCF)
 val tertiaryDark = Color(0xFFFFFFFF)
 val onTertiaryDark = Color(0xFF003640)
-val tertiaryContainerDark = Color(0xFFADDCEA)
-val onTertiaryContainerDark = Color(0xFF114551)
+val tertiaryContainerDark = Color(0xFF4C4400)
+val onTertiaryContainerDark = Color(0xFFDEE4E0)
 val errorDark = Color(0xFFFFB4AB)
 val onErrorDark = Color(0xFF690005)
 val errorContainerDark = Color(0xFF93000A)
