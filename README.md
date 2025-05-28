@@ -15,6 +15,7 @@ Refer to the root project's [`build.gradle.kts`](build.gradle.kts#L55-L90) for d
 *Excluded elements include:*
 - Data models (no logic to test)
 -	Authentication (tedious to cover for now; may change later)
+- Network status check (tedious to cover)
 - Dependency injection (limited relevance despite some graph tests)
 - Generated code that's untestable or irrelevant (that said, `*Dao_Impl` are retained)
 - Root screens (difficult to test due to navigation, `ViewModel`, DI, etc.); testable parts are extracted for UI tests
