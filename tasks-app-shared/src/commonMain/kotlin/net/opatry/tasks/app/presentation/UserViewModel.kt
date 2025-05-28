@@ -24,12 +24,17 @@ package net.opatry.tasks.app.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.ktor.client.plugins.ResponseException
+import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.profile.UserInfoApi
+import net.opatry.google.profile.UserInfoErrorResponse
 import net.opatry.google.profile.model.UserInfo
+import net.opatry.logging.Logger
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.TokenCache
@@ -60,6 +65,7 @@ private fun UserInfo.asUserEntity(isSignedIn: Boolean): UserEntity {
 }
 
 class UserViewModel(
+    private val logger: Logger,
     private val userDao: UserDao,
     private val credentialsStorage: CredentialsStorage,
     private val userInfoApi: UserInfoApi,
@@ -72,8 +78,14 @@ class UserViewModel(
     private suspend fun fetchUserInfo(): UserInfo? {
         return try {
             userInfoApi.getUserInfo()
-        } catch (_: Exception) {
+        } catch (e: ResponseException) {
+            Json.decodeFromString<UserInfoErrorResponse>(e.response.bodyAsText()).also { response ->
+                logger.logError("Error while fetching user info: ${response.error.message}", e)
+            }
+            null
+        } catch (e: Exception) {
             // most likely no network
+            logger.logError("Error while fetching user info", e)
             null
         }
     }
