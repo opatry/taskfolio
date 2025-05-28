@@ -25,6 +25,8 @@
 
     <string name="dialog_cancel">Annuler</string>
 
+    <string name="network_unavailable_message">Pas de connexion Internet</string>
+
     <string name="edit_text_dialog_title">Titre</string>
     <string name="edit_text_dialog_empty_title_error">Le texte ne peut pas être vide</string>
 

@@ -22,6 +22,10 @@
 
 package net.opatry.tasks.app.ui.screen
 
+import CloudOff
+import LucideIcons
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -44,14 +48,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import net.opatry.network.networkStateFlow
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.ui.TaskEvent
 import net.opatry.tasks.app.ui.asLabel
+import net.opatry.tasks.app.ui.component.Banner
 import net.opatry.tasks.app.ui.component.LoadingPane
 import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.app.ui.component.NoTaskListsEmptyState
 import net.opatry.tasks.app.ui.component.TaskListsColumn
 import net.opatry.tasks.resources.Res
+import net.opatry.tasks.resources.network_unavailable_message
 import net.opatry.tasks.resources.task_lists_screen_default_task_list_title
 import org.jetbrains.compose.resources.stringResource
 
@@ -71,6 +78,8 @@ fun TaskListsMasterDetail(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var errorEvent by remember { mutableStateOf<TaskEvent.Error?>(null) }
+    var networkBannerDismissed by remember { mutableStateOf(true) }
+    val isNetworkAvailable by networkStateFlow().collectAsStateWithLifecycle(null)
 
     LaunchedEffect(selectedTaskListId) {
         if (selectedTaskListId != null) {
@@ -107,47 +116,63 @@ fun TaskListsMasterDetail(
         }
     }
 
+    LaunchedEffect(isNetworkAvailable) {
+        if (isNetworkAvailable == false) {
+            networkBannerDismissed = false
+        }
+    }
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         }
     ) { contentPadding ->
-        ListDetailPaneScaffold(
-            directive = navigator.scaffoldDirective,
-            value = navigator.scaffoldValue,
-            listPane = {
-                val lists = taskLists
-                AnimatedPane {
-                    when {
-                        lists == null -> LoadingPane()
+        Column(Modifier.padding(contentPadding)) {
+            AnimatedVisibility(!networkBannerDismissed && isNetworkAvailable == false) {
+                Banner(
+                    message = stringResource(Res.string.network_unavailable_message),
+                    icon = LucideIcons.CloudOff,
+                ) {
+                    networkBannerDismissed = true
+                }
+            }
+            ListDetailPaneScaffold(
+                directive = navigator.scaffoldDirective,
+                value = navigator.scaffoldValue,
+                listPane = {
 
-                        lists.isEmpty() -> {
-                            val newTaskListName = stringResource(Res.string.task_lists_screen_default_task_list_title)
-                            NoTaskListsEmptyState {
-                                onNewTaskList(newTaskListName)
-                            }
-                        }
+                    val lists = taskLists
+                    AnimatedPane {
+                        when {
+                            lists == null -> LoadingPane()
 
-                        else -> Row {
-                            TaskListsColumn(
-                                lists,
-                                onNewTaskList = { onNewTaskList("") },
-                                onItemClick = { taskList ->
-                                    viewModel.selectTaskList(taskList.id)
+                            lists.isEmpty() -> {
+                                val newTaskListName = stringResource(Res.string.task_lists_screen_default_task_list_title)
+                                NoTaskListsEmptyState {
+                                    onNewTaskList(newTaskListName)
                                 }
-                            )
+                            }
 
-                            if (navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded) {
-                                VerticalDivider()
+                            else -> Row {
+                                TaskListsColumn(
+                                    lists,
+                                    onNewTaskList = { onNewTaskList("") },
+                                    onItemClick = { taskList ->
+                                        viewModel.selectTaskList(taskList.id)
+                                    }
+                                )
+
+                                if (navigator.scaffoldValue.primary == PaneAdaptedValue.Expanded) {
+                                    VerticalDivider()
+                                }
                             }
                         }
                     }
-                }
-            },
-            detailPane = {
-                TaskListDetail(viewModel)
-            },
-            modifier = Modifier.padding(contentPadding),
-        )
+                },
+                detailPane = {
+                    TaskListDetail(viewModel)
+                },
+            )
+        }
     }
 }
