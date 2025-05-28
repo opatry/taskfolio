@@ -1,11 +1,33 @@
+name: 📲 E2E tests
+
 on:
-  workflow_call:
-    secrets:
-      PLAYSTORE_SECRET_PASSPHRASE:
-        required: true
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
 
 jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changes-detected: ${{ steps.check.outputs.changes_detected }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes
+        id: check
+        run: |
+          git fetch origin main
+          if git log origin/main --since="24 hours ago" --pretty=format:%H | grep .; then
+            echo "changes_detected=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes_detected=false" >> "$GITHUB_OUTPUT"
+          fi
+
   e2e-tests:
+    needs: check-changes
+    if: needs.check-changes.outputs.changes-detected == 'true' || github.event_name == 'workflow_dispatch'
     name: 📲 E2E tests
     runs-on: ubuntu-24.04
 
