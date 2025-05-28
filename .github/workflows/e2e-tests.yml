@@ -19,7 +19,12 @@ jobs:
         id: check
         run: |
           git fetch origin main
-          if git log origin/main --since="24 hours ago" --pretty=format:%H | grep .; then
+          if git log --since="24 hours ago" --pretty=format:%H -- . \
+              ':(exclude)website/' \
+              ':(exclude)fastlane/' \
+              ':(exclude)assets/' \
+              ':(exclude)**/*.md' \
+              | grep .; then
             echo "changes_detected=true" >> "$GITHUB_OUTPUT"
           else
             echo "changes_detected=false" >> "$GITHUB_OUTPUT"
