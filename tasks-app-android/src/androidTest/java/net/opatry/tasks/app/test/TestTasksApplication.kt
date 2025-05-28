@@ -20,8 +20,12 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.app.test
 
-import org.koin.core.module.Module
+import net.opatry.tasks.app.TasksApplication
 
-expect fun platformModule(target: String): Module
+class TestTasksApplication : TasksApplication() {
+
+    override val target: String
+        get() = "test"
+}

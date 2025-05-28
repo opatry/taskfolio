@@ -41,7 +41,7 @@ import net.opatry.tasks.app.ui.component.TaskListScaffoldTestTag.ADD_TASK_FAB
 import net.opatry.tasks.data.TaskListSorting
 
 @VisibleForTesting
-internal object TaskListScaffoldTestTag {
+object TaskListScaffoldTestTag {
     const val ADD_TASK_FAB = "TASK_LIST_SCAFFOLD_ADD_TASK_FAB"
 }
 

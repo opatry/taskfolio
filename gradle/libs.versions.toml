@@ -11,8 +11,8 @@ ktor = "3.1.3"
 ktor-monitor-logging = "1.7.1"
 activity-compose = "1.11.0-rc01"
 compose-plugin = "1.8.1"
+compose = "1.8.2"
 compose-hot-reload-plugin = "1.0.0-alpha10"
-compose-ui-preview = "1.8.2"
 compose-m3-adaptive = "1.1.1"
 compose-lifecycle = "2.9.0"
 compose-navigation = "2.9.0-beta01"
@@ -23,6 +23,7 @@ coil = "3.2.0"
 about-libraries = "12.1.2"
 mockito = "5.17.0"
 kover = "0.9.1"
+androidx-test-runner = "1.6.2"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -89,10 +90,14 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "about-libraries" }
 
 androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-androidx-ui-tooling-preview-android = { module = "androidx.compose.ui:ui-tooling-preview-android", version.ref = "compose-ui-preview" }
-androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-ui-preview" }
+
+androidx-ui-tooling-preview-android = { module = "androidx.compose.ui:ui-tooling-preview-android", version.ref = "compose" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]

@@ -50,7 +50,7 @@ import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.TITLE
 import net.opatry.tasks.data.TaskListSorting
 
 @VisibleForTesting
-internal object TaskListTopAppBarTestTag {
+object TaskListTopAppBarTestTag {
     const val TITLE = "TASK_LIST_PANE_TITLE"
     const val SORT_MENU_ICON = "SORT_MENU_ICON"
     const val MORE_MENU_ICON = "MORE_MENU_ICON"

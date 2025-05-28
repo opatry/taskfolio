@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -31,11 +31,18 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.io.File
 
-actual fun platformModule(): Module = module {
+actual fun platformModule(target: String): Module = module {
     single {
+        val dbNameSuffix = when (target) {
+            "store" -> ""
+            else -> "_$target"
+        }
         val context = get<Context>()
         val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath("tasks.db")
+        val dbFile = appContext.getDatabasePath("tasks${dbNameSuffix}.db")
+        if (target == "test" && dbFile.exists()) {
+            dbFile.delete()
+        }
         Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
     }
 

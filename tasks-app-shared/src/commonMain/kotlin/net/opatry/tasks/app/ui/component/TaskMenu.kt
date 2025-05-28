@@ -59,7 +59,7 @@ import net.opatry.tasks.resources.task_menu_unindent
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
-internal object TaskMenuTestTag {
+object TaskMenuTestTag {
     const val TASK_MENU = "TASK_MENU"
     const val ADD_SUBTASK = "TASK_MENU_ADD_SUBTASK"
     const val MOVE_TO_TOP = "TASK_MENU_MOVE_TO_TOP"

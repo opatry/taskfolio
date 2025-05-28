@@ -93,7 +93,7 @@ import net.opatry.tasks.resources.task_editor_sheet_validate
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
-internal object TaskEditorBottomSheetTestTag {
+object TaskEditorBottomSheetTestTag {
     const val SHEET_TITLE = "TASK_EDITOR_BOTTOM_SHEET_TITLE"
     const val TITLE_FIELD = "TASK_EDITOR_TITLE_FIELD"
     const val TITLE_FIELD_ERROR_MESSAGE = "TASK_EDITOR_TITLE_FIELD_ERROR_MESSAGE"

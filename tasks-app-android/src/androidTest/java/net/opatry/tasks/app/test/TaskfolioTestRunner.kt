@@ -20,8 +20,14 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.app.test
 
-import org.koin.core.module.Module
+import android.app.Application
+import android.content.Context
+import androidx.test.runner.AndroidJUnitRunner
 
-expect fun platformModule(target: String): Module
+class TaskfolioTestRunner : AndroidJUnitRunner() {
+    override fun newApplication(classLoader: ClassLoader?, className: String?, context: Context?): Application {
+        return super.newApplication(classLoader, TestTasksApplication::class.java.name, context)
+    }
+}
