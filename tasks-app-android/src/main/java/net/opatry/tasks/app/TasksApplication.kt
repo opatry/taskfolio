@@ -23,6 +23,7 @@
 package net.opatry.tasks.app
 
 import android.app.Application
+import net.opatry.network.initNetworkMonitor
 import net.opatry.tasks.app.di.authModule
 import net.opatry.tasks.app.di.dataModule
 import net.opatry.tasks.app.di.loggingModule
@@ -54,5 +55,11 @@ open class TasksApplication : Application(), KoinStartup {
             networkModule,
             tasksAppModule,
         )
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        initNetworkMonitor(this)
     }
 }
