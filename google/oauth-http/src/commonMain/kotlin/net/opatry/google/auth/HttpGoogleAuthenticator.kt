@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -24,19 +24,16 @@ package net.opatry.google.auth
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.CurlUserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.Url
 import io.ktor.http.contentType
 import io.ktor.http.fullPath
-import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.install
@@ -93,6 +90,7 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
             install(ContentNegotiation) {
                 json()
             }
+            expectSuccess = true
         }
     }
 
@@ -246,10 +244,6 @@ class HttpGoogleAuthenticator(private val config: ApplicationConfig) : GoogleAut
             contentType(ContentType.Application.FormUrlEncoded)
         }
 
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -29,15 +29,12 @@ import com.google.android.gms.common.api.Scope
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.CurlUserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.withTimeout
 import net.opatry.google.auth.GoogleAuthenticator
@@ -73,6 +70,7 @@ class PlayServicesGoogleAuthenticator(
             install(ContentNegotiation) {
                 json()
             }
+            expectSuccess = true
         }
     }
 
@@ -125,10 +123,6 @@ class PlayServicesGoogleAuthenticator(
             contentType(ContentType.Application.FormUrlEncoded)
         }
 
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw ClientRequestException(response, response.bodyAsText())
-        }
+        return response.body()
     }
 }
