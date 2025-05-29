@@ -21,6 +21,7 @@
  */
 
 import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
@@ -124,6 +125,21 @@ kover {
 }
 
 subprojects {
+    tasks {
+        findByName("test") ?: return@tasks
+        named<Test>("test") {
+            testLogging {
+                events("failed", "passed", "skipped")
+
+                exceptionFormat = TestExceptionFormat.SHORT
+
+                debug {
+                    exceptionFormat = TestExceptionFormat.FULL
+                }
+            }
+        }
+    }
+
     if (project.name in koverProjects.map { it.name }) {
         project.afterEvaluate {
             apply(plugin = libs.plugins.kover.get().pluginId)
