@@ -31,6 +31,7 @@ jobs:
           fi
 
   e2e-tests:
+    timeout-minutes: 15
     needs: check-changes
     if: needs.check-changes.outputs.changes-detected == 'true' || github.event_name == 'workflow_dispatch'
     name: 📲 E2E tests
