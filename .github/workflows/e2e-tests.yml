@@ -83,7 +83,7 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           # FIXME disabling animations makes test failing (ironic!), at least in CI, to be investigated.
           # disable-animations: true
-          script: ./gradlew --no-daemon --parallel :tasks-app-android:connectedStoreDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=net.opatry.tasks.app.test.e2e.TaskfolioE2ETest
+          script: _ci/e2e_tests.sh
 
     - name: 🗒️ Publish Test Reports
       uses: mikepenz/action-junit-report@v4
