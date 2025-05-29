@@ -33,9 +33,10 @@ import kotlinx.coroutines.isActive
 import java.net.HttpURLConnection
 import java.net.URI
 import java.net.URLConnection
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.seconds
 
-private fun isInternetAvailable(): Boolean = try {
+private fun isInternetAvailableURLConnectionImpl(): Boolean = try {
     val url = URI.create("https://clients3.google.com/generate_204").toURL()
     val connection = (url.openConnection() as HttpURLConnection).apply {
         requestMethod = "HEAD"
@@ -47,29 +48,38 @@ private fun isInternetAvailable(): Boolean = try {
     false
 }
 
-private val BaseDelay = 1.seconds
-private val RecheckAfterAvailableDelay = 2.seconds
-private val MaxDelay = 10.seconds
-
-actual fun networkStateFlow(): Flow<Boolean> = flow {
-    var wasAvailable: Boolean? = null
-    var pollingDelay = BaseDelay
-
-    while (currentCoroutineContext().isActive) {
-        val isAvailable = isInternetAvailable()
-
-        pollingDelay = if (isAvailable != wasAvailable) {
-            emit(isAvailable)
-            wasAvailable = isAvailable
-            BaseDelay
-        } else {
-            when {
-                isAvailable -> RecheckAfterAvailableDelay
-                // exponential backoff when network is not available
-                else -> (pollingDelay * 2).coerceAtMost(MaxDelay)
-            }
-        }
-
-        delay(pollingDelay)
+class NetworkStatusNotifier(
+    private val dispatcher: CoroutineContext = Dispatchers.IO,
+    private val checkNetwork: () -> Boolean = ::isInternetAvailableURLConnectionImpl,
+) {
+    companion object {
+        private val PollingDelay = 5.seconds
+        private val MaxPollingDelay = 15.seconds
     }
-}.distinctUntilChanged().flowOn(Dispatchers.IO)
+
+    fun networkStateFlow(): Flow<Boolean> = flow {
+        var wasAvailable: Boolean? = null
+        var pollingDelay = PollingDelay
+
+        while (currentCoroutineContext().isActive) {
+            val isAvailable = checkNetwork()
+
+            pollingDelay = if (isAvailable != wasAvailable) {
+                emit(isAvailable)
+                wasAvailable = isAvailable
+                PollingDelay
+            } else {
+                when {
+                    isAvailable -> PollingDelay
+                    // exponential backoff when network is not available
+                    else -> (pollingDelay * 2).coerceAtMost(MaxPollingDelay)
+                }
+            }
+
+            delay(pollingDelay)
+        }
+    }.distinctUntilChanged().flowOn(dispatcher)
+}
+
+private val notifier = NetworkStatusNotifier()
+actual fun networkStateFlow(): Flow<Boolean> = notifier.networkStateFlow()

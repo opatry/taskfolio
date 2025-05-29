@@ -55,7 +55,7 @@ dependencies {
 
 val koverExcludedClasses = listOf(
     "net.opatry.logging.*",
-    "net.opatry.network.*",
+    "net.opatry.network.NetworkStatusNotifier_*",
     "net.opatry.google.tasks.model.*",
     "net.opatry.google.profile.UserInfoErrorResponse*",
     "net.opatry.tasks.TokenCache*",
