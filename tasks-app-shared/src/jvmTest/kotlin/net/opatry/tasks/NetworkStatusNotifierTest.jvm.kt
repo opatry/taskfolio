@@ -23,6 +23,7 @@
 package net.opatry.tasks
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -126,7 +127,7 @@ class NetworkStatusNotifierTest {
         }
 
         advanceTimeBy(5.5.seconds)
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
 
         assertEquals(2, collectedStates.size)
         assertTrue(collectedStates.first())
@@ -148,7 +149,7 @@ class NetworkStatusNotifierTest {
         }
 
         advanceTimeBy(5.5.seconds)
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
 
         assertEquals(2, collectedStates.size)
         assertFalse(collectedStates.first())
@@ -175,7 +176,7 @@ class NetworkStatusNotifierTest {
         assertEquals(1, checkTimes.size)
 
         advanceTimeBy(5.seconds)
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
         assertEquals(2, checkTimes.size)
         val t2 = virtualNow()
 
@@ -206,7 +207,7 @@ class NetworkStatusNotifierTest {
         assertEquals(1, checkTimes.size)
 
         advanceTimeBy(5.seconds)
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
         assertEquals(2, checkTimes.size)
         val t2 = virtualNow()
 
@@ -241,7 +242,7 @@ class NetworkStatusNotifierTest {
         advanceTimeBy(10.seconds)
         assertEquals(4, callCount)
 
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
     }
 
     @Test
@@ -276,7 +277,7 @@ class NetworkStatusNotifierTest {
         advanceTimeBy(10.seconds)
         assertEquals(4, callCount)
 
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
     }
 
     @Test
@@ -301,7 +302,7 @@ class NetworkStatusNotifierTest {
         // called 2 times more in 10 seconds
         assertEquals(4, callCount)
 
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
     }
 
     @Test
@@ -323,9 +324,55 @@ class NetworkStatusNotifierTest {
         advanceTimeBy(10.seconds)
         assertEquals(3, callCount)
 
-        collectorJob.cancel()
+        collectorJob.cancelChildren()
 
         advanceTimeBy(50.seconds)
         assertEquals(3, callCount)
+    }
+
+    @Test
+    fun `when state is ON from on poll to another should not notify twice`() = runTest {
+        var callCount = 0
+        val notifier = NetworkStatusNotifierTest {
+            ++callCount
+            true
+        }
+
+        val flow = notifier.networkStateFlow()
+
+        val collectedStates = mutableListOf<Boolean>()
+        val collectorJob = launch {
+            flow.toList(collectedStates)
+        }
+
+        advanceTimeBy(15.seconds)
+
+        collectorJob.cancelChildren()
+
+        assertEquals(3, callCount)
+        assertEquals(1, collectedStates.size)
+    }
+
+    @Test
+    fun `when state is OFF from on poll to another should not notify twice`() = runTest {
+        var callCount = 0
+        val notifier = NetworkStatusNotifierTest {
+            ++callCount
+            false
+        }
+
+        val flow = notifier.networkStateFlow()
+
+        val collectedStates = mutableListOf<Boolean>()
+        val collectorJob = launch {
+            flow.toList(collectedStates)
+        }
+
+        advanceTimeBy(15.seconds)
+
+        collectorJob.cancelChildren()
+
+        assertEquals(2, callCount)
+        assertEquals(1, collectedStates.size)
     }
 }
