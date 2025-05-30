@@ -329,4 +329,50 @@ class NetworkStatusNotifierTest {
         advanceTimeBy(50.seconds)
         assertEquals(3, callCount)
     }
+
+    @Test
+    fun `when state is ON from on poll to another should not notify twice`() = runTest {
+        var callCount = 0
+        val notifier = NetworkStatusNotifierTest {
+            ++callCount
+            true
+        }
+
+        val flow = notifier.networkStateFlow()
+
+        val collectedStates = mutableListOf<Boolean>()
+        val collectorJob = launch {
+            flow.toList(collectedStates)
+        }
+
+        advanceTimeBy(15.seconds)
+
+        collectorJob.cancelChildren()
+
+        assertEquals(3, callCount)
+        assertEquals(1, collectedStates.size)
+    }
+
+    @Test
+    fun `when state is OFF from on poll to another should not notify twice`() = runTest {
+        var callCount = 0
+        val notifier = NetworkStatusNotifierTest {
+            ++callCount
+            false
+        }
+
+        val flow = notifier.networkStateFlow()
+
+        val collectedStates = mutableListOf<Boolean>()
+        val collectorJob = launch {
+            flow.toList(collectedStates)
+        }
+
+        advanceTimeBy(15.seconds)
+
+        collectorJob.cancelChildren()
+
+        assertEquals(2, callCount)
+        assertEquals(1, collectedStates.size)
+    }
 }

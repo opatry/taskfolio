@@ -26,7 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
@@ -78,7 +77,7 @@ class NetworkStatusNotifier(
 
             delay(pollingDelay)
         }
-    }.distinctUntilChanged().flowOn(dispatcher)
+    }.flowOn(dispatcher)
 }
 
 private val notifier = NetworkStatusNotifier()
