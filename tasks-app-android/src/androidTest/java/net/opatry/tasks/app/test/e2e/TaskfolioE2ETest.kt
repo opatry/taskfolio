@@ -88,7 +88,8 @@ class TaskfolioE2ETest {
             .performClick()
 
         // creating a list switches to the tasks screen automatically
-        waitUntilExactlyOneExists(hasTestTag(NO_TASKS_EMPTY_STATE))
+        waitForIdle()
+        waitUntilExactlyOneExists(hasTestTag(NO_TASKS_EMPTY_STATE), timeoutMillis = 5_000)
         onNodeWithTag(NO_TASKS_EMPTY_STATE)
             .assertIsDisplayed()
         onNodeWithText(listTitle)
