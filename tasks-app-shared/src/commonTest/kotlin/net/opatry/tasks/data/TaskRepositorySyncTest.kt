@@ -94,8 +94,7 @@ class TaskRepositorySyncTest {
             taskListsApi.isNetworkAvailable = true
             repository.sync()
             assertContentEquals(listOf("list", "insert"), taskListsApi.requests)
-            // FIXME not expected, to debug and remove
-            assertContentEquals(listOf("list", "list"), tasksApi.requests)
+            assertContentEquals(listOf("list"), tasksApi.requests)
         }
     }
 }

@@ -251,6 +251,11 @@ fun Instant.asCompletedTaskPosition(): String {
     return sorting.toTaskPosition()
 }
 
+private data class TaskListSyncAction(
+    val taskListId: String,
+    val fetchRemoteTasks: Boolean = true,
+)
+
 class TaskRepository(
     private val taskListDao: TaskListDao,
     private val taskDao: TaskDao,
@@ -268,7 +273,7 @@ class TaskRepository(
         }
 
     suspend fun sync() {
-        val taskListIds = mutableMapOf<Long, String>()
+        val taskListSyncActions = mutableMapOf<Long, TaskListSyncAction>()
         val remoteTaskLists = withContext(Dispatchers.IO) {
             try {
                 taskListsApi.listAll()
@@ -291,7 +296,7 @@ class TaskRepository(
             val existingEntity = taskListDao.getByRemoteId(remoteTaskList.id)
             val updatedEntity = remoteTaskList.asTaskListEntity(existingEntity?.id, existingEntity?.sorting ?: TaskListEntity.Sorting.UserDefined)
             val finalLocalId = taskListDao.upsert(updatedEntity)
-            taskListIds[finalLocalId] = remoteTaskList.id
+            taskListSyncActions[finalLocalId] = TaskListSyncAction(remoteTaskList.id)
         }
         taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
         taskListDao.getLocalOnlyTaskLists().onEach { localTaskList ->
@@ -304,29 +309,31 @@ class TaskRepository(
             }
             if (remoteTaskList != null) {
                 taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
-                taskListIds[localTaskList.id] = remoteTaskList.id
+                taskListSyncActions[localTaskList.id] = TaskListSyncAction(remoteTaskList.id, fetchRemoteTasks = false)
             }
         }
-        taskListIds.forEach { (localListId, remoteListId) ->
+        taskListSyncActions.forEach { (localListId, actions) ->
+            val (taskListId, fetchRemoteTasks) = actions
             // TODO deal with showDeleted, showHidden, etc.
             // TODO updatedMin could be used to filter out unchanged tasks since last sync
             //  /!\ this would impact the deleteStaleTasks logic
-            val remoteTasks = withContext(Dispatchers.IO) {
-                tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
-            }
+            if (fetchRemoteTasks) {
+                val remoteTasks = withContext(Dispatchers.IO) {
+                    tasksApi.listAll(taskListId, showHidden = true, showCompleted = true)
+                }
+                val taskEntities = remoteTasks.map { remoteTask ->
+                    val existingEntity = taskDao.getByRemoteId(remoteTask.id)
+                    val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
+                    remoteTask.asTaskEntity(
+                        parentListLocalId = localListId,
+                        parentTaskLocalId = parentTaskEntity?.id,
+                        taskLocalId = existingEntity?.id,
+                    )
+                }
+                taskDao.upsertAll(taskEntities)
 
-            val taskEntities = remoteTasks.map { remoteTask ->
-                val existingEntity = taskDao.getByRemoteId(remoteTask.id)
-                val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                remoteTask.asTaskEntity(
-                    parentListLocalId = localListId,
-                    parentTaskLocalId = parentTaskEntity?.id,
-                    taskLocalId = existingEntity?.id,
-                )
+                taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
             }
-            taskDao.upsertAll(taskEntities)
-
-            taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
 
             val localOnlyTasks = taskDao.getLocalOnlyTasks(localListId)
             val sortedRootTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == null })
@@ -336,7 +343,7 @@ class TaskRepository(
                 val remoteRootTask = withContext(Dispatchers.IO) {
                     try {
                         tasksApi.insert(
-                            taskListId = remoteListId,
+                            taskListId = taskListId,
                             task = localRootTask.asTask(),
                             parentTaskId = null,
                             previousTaskId = previousTaskId,
@@ -362,7 +369,7 @@ class TaskRepository(
                         val remoteSubTask = withContext(Dispatchers.IO) {
                             try {
                                 tasksApi.insert(
-                                    taskListId = remoteListId,
+                                    taskListId = taskListId,
                                     task = localSubTask.asTask(),
                                     parentTaskId = remoteRootTask.id,
                                     previousTaskId = previousSubTaskId,
