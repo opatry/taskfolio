@@ -252,7 +252,7 @@ fun Instant.asCompletedTaskPosition(): String {
 }
 
 private data class TaskListSyncAction(
-    val taskListId: String,
+    val remoteTaskListId: String,
     val fetchRemoteTasks: Boolean = true,
 )
 
@@ -273,86 +273,122 @@ class TaskRepository(
         }
 
     suspend fun sync() {
-        val taskListSyncActions = mutableMapOf<Long, TaskListSyncAction>()
         val remoteTaskLists = withContext(Dispatchers.IO) {
             try {
                 taskListsApi.listAll()
             } catch (_: Exception) {
                 null
             }
-        }
+        } ?: return // most likely not internet, can't fetch data, nothing to sync
 
-        if (remoteTaskLists == null) {
-            // most likely not internet, can't fetch data, nothing to sync
-            return
-        }
+        val syncActions = syncRemoteTaskLists(remoteTaskLists) + syncLocalTaskLists(taskListDao.getLocalOnlyTaskLists())
 
-        remoteTaskLists.onEach { remoteTaskList ->
-            // FIXME suboptimal
-            //  - check stale ones in DB and remove them if not only local
-            //  - check no update, and ignore/filter
-            //  - check new ones
-            //  - etc.
-            val existingEntity = taskListDao.getByRemoteId(remoteTaskList.id)
-            val updatedEntity = remoteTaskList.asTaskListEntity(existingEntity?.id, existingEntity?.sorting ?: TaskListEntity.Sorting.UserDefined)
-            val finalLocalId = taskListDao.upsert(updatedEntity)
-            taskListSyncActions[finalLocalId] = TaskListSyncAction(remoteTaskList.id)
+        syncTasks(syncActions)
+    }
+
+    private suspend fun syncRemoteTaskLists(remoteTaskLists: List<TaskList>): Map<Long, TaskListSyncAction> {
+        return buildMap {
+            remoteTaskLists.onEach { remoteTaskList ->
+                // FIXME suboptimal
+                //  - check stale ones in DB and remove them if not only local
+                //  - check no update, and ignore/filter
+                //  - check new ones
+                //  - etc.
+                val existingLocalList = taskListDao.getByRemoteId(remoteTaskList.id)
+                val localListToUpsert = remoteTaskList.asTaskListEntity(
+                    localId = existingLocalList?.id,
+                    sorting = existingLocalList?.sorting ?: TaskListEntity.Sorting.UserDefined
+                )
+                val finalLocalId = taskListDao.upsert(localListToUpsert)
+                put(finalLocalId, TaskListSyncAction(remoteTaskList.id))
+            }
+
+            taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
         }
-        taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
-        taskListDao.getLocalOnlyTaskLists().onEach { localTaskList ->
-            val remoteTaskList = withContext(Dispatchers.IO) {
-                try {
-                    taskListsApi.insert(TaskList(localTaskList.title))
-                } catch (_: Exception) {
-                    null
+    }
+
+    private suspend fun syncLocalTaskLists(localTaskLists: List<TaskListEntity>): Map<Long, TaskListSyncAction> {
+        return buildMap {
+            val syncedList = localTaskLists.mapNotNull { localTaskList ->
+                val remoteTaskList = withContext(Dispatchers.IO) {
+                    try {
+                        taskListsApi.insert(TaskList(localTaskList.title))
+                    } catch (_: Exception) {
+                        null
+                    }
+                }
+                remoteTaskList?.let {
+                    put(localTaskList.id, TaskListSyncAction(remoteTaskList.id, fetchRemoteTasks = false))
+                    remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting)
                 }
             }
-            if (remoteTaskList != null) {
-                taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
-                taskListSyncActions[localTaskList.id] = TaskListSyncAction(remoteTaskList.id, fetchRemoteTasks = false)
-            }
+
+            taskListDao.upsertAll(syncedList)
         }
-        taskListSyncActions.forEach { (localListId, actions) ->
-            val (taskListId, fetchRemoteTasks) = actions
+    }
+
+    private suspend fun syncTasks(taskListSyncActions: Map<Long, TaskListSyncAction>) {
+        taskListSyncActions.forEach { (localListId, syncAction) ->
+            val (remoteTaskListId, fetchRemoteTasks) = syncAction
             // TODO deal with showDeleted, showHidden, etc.
             // TODO updatedMin could be used to filter out unchanged tasks since last sync
             //  /!\ this would impact the deleteStaleTasks logic
             if (fetchRemoteTasks) {
                 val remoteTasks = withContext(Dispatchers.IO) {
-                    tasksApi.listAll(taskListId, showHidden = true, showCompleted = true)
+                    tasksApi.listAll(remoteTaskListId, showHidden = true, showCompleted = true)
                 }
-                val taskEntities = remoteTasks.map { remoteTask ->
-                    val existingEntity = taskDao.getByRemoteId(remoteTask.id)
-                    val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
+                val localTasks = remoteTasks.map { remoteTask ->
+                    val existingLocalTask = taskDao.getByRemoteId(remoteTask.id)
+                    val localParentTask = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
                     remoteTask.asTaskEntity(
                         parentListLocalId = localListId,
-                        parentTaskLocalId = parentTaskEntity?.id,
-                        taskLocalId = existingEntity?.id,
+                        parentTaskLocalId = localParentTask?.id,
+                        taskLocalId = existingLocalTask?.id,
                     )
                 }
-                taskDao.upsertAll(taskEntities)
+                taskDao.upsertAll(localTasks)
 
                 taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
             }
 
             val localOnlyTasks = taskDao.getLocalOnlyTasks(localListId)
-            val sortedRootTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == null })
-            var previousTaskId: String? = null
-            val syncedTasks = mutableListOf<TaskEntity>()
-            sortedRootTasks.onEach { localRootTask ->
-                val remoteRootTask = withContext(Dispatchers.IO) {
+            val syncedTasks = syncLocalTasks(
+                localTaskListId = localListId,
+                remoteTaskListId = remoteTaskListId,
+                localParentTaskId = null,
+                remoteParentTaskId = null,
+                tasks = localOnlyTasks,
+            )
+            taskDao.upsertAll(syncedTasks)
+        }
+    }
+
+    private suspend fun syncLocalTasks(
+        localTaskListId: Long,
+        remoteTaskListId: String,
+        localParentTaskId: Long?,
+        remoteParentTaskId: String?,
+        tasks: List<TaskEntity>
+    ): List<TaskEntity> {
+        val tasksToSync = computeTaskPositions(tasks.filter { it.parentTaskLocalId == localParentTaskId })
+        var previousTaskId: String? = null
+        return buildList {
+            tasksToSync.onEach { localTask ->
+                val remoteTask = withContext(Dispatchers.IO) {
                     try {
                         tasksApi.insert(
-                            taskListId = taskListId,
-                            task = localRootTask.asTask(),
-                            parentTaskId = null,
+                            taskListId = remoteTaskListId,
+                            task = localTask.asTask(),
+                            parentTaskId = remoteParentTaskId,
                             previousTaskId = previousTaskId,
-                        ).also { task ->
-                            syncedTasks.add(
-                                task.asTaskEntity(
-                                    parentListLocalId = localListId,
-                                    parentTaskLocalId = null,
-                                    taskLocalId = localRootTask.id,
+                        ).also { remoteTask ->
+                            // ensure up to date local parent after sync
+                            val localParentTask = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
+                            add(
+                                remoteTask.asTaskEntity(
+                                    parentListLocalId = localTaskListId,
+                                    parentTaskLocalId = localParentTask?.id,
+                                    taskLocalId = localTask.id,
                                 )
                             )
                         }
@@ -360,39 +396,22 @@ class TaskRepository(
                         null
                     }
                 }
+                // FIXME if one of the task sync fails, it breaks sibling order
+                previousTaskId = remoteTask?.id
 
-                // don't try syncing sub tasks if root task failed, it would break hierarchy on remote side
-                if (remoteRootTask != null) {
-                    val sortedSubTasks = computeTaskPositions(localOnlyTasks.filter { it.parentTaskLocalId == localRootTask.id })
-                    var previousSubTaskId: String? = null
-                    sortedSubTasks.onEach { localSubTask ->
-                        val remoteSubTask = withContext(Dispatchers.IO) {
-                            try {
-                                tasksApi.insert(
-                                    taskListId = taskListId,
-                                    task = localSubTask.asTask(),
-                                    parentTaskId = remoteRootTask.id,
-                                    previousTaskId = previousSubTaskId,
-                                ).also { remoteTask ->
-                                    val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                                    syncedTasks.add(
-                                        remoteTask.asTaskEntity(
-                                            parentListLocalId = localListId,
-                                            parentTaskLocalId = parentTaskEntity?.id,
-                                            taskLocalId = localSubTask.id,
-                                        )
-                                    )
-                                }
-                            } catch (_: Exception) {
-                                null
-                            }
-                        }
-                        previousSubTaskId = remoteSubTask?.id
-                    }
+                // don't try syncing sub tasks if parent task failed, it would break hierarchy on remote side
+                if (remoteTask != null) {
+                    addAll(
+                        syncLocalTasks(
+                            localTaskListId = localTaskListId,
+                            remoteTaskListId = remoteTaskListId,
+                            localParentTaskId = localTask.id,
+                            remoteParentTaskId = remoteTask.id,
+                            tasks = tasks,
+                        )
+                    )
                 }
-                previousTaskId = remoteRootTask?.id
             }
-            taskDao.upsertAll(syncedTasks)
         }
     }
 
