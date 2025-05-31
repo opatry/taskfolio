@@ -323,7 +323,11 @@ class TaskRepository(
             val taskEntities = remoteTasks.map { remoteTask ->
                 val existingEntity = taskDao.getByRemoteId(remoteTask.id)
                 val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                remoteTask.asTaskEntity(localListId, existingEntity?.id, parentTaskEntity?.id)
+                remoteTask.asTaskEntity(
+                    parentListLocalId = localListId,
+                    taskLocalId = existingEntity?.id,
+                    parentTaskLocalId = parentTaskEntity?.id,
+                )
             }
             taskDao.upsertAll(taskEntities)
 
@@ -336,8 +340,19 @@ class TaskRepository(
             sortedRootTasks.onEach { localRootTask ->
                 val remoteRootTask = withContext(Dispatchers.IO) {
                     try {
-                        tasksApi.insert(remoteListId, localRootTask.asTask(), null, previousTaskId).also {
-                            syncedTasks.add(it.asTaskEntity(localListId, localRootTask.id, null))
+                        tasksApi.insert(
+                            taskListId = remoteListId,
+                            task = localRootTask.asTask(),
+                            parentTaskId = null,
+                            previousTaskId = previousTaskId,
+                        ).also { task ->
+                            syncedTasks.add(
+                                task.asTaskEntity(
+                                    parentListLocalId = localListId,
+                                    taskLocalId = localRootTask.id,
+                                    parentTaskLocalId = null,
+                                )
+                            )
                         }
                     } catch (_: Exception) {
                         null
@@ -351,9 +366,20 @@ class TaskRepository(
                     sortedSubTasks.onEach { localSubTask ->
                         val remoteSubTask = withContext(Dispatchers.IO) {
                             try {
-                                tasksApi.insert(remoteListId, localSubTask.asTask(), remoteRootTask.id, previousSubTaskId).also { remoteTask ->
+                                tasksApi.insert(
+                                    taskListId = remoteListId,
+                                    task = localSubTask.asTask(),
+                                    parentTaskId = remoteRootTask.id,
+                                    previousTaskId = previousSubTaskId,
+                                ).also { remoteTask ->
                                     val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                                    syncedTasks.add(remoteTask.asTaskEntity(localListId, localSubTask.id, parentTaskEntity?.id))
+                                    syncedTasks.add(
+                                        remoteTask.asTaskEntity(
+                                            parentListLocalId = localListId,
+                                            taskLocalId = localSubTask.id,
+                                            parentTaskLocalId = parentTaskEntity?.id,
+                                        )
+                                    )
                                 }
                             } catch (_: Exception) {
                                 null
@@ -493,7 +519,13 @@ class TaskRepository(
                 }
             }
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(taskListId, taskId, parentTaskId))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = taskListId,
+                        taskLocalId = taskId,
+                        parentTaskLocalId = parentTaskId,
+                    )
+                )
             }
         }
         return taskId
@@ -548,7 +580,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId, updatedTaskEntity.parentTaskLocalId))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        taskLocalId = taskId,
+                        parentTaskLocalId = updatedTaskEntity.parentTaskLocalId,
+                    )
+                )
             }
         }
     }
@@ -654,7 +692,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, updatedTaskEntity.id, parentTaskEntity.id))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        taskLocalId = updatedTaskEntity.id,
+                        parentTaskLocalId = parentTaskEntity.id,
+                    )
+                )
             }
         }
     }
@@ -706,7 +750,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, updatedTaskEntity.id, null))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        taskLocalId = updatedTaskEntity.id,
+                        parentTaskLocalId = null,
+                    )
+                )
             }
         }
     }
@@ -744,7 +794,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId, null))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        taskLocalId = taskId,
+                        parentTaskLocalId = null,
+                    )
+                )
             }
         }
     }
@@ -797,7 +853,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(destinationListId, taskId, null))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = destinationListId,
+                        taskLocalId = taskId,
+                        parentTaskLocalId = null,
+                    )
+                )
             }
         }
     }
