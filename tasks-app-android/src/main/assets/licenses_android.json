@@ -1127,7 +1127,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.0",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
             "licenses": [
@@ -1144,7 +1144,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.0",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
             "licenses": [
@@ -1161,7 +1161,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.0",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
             "licenses": [
@@ -1827,7 +1827,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "12.1.2",
+            "artifactVersion": "12.2.0",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "licenses": [
@@ -2329,7 +2329,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.0-beta02",
             "description": "Android Navigation-Common",
             "name": "Navigation Common",
             "licenses": [
@@ -2343,7 +2343,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.0-beta02",
             "description": "Compose integration with Navigation",
             "name": "Compose Navigation",
             "licenses": [
@@ -2357,7 +2357,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.0-beta02",
             "description": "Android Navigation-Runtime",
             "name": "Navigation Runtime",
             "licenses": [
@@ -2385,7 +2385,7 @@
                     "name": "Compose Multiplatform Team"
                 }
             ],
-            "artifactVersion": "1.3.0-beta01",
+            "artifactVersion": "1.3.0",
             "description": "Compose integration with Saved State",
             "name": "Saved State Compose",
             "licenses": [
@@ -2791,7 +2791,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "0.3.8",
+            "artifactVersion": "0.4.0",
             "description": "Kotlin Immutable Collections multiplatform library",
             "name": "kotlinx-collections-immutable",
             "licenses": [
@@ -3007,7 +3007,7 @@
                     "name": "Cosmin Mihu"
                 }
             ],
-            "artifactVersion": "1.7.1",
+            "artifactVersion": "1.7.2",
             "description": "Powerful tools to log Ktor Client requests and responses, making it easier to debug and analyze network communication.",
             "name": "Ktor Monitor",
             "licenses": [
