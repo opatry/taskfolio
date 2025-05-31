@@ -1,8 +1,3 @@
-• Enable task move actions (to top, to list, to new list)
-• Support subtask creation
-• Allow setting due dates directly from a task cell
-• Fix 1-day offset issue in the date picker
-• Add support for sorting tasks by title
-• Enhance task sorting functionality
-• Introduce "Per-app language preferences" on Android
+• Enable task indent and unindent actions
+• Notify on network loss
 • General performance improvements and under-the-hood optimizations
