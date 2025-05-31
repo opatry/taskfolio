@@ -20,36 +20,12 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.app.init
 
-import android.content.Context
-import androidx.room.Room
-import net.opatry.tasks.CredentialsStorage
-import net.opatry.tasks.FileCredentialsStorage
-import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.core.module.Module
-import org.koin.dsl.module
-import java.io.File
+import android.app.Application
 
-actual fun platformModule(target: String): Module = module {
-    single {
-        val dbNameSuffix = when (target) {
-            "store" -> ""
-            else -> "_$target"
-        }
-        val context = get<Context>()
-        val appContext = context.applicationContext
-        val dbFile = appContext.getDatabasePath("tasks${dbNameSuffix}.db")
-        if (target in arrayOf("test", "demo") && dbFile.exists()) {
-            dbFile.delete()
-        }
-        Room.databaseBuilder<TasksAppDatabase>(appContext, dbFile.absolutePath)
-    }
-
-    single<CredentialsStorage> {
-        // TODO store in database
-        val context = get<Context>()
-        val credentialsFile = File(context.cacheDir, "google_auth_token_cache.json")
-        FileCredentialsStorage(credentialsFile.absolutePath)
+object FlavorCustomInit {
+    fun Application.init() {
+        // Nothing custom is needed for this flavor
     }
 }

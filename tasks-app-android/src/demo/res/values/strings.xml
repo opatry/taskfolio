@@ -1,0 +1,50 @@
+<!--
+  Copyright (c) 2025 Olivier Patry
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom the Software
+  is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<resources>
+    <string name="app_name">📸 Taskfolio</string>
+
+    <string name="demo_task_list_default">👩‍💼 My Tasks</string>
+    <string name="demo_task_list_default_task1">Plan weekend getaway 🏖️</string>
+    <string name="demo_task_list_default_task1_notes">"• Find accommodations\n• Check weather"️</string>
+    <string name="demo_task_list_default_task2">Finish reading book 📖️</string>
+    <string name="demo_task_list_default_task3">Organize desk 📁️</string>
+    <string name="demo_task_list_default_task3_notes">"• Sort out papers\n• Set up new monitor"</string>
+    <string name="demo_task_list_groceries">🛒 Groceries</string>
+    <string name="demo_task_list_groceries_task1">Milk 🥛</string>
+    <string name="demo_task_list_groceries_task2">Cheese 🧀</string>
+    <string name="demo_task_list_groceries_task3">Carrots 🥕</string>
+    <string name="demo_task_list_groceries_task4">Bread 🥖</string>
+    <string name="demo_task_list_groceries_task4_notes">Whole wheat</string>
+    <string name="demo_task_list_home">🏡 Home</string>
+    <string name="demo_task_list_home_task1">Fix leaking faucet 🚰</string>
+    <string name="demo_task_list_home_task2">Mow the lawn 🌱</string>
+    <string name="demo_task_list_home_task3">Garage appointment 🛠️ 🚗</string>
+    <string name="demo_task_list_home_task3_notes">"• Oil change\n• Check brakes…\n• Tire rotation"</string>
+    <string name="demo_task_list_work">💼 Work</string>
+    <string name="demo_task_list_work_task1">📑 Finish Acme report</string>
+    <string name="demo_task_list_work_task1_notes">Include last quarter’s stats</string>
+    <string name="demo_task_list_work_task2">Attend team meeting</string>
+    <string name="demo_task_list_work_task2_notes">Discuss project timelines</string>
+    <string name="demo_task_list_work_task3">Review project proposals</string>
+    <string name="demo_task_list_work_task3_notes">Focus on budget analysis</string>
+</resources>
