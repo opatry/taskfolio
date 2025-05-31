@@ -60,12 +60,7 @@ private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.So
     )
 }
 
-// TODO invert taskId & parentTaskId parameters
-// Do it so that:
-//  no risk of tedious conflict
-//  replace call site with name=
-//  ensure call site order is properly switch accordingly (/!\ IDEA "flip ','" doesn't do it for us)
-private fun Task.asTaskEntity(parentListLocalId: Long, taskLocalId: Long?, parentTaskLocalId: Long?): TaskEntity {
+private fun Task.asTaskEntity(parentListLocalId: Long, parentTaskLocalId: Long?, taskLocalId: Long?): TaskEntity {
     return TaskEntity(
         id = taskLocalId ?: 0,
         remoteId = id,
@@ -325,8 +320,8 @@ class TaskRepository(
                 val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
                 remoteTask.asTaskEntity(
                     parentListLocalId = localListId,
-                    taskLocalId = existingEntity?.id,
                     parentTaskLocalId = parentTaskEntity?.id,
+                    taskLocalId = existingEntity?.id,
                 )
             }
             taskDao.upsertAll(taskEntities)
@@ -349,8 +344,8 @@ class TaskRepository(
                             syncedTasks.add(
                                 task.asTaskEntity(
                                     parentListLocalId = localListId,
-                                    taskLocalId = localRootTask.id,
                                     parentTaskLocalId = null,
+                                    taskLocalId = localRootTask.id,
                                 )
                             )
                         }
@@ -376,8 +371,8 @@ class TaskRepository(
                                     syncedTasks.add(
                                         remoteTask.asTaskEntity(
                                             parentListLocalId = localListId,
-                                            taskLocalId = localSubTask.id,
                                             parentTaskLocalId = parentTaskEntity?.id,
+                                            taskLocalId = localSubTask.id,
                                         )
                                     )
                                 }
@@ -522,8 +517,8 @@ class TaskRepository(
                 taskDao.upsert(
                     task.asTaskEntity(
                         parentListLocalId = taskListId,
-                        taskLocalId = taskId,
                         parentTaskLocalId = parentTaskId,
+                        taskLocalId = taskId,
                     )
                 )
             }
@@ -583,8 +578,8 @@ class TaskRepository(
                 taskDao.upsert(
                     task.asTaskEntity(
                         parentListLocalId = updatedTaskEntity.parentListLocalId,
-                        taskLocalId = taskId,
                         parentTaskLocalId = updatedTaskEntity.parentTaskLocalId,
+                        taskLocalId = taskId,
                     )
                 )
             }
@@ -695,8 +690,8 @@ class TaskRepository(
                 taskDao.upsert(
                     task.asTaskEntity(
                         parentListLocalId = updatedTaskEntity.parentListLocalId,
-                        taskLocalId = updatedTaskEntity.id,
                         parentTaskLocalId = parentTaskEntity.id,
+                        taskLocalId = updatedTaskEntity.id,
                     )
                 )
             }
@@ -753,8 +748,8 @@ class TaskRepository(
                 taskDao.upsert(
                     task.asTaskEntity(
                         parentListLocalId = updatedTaskEntity.parentListLocalId,
-                        taskLocalId = updatedTaskEntity.id,
                         parentTaskLocalId = null,
+                        taskLocalId = updatedTaskEntity.id,
                     )
                 )
             }
@@ -797,8 +792,8 @@ class TaskRepository(
                 taskDao.upsert(
                     task.asTaskEntity(
                         parentListLocalId = updatedTaskEntity.parentListLocalId,
-                        taskLocalId = taskId,
                         parentTaskLocalId = null,
+                        taskLocalId = taskId,
                     )
                 )
             }
@@ -856,8 +851,8 @@ class TaskRepository(
                 taskDao.upsert(
                     task.asTaskEntity(
                         parentListLocalId = destinationListId,
-                        taskLocalId = taskId,
                         parentTaskLocalId = null,
+                        taskLocalId = taskId,
                     )
                 )
             }
