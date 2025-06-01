@@ -258,6 +258,9 @@ class TaskRepository(
     private val tasksApi: TasksApi,
     private val nowProvider: NowProvider,
 ) {
+    // TODO persist it
+    private var lastSync: Instant? = null
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTaskLists() = taskListDao.getAllTaskListsWithTasksAsFlow()
         .distinctUntilChanged()
@@ -340,6 +343,8 @@ class TaskRepository(
         }.also { syncedTasks ->
             taskDao.upsertAll(syncedTasks)
         }
+
+        lastSync = nowProvider.now()
     }
 
     private suspend fun updateTaskListFromRemote(remoteTaskList: RemoteTaskList): LocalTaskList {
@@ -368,11 +373,14 @@ class TaskRepository(
     }
 
     private suspend fun fetchRemoteTasks(localTaskListId: Long, remoteTaskListId: String): List<LocalTask> {
-        // TODO deal with showDeleted, showHidden, etc.
-        // TODO updatedMin could be used to filter out unchanged tasks since last sync
-        //  /!\ this would impact the deleteStaleTasks logic
-        withContext(Dispatchers.IO) {
-            tasksApi.listAll(remoteTaskListId, showHidden = true, showCompleted = true)
+        return withContext(Dispatchers.IO) {
+            tasksApi.listAll(
+                taskListId = remoteTaskListId,
+                showDeleted = false,
+                showHidden = true,
+                showCompleted = true,
+                updatedMin = lastSync,
+            )
         }.map { remoteTask ->
             val existingLocalTask = taskDao.getByRemoteId(remoteTask.id)
             val localParentTask = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
