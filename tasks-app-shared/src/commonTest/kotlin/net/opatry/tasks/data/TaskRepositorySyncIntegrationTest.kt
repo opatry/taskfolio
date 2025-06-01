@@ -33,7 +33,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 
-class TaskRepositorySyncTest {
+class TaskRepositorySyncIntegrationTest {
     @Test
     fun `when remote task lists with tasks then sync should store data locally`() {
         val taskListsApi = InMemoryTaskListsApi("My tasks", "Other tasks")

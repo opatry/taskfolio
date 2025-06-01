@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.data
 
+import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -60,7 +61,8 @@ private fun RemoteTaskList.asTaskListEntity(localId: Long?, sorting: LocalTaskLi
     )
 }
 
-private fun RemoteTask.asTaskEntity(parentListLocalId: Long, parentTaskLocalId: Long?, taskLocalId: Long?): LocalTask {
+@VisibleForTesting
+internal fun RemoteTask.asTaskEntity(parentListLocalId: Long, parentTaskLocalId: Long?, taskLocalId: Long?): LocalTask {
     return LocalTask(
         id = taskLocalId ?: 0,
         remoteId = id,
@@ -125,7 +127,8 @@ private fun LocalTask.asTaskDataModel(indent: Int, isParentTask: Boolean): TaskD
     )
 }
 
-private fun LocalTask.asTask(): RemoteTask {
+@VisibleForTesting
+internal fun LocalTask.asTask(): RemoteTask {
     return RemoteTask(
         id = remoteId ?: "",
         title = title,
