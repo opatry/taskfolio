@@ -307,17 +307,27 @@ class TaskRepository(
         } ?: return // most likely not internet, can't fetch data, nothing to sync
 
         // update local lists from remote counterparts
-        val remoteSyncedTaskLists = remoteTaskLists.map { remoteTaskList ->
-            updateTaskListFromRemote(remoteTaskList)
+        val syncedTaskLists = remoteTaskLists.map { remoteTaskList ->
+            val existingLocalList = taskListDao.getByRemoteId(remoteTaskList.id)
+            remoteTaskList.asTaskListEntity(
+                localId = existingLocalList?.id,
+                sorting = existingLocalList?.sorting ?: LocalTaskList.Sorting.UserDefined
+            )
+        }.let { lists ->
+            val finalListIds = taskListDao.upsertAll(lists)
+            // update list ids following upsertAll
+            lists.zip(finalListIds) { list, finalId -> list.copy(id = finalId) }
         }
 
         // fetch remote tasks
-        remoteSyncedTaskLists.flatMap { taskList ->
+        syncedTaskLists.flatMap { taskList ->
             taskList.remoteId?.let { remoteTaskListId ->
                 fetchRemoteTasks(taskList.id, remoteTaskListId)
             } ?: emptyList()
-        }.also { syncedTasks ->
-            taskDao.upsertAll(syncedTasks)
+        }.let { syncedTasks ->
+            val finalTaskIds = taskDao.upsertAll(syncedTasks)
+            // update list ids following upsertAll
+            syncedTasks.zip(finalTaskIds) { task, finalId -> task.copy(id = finalId) }
         }
 
         // upload local only lists
@@ -328,7 +338,7 @@ class TaskRepository(
         }
 
         // upload local only tasks
-        val allTaskLists = remoteSyncedTaskLists + localOnlySyncedTaskLists
+        val allTaskLists = syncedTaskLists + localOnlySyncedTaskLists
         allTaskLists.flatMap { taskList ->
             val localOnlyTasks = taskDao.getLocalOnlyTasks(taskList.id)
             taskList.remoteId?.let { remoteTaskListId ->
@@ -349,21 +359,6 @@ class TaskRepository(
         if (cleanStaleTasks) {
             cleanStaleTasks()
         }
-    }
-
-    private suspend fun updateTaskListFromRemote(remoteTaskList: RemoteTaskList): LocalTaskList {
-        // FIXME suboptimal
-        //  - check stale ones in DB and remove them if not only local
-        //  - check no update, and ignore/filter
-        //  - check new ones
-        //  - etc.
-        val existingLocalList = taskListDao.getByRemoteId(remoteTaskList.id)
-        val localListToUpsert = remoteTaskList.asTaskListEntity(
-            localId = existingLocalList?.id,
-            sorting = existingLocalList?.sorting ?: LocalTaskList.Sorting.UserDefined
-        )
-        val finalLocalId = taskListDao.upsert(localListToUpsert)
-        return localListToUpsert.copy(id = finalLocalId)
     }
 
     private suspend fun syncLocalTaskList(localTaskList: LocalTaskList): LocalTaskList? {
@@ -393,10 +388,6 @@ class TaskRepository(
                 parentTaskLocalId = localParentTask?.id,
                 taskLocalId = existingLocalTask?.id,
             )
-        }.let { syncedTasks ->
-            val taskIds = taskDao.upsertAll(syncedTasks)
-            // update task ids following upsertAll
-            syncedTasks.zip(taskIds) { task, id -> task.copy(id = id) }
         }
     }
 
