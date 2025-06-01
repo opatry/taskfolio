@@ -297,7 +297,7 @@ class TaskRepository(
         taskListDao.deleteStaleTaskLists(remoteTaskListIds)
     }
 
-    suspend fun sync() {
+    suspend fun sync(cleanStaleTasks: Boolean = lastSync == null) {
         val remoteTaskLists = withContext(Dispatchers.IO) {
             try {
                 taskListsApi.listAll()
@@ -345,6 +345,10 @@ class TaskRepository(
         }
 
         lastSync = nowProvider.now()
+
+        if (cleanStaleTasks) {
+            cleanStaleTasks()
+        }
     }
 
     private suspend fun updateTaskListFromRemote(remoteTaskList: RemoteTaskList): LocalTaskList {

@@ -43,7 +43,7 @@ class TaskRepositorySyncTest {
             val initialTaskLists = repository.getTaskLists().firstOrNull()
             assertEquals(0, initialTaskLists?.size, "There shouldn't be any task list at start")
 
-            repository.sync()
+            repository.sync(cleanStaleTasks = false)
 
             assertContentEquals(listOf("list"), taskListsApi.requests)
             assertContentEquals(listOf("list", "list"), tasksApi.requests)
@@ -92,7 +92,7 @@ class TaskRepositorySyncTest {
 
             // network is considered back, sync should trigger fetch & push requests
             taskListsApi.isNetworkAvailable = true
-            repository.sync()
+            repository.sync(cleanStaleTasks = false)
             assertContentEquals(listOf("list", "insert"), taskListsApi.requests)
             assertContentEquals(listOf("list"), tasksApi.requests)
         }
