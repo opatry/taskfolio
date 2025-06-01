@@ -35,7 +35,7 @@ import kotlin.test.assertNotNull
 
 class TaskRepositorySyncTest {
     @Test
-    fun `sync remote task lists`() {
+    fun `when remote task lists with tasks then sync should store data locally`() {
         val taskListsApi = InMemoryTaskListsApi("My tasks", "Other tasks")
         val tasksApi = InMemoryTasksApi("1" to listOf("First task TODO"), "2" to listOf("Another task"))
 
@@ -64,7 +64,7 @@ class TaskRepositorySyncTest {
     }
 
     @Test
-    fun `task list CRUD without network should create a local only task list`() {
+    fun `when network is OFF then created task list should be local only`() {
         val taskListsApi = InMemoryTaskListsApi()
 
         runTaskRepositoryTest(taskListsApi) { repository ->
@@ -78,7 +78,7 @@ class TaskRepositorySyncTest {
     }
 
     @Test
-    fun `local only task lists are synced at next sync`() {
+    fun `when there are local only task lists then sync should upload them`() {
         val taskListsApi = InMemoryTaskListsApi("Task list")
         val tasksApi = InMemoryTasksApi()
 
