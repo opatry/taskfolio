@@ -270,13 +270,17 @@ class TaskRepository(
             }
         }
 
-    suspend fun cleanStaleTasks() {
-        val remoteTaskListIds = withContext(Dispatchers.IO) {
-            try {
-                taskListsApi.listAll()
-            } catch (_: Exception) {
-                null
+    suspend fun cleanStaleTasks(remoteTaskLists: List<RemoteTaskList>? = null) {
+        val remoteTaskListIds = when (remoteTaskLists) {
+            null -> withContext(Dispatchers.IO) {
+                try {
+                    taskListsApi.listAll()
+                } catch (_: Exception) {
+                    null
+                }
             }
+
+            else -> remoteTaskLists
         }?.map(RemoteTaskList::id) ?: return
 
         remoteTaskListIds.forEach { remoteTaskListId ->
@@ -361,7 +365,7 @@ class TaskRepository(
         lastSync = nowProvider.now()
 
         if (cleanStaleTasks) {
-            cleanStaleTasks()
+            cleanStaleTasks(remoteTaskLists)
         }
     }
 
