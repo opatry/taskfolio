@@ -313,36 +313,38 @@ class TaskRepository(
                 localId = existingLocalList?.id,
                 sorting = existingLocalList?.sorting ?: LocalTaskList.Sorting.UserDefined
             )
-        }.let { lists ->
+        }.takeUnless(List<*>::isEmpty)?.let { lists ->
             val finalListIds = taskListDao.upsertAll(lists)
             // update list ids following upsertAll
             lists.zip(finalListIds) { list, finalId -> list.copy(id = finalId) }
-        }
+        } ?: emptyList()
 
-        // fetch remote tasks
+        // pull remote tasks
         syncedTaskLists.flatMap { taskList ->
             taskList.remoteId?.let { remoteTaskListId ->
-                fetchRemoteTasks(taskList.id, remoteTaskListId)
+                pullRemoteTasks(taskList.id, remoteTaskListId)
             } ?: emptyList()
-        }.let { syncedTasks ->
-            val finalTaskIds = taskDao.upsertAll(syncedTasks)
-            // update list ids following upsertAll
-            syncedTasks.zip(finalTaskIds) { task, finalId -> task.copy(id = finalId) }
+        }.also { syncedTasks ->
+            if (syncedTasks.isNotEmpty()) {
+                taskDao.upsertAll(syncedTasks)
+            }
         }
 
-        // upload local only lists
+        // push local only lists
         val localOnlySyncedTaskLists = taskListDao.getLocalOnlyTaskLists().mapNotNull { localTaskList ->
-            syncLocalTaskList(localTaskList)
-        }.also { syncedTaskLists ->
-            taskListDao.upsertAll(syncedTaskLists)
-        }
+            pushLocalTaskList(localTaskList)
+        }.takeUnless(List<*>::isEmpty)?.let { syncedTaskLists ->
+            val finalListIds = taskListDao.upsertAll(syncedTaskLists)
+            // update list ids following upsertAll
+            syncedTaskLists.zip(finalListIds) { list, finalId -> list.copy(id = finalId) }
+        } ?: emptyList()
 
-        // upload local only tasks
+        // push local only tasks
         val allTaskLists = syncedTaskLists + localOnlySyncedTaskLists
         allTaskLists.flatMap { taskList ->
             val localOnlyTasks = taskDao.getLocalOnlyTasks(taskList.id)
             taskList.remoteId?.let { remoteTaskListId ->
-                syncLocalTasks(
+                pushLocalTasks(
                     localTaskListId = taskList.id,
                     remoteTaskListId = remoteTaskListId,
                     localParentTaskId = null,
@@ -351,7 +353,9 @@ class TaskRepository(
                 )
             } ?: emptyList()
         }.also { syncedTasks ->
-            taskDao.upsertAll(syncedTasks)
+            if (syncedTasks.isNotEmpty()) {
+                taskDao.upsertAll(syncedTasks)
+            }
         }
 
         lastSync = nowProvider.now()
@@ -361,7 +365,7 @@ class TaskRepository(
         }
     }
 
-    private suspend fun syncLocalTaskList(localTaskList: LocalTaskList): LocalTaskList? {
+    private suspend fun pushLocalTaskList(localTaskList: LocalTaskList): LocalTaskList? {
         return withContext(Dispatchers.IO) {
             try {
                 taskListsApi.insert(RemoteTaskList(localTaskList.title))
@@ -371,7 +375,7 @@ class TaskRepository(
         }?.asTaskListEntity(localTaskList.id, localTaskList.sorting)
     }
 
-    private suspend fun fetchRemoteTasks(localTaskListId: Long, remoteTaskListId: String): List<LocalTask> {
+    private suspend fun pullRemoteTasks(localTaskListId: Long, remoteTaskListId: String): List<LocalTask> {
         return withContext(Dispatchers.IO) {
             tasksApi.listAll(
                 taskListId = remoteTaskListId,
@@ -391,7 +395,7 @@ class TaskRepository(
         }
     }
 
-    private suspend fun syncLocalTasks(
+    private suspend fun pushLocalTasks(
         localTaskListId: Long,
         remoteTaskListId: String,
         localParentTaskId: Long?,
@@ -430,7 +434,7 @@ class TaskRepository(
                 // don't try syncing sub tasks if parent task failed, it would break hierarchy on remote side
                 if (remoteTask != null) {
                     addAll(
-                        syncLocalTasks(
+                        pushLocalTasks(
                             localTaskListId = localTaskListId,
                             remoteTaskListId = remoteTaskListId,
                             localParentTaskId = localTask.id,
