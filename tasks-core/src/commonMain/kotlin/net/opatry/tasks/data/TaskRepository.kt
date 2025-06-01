@@ -368,7 +368,12 @@ class TaskRepository(
     private suspend fun pushLocalTaskList(localTaskList: LocalTaskList): LocalTaskList? {
         return withContext(Dispatchers.IO) {
             try {
-                taskListsApi.insert(RemoteTaskList(localTaskList.title))
+                taskListsApi.insert(
+                    RemoteTaskList(
+                        title = localTaskList.title,
+                        updatedDate = localTaskList.lastUpdateDate
+                    )
+                )
             } catch (_: Exception) {
                 null
             }
