@@ -36,6 +36,7 @@ import net.opatry.tasks.app.presentation.UserViewModel
 import net.opatry.tasks.data.TaskDao
 import net.opatry.tasks.data.TaskListDao
 import net.opatry.tasks.data.TaskRepository
+import net.opatry.tasks.data.TransactionRunner
 import net.opatry.tasks.data.UserDao
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.dsl.module
@@ -103,7 +104,14 @@ class AndroidDITest {
     fun `verify app module`() {
         tasksAppModule.verify(
             injections = injectedParameters(
-                definition<TaskRepository>(TaskListDao::class, TaskDao::class, TaskListsApi::class, TasksApi::class, NowProvider::class),
+                definition<TaskRepository>(
+                    TransactionRunner::class,
+                    TaskListDao::class,
+                    TaskDao::class,
+                    TaskListsApi::class,
+                    TasksApi::class,
+                    NowProvider::class
+                ),
                 definition<TaskListsViewModel>(Duration::class, Logger::class),
                 definition<UserViewModel>(Logger::class, UserDao::class, CredentialsStorage::class, UserInfoApi::class, NowProvider::class),
             )

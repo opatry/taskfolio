@@ -23,9 +23,12 @@
 package net.opatry.tasks.app.di
 
 import androidx.room.Room
+import androidx.room.Transactor
+import androidx.room.useWriterConnection
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.FileCredentialsStorage
 import net.opatry.tasks.data.TasksAppDatabase
+import net.opatry.tasks.data.TransactionRunner
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -51,5 +54,18 @@ actual fun platformModule(target: String): Module = module {
         // TODO store in database
         val credentialsFile = File(get<File>(named("app_root_dir")), "google_auth_token_cache.json")
         FileCredentialsStorage(credentialsFile.absolutePath)
+    }
+
+    single<TransactionRunner> {
+        object : TransactionRunner {
+            override suspend fun <R> runInTransaction(logic: suspend () -> R): R {
+                val db = get<TasksAppDatabase>()
+                return db.useWriterConnection { transactor ->
+                    transactor.withTransaction(Transactor.SQLiteTransactionType.IMMEDIATE) {
+                        logic()
+                    }
+                }
+            }
+        }
     }
 }

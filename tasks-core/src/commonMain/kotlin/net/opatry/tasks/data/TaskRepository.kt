@@ -257,6 +257,7 @@ fun Instant.asCompletedTaskPosition(): String {
 }
 
 class TaskRepository(
+    private val transactionRunner: TransactionRunner,
     private val taskListDao: TaskListDao,
     private val taskDao: TaskDao,
     private val taskListsApi: TaskListsApi,
@@ -358,8 +359,11 @@ class TaskRepository(
 
     suspend fun deleteTaskList(taskListId: Long) {
         // TODO deal with deleted locally but not remotely yet (no internet)
-        val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
-        taskListDao.deleteTaskList(taskListId)
+        val taskListEntity = transactionRunner.runInTransaction {
+            val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
+            taskListDao.deleteTaskList(taskListId)
+            taskListEntity
+        }
         if (taskListEntity.remoteId != null) {
             withContext(Dispatchers.IO) {
                 try {
