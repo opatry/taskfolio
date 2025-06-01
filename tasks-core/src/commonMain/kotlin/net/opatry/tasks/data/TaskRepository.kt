@@ -267,6 +267,33 @@ class TaskRepository(
             }
         }
 
+    suspend fun cleanStaleTasks() {
+        val remoteTaskListIds = withContext(Dispatchers.IO) {
+            try {
+                taskListsApi.listAll()
+            } catch (_: Exception) {
+                null
+            }
+        }?.map(RemoteTaskList::id) ?: return
+
+        remoteTaskListIds.forEach { remoteTaskListId ->
+            val localTaskListId = taskListDao.getByRemoteId(remoteTaskListId)?.id ?: return@forEach
+            val remoteTaskIds = withContext(Dispatchers.IO) {
+                tasksApi.listAll(
+                    taskListId = remoteTaskListId,
+                    showDeleted = true,
+                    showHidden = true,
+                    showCompleted = true,
+                    updatedMin = null, // we need all content to purge local data accurately
+                )
+            }.map(RemoteTask::id)
+
+            taskDao.deleteStaleTasks(localTaskListId, remoteTaskIds)
+        }
+
+        taskListDao.deleteStaleTaskLists(remoteTaskListIds)
+    }
+
     suspend fun sync() {
         val remoteTaskLists = withContext(Dispatchers.IO) {
             try {
@@ -280,7 +307,6 @@ class TaskRepository(
         val remoteSyncedTaskLists = remoteTaskLists.map { remoteTaskList ->
             updateTaskListFromRemote(remoteTaskList)
         }
-        taskListDao.deleteStaleTaskLists(remoteTaskLists.map(RemoteTaskList::id))
 
         // fetch remote tasks
         remoteSyncedTaskLists.flatMap { taskList ->
@@ -345,10 +371,9 @@ class TaskRepository(
         // TODO deal with showDeleted, showHidden, etc.
         // TODO updatedMin could be used to filter out unchanged tasks since last sync
         //  /!\ this would impact the deleteStaleTasks logic
-        val remoteTasks = withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             tasksApi.listAll(remoteTaskListId, showHidden = true, showCompleted = true)
-        }
-        val syncedTasks = remoteTasks.map { remoteTask ->
+        }.map { remoteTask ->
             val existingLocalTask = taskDao.getByRemoteId(remoteTask.id)
             val localParentTask = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
             remoteTask.asTaskEntity(
@@ -357,17 +382,10 @@ class TaskRepository(
                 taskLocalId = existingLocalTask?.id,
             )
         }.let { syncedTasks ->
-            // need to upsert BEFORE deleting stale tasks to reason on an up to date state
-            // TODO revisiting the deleteStaleTasks query, we might be able to avoid that
-            //  so that caller can do a single upsertAll for ALL lists in a single shot
             val taskIds = taskDao.upsertAll(syncedTasks)
             // update task ids following upsertAll
             syncedTasks.zip(taskIds) { task, id -> task.copy(id = id) }
         }
-
-        taskDao.deleteStaleTasks(localTaskListId, remoteTasks.map(RemoteTask::id))
-
-        return syncedTasks
     }
 
     private suspend fun syncLocalTasks(
