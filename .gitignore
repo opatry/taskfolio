@@ -21,6 +21,12 @@ local.properties
 .idea/misc.xml
 .idea/uiDesigner.xml
 .idea/vcs.xml
+.idea/runConfigurations.xml
+.idea/AndroidProjectSystem.xml
+.idea/androidTestResultsUserPreferences.xml
+.idea/studiobot.xml
+.idea/codeInsightSettings.xml
+.idea/deviceManager.xml
 
 .kotlin/errors/errors-*.log
 .kotlin/sessions/
@@ -35,7 +41,4 @@ _ci/api-*.json
 bundletool-*.jar
 
 _site/
-.idea/AndroidProjectSystem.xml
-.idea/androidTestResultsUserPreferences.xml
-.idea/studiobot.xml
 tasks-app-desktop/bin/
