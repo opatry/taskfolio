@@ -351,8 +351,6 @@ class TaskRepository(
                 pushLocalTasks(
                     localTaskListId = taskList.id,
                     remoteTaskListId = remoteTaskListId,
-                    localParentTaskId = null,
-                    remoteParentTaskId = null,
                     localOnlyTasks,
                 )
             } ?: emptyList()
@@ -407,53 +405,44 @@ class TaskRepository(
     private suspend fun pushLocalTasks(
         localTaskListId: Long,
         remoteTaskListId: String,
-        localParentTaskId: Long?,
-        remoteParentTaskId: String?,
         tasks: List<LocalTask>
     ): List<LocalTask> {
-        val tasksToSync = computeTaskPositions(tasks.filter { it.parentTaskLocalId == localParentTaskId })
-        var previousTaskId: String? = null
-        return buildList {
+        // iterate on tasks grouped by parent, top-level tasks being processed first
+        val allTasksToSync = tasks.groupBy(LocalTask::parentTaskLocalId)
+            .toSortedMap(compareBy<Any?> { it != null }) // null comes first
+            .toMutableMap()
+        val syncedTasks = mutableMapOf<Long, LocalTask>()
+        val syncFailedTaskIds = mutableListOf<Long>()
+        allTasksToSync.onEach { (localParentTaskId, tasksToSync) ->
+            // don't try syncing sub tasks if parent task failed, it would break hierarchy on remote side
+            if (localParentTaskId in syncFailedTaskIds) return@onEach
+
+            var previousTaskId: String? = null
             tasksToSync.onEach { localTask ->
                 val remoteTask = withContext(Dispatchers.IO) {
                     try {
                         tasksApi.insert(
                             taskListId = remoteTaskListId,
                             task = localTask.asTask(),
-                            parentTaskId = remoteParentTaskId,
+                            parentTaskId = syncedTasks[localParentTaskId]?.remoteId,
                             previousTaskId = previousTaskId,
                         ).also { remoteTask ->
-                            // ensure up to date local parent after sync
-                            val localParentTask = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                            add(
-                                remoteTask.asTaskEntity(
-                                    parentListLocalId = localTaskListId,
-                                    parentTaskLocalId = localParentTask?.id,
-                                    taskLocalId = localTask.id,
-                                )
+                            syncedTasks[localTask.id] = remoteTask.asTaskEntity(
+                                parentListLocalId = localTaskListId,
+                                parentTaskLocalId = localParentTaskId,
+                                taskLocalId = localTask.id,
                             )
                         }
                     } catch (_: Exception) {
+                        syncFailedTaskIds += localTask.id
                         null
                     }
                 }
                 // FIXME if one of the task sync fails, it breaks sibling order
                 previousTaskId = remoteTask?.id
-
-                // don't try syncing sub tasks if parent task failed, it would break hierarchy on remote side
-                if (remoteTask != null) {
-                    addAll(
-                        pushLocalTasks(
-                            localTaskListId = localTaskListId,
-                            remoteTaskListId = remoteTaskListId,
-                            localParentTaskId = localTask.id,
-                            remoteParentTaskId = remoteTask.id,
-                            tasks = tasks,
-                        )
-                    )
-                }
             }
         }
+        return syncedTasks.values.toList()
     }
 
     suspend fun createTaskList(title: String): Long {
