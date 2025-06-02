@@ -33,9 +33,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 
-class TaskRepositorySyncTest {
+class TaskRepositorySyncIntegrationTest {
     @Test
-    fun `sync remote task lists`() {
+    fun `when remote task lists with tasks then sync should store data locally`() {
         val taskListsApi = InMemoryTaskListsApi("My tasks", "Other tasks")
         val tasksApi = InMemoryTasksApi("1" to listOf("First task TODO"), "2" to listOf("Another task"))
 
@@ -43,11 +43,9 @@ class TaskRepositorySyncTest {
             val initialTaskLists = repository.getTaskLists().firstOrNull()
             assertEquals(0, initialTaskLists?.size, "There shouldn't be any task list at start")
 
-            repository.sync()
+            repository.sync(cleanStaleTasks = false)
 
-            assertEquals(1, taskListsApi.requestCount)
             assertContentEquals(listOf("list"), taskListsApi.requests)
-            assertEquals(2, tasksApi.requestCount)
             assertContentEquals(listOf("list", "list"), tasksApi.requests)
 
             val taskLists = repository.getTaskLists().firstOrNull()
@@ -66,7 +64,7 @@ class TaskRepositorySyncTest {
     }
 
     @Test
-    fun `task list CRUD without network should create a local only task list`() {
+    fun `when network is OFF then created task list should be local only`() {
         val taskListsApi = InMemoryTaskListsApi()
 
         runTaskRepositoryTest(taskListsApi) { repository ->
@@ -80,10 +78,11 @@ class TaskRepositorySyncTest {
     }
 
     @Test
-    fun `local only task lists are synced at next sync`() {
-        val taskListsApi = InMemoryTaskListsApi()
+    fun `when there are local only task lists then sync should upload them`() {
+        val taskListsApi = InMemoryTaskListsApi("Task list")
+        val tasksApi = InMemoryTasksApi()
 
-        runTaskRepositoryTest(taskListsApi) { repository ->
+        runTaskRepositoryTest(taskListsApi, tasksApi) { repository ->
             // for first request, no network
             taskListsApi.isNetworkAvailable = false
             repository.createTaskList("Task list")
@@ -93,9 +92,9 @@ class TaskRepositorySyncTest {
 
             // network is considered back, sync should trigger fetch & push requests
             taskListsApi.isNetworkAvailable = true
-            repository.sync()
-            assertEquals(2, taskListsApi.requestCount)
+            repository.sync(cleanStaleTasks = false)
             assertContentEquals(listOf("list", "insert"), taskListsApi.requests)
+            assertContentEquals(listOf("list"), tasksApi.requests)
         }
     }
 }

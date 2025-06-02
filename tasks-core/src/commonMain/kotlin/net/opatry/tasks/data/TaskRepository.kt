@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.data
 
+import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -34,14 +35,14 @@ import kotlinx.datetime.Instant
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
-import net.opatry.google.tasks.model.Task
-import net.opatry.google.tasks.model.TaskList
 import net.opatry.tasks.NowProvider
-import net.opatry.tasks.data.entity.TaskEntity
-import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import java.math.BigInteger
+import net.opatry.google.tasks.model.Task as RemoteTask
+import net.opatry.google.tasks.model.TaskList as RemoteTaskList
+import net.opatry.tasks.data.entity.TaskEntity as LocalTask
+import net.opatry.tasks.data.entity.TaskListEntity as LocalTaskList
 
 enum class TaskListSorting {
     Manual,
@@ -49,8 +50,8 @@ enum class TaskListSorting {
     Title,
 }
 
-private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.Sorting): TaskListEntity {
-    return TaskListEntity(
+private fun RemoteTaskList.asTaskListEntity(localId: Long?, sorting: LocalTaskList.Sorting): LocalTaskList {
+    return LocalTaskList(
         id = localId ?: 0,
         remoteId = id,
         etag = etag,
@@ -60,13 +61,9 @@ private fun TaskList.asTaskListEntity(localId: Long?, sorting: TaskListEntity.So
     )
 }
 
-// TODO invert taskId & parentTaskId parameters
-// Do it so that:
-//  no risk of tedious conflict
-//  replace call site with name=
-//  ensure call site order is properly switch accordingly (/!\ IDEA "flip ','" doesn't do it for us)
-private fun Task.asTaskEntity(parentListLocalId: Long, taskLocalId: Long?, parentTaskLocalId: Long?): TaskEntity {
-    return TaskEntity(
+@VisibleForTesting
+internal fun RemoteTask.asTaskEntity(parentListLocalId: Long, parentTaskLocalId: Long?, taskLocalId: Long?): LocalTask {
+    return LocalTask(
         id = taskLocalId ?: 0,
         remoteId = id,
         parentListLocalId = parentListLocalId,
@@ -83,18 +80,18 @@ private fun Task.asTaskEntity(parentListLocalId: Long, taskLocalId: Long?, paren
     )
 }
 
-private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskListDataModel {
-    val parentIds = tasks.map(TaskEntity::parentTaskLocalId).toSet()
+private fun LocalTaskList.asTaskListDataModel(tasks: List<LocalTask>): TaskListDataModel {
+    val parentIds = tasks.map(LocalTask::parentTaskLocalId).toSet()
     val (sorting, sortedTasks) = when (sorting) {
-        TaskListEntity.Sorting.UserDefined -> TaskListSorting.Manual to sortTasksManualOrdering(tasks).map { (task, indent) ->
+        LocalTaskList.Sorting.UserDefined -> TaskListSorting.Manual to sortTasksManualOrdering(tasks).map { (task, indent) ->
             task.asTaskDataModel(indent, !task.isCompleted && task.id in parentIds)
         }
 
-        TaskListEntity.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
+        LocalTaskList.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
             task.asTaskDataModel(0, !task.isCompleted && task.id in parentIds)
         }
 
-        TaskListEntity.Sorting.Title -> TaskListSorting.Title to sortTasksTitleOrdering(tasks).map { task ->
+        LocalTaskList.Sorting.Title -> TaskListSorting.Title to sortTasksTitleOrdering(tasks).map { task ->
             task.asTaskDataModel(0, !task.isCompleted && task.id in parentIds)
         }
     }
@@ -115,7 +112,7 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
     )
 }
 
-private fun TaskEntity.asTaskDataModel(indent: Int, isParentTask: Boolean): TaskDataModel {
+private fun LocalTask.asTaskDataModel(indent: Int, isParentTask: Boolean): TaskDataModel {
     return TaskDataModel(
         id = id,
         title = title,
@@ -130,14 +127,15 @@ private fun TaskEntity.asTaskDataModel(indent: Int, isParentTask: Boolean): Task
     )
 }
 
-private fun TaskEntity.asTask(): Task {
-    return Task(
+@VisibleForTesting
+internal fun LocalTask.asTask(): RemoteTask {
+    return RemoteTask(
         id = remoteId ?: "",
         title = title,
         notes = notes,
         dueDate = dueDate,
         updatedDate = lastUpdateDate,
-        status = if (isCompleted) Task.Status.Completed else Task.Status.NeedsAction,
+        status = if (isCompleted) RemoteTask.Status.Completed else RemoteTask.Status.NeedsAction,
         completedDate = completionDate,
         // doc says it's a read only field, but status is not hidden when syncing local only completed tasks
         // forcing the hidden status works and makes everything more consistent (position following 099999... pattern, hidden status)
@@ -146,12 +144,12 @@ private fun TaskEntity.asTask(): Task {
     )
 }
 
-fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>> {
+fun sortTasksManualOrdering(tasks: List<LocalTask>): List<Pair<LocalTask, Int>> {
     // Step 1: Create a map of tasks by their IDs for easy lookup
-    val taskMap = tasks.associateBy(TaskEntity::id).toMutableMap()
+    val taskMap = tasks.associateBy(LocalTask::id).toMutableMap()
 
     // Step 2: Build a tree structure with parent-child relationships
-    val tree = mutableMapOf<Long, MutableList<TaskEntity>>()
+    val tree = mutableMapOf<Long, MutableList<LocalTask>>()
     tasks.forEach { task ->
         val parentId = task.parentTaskLocalId
         if (parentId == null) {
@@ -165,11 +163,11 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
 
     // Step 3: Sort the child tasks by position
     tree.forEach { (_, children) ->
-        children.sortBy(TaskEntity::position)
+        children.sortBy(LocalTask::position)
     }
 
     // Step 4: Recursive function to traverse tasks and assign indentation levels
-    fun traverseTasks(taskId: Long, level: Int, result: MutableList<Pair<TaskEntity, Int>>) {
+    fun traverseTasks(taskId: Long, level: Int, result: MutableList<Pair<LocalTask, Int>>) {
         val task = taskMap[taskId] ?: return
         result.add(task to level)
         val children = tree[taskId] ?: return
@@ -179,7 +177,7 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
     }
 
     // Step 5: Start traversal from the root tasks (tasks with no parents)
-    val sortedTasks = mutableListOf<Pair<TaskEntity, Int>>()
+    val sortedTasks = mutableListOf<Pair<LocalTask, Int>>()
     tree.keys.filter { taskMap[it]?.parentTaskRemoteId == null }.sortedBy { taskMap[it]?.position }.forEach {
         traverseTasks(it, 0, sortedTasks)
     }
@@ -187,27 +185,27 @@ fun sortTasksManualOrdering(tasks: List<TaskEntity>): List<Pair<TaskEntity, Int>
     return sortedTasks
 }
 
-fun sortTasksDateOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
-    val (completedTasks, remainingTasks) = tasks.partition(TaskEntity::isCompleted)
+fun sortTasksDateOrdering(tasks: List<LocalTask>): List<LocalTask> {
+    val (completedTasks, remainingTasks) = tasks.partition(LocalTask::isCompleted)
     val sortedRemainingTasks = remainingTasks.sortedWith(
-        compareBy<TaskEntity> { it.dueDate == null }
-            .thenBy(TaskEntity::dueDate)
+        compareBy<LocalTask> { it.dueDate == null }
+            .thenBy(LocalTask::dueDate)
     )
     return sortedRemainingTasks + sortCompletedTasks(completedTasks)
 }
 
-fun sortTasksTitleOrdering(tasks: List<TaskEntity>): List<TaskEntity> {
-    val (completedTasks, remainingTasks) = tasks.partition(TaskEntity::isCompleted)
+fun sortTasksTitleOrdering(tasks: List<LocalTask>): List<LocalTask> {
+    val (completedTasks, remainingTasks) = tasks.partition(LocalTask::isCompleted)
     val sortedRemainingTasks = remainingTasks.sortedWith(
-        compareBy<TaskEntity> { it.title.lowercase() }
-            .thenByDescending(TaskEntity::title)
+        compareBy<LocalTask> { it.title.lowercase() }
+            .thenByDescending(LocalTask::title)
     )
     return sortedRemainingTasks + sortCompletedTasks(completedTasks)
 }
 
-fun sortCompletedTasks(tasks: List<TaskEntity>): List<TaskEntity> {
-    require(tasks.all(TaskEntity::isCompleted)) { "Only completed tasks can be sorted" }
-    return tasks.sortedBy(TaskEntity::position)
+fun sortCompletedTasks(tasks: List<LocalTask>): List<LocalTask> {
+    require(tasks.all(LocalTask::isCompleted)) { "Only completed tasks can be sorted" }
+    return tasks.sortedBy(LocalTask::position)
 }
 
 /**
@@ -216,18 +214,18 @@ fun sortCompletedTasks(tasks: List<TaskEntity>): List<TaskEntity> {
  * The completed tasks are sorted last and sorted by completion date.
  * Position is reset for each list & parent task.
  */
-fun computeTaskPositions(tasks: List<TaskEntity>, newPositionStart: Int = 0): List<TaskEntity> {
+fun computeTaskPositions(tasks: List<LocalTask>, newPositionStart: Int = 0): List<LocalTask> {
     return buildList {
-        val tasksByList = tasks.groupBy(TaskEntity::parentListLocalId)
+        val tasksByList = tasks.groupBy(LocalTask::parentListLocalId)
         tasksByList.forEach { (_, tasks) ->
-            tasks.groupBy(TaskEntity::parentTaskLocalId).forEach { (_, subTasks) ->
+            tasks.groupBy(LocalTask::parentTaskLocalId).forEach { (_, subTasks) ->
                 val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
                 val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
-                val todoWithPositions = todo.mapIndexed { index, taskEntity ->
-                    taskEntity.copy(position = (newPositionStart + index).toTaskPosition())
+                val todoWithPositions = todo.mapIndexed { index, LocalTask ->
+                    LocalTask.copy(position = (newPositionStart + index).toTaskPosition())
                 }
 
-                val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(TaskEntity::position)
+                val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(LocalTask::position)
                 addAll(sortedSubTasks)
             }
         }
@@ -236,7 +234,7 @@ fun computeTaskPositions(tasks: List<TaskEntity>, newPositionStart: Int = 0): Li
 
 fun Number.toTaskPosition(): String = this.toString().padStart(20, '0')
 
-fun computeCompletedTaskPosition(task: TaskEntity): String {
+fun computeCompletedTaskPosition(task: LocalTask): String {
     val completionDate = task.completionDate
     require(task.isCompleted && completionDate != null) {
         "Task must be completed and have a completion date"
@@ -263,6 +261,9 @@ class TaskRepository(
     private val tasksApi: TasksApi,
     private val nowProvider: NowProvider,
 ) {
+    // TODO persist it
+    private var lastSync: Instant? = null
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTaskLists() = taskListDao.getAllTaskListsWithTasksAsFlow()
         .distinctUntilChanged()
@@ -272,86 +273,193 @@ class TaskRepository(
             }
         }
 
-    suspend fun sync() {
-        val taskListIds = mutableMapOf<Long, String>()
+    suspend fun cleanStaleTasks(remoteTaskLists: List<RemoteTaskList>? = null) {
+        val remoteTaskListIds = when (remoteTaskLists) {
+            null -> withContext(Dispatchers.IO) {
+                try {
+                    taskListsApi.listAll()
+                } catch (_: Exception) {
+                    null
+                }
+            }
+
+            else -> remoteTaskLists
+        }?.map(RemoteTaskList::id) ?: return
+
+        remoteTaskListIds.forEach { remoteTaskListId ->
+            val localTaskListId = taskListDao.getByRemoteId(remoteTaskListId)?.id ?: return@forEach
+            val remoteTaskIds = withContext(Dispatchers.IO) {
+                tasksApi.listAll(
+                    taskListId = remoteTaskListId,
+                    showDeleted = true,
+                    showHidden = true,
+                    showCompleted = true,
+                    updatedMin = null, // we need all content to purge local data accurately
+                )
+            }.map(RemoteTask::id)
+
+            taskDao.deleteStaleTasks(localTaskListId, remoteTaskIds)
+        }
+
+        taskListDao.deleteStaleTaskLists(remoteTaskListIds)
+    }
+
+    suspend fun sync(cleanStaleTasks: Boolean = lastSync == null) {
         val remoteTaskLists = withContext(Dispatchers.IO) {
             try {
                 taskListsApi.listAll()
             } catch (_: Exception) {
                 null
             }
+        } ?: return // most likely not internet, can't fetch data, nothing to sync
+
+        // update local lists from remote counterparts
+        val syncedTaskLists = remoteTaskLists.map { remoteTaskList ->
+            val existingLocalList = taskListDao.getByRemoteId(remoteTaskList.id)
+            remoteTaskList.asTaskListEntity(
+                localId = existingLocalList?.id,
+                sorting = existingLocalList?.sorting ?: LocalTaskList.Sorting.UserDefined
+            )
+        }.takeUnless(List<*>::isEmpty)?.let { lists ->
+            val finalListIds = taskListDao.upsertAll(lists)
+            // update list ids following upsertAll
+            lists.zip(finalListIds) { list, finalId -> list.copy(id = finalId) }
+        } ?: emptyList()
+
+        // pull remote tasks
+        syncedTaskLists.flatMap { taskList ->
+            taskList.remoteId?.let { remoteTaskListId ->
+                pullRemoteTasks(taskList.id, remoteTaskListId)
+            } ?: emptyList()
+        }.also { syncedTasks ->
+            if (syncedTasks.isNotEmpty()) {
+                taskDao.upsertAll(syncedTasks)
+            }
         }
 
-        if (remoteTaskLists == null) {
-            // most likely not internet, can't fetch data, nothing to sync
-            return
+        // push local only lists
+        val localOnlySyncedTaskLists = taskListDao.getLocalOnlyTaskLists().mapNotNull { localTaskList ->
+            pushLocalTaskList(localTaskList)
+        }.takeUnless(List<*>::isEmpty)?.let { syncedTaskLists ->
+            val finalListIds = taskListDao.upsertAll(syncedTaskLists)
+            // update list ids following upsertAll
+            syncedTaskLists.zip(finalListIds) { list, finalId -> list.copy(id = finalId) }
+        } ?: emptyList()
+
+        // push local only tasks
+        val allTaskLists = syncedTaskLists + localOnlySyncedTaskLists
+        allTaskLists.flatMap { taskList ->
+            val localOnlyTasks = taskDao.getLocalOnlyTasks(taskList.id)
+            taskList.remoteId?.let { remoteTaskListId ->
+                pushLocalTasks(
+                    localTaskListId = taskList.id,
+                    remoteTaskListId = remoteTaskListId,
+                    localOnlyTasks,
+                )
+            } ?: emptyList()
+        }.also { syncedTasks ->
+            if (syncedTasks.isNotEmpty()) {
+                taskDao.upsertAll(syncedTasks)
+            }
         }
 
-        remoteTaskLists.onEach { remoteTaskList ->
-            // FIXME suboptimal
-            //  - check stale ones in DB and remove them if not only local
-            //  - check no update, and ignore/filter
-            //  - check new ones
-            //  - etc.
-            val existingEntity = taskListDao.getByRemoteId(remoteTaskList.id)
-            val updatedEntity = remoteTaskList.asTaskListEntity(existingEntity?.id, existingEntity?.sorting ?: TaskListEntity.Sorting.UserDefined)
-            val finalLocalId = taskListDao.upsert(updatedEntity)
-            taskListIds[finalLocalId] = remoteTaskList.id
+        lastSync = nowProvider.now()
+
+        if (cleanStaleTasks) {
+            cleanStaleTasks(remoteTaskLists)
         }
-        taskListDao.deleteStaleTaskLists(remoteTaskLists.map(TaskList::id))
-        taskListDao.getLocalOnlyTaskLists().onEach { localTaskList ->
-            val remoteTaskList = withContext(Dispatchers.IO) {
-                try {
-                    taskListsApi.insert(TaskList(localTaskList.title))
-                } catch (_: Exception) {
-                    null
-                }
+    }
+
+    private suspend fun pushLocalTaskList(localTaskList: LocalTaskList): LocalTaskList? {
+        return withContext(Dispatchers.IO) {
+            try {
+                taskListsApi.insert(
+                    RemoteTaskList(
+                        title = localTaskList.title,
+                        updatedDate = localTaskList.lastUpdateDate
+                    )
+                )
+            } catch (_: Exception) {
+                null
             }
-            if (remoteTaskList != null) {
-                taskListDao.upsert(remoteTaskList.asTaskListEntity(localTaskList.id, localTaskList.sorting))
-            }
+        }?.asTaskListEntity(localTaskList.id, localTaskList.sorting)
+    }
+
+    private suspend fun pullRemoteTasks(localTaskListId: Long, remoteTaskListId: String): List<LocalTask> {
+        return withContext(Dispatchers.IO) {
+            tasksApi.listAll(
+                taskListId = remoteTaskListId,
+                showDeleted = false,
+                showHidden = true,
+                showCompleted = true,
+                updatedMin = lastSync,
+            )
+        }.map { remoteTask ->
+            val existingLocalTask = taskDao.getByRemoteId(remoteTask.id)
+            val localParentTask = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
+            remoteTask.asTaskEntity(
+                parentListLocalId = localTaskListId,
+                parentTaskLocalId = localParentTask?.id,
+                taskLocalId = existingLocalTask?.id,
+            )
         }
-        taskListIds.forEach { (localListId, remoteListId) ->
-            // TODO deal with showDeleted, showHidden, etc.
-            // TODO updatedMin could be used to filter out unchanged tasks since last sync
-            //  /!\ this would impact the deleteStaleTasks logic
-            val remoteTasks = withContext(Dispatchers.IO) {
-                tasksApi.listAll(remoteListId, showHidden = true, showCompleted = true)
-            }
-            remoteTasks.onEach { remoteTask ->
-                val existingEntity = taskDao.getByRemoteId(remoteTask.id)
-                val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                taskDao.upsert(remoteTask.asTaskEntity(localListId, existingEntity?.id, parentTaskEntity?.id))
-            }
-            taskDao.deleteStaleTasks(localListId, remoteTasks.map(Task::id))
-            taskDao.getLocalOnlyTasks(localListId).onEach { localTask ->
+    }
+
+    private suspend fun pushLocalTasks(
+        localTaskListId: Long,
+        remoteTaskListId: String,
+        tasks: List<LocalTask>
+    ): List<LocalTask> {
+        // iterate on tasks grouped by parent, top-level tasks being processed first
+        val allTasksToSync = tasks.groupBy(LocalTask::parentTaskLocalId)
+            .toSortedMap(compareBy<Any?> { it != null }) // null comes first
+            .toMutableMap()
+        val syncedTasks = mutableMapOf<Long, LocalTask>()
+        val syncFailedTaskIds = mutableListOf<Long>()
+        allTasksToSync.onEach { (localParentTaskId, tasksToSync) ->
+            // don't try syncing sub tasks if parent task failed, it would break hierarchy on remote side
+            if (localParentTaskId in syncFailedTaskIds) return@onEach
+
+            var previousTaskId: String? = null
+            tasksToSync.onEach { localTask ->
                 val remoteTask = withContext(Dispatchers.IO) {
                     try {
-                        tasksApi.insert(remoteListId, localTask.asTask())
+                        tasksApi.insert(
+                            taskListId = remoteTaskListId,
+                            task = localTask.asTask(),
+                            parentTaskId = syncedTasks[localParentTaskId]?.remoteId,
+                            previousTaskId = previousTaskId,
+                        ).also { remoteTask ->
+                            syncedTasks[localTask.id] = remoteTask.asTaskEntity(
+                                parentListLocalId = localTaskListId,
+                                parentTaskLocalId = localParentTaskId,
+                                taskLocalId = localTask.id,
+                            )
+                        }
                     } catch (_: Exception) {
+                        syncFailedTaskIds += localTask.id
                         null
                     }
                 }
-                if (remoteTask != null) {
-                    val parentTaskEntity = remoteTask.parent?.let { taskDao.getByRemoteId(it) }
-                    taskDao.upsert(remoteTask.asTaskEntity(localListId, localTask.id, parentTaskEntity?.id))
-                }
+                // FIXME if one of the task sync fails, it breaks sibling order
+                previousTaskId = remoteTask?.id
             }
         }
+        return syncedTasks.values.toList()
     }
 
     suspend fun createTaskList(title: String): Long {
         val now = nowProvider.now()
-        val taskListId = taskListDao.insert(TaskListEntity(title = title, lastUpdateDate = now))
+        val taskListId = taskListDao.insert(LocalTaskList(title = title, lastUpdateDate = now))
         val taskList = withContext(Dispatchers.IO) {
             try {
-                taskListsApi.insert(TaskList(title = title, updatedDate = now))
+                taskListsApi.insert(RemoteTaskList(title = title, updatedDate = now))
             } catch (_: Exception) {
                 null
             }
         }
         if (taskList != null) {
-            taskListDao.upsert(taskList.asTaskListEntity(taskListId, TaskListEntity.Sorting.UserDefined))
+            taskListDao.upsert(taskList.asTaskListEntity(taskListId, LocalTaskList.Sorting.UserDefined))
         }
         return taskListId
     }
@@ -384,7 +492,7 @@ class TaskRepository(
                 try {
                     taskListsApi.update(
                         taskListEntity.remoteId,
-                        TaskList(
+                        RemoteTaskList(
                             id = taskListEntity.remoteId,
                             title = taskListEntity.title,
                             updatedDate = taskListEntity.lastUpdateDate
@@ -404,7 +512,7 @@ class TaskRepository(
         val taskList = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         // TODO local update date task list
         val completedTasks = taskDao.getCompletedTasks(taskListId)
-        taskDao.deleteTasks(completedTasks.map(TaskEntity::id))
+        taskDao.deleteTasks(completedTasks.map(LocalTask::id))
         if (taskList.remoteId != null) {
             coroutineScope {
                 completedTasks.mapNotNull { task ->
@@ -424,9 +532,9 @@ class TaskRepository(
 
     suspend fun sortTasksBy(taskListId: Long, sorting: TaskListSorting) {
         val dbSorting = when (sorting) {
-            TaskListSorting.Manual -> TaskListEntity.Sorting.UserDefined
-            TaskListSorting.DueDate -> TaskListEntity.Sorting.DueDate
-            TaskListSorting.Title -> TaskListEntity.Sorting.Title
+            TaskListSorting.Manual -> LocalTaskList.Sorting.UserDefined
+            TaskListSorting.DueDate -> LocalTaskList.Sorting.DueDate
+            TaskListSorting.Title -> LocalTaskList.Sorting.Title
         }
         // no update date change, it's a local only information unrelated to remote tasks
         taskListDao.sortTasksBy(taskListId, dbSorting)
@@ -439,7 +547,7 @@ class TaskRepository(
         val firstPosition = 0.toTaskPosition()
         val currentTasks = taskDao.getTasksFromPositionOnward(taskListId, parentTaskId, firstPosition)
             .toMutableList()
-        val taskEntity = TaskEntity(
+        val taskEntity = LocalTask(
             parentListLocalId = taskListId,
             parentTaskLocalId = parentTaskId,
             title = title,
@@ -465,7 +573,13 @@ class TaskRepository(
                 }
             }
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(taskListId, taskId, parentTaskId))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = taskListId,
+                        parentTaskLocalId = parentTaskId,
+                        taskLocalId = taskId,
+                    )
+                )
             }
         }
         return taskId
@@ -498,7 +612,7 @@ class TaskRepository(
         // TODO pending deletion
     }
 
-    private suspend fun applyTaskUpdate(taskId: Long, updateLogic: suspend (TaskEntity, Instant) -> TaskEntity?) {
+    private suspend fun applyTaskUpdate(taskId: Long, updateLogic: suspend (LocalTask, Instant) -> LocalTask?) {
         val now = nowProvider.now()
         val taskEntity = requireNotNull(taskDao.getById(taskId)) { "Invalid task id $taskId" }
         val updatedTaskEntity = updateLogic(taskEntity, now) ?: return
@@ -520,7 +634,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId, updatedTaskEntity.parentTaskLocalId))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        parentTaskLocalId = updatedTaskEntity.parentTaskLocalId,
+                        taskLocalId = taskId,
+                    )
+                )
             }
         }
     }
@@ -528,9 +648,10 @@ class TaskRepository(
     suspend fun toggleTaskCompletionState(taskId: Long) {
         applyTaskUpdate(taskId) { taskEntity, updateTime ->
             // TODO should update position when changed/restored to not completed, what should it be?
+            val isNowCompleted = !taskEntity.isCompleted
             taskEntity.copy(
-                isCompleted = !taskEntity.isCompleted,
-                completionDate = if (taskEntity.isCompleted) null else updateTime,
+                isCompleted = isNowCompleted,
+                completionDate = if (isNowCompleted) updateTime else null,
                 lastUpdateDate = updateTime,
             )
         }
@@ -625,7 +746,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, updatedTaskEntity.id, parentTaskEntity.id))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        parentTaskLocalId = parentTaskEntity.id,
+                        taskLocalId = updatedTaskEntity.id,
+                    )
+                )
             }
         }
     }
@@ -677,7 +804,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, updatedTaskEntity.id, null))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        parentTaskLocalId = null,
+                        taskLocalId = updatedTaskEntity.id,
+                    )
+                )
             }
         }
     }
@@ -715,7 +848,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(updatedTaskEntity.parentListLocalId, taskId, null))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = updatedTaskEntity.parentListLocalId,
+                        parentTaskLocalId = null,
+                        taskLocalId = taskId,
+                    )
+                )
             }
         }
     }
@@ -768,7 +907,13 @@ class TaskRepository(
             }
 
             if (task != null) {
-                taskDao.upsert(task.asTaskEntity(destinationListId, taskId, null))
+                taskDao.upsert(
+                    task.asTaskEntity(
+                        parentListLocalId = destinationListId,
+                        parentTaskLocalId = null,
+                        taskLocalId = taskId,
+                    )
+                )
             }
         }
     }
