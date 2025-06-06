@@ -222,7 +222,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "12.2.0",
+            "artifactVersion": "12.2.1",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "licenses": [
