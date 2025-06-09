@@ -23,20 +23,23 @@
 package net.opatry.tasks.app.test.screenshot
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.test.AndroidComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.runAndroidComposeUiTest
+import androidx.compose.ui.test.waitUntilAtLeastOneExists
+import androidx.compose.ui.test.waitUntilExactlyOneExists
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import kotlinx.coroutines.test.runTest
 import net.opatry.tasks.app.MainActivity
 import net.opatry.tasks.app.R
 import net.opatry.tasks.app.test.ScreenshotOnFailureRule
@@ -51,9 +54,6 @@ import java.io.File
 
 @OptIn(ExperimentalTestApi::class)
 class StoreScreenshotTest {
-
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
     val screenshotOnFailureRule = ScreenshotOnFailureRule()
@@ -72,128 +72,128 @@ class StoreScreenshotTest {
             .takeScreenshot(outputFile)
     }
 
-    private fun pressBack() {
-        // FIXME how to "press back" with ComposeTestRule (without Espresso)
-        //  UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack()
+    private fun AndroidComposeUiTest<*>.pressBack() {
+        // FIXME how to "press back" with `runAndroidComposeUiTest` (without Espresso)
+        //  `UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack()`
         //  UI Automator doesn't work for navigation (but does for IME dismiss)
-        composeTestRule.activity.onBackPressed()
+        activity?.onBackPressed()
     }
 
     private fun dismissKeyboard() {
         UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).pressBack()
     }
 
-    private fun switchToNightMode(nightMode: Int) {
-        composeTestRule.activity.runOnUiThread {
-            composeTestRule.activity.delegate.localNightMode = nightMode
+    private fun <A : AppCompatActivity> AndroidComposeUiTest<A>.switchToNightMode(nightMode: Int) {
+        activity?.runOnUiThread {
+            activity?.delegate?.localNightMode = nightMode
+            activity?.recreate()
         }
-        composeTestRule.activityRule.scenario.recreate()
-        composeTestRule.waitForIdle()
+        waitForIdle()
     }
 
     /**
      * This test should be executed with the `demo` flavor which stub content for store screenshots.
      */
     @Test
-    fun storeScreenshotSequence() = runTest {
-        val initialNightMode = composeTestRule.activity.delegate.localNightMode
+    fun storeScreenshotSequence() = runAndroidComposeUiTest<MainActivity> {
+        val initialNightMode = activity?.delegate?.localNightMode ?: AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
 
-        composeTestRule.waitForIdle()
+        waitForIdle()
         takeScreenshot("initial_screen")
 
         switchToNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val defaultTaskTitle = targetContext.getString(R.string.demo_task_list_default)
-        composeTestRule.waitUntilAtLeastOneExists(hasText(defaultTaskTitle))
-        composeTestRule.onNodeWithText(defaultTaskTitle)
+        waitUntilAtLeastOneExists(hasText(defaultTaskTitle))
+        onNodeWithText(defaultTaskTitle)
             .assertIsDisplayed()
 
         val homeTaskTitle = targetContext.getString(R.string.demo_task_list_home)
-        composeTestRule.onNodeWithText(homeTaskTitle)
+        onNodeWithText(homeTaskTitle)
             .assertIsDisplayed()
 
         val groceriesTaskTitle = targetContext.getString(R.string.demo_task_list_groceries)
-        composeTestRule.onNodeWithText(groceriesTaskTitle)
+        onNodeWithText(groceriesTaskTitle)
             .assertIsDisplayed()
 
         val workTaskTitle = targetContext.getString(R.string.demo_task_list_work)
-        composeTestRule.onNodeWithText(workTaskTitle)
+        onNodeWithText(workTaskTitle)
             .assertIsDisplayed()
 
         takeScreenshot("task_lists_light")
 
-        composeTestRule.onNodeWithText(defaultTaskTitle)
+        onNodeWithText(defaultTaskTitle)
             .assertIsDisplayed()
             .performClick()
         val defaultTask1Title = targetContext.getString(R.string.demo_task_list_default_task1)
-        composeTestRule.waitUntilAtLeastOneExists(hasText(defaultTask1Title))
+        waitUntilAtLeastOneExists(hasText(defaultTask1Title))
         // FIXME unreliable, need to wait for something else?
         takeScreenshot("my_tasks_light")
 
-        composeTestRule.waitUntilExactlyOneExists(hasTestTag(ADD_TASK_FAB))
-        composeTestRule.onNodeWithTag(ADD_TASK_FAB)
+        waitUntilExactlyOneExists(hasTestTag(ADD_TASK_FAB))
+        onNodeWithTag(ADD_TASK_FAB)
             .assertIsDisplayed()
             .performClick()
-        composeTestRule.waitUntilExactlyOneExists(isDialog())
+        waitUntilExactlyOneExists(isDialog())
 
-        composeTestRule.waitUntilExactlyOneExists(hasTestTag(TITLE_FIELD))
-        composeTestRule.onNodeWithTag(TITLE_FIELD)
+        waitUntilExactlyOneExists(hasTestTag(TITLE_FIELD))
+        onNodeWithTag(TITLE_FIELD)
             .performTextInput("Wash the car 🧽")
-        composeTestRule.waitForIdle()
+        waitForIdle()
         dismissKeyboard()
 
-        composeTestRule.waitUntilExactlyOneExists(hasTestTag(NOTES_FIELD))
-        composeTestRule.onNodeWithTag(NOTES_FIELD)
+        waitUntilExactlyOneExists(hasTestTag(NOTES_FIELD))
+        onNodeWithTag(NOTES_FIELD)
             .performTextInput("Keys are in the drawer")
 
         dismissKeyboard()
 
-        composeTestRule.waitForIdle()
+        waitForIdle()
         takeScreenshot("add_task_light")
 
         // FIXME how to dismiss bottom sheet without clicking on the button? (press back somehow? tap outside?)
         // FIXME how to use Res strings from :tasks-app-shared?
-        composeTestRule.onNodeWithText("Cancel")
+        onNodeWithText("Cancel")
             .assertIsDisplayed()
             .performClick()
         // go back
         pressBack()
-        composeTestRule.waitUntilAtLeastOneExists(hasText(groceriesTaskTitle))
+        waitUntilAtLeastOneExists(hasText(groceriesTaskTitle))
 
-        composeTestRule.onNodeWithText(groceriesTaskTitle)
+        onNodeWithText(groceriesTaskTitle)
             .assertIsDisplayed()
             .performClick()
         val groceriesTask1Title = targetContext.getString(R.string.demo_task_list_groceries_task1)
-        composeTestRule.waitUntilAtLeastOneExists(hasText(groceriesTask1Title))
-        composeTestRule.onNodeWithTag(COMPLETED_TASKS_TOGGLE)
+        waitUntilAtLeastOneExists(hasText(groceriesTask1Title))
+        onNodeWithTag(COMPLETED_TASKS_TOGGLE)
             .assertIsDisplayed()
             .performClick()
         val groceriesTask3Title = targetContext.getString(R.string.demo_task_list_groceries_task3)
-        composeTestRule.waitUntilAtLeastOneExists(hasText(groceriesTask3Title))
+        waitUntilAtLeastOneExists(hasText(groceriesTask3Title))
         takeScreenshot("groceries_light")
 
         pressBack()
-        composeTestRule.waitUntilAtLeastOneExists(hasText(workTaskTitle))
+        waitUntilAtLeastOneExists(hasText(workTaskTitle))
 
-        composeTestRule.onNodeWithText(workTaskTitle)
+        onNodeWithText(workTaskTitle)
             .assertIsDisplayed()
             .performClick()
         val workTask1Title = targetContext.getString(R.string.demo_task_list_work_task1)
-        composeTestRule.waitUntilAtLeastOneExists(hasText(workTask1Title))
+        waitUntilAtLeastOneExists(hasText(workTask1Title))
         takeScreenshot("work_light")
 
         pressBack()
-        composeTestRule.waitUntilAtLeastOneExists(hasText(homeTaskTitle))
+        waitUntilAtLeastOneExists(hasText(homeTaskTitle))
 
-        composeTestRule.onNodeWithText(homeTaskTitle)
+        onNodeWithText(homeTaskTitle)
             .assertIsDisplayed()
             .performClick()
         val homeTask1Title = targetContext.getString(R.string.demo_task_list_home_task1)
-        composeTestRule.waitUntilAtLeastOneExists(hasText(homeTask1Title))
+        waitUntilAtLeastOneExists(hasText(homeTask1Title))
         takeScreenshot("home_light")
 
         switchToNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        composeTestRule.waitUntilAtLeastOneExists(hasText(homeTask1Title))
+        waitUntilAtLeastOneExists(hasText(homeTask1Title))
         takeScreenshot("home_dark")
         switchToNightMode(initialNightMode)
     }
