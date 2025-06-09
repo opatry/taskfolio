@@ -18,9 +18,9 @@ compose-lifecycle = "2.9.0"
 compose-navigation = "2.9.0-beta02"
 room = "2.7.1"
 sqlite = "2.5.1"
-koin = "4.0.4"
+koin = "4.1.0"
 coil = "3.2.0"
-about-libraries = "12.2.0"
+about-libraries = "12.2.1"
 mockito = "5.18.0"
 kover = "0.9.1"
 androidx-test-runner = "1.6.2"
@@ -79,7 +79,7 @@ compose-m3-adaptive-navigation = { module = "org.jetbrains.compose.material3.ada
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.14.0" }

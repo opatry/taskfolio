@@ -92,7 +92,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.0",
+            "artifactVersion": "1.7.1",
             "description": "Provides backwards-compatible implementations of UI-related Android SDK functionality, including dark mode and Material theming.",
             "name": "AppCompat",
             "licenses": [
@@ -109,7 +109,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.7.0",
+            "artifactVersion": "1.7.1",
             "description": "Provides backward-compatible implementations of resource-related Android SDKfunctionality, including color state list theming.",
             "name": "AppCompat Resources",
             "licenses": [
@@ -844,7 +844,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.8.5",
+            "artifactVersion": "1.8.8",
             "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
             "name": "fragment",
             "licenses": [
@@ -861,7 +861,7 @@
                     "name": "The Android Open Source Project"
                 }
             ],
-            "artifactVersion": "1.8.5",
+            "artifactVersion": "1.8.8",
             "description": "Kotlin extensions for 'fragment' artifact",
             "name": "Fragment Kotlin Extensions",
             "licenses": [
@@ -1827,7 +1827,7 @@
                     "name": "Mike Penz"
                 }
             ],
-            "artifactVersion": "12.2.0",
+            "artifactVersion": "12.2.1",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "name": "AboutLibraries Core Library",
             "licenses": [
@@ -1939,7 +1939,7 @@
                     "name": "Arnaud Giuliani"
                 }
             ],
-            "artifactVersion": "4.0.4",
+            "artifactVersion": "4.1.0",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "name": "Koin",
             "licenses": [
@@ -2220,20 +2220,6 @@
             "artifactVersion": "1",
             "description": "The javax.inject API",
             "name": "javax.inject",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
-            "uniqueId": "org.jetbrains.androidx.core:core-bundle",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.0.1",
-            "description": "Provides Bundle in Kotlin Multiplatform projects",
-            "name": "androidx.core:core-bundle",
             "licenses": [
                 "Apache-2.0"
             ]
