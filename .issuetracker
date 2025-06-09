@@ -2,6 +2,6 @@
 #
 # (note that '\' need to be escaped).
 
-[issuetracker "opatry/tasks-app GitHub Rule"]
+[issuetracker "opatry/taskfolio GitHub Rule"]
   regex = "#(\\d+)"
-  url = "https://github.com/opatry/tasks-app/issues/$1"
+  url = "https://github.com/opatry/taskfolio/issues/$1"
