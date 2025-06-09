@@ -24,13 +24,13 @@ package net.opatry.tasks.app.di
 
 import net.opatry.logging.Logger
 import net.opatry.logging.PrintLogger
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val loggingModule = module {
     // TODO replace with a more sophisticated logger (standard & KMP compatible ideally)
     //  On Android, should also log in Firebase Crashlytics
     //  see #118
-    single<Logger> {
-        PrintLogger(get())
-    }
+    singleOf(::PrintLogger) bind Logger::class
 }

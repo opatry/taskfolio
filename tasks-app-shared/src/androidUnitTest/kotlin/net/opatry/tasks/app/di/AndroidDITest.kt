@@ -29,6 +29,7 @@ import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.logging.Logger
+import net.opatry.logging.PrintLogger
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.app.presentation.TaskListsViewModel
@@ -72,7 +73,11 @@ class AndroidDITest {
 
     @Test
     fun `verify logging module`() {
-        loggingModule.verify()
+        loggingModule.verify(
+            injections = injectedParameters(
+                definition<PrintLogger>(NowProvider::class),
+            )
+        )
     }
 
     @Test
