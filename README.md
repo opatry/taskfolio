@@ -80,7 +80,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
   - iOS & Web are not planned any time soon (contribution are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
-- [Room](https://developer.android.com/training/data-storage/room) for local persistance
+- [Room](https://developer.android.com/training/data-storage/room) for local persistence
 - [Koin](https://insert-koin.io/) for dependency injection
 - [Material Design 3 Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose), [Multiplatform (aka CMP)](https://www.jetbrains.com/compose-multiplatform/)
