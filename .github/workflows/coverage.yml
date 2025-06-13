@@ -14,22 +14,18 @@ jobs:
 
     # Avoid using --parallel for coverage reporting, seems unreliable when doing it
     - name: 📊 Check coverage
-      if: github.event_name == 'pull_request'
       run: |
         ./gradlew --no-daemon --console=plain \
-          koverLogCoverage koverVerifyCoverage
+          koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
 
-    # Avoid using --parallel for coverage reporting, seems unreliable when doing it
-    - name: 📊 Check coverage & update badge
+    - name: 🏷️ Update badge
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         sudo apt -y install libxml2-utils
-        ./gradlew --no-daemon  --console=plain \
-          koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
         ./_ci/replace_coverage_badge.sh build/reports/kover/reportCoverage.xml
         if [[ $(git status --porcelain README.md) ]]; then
           git config user.name 'Github Actions'
-          git config user.email 'opatry-tasks-app@users.noreply.github.com'
+          git config user.email 'opatry-h2go-app@users.noreply.github.com'
           git add README.md
           git commit -m "Update coverage badge in README.md"
           git push
