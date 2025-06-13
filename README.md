@@ -1,5 +1,5 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-rgb%280%2C107%2C88%29)](https://github.com/opatry/taskfolio/blob/main/LICENSE)
-[![Build & Test](https://github.com/opatry/tasks-app/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/tasks-app/actions/workflows/build.yml)
+[![Build & Test](https://github.com/opatry/taskfolio/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/taskfolio/actions/workflows/build.yml)
 [![📲 E2E Tests](https://github.com/opatry/taskfolio/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/opatry/taskfolio/actions/workflows/e2e-tests.yml)
 ![Coverage 93%](https://img.shields.io/badge/Coverage-93%25-rgb%28154%2C205%2C50%29)
 [![Google Play Release](https://img.shields.io/github/v/release/opatry/taskfolio?sort=semver&style=flat&logo=googleplay&label=Release&color=rgb(191%2C238%2C222))](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
