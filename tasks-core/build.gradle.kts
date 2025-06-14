@@ -42,6 +42,7 @@ kotlin {
             implementation(projects.google.tasks)
 
             implementation(libs.androidx.room.common)
+            implementation(libs.androidx.room.runtime)
         }
 
         commonTest.dependencies {
@@ -51,6 +52,7 @@ kotlin {
         jvmTest.dependencies {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.androidx.room.testing)
+            implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
         }
     }
