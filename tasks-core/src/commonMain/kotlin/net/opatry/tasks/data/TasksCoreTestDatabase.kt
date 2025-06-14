@@ -22,38 +22,22 @@
 
 package net.opatry.tasks.data
 
-import androidx.room.AutoMigration
-import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
-import net.opatry.tasks.data.entity.UserEntity
 
-@ConstructedBy(TasksAppDatabaseConstructor::class)
 @TypeConverters(CoreConverters::class)
 @Database(
     entities = [
-        TaskListEntity::class,
         TaskEntity::class,
-        UserEntity::class,
+        TaskListEntity::class,
     ],
-    version = 3,
-    autoMigrations = [
-        AutoMigration(from = 1, to = 2), // add user table
-        AutoMigration(from = 2, to = 3), // add sorting column in task_list table
-    ],
+    version = 1,
+    exportSchema = false,
 )
-abstract class TasksAppDatabase : RoomDatabase() {
+abstract class TasksCoreTestDatabase : RoomDatabase() {
     abstract fun getTaskListDao(): TaskListDao
     abstract fun getTaskDao(): TaskDao
-    abstract fun getUserDao(): UserDao
-}
-
-// The Room compiler generates the `actual` implementations.
-@Suppress("NO_ACTUAL_FOR_EXPECT", "EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-expect object TasksAppDatabaseConstructor : RoomDatabaseConstructor<TasksAppDatabase> {
-    override fun initialize(): TasksAppDatabase
 }
