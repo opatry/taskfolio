@@ -22,13 +22,13 @@
 
 package net.opatry.tasks.data
 
+import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
-import net.opatry.tasks.data.util.inMemoryTasksAppDatabaseBuilder
 import org.junit.After
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -42,15 +42,14 @@ class TaskDaoTest {
     private val now: Instant
         get() = Clock.System.now()
 
-    private lateinit var db: TasksAppDatabase
+    private lateinit var db: TasksCoreTestDatabase
     private lateinit var taskDao: TaskDao
 
     @BeforeTest
     fun createDb() {
-        db = inMemoryTasksAppDatabaseBuilder()
+        db = Room.inMemoryDatabaseBuilder<TasksCoreTestDatabase>()
             .setDriver(BundledSQLiteDriver())
             .build()
-        taskDao = db.getTaskDao()
         taskDao = db.getTaskDao()
     }
 

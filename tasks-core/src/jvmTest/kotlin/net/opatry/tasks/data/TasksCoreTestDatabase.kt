@@ -20,42 +20,24 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks.data
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.ksp)
-}
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import net.opatry.tasks.data.entity.TaskEntity
+import net.opatry.tasks.data.entity.TaskListEntity
 
-kotlin {
-    jvm()
-
-    jvmToolchain(17)
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-
-            api(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-            implementation(projects.google.oauth)
-            implementation(projects.google.tasks)
-
-            implementation(libs.androidx.room.common)
-        }
-
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-        }
-
-        jvmTest.dependencies {
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.androidx.room.testing)
-            implementation(libs.androidx.sqlite.bundled)
-        }
-    }
-}
-
-dependencies {
-    add("kspJvm", libs.androidx.room.compiler)
+@TypeConverters(CoreConverters::class)
+@Database(
+    entities = [
+        TaskEntity::class,
+        TaskListEntity::class,
+    ],
+    version = 1,
+    exportSchema = false,
+)
+abstract class TasksCoreTestDatabase : RoomDatabase() {
+    abstract fun getTaskListDao(): TaskListDao
+    abstract fun getTaskDao(): TaskDao
 }
