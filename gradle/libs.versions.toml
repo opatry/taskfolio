@@ -93,6 +93,7 @@ androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
+androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version = "2.3.0" }
 
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 
