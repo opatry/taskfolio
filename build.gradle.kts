@@ -85,7 +85,7 @@ val koverExcludedClasses = listOf(
     "net.opatry.tasks.app.ui.tooling.*",
     "net.opatry.tasks.data.*Dao",
     "net.opatry.tasks.data.*Dao\$DefaultImpls",
-    "net.opatry.tasks.data.Converters",
+    "net.opatry.tasks.data.CoreConverters",
     "net.opatry.tasks.data.entity.*",
     "net.opatry.tasks.data.model.*",
     "net.opatry.tasks.data.TasksAppDatabase*",
