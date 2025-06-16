@@ -25,14 +25,11 @@ package net.opatry.tasks.app.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.ktor.client.plugins.ResponseException
-import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.profile.UserInfoApi
-import net.opatry.google.profile.UserInfoErrorResponse
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.logging.Logger
 import net.opatry.tasks.CredentialsStorage
@@ -79,9 +76,9 @@ class UserViewModel(
         return try {
             userInfoApi.getUserInfo()
         } catch (e: ResponseException) {
-            Json.decodeFromString<UserInfoErrorResponse>(e.response.bodyAsText()).also { response ->
-                logger.logError("Error while fetching user info: ${response.error.message}", e)
-            }
+            // don't assume we can read response accurately (see https://github.com/opatry/taskfolio/issues/262)
+            // API is poorly documented and 401 & 400 do not return the same data for sure
+            logger.logError("Web Service error while fetching user info", e)
             null
         } catch (e: Exception) {
             // most likely no network
