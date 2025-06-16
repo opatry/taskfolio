@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.presentation
 
+import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -41,9 +42,12 @@ import net.opatry.test.MainDispatcherRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
@@ -168,12 +172,72 @@ class UserViewModelTest {
     }
 
     @Test
+    fun `signIn stores token but updates state to Unsigned on WS failure when fetching user info`() = runTest {
+        given(nowProvider.now())
+            .willReturn(Instant.fromEpochMilliseconds(42L))
+        val exception = mock<ResponseException>()
+        given(userInfoApi.getUserInfo()).willThrow(exception)
+
+        viewModel.signIn(
+            GoogleAuthenticator.OAuthToken(
+                accessToken = "accessToken",
+                expiresIn = 10L,
+                idToken = "idToken",
+                refreshToken = "refreshToken",
+                scope = "scope",
+                tokenType = GoogleAuthenticator.OAuthToken.TokenType.Bearer,
+            )
+        )
+        advanceUntilIdle()
+
+        verify(credentialsStorage).store(
+            TokenCache(
+                accessToken = "accessToken",
+                refreshToken = "refreshToken",
+                expirationTimeMillis = 42L + 10L.seconds.inWholeMilliseconds,
+            )
+        )
+        verify(logger).logError("Web Service error while fetching user info", exception)
+        assertEquals(UserState.Unsigned, viewModel.state.value)
+    }
+
+    @Test
+    fun `signIn stores token but updates state to Unsigned on unknown failure when fetching user info`() = runTest {
+        given(nowProvider.now())
+            .willReturn(Instant.fromEpochMilliseconds(42L))
+        val exception = mock<RuntimeException>()
+        given(userInfoApi.getUserInfo()).willThrow(exception)
+
+        viewModel.signIn(
+            GoogleAuthenticator.OAuthToken(
+                accessToken = "accessToken",
+                expiresIn = 10L,
+                idToken = "idToken",
+                refreshToken = "refreshToken",
+                scope = "scope",
+                tokenType = GoogleAuthenticator.OAuthToken.TokenType.Bearer,
+            )
+        )
+        advanceUntilIdle()
+
+        verify(credentialsStorage).store(
+            TokenCache(
+                accessToken = "accessToken",
+                refreshToken = "refreshToken",
+                expirationTimeMillis = 42L + 10L.seconds.inWholeMilliseconds,
+            )
+        )
+        verify(logger).logError("Error while fetching user info", exception)
+        assertEquals(UserState.Unsigned, viewModel.state.value)
+    }
+
+    @Test
     fun `signOut clears token clears signed in status and updates state to Unsigned`() = runTest {
         viewModel.signOut()
         advanceUntilIdle()
 
-        then(credentialsStorage).should().store(TokenCache())
-        then(userDao).should().clearAllSignedInStatus()
+        verify(credentialsStorage).store(TokenCache())
+        verify(userDao).clearAllSignedInStatus()
         assertEquals(UserState.Unsigned, viewModel.state.value)
     }
 
