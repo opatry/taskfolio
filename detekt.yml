@@ -1,0 +1,84 @@
+processors:
+  active: true
+
+naming:
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']
+    functionPattern: '^[a-z][A-Za-z0-9]*$'
+  MatchingDeclarationName:
+    active: false
+    excludes: ['**/ui/**']
+    ignoreAnnotated: ['Composable', 'VisibleForTesting']
+  FunctionMaxLength:
+    active: true
+    ignoreAnnotated: ['Test', 'ParameterizedTest']
+
+style:
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated: ['Preview', 'PreviewLightDark']
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+    excludePackageStatements: true
+    excludeImportStatements: true
+    excludeCommentStatements: true
+    ignoreAnnotated: ['Test']
+  ClassOrdering:
+    active: false
+  UseIfInsteadOfWhen:
+    active: false
+
+formatting:
+  NoEmptyFirstLineInClassBody:
+    active: false
+  TrailingCommaOnCallSite:
+    active: false
+    useTrailingCommaOnCallSite: true
+  TrailingCommaOnDeclarationSite:
+    active: false
+    useTrailingCommaOnDeclarationSite: true
+  FunctionSignature:
+    active: false
+    forceMultilineWhenParameterCountGreaterOrEqualThan: 3
+  FinalNewline:
+    active: true
+  MultilineExpressionWrapping:
+    active: false
+  PropertyName:
+    active: false
+  FunctionName:
+    active: false
+  Filename:
+    active: false
+  StringTemplateIndent:
+    active: false
+
+comments:
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+  UndocumentedPublicProperty:
+    active: false
+  AbsentOrWrongFileLicense:
+    active: true
+    licenseTemplateFile: 'config/detekt/license.template'
+    licenseTemplateIsRegex: false
+
+complexity:
+  LongMethod:
+    active: true
+    ignoreAnnotated: ['Composable', 'Test']
+    threshold: 60
+  StringLiteralDuplication:
+    active: false
+
+performance:
+  SpreadOperator:
+    active: false
+
+potential-bugs:
+  MissingPackageDeclaration:
+    active: false

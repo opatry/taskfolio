@@ -1,0 +1,24 @@
+on:
+  workflow_call:
+
+jobs:
+  code-style:
+    name: 👔 Code style
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: 🕵🏻‍♂️ Detekt
+      run: |
+        ./gradlew --no-daemon --parallel --console=plain \
+          detekt
+        echo "### Detekt Report" >> $GITHUB_STEP_SUMMARY
+        if [ -f build/reports/detekt/detekt.txt ]; then
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat build/reports/detekt/detekt.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        else
+          echo "No report found." >> $GITHUB_STEP_SUMMARY
+        fi
