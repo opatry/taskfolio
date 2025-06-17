@@ -32,6 +32,7 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.InMemoryTasksApi
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.TaskRepository
+import net.opatry.tasks.data.TransactionRunner
 
 internal suspend fun TaskRepository.printTaskTree() {
     getTaskLists().firstOrNull()?.let { taskLists ->
@@ -49,6 +50,10 @@ internal suspend fun TaskRepository.printTaskTree() {
     } ?: println("Task lists not ready.")
 }
 
+private val TestTransactionRunner = object : TransactionRunner {
+    override suspend fun <R> runInTransaction(logic: suspend () -> R): R = logic()
+}
+
 internal fun runTaskRepositoryTest(
     taskListsApi: TaskListsApi = InMemoryTaskListsApi(),
     tasksApi: TasksApi = InMemoryTasksApi(),
@@ -59,7 +64,14 @@ internal fun runTaskRepositoryTest(
         .setQueryCoroutineContext(backgroundScope.coroutineContext)
         .build()
 
-    val repository = TaskRepository(db.getTaskListDao(), db.getTaskDao(), taskListsApi, tasksApi, NowProvider(Clock.System::now))
+    val repository = TaskRepository(
+        transactionRunner = TestTransactionRunner,
+        taskListDao = db.getTaskListDao(),
+        taskDao = db.getTaskDao(),
+        taskListsApi = taskListsApi,
+        tasksApi = tasksApi,
+        nowProvider = NowProvider(Clock.System::now)
+    )
     try {
         test(repository)
     } catch (e: AssertionError) {

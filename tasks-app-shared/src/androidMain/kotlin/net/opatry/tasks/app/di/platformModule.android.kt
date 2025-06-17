@@ -24,9 +24,11 @@ package net.opatry.tasks.app.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.withTransaction
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.FileCredentialsStorage
 import net.opatry.tasks.data.TasksAppDatabase
+import net.opatry.tasks.data.TransactionRunner
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.io.File
@@ -51,5 +53,16 @@ actual fun platformModule(target: String): Module = module {
         val context = get<Context>()
         val credentialsFile = File(context.cacheDir, "google_auth_token_cache.json")
         FileCredentialsStorage(credentialsFile.absolutePath)
+    }
+
+    single<TransactionRunner> {
+        object : TransactionRunner {
+            override suspend fun <R> runInTransaction(logic: suspend () -> R): R {
+                val db = get<TasksAppDatabase>()
+                return db.withTransaction {
+                    logic()
+                }
+            }
+        }
     }
 }
