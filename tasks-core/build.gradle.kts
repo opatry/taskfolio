@@ -24,6 +24,7 @@
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -41,10 +42,22 @@ kotlin {
             implementation(projects.google.tasks)
 
             implementation(libs.androidx.room.common)
+            implementation(libs.androidx.room.runtime)
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
+
+        jvmTest.dependencies {
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.androidx.room.testing)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+        }
     }
+}
+
+dependencies {
+    add("kspJvm", libs.androidx.room.compiler)
 }
