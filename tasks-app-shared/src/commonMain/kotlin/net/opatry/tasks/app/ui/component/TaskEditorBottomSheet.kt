@@ -70,6 +70,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDate
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
+import net.opatry.tasks.app.ui.component.TaskEditorBottomSheetTestTag.BOTTOM_SHEET
 import net.opatry.tasks.app.ui.component.TaskEditorBottomSheetTestTag.CANCEL_BUTTON
 import net.opatry.tasks.app.ui.component.TaskEditorBottomSheetTestTag.DUE_DATE_CHIP
 import net.opatry.tasks.app.ui.component.TaskEditorBottomSheetTestTag.NOTES_FIELD
@@ -94,6 +95,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting
 object TaskEditorBottomSheetTestTag {
+    const val BOTTOM_SHEET = "TASK_EDITOR_BOTTOM_SHEET"
     const val SHEET_TITLE = "TASK_EDITOR_BOTTOM_SHEET_TITLE"
     const val TITLE_FIELD = "TASK_EDITOR_TITLE_FIELD"
     const val TITLE_FIELD_ERROR_MESSAGE = "TASK_EDITOR_TITLE_FIELD_ERROR_MESSAGE"
@@ -122,6 +124,7 @@ fun TaskEditorBottomSheet(
     onValidate: (TaskListUIModel, String, String, LocalDate?) -> Unit,
 ) {
     ModalBottomSheet(
+        modifier = Modifier.testTag(BOTTOM_SHEET),
         sheetState = sheetState,
         onDismissRequest = onDismiss
     ) {
