@@ -87,7 +87,10 @@ private fun TaskListEntity.asTaskListDataModel(tasks: List<TaskEntity>): TaskLis
     val parentIds = tasks.map(TaskEntity::parentTaskLocalId).toSet()
     val (sorting, sortedTasks) = when (sorting) {
         TaskListEntity.Sorting.UserDefined -> TaskListSorting.Manual to sortTasksManualOrdering(tasks).map { (task, indent) ->
-            task.asTaskDataModel(indent, !task.isCompleted && task.id in parentIds)
+            // FIXME to be detected earlier and fixed to keep the requirement of indent 0 for parent tasks
+            val isParentTask = task.id in parentIds
+            val tweakedIndent = if (isParentTask) 0 else indent
+            task.asTaskDataModel(tweakedIndent, !task.isCompleted && isParentTask)
         }
 
         TaskListEntity.Sorting.DueDate -> TaskListSorting.DueDate to sortTasksDateOrdering(tasks).map { task ->
