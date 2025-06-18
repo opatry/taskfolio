@@ -132,10 +132,24 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 <details>
 <summary>See details…</summary>
 
+### Production setup
+
+If you have access to the project’s secrets, you can decrypt the encrypted files using the following procedure:
+
 Decrypt `*.gpg` files needed for development, and copy decrypted versions in proper places.
 
 ```bash
 PLAYSTORE_SECRET_PASSPHRASE=MY_SECRET ./_ci/decrypt_secrets.sh
+```
+
+### Stub setup
+
+Alternatively, you can stub the necessary files to make the project compile.
+The release signing config is irrelevant for local development and can be ignored.
+As for `google-services.json`, a simple stub is sufficient for local setup.
+
+```bash
+./_ci/stub_secrets.sh
 ```
 
 ### Updating `google-services.json`
