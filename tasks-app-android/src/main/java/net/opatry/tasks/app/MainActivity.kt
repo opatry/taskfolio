@@ -44,7 +44,6 @@ import net.opatry.tasks.app.ui.theme.TaskfolioTheme
 import net.opatry.tasks.app.util.readText
 import org.koin.compose.viewmodel.koinViewModel
 
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +63,9 @@ class MainActivity : AppCompatActivity() {
             TaskfolioTheme {
                 Surface(Modifier.statusBarsPadding()) {
                     when (userState) {
-                        null -> LoadingPane()
+                        null -> {
+                            LoadingPane()
+                        }
 
                         UserState.Unsigned,
                         is UserState.SignedIn -> {
@@ -78,8 +79,10 @@ class MainActivity : AppCompatActivity() {
                             TasksApp(aboutApp, userViewModel, tasksViewModel)
                         }
 
-                        UserState.Newcomer -> AuthorizationScreen(userViewModel::skipSignIn) {
-                            AuthorizeGoogleTasksButton(onSuccess = userViewModel::signIn)
+                        UserState.Newcomer -> {
+                            AuthorizationScreen(userViewModel::skipSignIn) {
+                                AuthorizeGoogleTasksButton(onSuccess = userViewModel::signIn)
+                            }
                         }
                     }
                 }
