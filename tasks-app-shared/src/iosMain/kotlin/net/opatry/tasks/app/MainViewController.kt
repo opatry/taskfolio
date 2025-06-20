@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.window.ComposeUIViewController
+import kotlinx.cinterop.ExperimentalForeignApi
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.UserState
 import net.opatry.tasks.app.presentation.UserViewModel
@@ -37,17 +38,30 @@ import net.opatry.tasks.app.ui.screen.AboutApp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreen
 import net.opatry.tasks.app.ui.theme.TaskfolioTheme
 import org.koin.compose.viewmodel.koinViewModel
+import platform.Foundation.stringWithContentsOfFile
 
+@OptIn(ExperimentalForeignApi::class)
 @Suppress(
     "unused",
     "FunctionName",
 )
 fun MainViewController() = ComposeUIViewController {
-    // TODO retrieve this from iOS specific stuff
-    val appName = /*System.getProperty("app.name") ?:*/ "Taskfolio"
-    val fullVersion = /*System.getProperty("app.version.full") ?:*/ "0.0.0.0"
-    val versionLabel = /*System.getProperty("app.version")?.let { " v$it" }.orEmpty()*/ ""
-    val releaseBuild = /*System.getProperty("build.release").toBoolean()*/ false
+    val mainBundle = platform.Foundation.NSBundle.mainBundle
+    val appName = mainBundle.objectForInfoDictionaryKey("CFBundleDisplayName")?.toString()
+        ?: mainBundle.objectForInfoDictionaryKey("CFBundleName")?.toString()
+        ?: "Taskfolio"
+
+    val shortVersion = mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString")
+        ?.toString()
+        ?.takeUnless(String::isEmpty)
+    val versionCode = mainBundle.objectForInfoDictionaryKey("CFBundleVersion")
+        ?.toString()
+        ?.takeUnless(String::isEmpty)
+    val fullVersion = listOfNotNull(
+        shortVersion,
+        versionCode,
+    ).joinToString(separator = ".")
+        .ifEmpty { "0.0.0.0" }
 
     val userViewModel = koinViewModel<UserViewModel>()
     val userState by userViewModel.state.collectAsState(null)
@@ -69,9 +83,14 @@ fun MainViewController() = ComposeUIViewController {
                         name = appName,
                         version = fullVersion
                     ) {
-                        // TODO load licenses from iOS resources using text resources read
-                        //  MainApp::class.java.getResource("/licenses_desktop.json")?.readText() ?: ""
-                        ""
+                        val path = mainBundle.pathForResource("licenses_ios", "json")
+                            ?: error("licenses_ios.json not found in bundle")
+
+                        platform.Foundation.NSString.stringWithContentsOfFile(
+                            path,
+                            encoding = platform.Foundation.NSUTF8StringEncoding,
+                            error = null
+                        ) as String
                     }
                     val tasksViewModel = koinViewModel<TaskListsViewModel>()
                     TasksApp(aboutApp, userViewModel, tasksViewModel)
