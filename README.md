@@ -129,10 +129,25 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 ## XXX iOS
 
+Dev environment initial setup (cf. https://touchlab.co/xcodekotlin):
+```bash
+brew install xcode-kotlin
+xcode-kotlin install
+```
+
+Sync after Xcode update:
+```bash
+xcode-kotlin sync
+```
+
+Build native `tasks-app-shared` code as iOS XCFramework: 
 ```bash
 ./gradlew tasks-app-shared:linkDebugFrameworkIosSimulatorArm64
 ./gradlew tasks-app-shared:embedAndSignAppleFrameworkForXcode
 ```
+
+Either commit (but what?) or explain how to debug with Add Group > Add folders `tasks-app-shared/{commonMain,iosMain}`.
+cf. https://touchlab.co/xcodekotlin
 
 ## 🧑‍💻 Local development
 
