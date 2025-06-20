@@ -132,7 +132,42 @@ private val iosTargets = listOf(
 )
 ext["enabledIosTargets"] = iosTargets
 
+//private val kmpPluginId = libs.plugins.jetbrains.kotlin.multiplatform.get().pluginId
+
 subprojects {
+//    plugins.withId(kmpPluginId) {
+//        if (project.name == projects.google.oauthHttp.name) return@withId
+//
+//        afterEvaluate {
+//            println("AFTER? $project")
+////            @Suppress("UNCHECKED_CAST")
+////            val targets = rootProject.extra["enabledIosTargets"] as? List<String> ?: emptyList()
+//            extensions.configure<KotlinMultiplatformExtension> {
+//                iosTargets.mapNotNull {
+//                    when (it) {
+//                        "iosX64" -> iosX64()
+//                        "iosArm64" -> iosArm64()
+//                        "iosSimulatorArm64" -> iosSimulatorArm64()
+//                        else -> null
+//                    }
+//                }.forEach { iosTarget ->
+//                    iosTarget.binaries.framework {
+//                        baseName = "TasksAppShared"
+//                        isStatic = false
+//                    }
+//                }
+//            }
+//
+//            if (project.name == projects.tasksAppShared.name) {
+//                dependencies {
+//                    iosTargets.forEach {
+//                        add("ksp${it.capitalized()}", libs.androidx.room.compiler)
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     tasks {
         findByName("test") ?: return@tasks
         named<Test>("test") {
