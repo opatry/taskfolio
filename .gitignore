@@ -30,6 +30,7 @@ local.properties
 
 .kotlin/errors/errors-*.log
 .kotlin/sessions/
+.kotlin/metadata/
 
 tasks-app-android/google-services.json
 
