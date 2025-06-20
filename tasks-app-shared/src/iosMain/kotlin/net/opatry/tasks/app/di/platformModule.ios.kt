@@ -22,29 +22,52 @@
 
 package net.opatry.tasks.app.di
 
+import androidx.room.Room
+import kotlinx.cinterop.ExperimentalForeignApi
 import net.opatry.tasks.CredentialsStorage
+import net.opatry.tasks.FileCredentialsStorage
+import net.opatry.tasks.data.TasksAppDatabase
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSUserDomainMask
 
 actual fun platformModule(target: String): Module = module {
-    single(named("app_root_dir")) {
-        TODO()
-        ""
-        //        documentDirectory() + "/.taskfolio"
+
+    @OptIn(ExperimentalForeignApi::class)
+    single<String>(named("app_root_dir")) {
+        val fileManager = NSFileManager.defaultManager
+        val documentDirectoryPath = fileManager.URLForDirectory(
+            directory = NSDocumentDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = true,
+            error = null,
+        )?.path ?: throw IllegalStateException("Could not find document directory")
+
+        ("$documentDirectoryPath/.taskfolio").also { appRootDirPath ->
+            if (!fileManager.fileExistsAtPath(appRootDirPath)) {
+                val success = fileManager.createDirectoryAtPath(
+                    path = appRootDirPath,
+                    withIntermediateDirectories = true,
+                    attributes = null,
+                    error = null
+                )
+                check(success) { "Failed to create directory at $appRootDirPath" }
+            }
+        }
     }
 
     single {
-        TODO()
-        ""
-        //        val dbFile = NSFile(get<NSFile>(named("app_root_dir")), "tasks.db")
-        //        Room.databaseBuilder<TasksAppDatabase>(dbFilePath)
+        val dbFilePath = get<String>(named("app_root_dir")) + "/tasks.db"
+        Room.databaseBuilder<TasksAppDatabase>(dbFilePath)
     }
 
     single<CredentialsStorage> {
-        TODO()
         // TODO store in database
-        //        val credentialsFile = NSFile(get<File>(named("app_root_dir")), "google_auth_token_cache.json")
-        //        FileCredentialsStorage(credentialsFile.absolutePath)
+        val credentialsFilePath = get<String>(named("app_root_dir")) + "/google_auth_token_cache.json"
+        FileCredentialsStorage(credentialsFilePath)
     }
 }
