@@ -27,8 +27,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
 
 // TODO simplify and minimize the amount of colors
 
@@ -108,28 +106,9 @@ private val LightColorScheme = lightColorScheme(
     surfaceContainerHighest = surfaceLight, //surfaceContainerHighestLight,
 )
 
-private val DesktopTypography = androidx.compose.material3.Typography(
-    displayLarge = TextStyle(fontSize = 57.sp), // TODO adjust
-    displayMedium = TextStyle(fontSize = 45.sp), // TODO adjust
-    displaySmall = TextStyle(fontSize = 36.sp), // TODO adjust
-    headlineLarge = TextStyle(fontSize = 32.sp), // TODO adjust
-    headlineMedium = TextStyle(fontSize = 28.sp), // TODO adjust
-    headlineSmall = TextStyle(fontSize = 24.sp), // TODO adjust
-    titleLarge = TextStyle(fontSize = 22.sp), // TODO adjust
-    titleMedium = TextStyle(fontSize = 16.sp), // TODO adjust
-    titleSmall = TextStyle(fontSize = 14.sp), // TODO adjust
-    bodyLarge = TextStyle(fontSize = 14.sp),
-    bodyMedium = TextStyle(fontSize = 12.sp),
-    bodySmall = TextStyle(fontSize = 10.sp),
-    labelLarge = TextStyle(fontSize = 12.sp),
-    labelMedium = TextStyle(fontSize = 10.sp),
-    labelSmall = TextStyle(fontSize = 9.sp),
-)
-
 @Composable
 fun TaskfolioTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    onAndroid: Boolean = System.getProperty("java.vm.name")?.contains("Dalvik") == true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -139,7 +118,7 @@ fun TaskfolioTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = if (onAndroid) Typography else DesktopTypography,
+        typography = Typography,
         content = content
     )
 }

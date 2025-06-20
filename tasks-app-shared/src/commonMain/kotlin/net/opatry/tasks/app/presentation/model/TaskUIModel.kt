@@ -27,8 +27,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
+import net.opatry.tasks.BigIntegerKMP
 import net.opatry.tasks.data.toTaskPosition
-import java.math.BigInteger
 import kotlin.jvm.JvmInline
 
 sealed class DateRange {
@@ -97,7 +97,7 @@ sealed interface TaskUIModel {
         override val id: TaskId,
         override val title: String,
         override val notes: String = "",
-        override val position: String = BigInteger("9999999999999999999").toTaskPosition(),
+        override val position: String = BigIntegerKMP("9999999999999999999").toTaskPosition(),
         override val dueDate: LocalDate? = null,
         val completionDate: LocalDate,
     ) : TaskUIModel

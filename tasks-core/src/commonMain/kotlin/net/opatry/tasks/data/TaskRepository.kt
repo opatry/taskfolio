@@ -37,12 +37,13 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
+import net.opatry.tasks.BigIntegerKMP
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
-import java.math.BigInteger
+import net.opatry.tasks.toBigInteger
 
 enum class TaskListSorting {
     Manual,
@@ -250,12 +251,14 @@ fun computeCompletedTaskPosition(task: TaskEntity): String {
     return truncatedDate.asCompletedTaskPosition()
 }
 
+fun BigIntegerKMP.toTaskPosition() = this.toString().padStart(20, '0')
+
 /**
  * Converts a completion date as the position of a completed task for Google Tasks sorting logic.
  * The sorting of completed tasks puts last completed tasks first.
  */
 fun Instant.asCompletedTaskPosition(): String {
-    val upperBound = BigInteger("9999999999999999999")
+    val upperBound = BigIntegerKMP("9999999999999999999")
     val sorting = upperBound - this.toEpochMilliseconds().toBigInteger()
     return sorting.toTaskPosition()
 }
@@ -652,7 +655,7 @@ class TaskRepository(
         // compute final subtasks position
         val subtasksToUpdate = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, parentTaskEntity.id, taskEntity.position)
             .toMutableList()
-        subtasksToUpdate.removeIf { it.id == taskEntity.id }
+        subtasksToUpdate.removeAll { it.id == taskEntity.id }
         val updatedSubtaskEntities = computeTaskPositions(subtasksToUpdate, taskEntity.position.toInt())
         taskDao.upsertAll(updatedSubtaskEntities)
 
@@ -696,7 +699,7 @@ class TaskRepository(
         )
         val tasksToUpdate = taskDao.getTasksUpToPosition(taskEntity.parentListLocalId, null, taskEntity.position)
             .toMutableList()
-        tasksToUpdate.removeIf { it.id == taskEntity.id }
+        tasksToUpdate.removeAll { it.id == taskEntity.id }
         // put the updated task at the beginning of the list to enforce proper ordering
         tasksToUpdate.add(0, updatedTaskEntity)
         val updatedTaskEntities = computeTaskPositions(tasksToUpdate)
@@ -747,7 +750,7 @@ class TaskRepository(
         // update positions of destination list
         val destinationTasksAfter = taskDao.getTasksUpToPosition(updatedTaskEntity.id, null, updatedTaskEntity.position)
             .toMutableList()
-        destinationTasksAfter.removeIf { it.id == updatedTaskEntity.id }
+        destinationTasksAfter.removeAll { it.id == updatedTaskEntity.id }
         if (destinationTasksAfter.isNotEmpty()) {
             val updatedTaskEntities = computeTaskPositions(destinationTasksAfter, newPositionStart = 1)
             taskDao.upsertAll(updatedTaskEntities)

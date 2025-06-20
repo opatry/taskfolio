@@ -62,5 +62,9 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
+
+        iosMain.dependencies {
+            implementation("com.ionspin.kotlin:bignum:0.3.10")
+        }
     }
 }

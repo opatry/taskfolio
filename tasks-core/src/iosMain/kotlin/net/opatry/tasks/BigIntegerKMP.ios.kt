@@ -20,6 +20,23 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.theme
+package net.opatry.tasks
 
-internal expect val Typography: androidx.compose.material3.Typography
+import com.ionspin.kotlin.bignum.integer.toBigInteger
+
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+actual class BigIntegerKMP actual constructor(value: String) {
+    private val delegate = value.toBigInteger()
+
+    actual operator fun plus(other: BigIntegerKMP) = BigIntegerKMP((delegate + other.delegate).toString())
+    actual operator fun minus(other: BigIntegerKMP) = BigIntegerKMP((delegate - other.delegate).toString())
+    actual operator fun times(other: BigIntegerKMP) = BigIntegerKMP((delegate * other.delegate).toString())
+    actual operator fun div(other: BigIntegerKMP) = BigIntegerKMP((delegate / other.delegate).toString())
+    actual operator fun rem(other: BigIntegerKMP) = BigIntegerKMP((delegate % other.delegate).toString())
+
+    actual override fun toString(): String = delegate.toString()
+
+    internal val delegateValue get() = delegate
+}
+
+actual fun Long.toBigInteger(): BigIntegerKMP = BigIntegerKMP(this.toString())

@@ -20,6 +20,18 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.ui.theme
+package net.opatry.tasks
 
-internal expect val Typography: androidx.compose.material3.Typography
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+expect class BigIntegerKMP constructor(value: String) {
+    operator fun plus(other: BigIntegerKMP): BigIntegerKMP
+    operator fun minus(other: BigIntegerKMP): BigIntegerKMP
+    operator fun times(other: BigIntegerKMP): BigIntegerKMP
+    operator fun div(other: BigIntegerKMP): BigIntegerKMP
+    operator fun rem(other: BigIntegerKMP): BigIntegerKMP
+
+    override fun toString(): String
+}
+
+expect fun Long.toBigInteger(): BigIntegerKMP
+
