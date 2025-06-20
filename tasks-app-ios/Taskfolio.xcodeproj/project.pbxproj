@@ -1,0 +1,461 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4705DD9C2E07520D0008E5F7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4705DD972E07520D0008E5F7 /* ContentView.swift */; };
+		4705DD9D2E07520D0008E5F7 /* TaskfolioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4705DD992E07520D0008E5F7 /* TaskfolioApp.swift */; };
+		4705DD9F2E07520D0008E5F7 /* licenses_ios.json in Resources */ = {isa = PBXBuildFile; fileRef = 4705DD922E07520D0008E5F7 /* licenses_ios.json */; };
+		4705DDA02E07520D0008E5F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4705DD942E07520D0008E5F7 /* Assets.xcassets */; };
+		47629B9A2E173EC100391C27 /* IOSGoogleAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47629B992E173EB900391C27 /* IOSGoogleAuthenticator.swift */; };
+		47629B9D2E17407D00391C27 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 47629B9C2E17407D00391C27 /* GoogleSignIn */; };
+		47629B9F2E17407D00391C27 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 47629B9E2E17407D00391C27 /* GoogleSignInSwift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4705DD922E07520D0008E5F7 /* licenses_ios.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = licenses_ios.json; sourceTree = "<group>"; };
+		4705DD942E07520D0008E5F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4705DD952E07520D0008E5F7 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		4705DD972E07520D0008E5F7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4705DD982E07520D0008E5F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4705DD992E07520D0008E5F7 /* TaskfolioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskfolioApp.swift; sourceTree = "<group>"; };
+		4705DD9A2E07520D0008E5F7 /* Versions.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Versions.xcconfig; sourceTree = "<group>"; };
+		4731FF7D2E1307C0005A081E /* Config.dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.dev.xcconfig; sourceTree = "<group>"; };
+		4734A08F2E05CE9D00175C75 /* T4skf0l10 d3v.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "T4skf0l10 d3v.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		47629B992E173EB900391C27 /* IOSGoogleAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSGoogleAuthenticator.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4734A08C2E05CE9D00175C75 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47629B9D2E17407D00391C27 /* GoogleSignIn in Frameworks */,
+				47629B9F2E17407D00391C27 /* GoogleSignInSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4705DD932E07520D0008E5F7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4705DD922E07520D0008E5F7 /* licenses_ios.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4705DD9B2E07520D0008E5F7 /* Taskfolio */ = {
+			isa = PBXGroup;
+			children = (
+				47629B992E173EB900391C27 /* IOSGoogleAuthenticator.swift */,
+				4705DD932E07520D0008E5F7 /* Resources */,
+				4705DD942E07520D0008E5F7 /* Assets.xcassets */,
+				4705DD972E07520D0008E5F7 /* ContentView.swift */,
+				4705DD982E07520D0008E5F7 /* Info.plist */,
+				4705DD992E07520D0008E5F7 /* TaskfolioApp.swift */,
+			);
+			path = Taskfolio;
+			sourceTree = "<group>";
+		};
+		4731FF612E127E5C005A081E /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				4705DD952E07520D0008E5F7 /* Config.xcconfig */,
+				4731FF7D2E1307C0005A081E /* Config.dev.xcconfig */,
+				4705DD9A2E07520D0008E5F7 /* Versions.xcconfig */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		4734A0862E05CE9D00175C75 = {
+			isa = PBXGroup;
+			children = (
+				4731FF612E127E5C005A081E /* Configuration */,
+				4705DD9B2E07520D0008E5F7 /* Taskfolio */,
+				4734A0902E05CE9D00175C75 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4734A0902E05CE9D00175C75 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4734A08F2E05CE9D00175C75 /* T4skf0l10 d3v.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4734A08E2E05CE9D00175C75 /* Taskfolio */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4734A0B32E05CED900175C75 /* Build configuration list for PBXNativeTarget "Taskfolio" */;
+			buildPhases = (
+				473FF7702E05F9E6002B3B0F /* Compile Kotlin Framework */,
+				4734A08B2E05CE9D00175C75 /* Sources */,
+				4734A08C2E05CE9D00175C75 /* Frameworks */,
+				4734A08D2E05CE9D00175C75 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Taskfolio;
+			packageProductDependencies = (
+				47629B9C2E17407D00391C27 /* GoogleSignIn */,
+				47629B9E2E17407D00391C27 /* GoogleSignInSwift */,
+			);
+			productName = Taskfolio;
+			productReference = 4734A08F2E05CE9D00175C75 /* T4skf0l10 d3v.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4734A0872E05CE9D00175C75 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					4734A08E2E05CE9D00175C75 = {
+						CreatedOnToolsVersion = 16.2;
+						LastSwiftMigration = 1620;
+					};
+				};
+			};
+			buildConfigurationList = 4734A08A2E05CE9D00175C75 /* Build configuration list for PBXProject "Taskfolio" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4734A0862E05CE9D00175C75;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				47629B9B2E17407D00391C27 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4734A0902E05CE9D00175C75 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4734A08E2E05CE9D00175C75 /* Taskfolio */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4734A08D2E05CE9D00175C75 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4705DD9F2E07520D0008E5F7 /* licenses_ios.json in Resources */,
+				4705DDA02E07520D0008E5F7 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		473FF7702E05F9E6002B3B0F /* Compile Kotlin Framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Compile Kotlin Framework";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED}\" = \"YES\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to 'YES'.\"\n  exit 0\nfi\n\nif [ -z \"${IOS_TARGET}\" ]; then\n  echo \"You must define IOS_TARGET to 'all', 'simulator' or 'device' to allow building for iOS.\"\n  exit 1\nfi\n\necho \"Building for '${IOS_TARGET}' target\"\n\ncd \"${SRCROOT}/..\"\n./gradlew :tasks-app-shared:embedAndSignAppleFrameworkForXcode\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4734A08B2E05CE9D00175C75 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4705DD9C2E07520D0008E5F7 /* ContentView.swift in Sources */,
+				47629B9A2E173EC100391C27 /* IOSGoogleAuthenticator.swift in Sources */,
+				4705DD9D2E07520D0008E5F7 /* TaskfolioApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4734A0B12E05CED900175C75 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4731FF7D2E1307C0005A081E /* Config.dev.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "$(BUNDLE_VERSION)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = "$(BUNDLE_SHORT_VERSION_STRING)";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(APP_DISPLAY_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4734A0B22E05CED900175C75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4705DD952E07520D0008E5F7 /* Config.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "$(BUNDLE_VERSION)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = "$(BUNDLE_SHORT_VERSION_STRING)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(APP_DISPLAY_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4734A0B42E05CED900175C75 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4731FF7D2E1307C0005A081E /* Config.dev.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon.dev;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor.dev;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
+				DEVELOPMENT_TEAM = 9J8LQ9R327;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"$(SRCROOT)/../tasks-app-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Taskfolio/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_DISPLAY_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID)";
+				PRODUCT_NAME = "$(APP_DISPLAY_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4734A0B52E05CED900175C75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4705DD952E07520D0008E5F7 /* Config.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9J8LQ9R327;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"$(SRCROOT)/../tasks-app-shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Taskfolio/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_DISPLAY_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID)";
+				PRODUCT_NAME = "$(APP_DISPLAY_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4734A08A2E05CE9D00175C75 /* Build configuration list for PBXProject "Taskfolio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4734A0B12E05CED900175C75 /* Debug */,
+				4734A0B22E05CED900175C75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4734A0B32E05CED900175C75 /* Build configuration list for PBXNativeTarget "Taskfolio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4734A0B42E05CED900175C75 /* Debug */,
+				4734A0B52E05CED900175C75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		47629B9B2E17407D00391C27 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		47629B9C2E17407D00391C27 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 47629B9B2E17407D00391C27 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		47629B9E2E17407D00391C27 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 47629B9B2E17407D00391C27 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 4734A0872E05CE9D00175C75 /* Project object */;
+}

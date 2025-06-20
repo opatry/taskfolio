@@ -29,6 +29,9 @@ plugins {
     alias(libs.plugins.about.libraries)
 }
 
+val appVersion = libs.versions.tasksApp.name.get()
+val appVersionCode = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
+
 kotlin {
     // kinda useless but need a target to allow sync in IntelliJ
     // and don't want this target to be forced to an iOS one
@@ -43,6 +46,22 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":tasks-app-shared"))
         }
+    }
+}
+
+tasks.register("updateXcodeVersionConfig") {
+    val configFile = file("${projectDir}/Taskfolio/Configuration/Versions.xcconfig")
+    outputs.file(configFile)
+    val content = """
+        BUNDLE_VERSION=$appVersionCode
+        BUNDLE_SHORT_VERSION_STRING=$appVersion
+        """.trimIndent()
+
+    outputs.upToDateWhen {
+        configFile.takeIf(File::exists)?.readText() == content
+    }
+    doLast {
+        configFile.writeText(content)
     }
 }
 
