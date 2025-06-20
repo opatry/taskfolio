@@ -20,44 +20,31 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks.app.di
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+import net.opatry.google.auth.GoogleAuthenticator
+import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType
+import org.koin.core.module.Module
+import org.koin.dsl.module
 
-kotlin {
-    jvm()
+actual fun authModule(gcpClientId: String): Module = module {
+    single<GoogleAuthenticator> {
+        // TODO implement GoogleAuthenticator for iOS
+        object : GoogleAuthenticator {
+            override suspend fun authorize(
+                scopes: List<GoogleAuthenticator.Scope>,
+                force: Boolean,
+                requestUserAuthorization: (Any) -> Unit
+            ): String = ""
 
-    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
-
-    jvmToolchain(17)
-
-    compilerOptions {
-        // Common compiler options applied to all Kotlin source sets
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-
-            api(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-            implementation(projects.google.oauth)
-            implementation(projects.google.tasks)
-
-            implementation(libs.androidx.room.common)
-        }
-
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-        }
-
-        if (iosTargets.isNotEmpty()) {
-            iosMain.dependencies {
-                implementation(libs.bignum)
-            }
+            override suspend fun getToken(grant: GoogleAuthenticator.Grant) = GoogleAuthenticator.OAuthToken(
+                accessToken = "",
+                expiresIn = 0L,
+                idToken = null,
+                refreshToken = null,
+                scope = "",
+                tokenType = TokenType.Bearer,
+            )
         }
     }
 }
