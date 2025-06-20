@@ -20,48 +20,16 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks.app.ui.component
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 
-kotlin {
-    jvm()
-
-    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
-
-    jvmToolchain(17)
-
-    compilerOptions {
-        // Common compiler options applied to all Kotlin source sets
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
-    sourceSets.all {
-        languageSettings.optIn("kotlin.time.ExperimentalTime")
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-
-            api(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-            implementation(project(":google:oauth"))
-            implementation(project(":google:tasks"))
-
-            implementation(libs.androidx.room.common)
-        }
-
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-        }
-
-        if (iosTargets.isNotEmpty()) {
-            iosMain.dependencies {
-                implementation(libs.bignum)
-            }
-        }
+@ExperimentalComposeUiApi
+@Composable
+actual fun MyBackHandler(canNavigateBack: () -> Boolean, navigateBack: () -> Unit) {
+    BackHandler(canNavigateBack()) {
+        navigateBack()
     }
 }
