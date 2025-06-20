@@ -23,6 +23,8 @@
 package net.opatry.tasks.app.di
 
 import androidx.room.Room
+import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.darwin.Darwin
 import kotlinx.cinterop.ExperimentalForeignApi
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.FileCredentialsStorage
@@ -35,6 +37,9 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
 actual fun platformModule(target: String): Module = module {
+    single<HttpClientEngineFactory<*>> {
+        Darwin
+    }
 
     @OptIn(ExperimentalForeignApi::class)
     single<String>(named("app_root_dir")) {
