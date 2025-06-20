@@ -22,21 +22,57 @@
 
 package net.opatry.tasks
 
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import platform.Foundation.NSData
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSString
+import platform.Foundation.NSURL
+import platform.Foundation.NSUTF8StringEncoding
+import platform.Foundation.create
+import platform.Foundation.dataUsingEncoding
+import platform.Foundation.dataWithContentsOfFile
+import platform.Foundation.writeToURL
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-actual class FileCredentialsStorage actual constructor(filepath: String) : CredentialsStorage {
+actual class FileCredentialsStorage actual constructor(private val filepath: String) : CredentialsStorage {
+    @OptIn(BetaInteropApi::class)
     override suspend fun load(): TokenCache? {
         return withContext(Dispatchers.IO) {
-            // TODO
-            null
+            val fileManager = NSFileManager.defaultManager
+            if (!fileManager.fileExistsAtPath(filepath)) return@withContext null
+
+            val data = NSData.dataWithContentsOfFile(filepath)
+                ?: return@withContext null
+
+            val content = NSString.create(data, NSUTF8StringEncoding)?.toString()
+                ?: return@withContext null
+
+            runCatching {
+                Json.decodeFromString<TokenCache>(content)
+            }.getOrNull()
         }
     }
 
+    @OptIn(BetaInteropApi::class)
     override suspend fun store(tokenCache: TokenCache) {
-        // TODO
+        val json = Json { prettyPrint = true }
+
+        val success = withContext(Dispatchers.IO) {
+            val nsString = NSString.create(string = json.encodeToString(tokenCache))
+            val data = nsString.dataUsingEncoding(NSUTF8StringEncoding)
+                ?: error("Failed to encode JSON to NSData")
+
+            val url = NSURL.fileURLWithPath(filepath)
+            data.writeToURL(url, atomically = true)
+        }
+
+        if (!success) {
+            error("Failed to write token cache to file at $filepath")
+        }
     }
 }
 
