@@ -200,3 +200,12 @@ subprojects {
         }
     }
 }
+
+gradle.projectsEvaluated {
+    val xcFrameworkTask = project(":tasks-app-shared").tasks.findByName("embedAndSignAppleFrameworkForXcode")
+    val updateVersionTask = project(":tasks-app-ios").tasks.findByName("updateXcodeVersionConfig")
+
+    if (xcFrameworkTask != null && updateVersionTask != null) {
+        xcFrameworkTask.dependsOn(updateVersionTask)
+    }
+}
