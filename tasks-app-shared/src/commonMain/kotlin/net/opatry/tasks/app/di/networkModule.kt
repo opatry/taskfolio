@@ -23,7 +23,7 @@
 package net.opatry.tasks.app.di
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.plugins.CurlUserAgent
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.auth.Auth
@@ -67,7 +67,7 @@ val networkModule = module {
     single(named(HttpClientName.Tasks)) {
         val credentialsStorage = get<CredentialsStorage>()
 
-        HttpClient(CIO) {
+        HttpClient(get<HttpClientEngineFactory<*>>()) {
             // It appears Google Tasks require the user agent to contain the "gzip" string
             // to accept gzip encoding in combination of `Accept-Encoding: gzip`.
             // see https://developers.google.com/tasks/performance#gzip

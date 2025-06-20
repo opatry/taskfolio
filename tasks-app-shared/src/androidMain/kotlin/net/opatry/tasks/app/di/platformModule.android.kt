@@ -24,6 +24,8 @@ package net.opatry.tasks.app.di
 
 import android.content.Context
 import androidx.room.Room
+import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.cio.CIO
 import net.opatry.tasks.CredentialsStorage
 import net.opatry.tasks.FileCredentialsStorage
 import net.opatry.tasks.data.TasksAppDatabase
@@ -32,6 +34,10 @@ import org.koin.dsl.module
 import java.io.File
 
 actual fun platformModule(target: String): Module = module {
+    single<HttpClientEngineFactory<*>> {
+        CIO
+    }
+
     single {
         val dbNameSuffix = when (target) {
             "store" -> ""
