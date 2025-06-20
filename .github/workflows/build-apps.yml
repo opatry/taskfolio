@@ -20,6 +20,8 @@ jobs:
             gradle_module: tasks-app-android
           - name: 🖥️ Desktop App
             gradle_module: tasks-app-desktop
+          - name: 🍎 iOS App
+            gradle_module: tasks-app-ios
     permissions:
         contents: write
         checks: write
@@ -50,4 +52,10 @@ jobs:
             -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
             -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
             -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+        elif [ "${gradle_module}" = "tasks-app-ios" ]; then
+          ./gradlew --no-daemon --parallel :tasks-app-shared:embedAndSignAppleFrameworkForXcode
         fi
+# TODO
+# 1 matrix per iOS target or just build for sim and that's it?
+# anyway, need to inject desired list of iOS targets to build and adjust gradle task to invoke accordingly
+# TODO launch iOS app build using xcodebuild (embedAndSignAppleFrameworkForXcode shouldn't be needed then, handled directly by xcodebuild)

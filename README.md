@@ -127,6 +127,13 @@ I do not aim to implement advanced features beyond what is supported by the Goog
   - The [static site](https://opatry.github.io/taskfolio/) presenting the project
   - Made with [Jekyll](https://jekyllrb.com/) and served by [Github pages](https://pages.github.com/)
 
+## XXX iOS
+
+```bash
+./gradlew tasks-app-shared:linkDebugFrameworkIosSimulatorArm64
+./gradlew tasks-app-shared:embedAndSignAppleFrameworkForXcode
+```
+
 ## 🧑‍💻 Local development
 
 <details>
