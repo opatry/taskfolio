@@ -20,48 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks.app.ui.theme
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 
-kotlin {
-    jvm()
-
-    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
-
-    jvmToolchain(17)
-
-    compilerOptions {
-        // Common compiler options applied to all Kotlin source sets
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
-    sourceSets.all {
-        languageSettings.optIn("kotlin.time.ExperimentalTime")
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-
-            api(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-            implementation(project(":google:oauth"))
-            implementation(project(":google:tasks"))
-
-            implementation(libs.androidx.room.common)
-        }
-
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-        }
-
-        if (iosTargets.isNotEmpty()) {
-            iosMain.dependencies {
-                implementation(libs.bignum)
-            }
-        }
-    }
-}
+internal actual val Typography: androidx.compose.material3.Typography = androidx.compose.material3.Typography(
+    displayLarge = TextStyle(fontSize = 57.sp), // TODO adjust
+    displayMedium = TextStyle(fontSize = 45.sp), // TODO adjust
+    displaySmall = TextStyle(fontSize = 36.sp), // TODO adjust
+    headlineLarge = TextStyle(fontSize = 32.sp), // TODO adjust
+    headlineMedium = TextStyle(fontSize = 28.sp), // TODO adjust
+    headlineSmall = TextStyle(fontSize = 24.sp), // TODO adjust
+    titleLarge = TextStyle(fontSize = 22.sp), // TODO adjust
+    titleMedium = TextStyle(fontSize = 16.sp), // TODO adjust
+    titleSmall = TextStyle(fontSize = 14.sp), // TODO adjust
+    bodyLarge = TextStyle(fontSize = 14.sp),
+    bodyMedium = TextStyle(fontSize = 12.sp),
+    bodySmall = TextStyle(fontSize = 10.sp),
+    labelLarge = TextStyle(fontSize = 12.sp),
+    labelMedium = TextStyle(fontSize = 10.sp),
+    labelSmall = TextStyle(fontSize = 9.sp),
+)

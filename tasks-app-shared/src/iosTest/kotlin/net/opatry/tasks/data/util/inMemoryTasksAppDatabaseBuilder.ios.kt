@@ -20,48 +20,12 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.opatry.tasks.data.util
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import net.opatry.tasks.data.TasksAppDatabase
 
-kotlin {
-    jvm()
-
-    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
-
-    jvmToolchain(17)
-
-    compilerOptions {
-        // Common compiler options applied to all Kotlin source sets
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
-    sourceSets.all {
-        languageSettings.optIn("kotlin.time.ExperimentalTime")
-    }
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-
-            api(libs.kotlinx.datetime)
-            implementation(libs.bundles.ktor.client)
-            implementation(project(":google:oauth"))
-            implementation(project(":google:tasks"))
-
-            implementation(libs.androidx.room.common)
-        }
-
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-        }
-
-        if (iosTargets.isNotEmpty()) {
-            iosMain.dependencies {
-                implementation(libs.bignum)
-            }
-        }
-    }
+actual fun inMemoryTasksAppDatabaseBuilder(): RoomDatabase.Builder<TasksAppDatabase> {
+    return Room.inMemoryDatabaseBuilder<TasksAppDatabase>()
 }
