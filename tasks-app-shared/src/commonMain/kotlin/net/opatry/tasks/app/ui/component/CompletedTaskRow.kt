@@ -25,6 +25,7 @@ package net.opatry.tasks.app.ui.component
 import CircleCheckBig
 import LucideIcons
 import Trash
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -57,7 +58,6 @@ import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_date_label
 import net.opatry.tasks.resources.task_list_pane_delete_task_icon_content_desc
-import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting

@@ -29,6 +29,7 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.data.toTaskPosition
 import java.math.BigInteger
+import kotlin.jvm.JvmInline
 
 sealed class DateRange {
     open val date: LocalDate? = null
