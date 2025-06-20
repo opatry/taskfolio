@@ -22,13 +22,65 @@
 
 package net.opatry.tasks.app
 
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.window.ComposeUIViewController
+import net.opatry.tasks.app.presentation.TaskListsViewModel
+import net.opatry.tasks.app.presentation.UserState
+import net.opatry.tasks.app.presentation.UserViewModel
+import net.opatry.tasks.app.ui.TasksApp
+import net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton
+import net.opatry.tasks.app.ui.component.LoadingPane
+import net.opatry.tasks.app.ui.screen.AboutApp
+import net.opatry.tasks.app.ui.screen.AuthorizationScreen
+import net.opatry.tasks.app.ui.theme.TaskfolioTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Suppress(
     "unused",
     "FunctionName",
 )
 fun MainViewController() = ComposeUIViewController {
-    Text("Here is the iOS MainViewController")
+    // TODO retrieve this from iOS specific stuff
+    val appName = /*System.getProperty("app.name") ?:*/ "Taskfolio"
+    val fullVersion = /*System.getProperty("app.version.full") ?:*/ "0.0.0.0"
+    val versionLabel = /*System.getProperty("app.version")?.let { " v$it" }.orEmpty()*/ ""
+    val releaseBuild = /*System.getProperty("build.release").toBoolean()*/ false
+
+    val userViewModel = koinViewModel<UserViewModel>()
+    val userState by userViewModel.state.collectAsState(null)
+
+    if (userState == null) {
+        LaunchedEffect(userState) {
+            userViewModel.refreshUserState()
+        }
+    }
+
+    TaskfolioTheme {
+        Surface {
+            when (userState) {
+                null -> LoadingPane()
+
+                UserState.Unsigned,
+                is UserState.SignedIn -> {
+                    val aboutApp = AboutApp(
+                        name = appName,
+                        version = fullVersion
+                    ) {
+                        // TODO load licenses from iOS resources using text resources read
+                        //  MainApp::class.java.getResource("/licenses_desktop.json")?.readText() ?: ""
+                        ""
+                    }
+                    val tasksViewModel = koinViewModel<TaskListsViewModel>()
+                    TasksApp(aboutApp, userViewModel, tasksViewModel)
+                }
+
+                UserState.Newcomer -> AuthorizationScreen(userViewModel::skipSignIn) {
+                    AuthorizeGoogleTasksButton(onSuccess = userViewModel::signIn)
+                }
+            }
+        }
+    }
 }
