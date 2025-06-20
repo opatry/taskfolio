@@ -9,7 +9,7 @@
 
 The coverage report excludes code not intended to be covered.
 
-This avoids the [“broken window” effect](https://blog.codinghorror.com/the-broken-window-theory/): whether coverage is at 43% or 56%, it’s perceived as equally low—so efforts to improve it are often dismissed. In contrast, high or near-100% coverage is seen as achievable and worth tracking.
+This avoids the [“broken window” effect](https://blog.codinghorror.com/the-broken-window-theory/): whether coverage is at 43% or 56%, it's perceived as equally low—so efforts to improve it are often dismissed. In contrast, high or near-100% coverage is seen as achievable and worth tracking.
 
 Refer to the root project's [`build.gradle.kts`](build.gradle.kts#L55-L90) for details.
 
@@ -36,12 +36,15 @@ Refer to the root project's [`build.gradle.kts`](build.gradle.kts#L55-L90) for d
 
 [**Taskfolio**](https://opatry.github.io/taskfolio) is an Android task management app built using [Google Tasks API](https://developers.google.com/tasks/reference/rest). Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
 
-> I set out to revisit the classical TODO app, ‘local-first’ syncing with Google Tasks—aiming for an <abbr title="Minimum Viable Experience">MVE</abbr> in 2 weeks, focusing on the 80/20 rule to nail the essentials.
+> I set out to revisit the classical TODO app, 'local-first' syncing with Google Tasks—aiming for an <abbr title="Minimum Viable Experience">MVE</abbr> in 2 weeks, focusing on the 80/20 rule to nail the essentials.
 
 | ![](assets/screens/task_lists_light.png) | ![](assets/screens/groceries_light.png) | ![](assets/screens/add_task_light.png) | ![](assets/screens/home_dark.png)  |
 | --------------------------------------- |--------------------------------------- | ---------------------------------- | ---------------------------------- |
 
 [![Taskfolio on Play Store](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
+
+> [!NOTE]
+> The application is also available as a desktop (Jvm) application and an iOS application as well (using [Compose Multi Platform (aka CMP)](https://www.jetbrains.com/compose-multiplatform/) as UI Toolkit).
 
 ## 🎯 Project intentions
 
@@ -76,9 +79,10 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 ## 🛠️ Tech stack
 
-- [Kotlin](https://kotlinlang.org/), [Multiplatform (aka KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
-  - iOS wasn’t initially planned, but I bootstrapped a [PR to evaluate the feasibility of the iOS target]((https://github.com/opatry/taskfolio/pull/269)). It turned out to be quite achievable and just needs some polishing.
-  - Web is not planned any time soon (contribution are welcome 🤝)
+- [Kotlin](https://kotlinlang.org/), [Multiplatform (aka KMP)](https://kotlinlang.org/docs/multiplatform.html)
+  - Android and Desktop are fully supported.
+  - iOS wasn't initially planned, but a draft version is available (use it at your own risk, there might be dragons 🐉).
+  - Web is not planned any time soon (contributions are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
 - [Room](https://developer.android.com/training/data-storage/room) for local persistence
@@ -123,6 +127,9 @@ I do not aim to implement advanced features beyond what is supported by the Goog
   - The Desktop application (thin layer fully reusing `:tasks-app-shared`)
 - [`:tasks-app-android`](tasks-app-android) <span style="color: #66FF00;">■■■■■■■■</span>□□ 80%
   - The Android application (thin layer fully reusing `:tasks-app-shared`)
+- [`:tasks-app-ios/Taskfolio`](tasks-app-ios/Taskfolio) <span style="color: #33FF00;">■■■■■■■■■</span>□ 90%
+  - The iOS application (thin layer fully reusing `:tasks-app-shared`)
+  - Xcode project, written in Swift
 - [`website/`](website) <span style="color: #00FF00;">■■■■■■■■■■</span> 100%
   - The [static site](https://opatry.github.io/taskfolio/) presenting the project
   - Made with [Jekyll](https://jekyllrb.com/) and served by [Github pages](https://pages.github.com/)
@@ -175,6 +182,68 @@ You'll see a Compose icon near the top left corner of the window.
 When clicking on it, it will open a new window with the hot reload status.
 
 ![](assets/compose-hot-reload-console.png)
+</details>
+
+## 🍎 Build for iOS target
+
+The support of iOS works more or less _as-is_ and gets the job done. It's provided without guarantees, use at your own risk.  
+Feedback and contributions are welcome though 🤝.
+
+> [!NOTE]
+> iOS support is _opt-in_ and disabled by default to avoid unnecessary time and disk usage during the initial Gradle sync when the iOS target isn't required.  
+> You can enable it by setting `ios.target` Gradle property to `all`, `simulator` or `device` from either `local.properties` or CLI using `-P`.  
+> When building from Xcode, it automatically sets `-Pios.target=simulator` based on `Config.xcconfig`.
+
+<details>
+<summary>See details…</summary>
+
+You can build the `:tasks-app-shared` code for iOS using Gradle (to check if everything compiles on Kotlin side):
+
+```bash
+./gradlew tasks-app-shared:linkDebugFrameworkIosSimulatorArm64 -Pios.target=simulator
+```
+
+### Building & Running from IntelliJ/Android Studio
+
+You can also use the incubating [Kotlin Multiplatform IntelliJ plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform) to build and launch the iOS app directly from IntelliJ/Android Studio (starting from Narwhal | 2025.1.1).  
+This plugin allows you to choose whether to run the app on a device or simulator, and enables debugging of Kotlin code even when called from iOS/Swift.
+
+It builds the Kotlin code as a native framework, then triggers the appropriate Gradle task to build Kotlin first, followed by `xcodebuild` for the Xcode and iOS-specific parts, ensuring a seamless integration between Kotlin and Swift code (see next section for details).
+
+### Building & Running from Xcode
+
+For full XCFramework build (to be consumed by the iOS application), you'll have to rely on `xcodebuild` (or build directly from Xcode):
+
+```bash
+cd tasks-app-ios
+IOS_TARGET=simulator xcodebuild -project Taskfolio.xcodeproj \
+  -scheme Taskfolio \
+  -sdk iphonesimulator \
+  -arch arm64 \
+  -configuration Debug \
+  build \
+  CODE_SIGNING_ALLOWED=NO \
+  CODE_SIGN_IDENTITY="" \
+  CODE_SIGNING_REQUIRED=NO
+```
+This triggers the `:tasks-app-shared:embedAndSignAppleFrameworkForXcode` Gradle task under the hood.
+
+For Xcode integration, it's recommended to install the [Xcode Kotlin plugin](https://touchlab.co/xcodekotlin):
+
+```bash
+brew install xcode-kotlin
+xcode-kotlin install
+```
+
+When you update Xcode, you'll have to sync the plugin:
+
+```bash
+xcode-kotlin sync
+```
+
+If you want to debug the Kotlin code from Xcode, you'll have to add the needed source sets in Xcode:  
+Add Group > Add folders as **reference** > `tasks-app-shared/{commonMain,iosMain}` (or any other module you want to debug).
+If you properly installed the Xcode Kotlin plugin, you'll be able to set a breakpoint in the Kotlin code and see syntax coloring as well.
 </details>
 
 ## ⚖️ License

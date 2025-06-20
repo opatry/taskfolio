@@ -14,10 +14,12 @@ This project highlights the breadth of my Android knowledge, from API integratio
 It’s designed not just as a functioning task manager, but as a demonstration of my ability to deliver well-structured, maintainable,
 and scalable Android apps.
 
-[![Taskfolio Android Application](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
+[![Taskfolio on Play Store](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.tasks.app)
 
-| --------------------------------------- |--------------------------------------- |--------------------------------------- | ---------------------------------- |
+| --------------------------------------- |--------------------------------------- | ---------------------------------- | ---------------------------------- |
 | ![](assets/screens/task_lists_light.png) | ![](assets/screens/groceries_light.png) | ![](assets/screens/add_task_light.png) | ![](assets/screens/home_dark.png)  |
+
+> ℹ️ The application is also available as a desktop (Jvm) application and an iOS application as well (using [Compose Multi Platform (aka CMP)](https://www.jetbrains.com/compose-multiplatform/) as UI Toolkit).
 
 ## 🎯 Project intentions
 
@@ -52,11 +54,13 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 
 ## 🛠️ Tech stack
 
-- [Kotlin](https://kotlinlang.org/), [Multiplatform (aka KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
-  - iOS & Web are not planned any time soon (contribution are welcome 🤝)
+- [Kotlin](https://kotlinlang.org/), [Multiplatform (aka KMP)](https://kotlinlang.org/docs/multiplatform.html)
+  - Android and Desktop are fully supported.
+  - iOS wasn't initially planned, but a draft version is available (use it at your own risk, there might be dragons 🐉).
+  - Web is not planned any time soon (contributions are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
-- [Room](https://developer.android.com/training/data-storage/room) for local persistance
+- [Room](https://developer.android.com/training/data-storage/room) for local persistence
 - [Koin](https://insert-koin.io/) for dependency injection
 - [Material Design 3 Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose), [Multiplatform (aka CMP)](https://www.jetbrains.com/compose-multiplatform/)
