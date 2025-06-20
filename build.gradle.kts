@@ -124,6 +124,14 @@ kover {
     }
 }
 
+// TODO infer from gradle property (none, all, simulator, device)
+private val iosTargets = listOf(
+//    "iosX64",
+//    "iosArm64",
+    "iosSimulatorArm64",
+)
+ext["enabledIosTargets"] = iosTargets
+
 subprojects {
     tasks {
         findByName("test") ?: return@tasks

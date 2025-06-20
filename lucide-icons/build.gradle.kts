@@ -28,7 +28,22 @@ plugins {
 
 kotlin {
     jvm()
-    iosSimulatorArm64()
+
+    @Suppress("UNCHECKED_CAST")
+    val iosTargets = rootProject.extra["enabledIosTargets"] as? List<String> ?: emptyList()
+    iosTargets.mapNotNull {
+        when (it) {
+            "iosX64" -> iosX64()
+            "iosArm64" -> iosArm64()
+            "iosSimulatorArm64" -> iosSimulatorArm64()
+            else -> null
+        }
+    }.forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "TasksAppShared"
+            isStatic = false
+        }
+    }
 
     jvmToolchain(17)
 
