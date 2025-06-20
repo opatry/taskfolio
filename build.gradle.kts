@@ -22,6 +22,7 @@
 
 import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
@@ -135,7 +136,32 @@ kover {
     }
 }
 
+private val kmpPluginId = libs.plugins.jetbrains.kotlin.multiplatform.get().pluginId
 subprojects {
+    plugins.withId(kmpPluginId) {
+        if (project == project(":google:oauth-http")) return@withId
+
+        extensions.configure<KotlinMultiplatformExtension> {
+            // foo-bar-zorg → FooBarZorg
+            val frameworkBaseName = project.name.split('-').joinToString("") { part ->
+                part.replaceFirstChar(Char::uppercase)
+            }
+            iosTargets.mapNotNull {
+                when (it) {
+                    "iosX64" -> iosX64()
+                    "iosArm64" -> iosArm64()
+                    "iosSimulatorArm64" -> iosSimulatorArm64()
+                    else -> null
+                }
+            }.forEach { iosTarget ->
+                iosTarget.binaries.framework {
+                    baseName = frameworkBaseName
+                    isStatic = true
+                }
+            }
+        }
+    }
+
     tasks {
         findByName("test") ?: return@tasks
         named<Test>("test") {
