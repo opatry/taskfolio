@@ -29,7 +29,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
-import net.opatry.tasks.InMemoryTasksApi
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.TaskRepository
 

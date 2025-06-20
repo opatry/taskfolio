@@ -23,7 +23,7 @@
 package net.opatry.tasks.data
 
 import kotlinx.coroutines.flow.firstOrNull
-import net.opatry.tasks.InMemoryTasksApi
+import net.opatry.tasks.data.util.InMemoryTasksApi
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.util.InMemoryTaskListsApi
 import net.opatry.tasks.data.util.runTaskRepositoryTest
