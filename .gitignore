@@ -33,6 +33,11 @@ local.properties
 .kotlin/metadata/
 
 tasks-app-android/google-services.json
+tasks-app-desktop/bin/
+tasks-app-ios/Taskfolio.xcodeproj/xcuserdata/*.xcuserdatad
+tasks-app-ios/Taskfolio.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+tasks-app-ios/Taskfolio.xcodeproj/project.xcworkspace/xcuserdata/*.xcuserdatad
+tasks-app-ios/Taskfolio.xcodeproj/project.xcworkspace/xcshareddata/*
 
 *token_cache.*
 client_secret_*.apps.googleusercontent.com.json
@@ -42,4 +47,3 @@ _ci/api-*.json
 bundletool-*.jar
 
 _site/
-tasks-app-desktop/bin/
