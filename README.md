@@ -36,6 +36,8 @@ Refer to the root project's [`build.gradle.kts`](build.gradle.kts#L55-L90) for d
 
 [**Taskfolio**](https://opatry.github.io/taskfolio) is an Android task management app built using [Google Tasks API](https://developers.google.com/tasks/reference/rest). Developed to demonstrate my expertise in modern Android development, it highlights my skills in architecture, UI design with Jetpack Compose, OAuth authentication, and more—all packaged in a sleek, user-friendly interface.
 
+> [!INFO] The application is also available as a desktop (Jvm) application and an iOS application as well (using [Compose Multi Platform (aka CMP)](https://www.jetbrains.com/compose-multiplatform/) as UI Toolkit).
+
 > I set out to revisit the classical TODO app, ‘local-first’ syncing with Google Tasks—aiming for an <abbr title="Minimum Viable Experience">MVE</abbr> in 2 weeks, focusing on the 80/20 rule to nail the essentials.
 
 | ![](assets/screens/task_lists_light.png) | ![](assets/screens/groceries_light.png) | ![](assets/screens/add_task_light.png) | ![](assets/screens/home_dark.png)  |
@@ -77,7 +79,7 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 ## 🛠️ Tech stack
 
 - [Kotlin](https://kotlinlang.org/), [Multiplatform (aka KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
-  - iOS wasn’t initially planned, but I bootstrapped a [PR to evaluate the feasibility of the iOS target]((https://github.com/opatry/taskfolio/pull/269)). It turned out to be quite achievable and just needs some polishing.
+  - iOS wasn’t initially planned, but a draft version is available (use it at your own risks, bare minimum support is expected). It uses [Compose Multi Platform (aka CMP)](https://www.jetbrains.com/compose-multiplatform/).
   - Web is not planned any time soon (contribution are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
