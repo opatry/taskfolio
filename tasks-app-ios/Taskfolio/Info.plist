@@ -4,5 +4,9 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>CFBundleShortVersionString</key>
+	<string>$(BUNDLE_SHORT_VERSION_STRING)</string>
+	<key>CFBundleVersion</key>
+	<string>$(BUNDLE_VERSION)</string>
 </dict>
 </plist>
