@@ -64,7 +64,7 @@ kotlin {
         }
 
         iosMain.dependencies {
-            implementation("com.ionspin.kotlin:bignum:0.3.10")
+            implementation(libs.bignum)
         }
     }
 }
