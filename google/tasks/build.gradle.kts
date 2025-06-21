@@ -28,21 +28,7 @@ plugins {
 kotlin {
     jvm()
 
-    @Suppress("UNCHECKED_CAST")
-    val iosTargets = rootProject.extra["enabledIosTargets"] as? List<String> ?: emptyList()
-    iosTargets.mapNotNull {
-        when (it) {
-            "iosX64" -> iosX64()
-            "iosArm64" -> iosArm64()
-            "iosSimulatorArm64" -> iosSimulatorArm64()
-            else -> null
-        }
-    }.forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "TasksAppShared"
-            isStatic = false
-        }
-    }
+    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
 
     jvmToolchain(17)
 

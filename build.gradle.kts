@@ -22,6 +22,7 @@
 
 import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform) apply false
@@ -124,51 +125,27 @@ kover {
     }
 }
 
-// We ignore "iosX64", not considered as a use case
-private val iosTargets = when (findProperty("ios.target") as? String) {
-    "all" -> listOf("iosArm64", "iosSimulatorArm64")
-    "simulator" -> listOf("iosSimulatorArm64")
-    "device" -> listOf("iosArm64")
-    "none" -> emptyList()
-    else -> emptyList()
-}
-ext["enabledIosTargets"] = iosTargets
-
-//private val kmpPluginId = libs.plugins.jetbrains.kotlin.multiplatform.get().pluginId
-
+private val kmpPluginId = libs.plugins.jetbrains.kotlin.multiplatform.get().pluginId
 subprojects {
-//    plugins.withId(kmpPluginId) {
-//        if (project.name == projects.google.oauthHttp.name) return@withId
-//
-//        afterEvaluate {
-//            println("AFTER? $project")
-////            @Suppress("UNCHECKED_CAST")
-////            val targets = rootProject.extra["enabledIosTargets"] as? List<String> ?: emptyList()
-//            extensions.configure<KotlinMultiplatformExtension> {
-//                iosTargets.mapNotNull {
-//                    when (it) {
-//                        "iosX64" -> iosX64()
-//                        "iosArm64" -> iosArm64()
-//                        "iosSimulatorArm64" -> iosSimulatorArm64()
-//                        else -> null
-//                    }
-//                }.forEach { iosTarget ->
-//                    iosTarget.binaries.framework {
-//                        baseName = "TasksAppShared"
-//                        isStatic = false
-//                    }
-//                }
-//            }
-//
-//            if (project.name == projects.tasksAppShared.name) {
-//                dependencies {
-//                    iosTargets.forEach {
-//                        add("ksp${it.capitalized()}", libs.androidx.room.compiler)
-//                    }
-//                }
-//            }
-//        }
-//    }
+    plugins.withId(kmpPluginId) {
+        if (project.name == projects.google.oauthHttp.name) return@withId
+
+        extensions.configure<KotlinMultiplatformExtension> {
+            iosTargets.mapNotNull {
+                when (it) {
+                    "iosX64" -> iosX64()
+                    "iosArm64" -> iosArm64()
+                    "iosSimulatorArm64" -> iosSimulatorArm64()
+                    else -> null
+                }
+            }.forEach { iosTarget ->
+                iosTarget.binaries.framework {
+                    baseName = "TasksAppShared"
+                    isStatic = false
+                }
+            }
+        }
+    }
 
     tasks {
         findByName("test") ?: return@tasks

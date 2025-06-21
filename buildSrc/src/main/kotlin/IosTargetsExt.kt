@@ -20,21 +20,23 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.jetbrains.kotlin.multiplatform)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-}
+import org.gradle.api.Project
 
-kotlin {
-    jvm()
+// can't use by lazy, we need Project.findProperty not accessible there
+@Suppress("ObjectPropertyName")
+private lateinit var _iosTargets: List<String>
 
-    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
-
-    jvmToolchain(17)
-
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlinx.serialization)
+val Project.iosTargets: List<String>
+    get() {
+        if (!::_iosTargets.isInitialized) {
+            _iosTargets = when (findProperty("ios.target") as? String) {
+                // We ignore "iosX64", not considered as a use case
+                "all" -> listOf("iosArm64", "iosSimulatorArm64")
+                "simulator" -> listOf("iosSimulatorArm64")
+                "device" -> listOf("iosArm64")
+                "none" -> emptyList()
+                else -> emptyList()
+            }
         }
+        return _iosTargets
     }
-}
