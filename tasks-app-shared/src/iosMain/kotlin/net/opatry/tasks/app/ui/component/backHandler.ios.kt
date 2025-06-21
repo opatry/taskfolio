@@ -23,9 +23,13 @@
 package net.opatry.tasks.app.ui.component
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 
+@ExperimentalComposeUiApi
 @Composable
 actual fun MyBackHandler(canNavigateBack: () -> Boolean, navigateBack: () -> Unit) {
-    // TODO
-    //  no-op to begin with
+    BackHandler(canNavigateBack()) {
+        navigateBack()
+    }
 }
