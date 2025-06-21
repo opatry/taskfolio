@@ -77,7 +77,8 @@ I do not aim to implement advanced features beyond what is supported by the Goog
 ## 🛠️ Tech stack
 
 - [Kotlin](https://kotlinlang.org/), [Multiplatform (aka KMP)](https://kotlinlang.org/docs/multiplatform.html) (currently Desktop & Android are supported)
-  - iOS & Web are not planned any time soon (contribution are welcome 🤝)
+  - iOS wasn’t initially planned, but I bootstrapped a [PR to evaluate the feasibility of the iOS target]((https://github.com/opatry/taskfolio/pull/269)). It turned out to be quite achievable and just needs some polishing.
+  - Web is not planned any time soon (contribution are welcome 🤝)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
 - [Ktor client](https://ktor.io/) (+ [Kotlinx serialization](https://kotlinlang.org/docs/serialization.html))
 - [Room](https://developer.android.com/training/data-storage/room) for local persistence
