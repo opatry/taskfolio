@@ -6,27 +6,8 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXContainerItemProxy section */
-		4734A0A02E05CED900175C75 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4734A0872E05CE9D00175C75 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4734A08E2E05CE9D00175C75;
-			remoteInfo = Taskfolio;
-		};
-		4734A0AA2E05CED900175C75 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4734A0872E05CE9D00175C75 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4734A08E2E05CE9D00175C75;
-			remoteInfo = Taskfolio;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		4734A08F2E05CE9D00175C75 /* Taskfolio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Taskfolio.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4734A09F2E05CED900175C75 /* TaskfolioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TaskfolioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4734A0A92E05CED900175C75 /* TaskfolioUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TaskfolioUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		473FF75F2E05F737002B3B0F /* TasksAppShared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TasksAppShared.framework; path = "../tasks-app-shared/build/bin/iosSimulatorArm64/debugFramework/TasksAppShared.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -59,20 +40,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4734A09C2E05CED900175C75 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4734A0A62E05CED900175C75 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -89,8 +56,6 @@
 			isa = PBXGroup;
 			children = (
 				4734A08F2E05CE9D00175C75 /* Taskfolio.app */,
-				4734A09F2E05CED900175C75 /* TaskfolioTests.xctest */,
-				4734A0A92E05CED900175C75 /* TaskfolioUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,46 +94,6 @@
 			productReference = 4734A08F2E05CE9D00175C75 /* Taskfolio.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4734A09E2E05CED900175C75 /* TaskfolioTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4734A0B62E05CED900175C75 /* Build configuration list for PBXNativeTarget "TaskfolioTests" */;
-			buildPhases = (
-				4734A09B2E05CED900175C75 /* Sources */,
-				4734A09C2E05CED900175C75 /* Frameworks */,
-				4734A09D2E05CED900175C75 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4734A0A12E05CED900175C75 /* PBXTargetDependency */,
-			);
-			name = TaskfolioTests;
-			packageProductDependencies = (
-			);
-			productName = TaskfolioTests;
-			productReference = 4734A09F2E05CED900175C75 /* TaskfolioTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		4734A0A82E05CED900175C75 /* TaskfolioUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4734A0B92E05CED900175C75 /* Build configuration list for PBXNativeTarget "TaskfolioUITests" */;
-			buildPhases = (
-				4734A0A52E05CED900175C75 /* Sources */,
-				4734A0A62E05CED900175C75 /* Frameworks */,
-				4734A0A72E05CED900175C75 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4734A0AB2E05CED900175C75 /* PBXTargetDependency */,
-			);
-			name = TaskfolioUITests;
-			packageProductDependencies = (
-			);
-			productName = TaskfolioUITests;
-			productReference = 4734A0A92E05CED900175C75 /* TaskfolioUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -181,14 +106,6 @@
 				TargetAttributes = {
 					4734A08E2E05CE9D00175C75 = {
 						CreatedOnToolsVersion = 16.2;
-					};
-					4734A09E2E05CED900175C75 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 4734A08E2E05CE9D00175C75;
-					};
-					4734A0A82E05CED900175C75 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 4734A08E2E05CE9D00175C75;
 					};
 				};
 			};
@@ -207,28 +124,12 @@
 			projectRoot = "";
 			targets = (
 				4734A08E2E05CE9D00175C75 /* Taskfolio */,
-				4734A09E2E05CED900175C75 /* TaskfolioTests */,
-				4734A0A82E05CED900175C75 /* TaskfolioUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4734A08D2E05CE9D00175C75 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4734A09D2E05CED900175C75 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4734A0A72E05CED900175C75 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -266,34 +167,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4734A09B2E05CED900175C75 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4734A0A52E05CED900175C75 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		4734A0A12E05CED900175C75 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4734A08E2E05CE9D00175C75 /* Taskfolio */;
-			targetProxy = 4734A0A02E05CED900175C75 /* PBXContainerItemProxy */;
-		};
-		4734A0AB2E05CED900175C75 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4734A08E2E05CE9D00175C75 /* Taskfolio */;
-			targetProxy = 4734A0AA2E05CED900175C75 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4734A0B12E05CED900175C75 /* Debug */ = {
@@ -330,6 +204,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -353,9 +228,11 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = Taskfolio;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -393,6 +270,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -409,9 +287,11 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = Taskfolio;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -421,7 +301,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_ASSET_PATHS = "\"Taskfolio/Preview Content\"";
 				DEVELOPMENT_TEAM = 9J8LQ9R327;
 				ENABLE_PREVIEWS = YES;
@@ -444,7 +324,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.3;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = net.opatry.tasks.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -462,7 +342,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_ASSET_PATHS = "\"Taskfolio/Preview Content\"";
 				DEVELOPMENT_TEAM = 9J8LQ9R327;
 				ENABLE_PREVIEWS = YES;
@@ -485,7 +365,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.3;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = net.opatry.tasks.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -494,78 +374,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		4734A0B72E05CED900175C75 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9J8LQ9R327;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.opatry.TaskfolioTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Taskfolio.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Taskfolio";
-			};
-			name = Debug;
-		};
-		4734A0B82E05CED900175C75 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9J8LQ9R327;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.opatry.TaskfolioTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Taskfolio.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Taskfolio";
-			};
-			name = Release;
-		};
-		4734A0BA2E05CED900175C75 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9J8LQ9R327;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.opatry.TaskfolioUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Taskfolio;
-			};
-			name = Debug;
-		};
-		4734A0BB2E05CED900175C75 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9J8LQ9R327;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.opatry.TaskfolioUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Taskfolio;
 			};
 			name = Release;
 		};
@@ -586,24 +394,6 @@
 			buildConfigurations = (
 				4734A0B42E05CED900175C75 /* Debug */,
 				4734A0B52E05CED900175C75 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4734A0B62E05CED900175C75 /* Build configuration list for PBXNativeTarget "TaskfolioTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4734A0B72E05CED900175C75 /* Debug */,
-				4734A0B82E05CED900175C75 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4734A0B92E05CED900175C75 /* Build configuration list for PBXNativeTarget "TaskfolioUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4734A0BA2E05CED900175C75 /* Debug */,
-				4734A0BB2E05CED900175C75 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
