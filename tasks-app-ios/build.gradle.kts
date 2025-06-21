@@ -29,6 +29,9 @@ plugins {
     alias(libs.plugins.about.libraries)
 }
 
+val appVersion = libs.versions.tasksApp.name.get()
+val appVersionCode = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
+
 kotlin {
     jvmToolchain(17)
 
@@ -52,6 +55,22 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.tasksAppShared)
         }
+    }
+}
+
+tasks.register("updateXcodeVersionConfig") {
+    val configFile = file("${projectDir}/Taskfolio/Versions.xcconfig")
+    outputs.file(configFile)
+    val content = """
+        BUNDLE_VERSION=$appVersionCode
+        BUNDLE_SHORT_VERSION_STRING=$appVersion
+        """.trimIndent()
+
+    outputs.upToDateWhen {
+        configFile.takeIf(File::exists)?.readText() == content
+    }
+    doLast {
+        configFile.writeText(content)
     }
 }
 

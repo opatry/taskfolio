@@ -6,8 +6,12 @@ origin=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd) || exit
 # shellcheck disable=SC1091
 . "${origin}/_ci/utils.sh"
 
+build_type="${1:-"dev"}"
 app_bundle_id="net.opatry.tasks.app"
-ios_target="${1:-"iPhone 16"}"
+if [ "${build_type}" = "dev" ]; then
+  app_bundle_id="${app_bundle_id}.dev"
+fi
+ios_target="${2:-"iPhone 16"}"
 
 step "Looking for iOS simulator device UUID for ${MAGENTA}${ios_target}${RESET}"
 device_uuid=$(xcrun simctl list devices | grep "${ios_target}" | grep "Booted" | grep -oE '[A-F0-9\-]{36}' | head -1)

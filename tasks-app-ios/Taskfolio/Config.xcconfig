@@ -1,0 +1,4 @@
+#include? "Versions.xcconfig"
+
+APP_DISPLAY_NAME=Taskfolio
+APP_ID=net.opatry.tasks.app

@@ -8,5 +8,7 @@
 	<string>$(BUNDLE_SHORT_VERSION_STRING)</string>
 	<key>CFBundleVersion</key>
 	<string>$(BUNDLE_VERSION)</string>
+	<key>CFBundleDisplayName</key>
+	<string>$(APP_DISPLAY_NAME)</string>
 </dict>
 </plist>
