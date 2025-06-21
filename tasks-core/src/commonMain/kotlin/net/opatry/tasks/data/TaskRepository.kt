@@ -37,13 +37,13 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
-import net.opatry.tasks.BigIntegerKMP
+import net.opatry.tasks.DoneTaskPosition
 import net.opatry.tasks.NowProvider
+import net.opatry.tasks.TodoTaskPosition
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
-import net.opatry.tasks.toBigInteger
 
 enum class TaskListSorting {
     Manual,
@@ -227,9 +227,9 @@ fun computeTaskPositions(tasks: List<TaskEntity>, newPositionStart: Int = 0): Li
         tasksByList.forEach { (_, tasks) ->
             tasks.groupBy(TaskEntity::parentTaskLocalId).forEach { (_, subTasks) ->
                 val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
-                val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
+                val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it).value) }
                 val todoWithPositions = todo.mapIndexed { index, taskEntity ->
-                    taskEntity.copy(position = (newPositionStart + index).toTaskPosition())
+                    taskEntity.copy(position = TodoTaskPosition.fromIndex(newPositionStart + index).value)
                 }
 
                 val sortedSubTasks = (todoWithPositions + completedWithPositions).sortedBy(TaskEntity::position)
@@ -239,28 +239,14 @@ fun computeTaskPositions(tasks: List<TaskEntity>, newPositionStart: Int = 0): Li
     }
 }
 
-fun Number.toTaskPosition(): String = this.toString().padStart(20, '0')
-
-fun computeCompletedTaskPosition(task: TaskEntity): String {
+fun computeCompletedTaskPosition(task: TaskEntity): DoneTaskPosition {
     val completionDate = task.completionDate
     require(task.isCompleted && completionDate != null) {
         "Task must be completed and have a completion date"
     }
     // ignore milliseconds, on backend side, Google Tasks API truncates milliseconds
     val truncatedDate = Instant.fromEpochMilliseconds(completionDate.toEpochMilliseconds() / 1000 * 1000)
-    return truncatedDate.asCompletedTaskPosition()
-}
-
-fun BigIntegerKMP.toTaskPosition() = this.toString().padStart(20, '0')
-
-/**
- * Converts a completion date as the position of a completed task for Google Tasks sorting logic.
- * The sorting of completed tasks puts last completed tasks first.
- */
-fun Instant.asCompletedTaskPosition(): String {
-    val upperBound = BigIntegerKMP("9999999999999999999")
-    val sorting = upperBound - this.toEpochMilliseconds().toBigInteger()
-    return sorting.toTaskPosition()
+    return DoneTaskPosition.fromCompletionDate(truncatedDate)
 }
 
 class TaskRepository(
@@ -443,7 +429,7 @@ class TaskRepository(
         val taskListEntity = requireNotNull(taskListDao.getById(taskListId)) { "Invalid task list id $taskListId" }
         val parentTaskEntity = parentTaskId?.let { requireNotNull(taskDao.getById(it)) { "Invalid parent task id $parentTaskId" } }
         val now = nowProvider.now()
-        val firstPosition = 0.toTaskPosition()
+        val firstPosition = TodoTaskPosition.fromIndex(0).value
         val currentTasks = taskDao.getTasksFromPositionOnward(taskListId, parentTaskId, firstPosition)
             .toMutableList()
         val taskEntity = TaskEntity(
@@ -589,11 +575,11 @@ class TaskRepository(
         }
         require(parentTaskEntity.parentTaskLocalId == null) { "Parent task must be a top level task" }
 
-        val subTasks = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.id, 0.toTaskPosition())
+        val subTasks = taskDao.getTasksFromPositionOnward(taskEntity.parentListLocalId, taskEntity.id, TodoTaskPosition.fromIndex(0).value)
         require(subTasks.isEmpty()) { "Cannot indent task with subtasks" }
 
         val now = nowProvider.now()
-        val targetPosition = Int.MAX_VALUE.toTaskPosition()
+        val targetPosition = TodoTaskPosition.fromIndex(Int.MAX_VALUE).value
         val updatedTaskEntity = taskEntity.copy(
             parentTaskLocalId = parentTaskEntity.id,
             lastUpdateDate = now,
@@ -649,7 +635,7 @@ class TaskRepository(
         val updatedTaskEntity = taskEntity.copy(
             parentTaskLocalId = null,
             lastUpdateDate = now,
-            position = newPosition.toTaskPosition(),
+            position = TodoTaskPosition.fromIndex(newPosition).value,
         )
 
         // compute final subtasks position
@@ -694,7 +680,7 @@ class TaskRepository(
         require(!taskEntity.isCompleted) { "Can't move completed tasks" }
         val now = nowProvider.now()
         val updatedTaskEntity = taskEntity.copy(
-            position = 0.toTaskPosition(),
+            position = TodoTaskPosition.fromIndex(0).value,
             lastUpdateDate = now,
         )
         val tasksToUpdate = taskDao.getTasksUpToPosition(taskEntity.parentListLocalId, null, taskEntity.position)
@@ -735,7 +721,7 @@ class TaskRepository(
         val updatedTaskEntity = taskEntity.copy(
             parentListLocalId = destinationListId,
             lastUpdateDate = now,
-            position = 0.toTaskPosition(),
+            position = TodoTaskPosition.fromIndex(0).value,
         )
         taskDao.upsert(updatedTaskEntity)
 

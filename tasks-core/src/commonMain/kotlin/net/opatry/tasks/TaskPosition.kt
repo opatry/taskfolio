@@ -20,22 +20,32 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package net.opatry.tasks
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-actual class BigIntegerKMP actual constructor(value: String) {
-    private val delegate = java.math.BigInteger(value)
+import kotlinx.datetime.Instant
 
-    actual operator fun plus(other: BigIntegerKMP) = BigIntegerKMP((delegate + other.delegate).toString())
-    actual operator fun minus(other: BigIntegerKMP) = BigIntegerKMP((delegate - other.delegate).toString())
-    actual operator fun times(other: BigIntegerKMP) = BigIntegerKMP((delegate * other.delegate).toString())
-    actual operator fun div(other: BigIntegerKMP) = BigIntegerKMP((delegate / other.delegate).toString())
-    actual operator fun rem(other: BigIntegerKMP) = BigIntegerKMP((delegate % other.delegate).toString())
-
-    actual override fun toString(): String = delegate.toString()
-
-    internal val delegateValue get() = delegate
+interface TaskPosition : Comparable<TaskPosition> {
+    val value: String
 }
 
-actual fun Long.toBigInteger(): BigIntegerKMP = BigIntegerKMP(this.toString())
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+expect class TodoTaskPosition : TaskPosition {
+    companion object {
+        fun fromIndex(index: Int): TodoTaskPosition
+        fun fromPosition(position: String): TodoTaskPosition
+    }
+
+    override val value: String
+    override fun compareTo(other: TaskPosition): Int
+}
+
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+expect class DoneTaskPosition : TaskPosition {
+    companion object {
+        fun fromCompletionDate(completionDate: Instant): DoneTaskPosition
+        fun fromPosition(position: String): DoneTaskPosition
+    }
+
+    override val value: String
+    override fun compareTo(other: TaskPosition): Int
+}
