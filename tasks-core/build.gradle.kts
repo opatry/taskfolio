@@ -49,8 +49,10 @@ kotlin {
             implementation(kotlin("test"))
         }
 
-        iosMain.dependencies {
-            implementation(libs.bignum)
+        if (iosTargets.isNotEmpty()) {
+            iosMain.dependencies {
+                implementation(libs.bignum)
+            }
         }
     }
 }
