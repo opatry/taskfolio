@@ -107,14 +107,13 @@ fun CreditsScreenContent(aboutLibraries: Libs?, modifier: Modifier = Modifier, o
         derivedStateOf {
             aboutLibraries?.libraries
                 ?.groupBy(Library::authors)
-                ?.toSortedMap { key1, key2 ->
-                    when {
-                        key1 == null -> 1
-                        key2 == null -> -1
-                        else -> key1.compareTo(key2)
-                    }
-                }?.mapValues { (_, libs) ->
-                    libs.distinctBy(Library::name).sortedBy(Library::uniqueId)
+                ?.entries
+                ?.sortedWith(compareBy<Map.Entry<String?, List<Library>>> {
+                    it.key == null
+                }.thenBy { it.key.orEmpty() })
+                ?.associate { entry ->
+                    val (key, libs) = entry
+                    key to libs.distinctBy(Library::name).sortedBy(Library::uniqueId)
                 }
         }
     }

@@ -25,6 +25,7 @@ package net.opatry.google.auth
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Bearer
+import kotlin.jvm.JvmInline
 
 interface GoogleAuthenticator {
     @JvmInline

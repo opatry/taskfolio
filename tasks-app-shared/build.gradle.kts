@@ -20,6 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
@@ -47,13 +48,15 @@ val ciBuild = (findProperty("ci") as? String).toBoolean()
 kotlin {
     jvm()
 
-    jvmToolchain(17)
-
     androidTarget {
         // useful to allow using commonTest in Android instrumentation tests
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
+
+    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
+
+    jvmToolchain(17)
 
     sourceSets {
         androidMain.dependencies {
@@ -81,8 +84,6 @@ kotlin {
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
-
-            implementation(compose.preview)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -154,6 +155,10 @@ room {
 dependencies {
     add("kspJvm", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
+
+    iosTargets.forEach { iosTarget ->
+        add("ksp${iosTarget.capitalized()}", libs.androidx.room.compiler)
+    }
 }
 
 android {

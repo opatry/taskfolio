@@ -39,12 +39,12 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDate
+import net.opatry.tasks.TodoTaskPosition
 import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
-import net.opatry.tasks.data.toTaskPosition
 
 private data class TaskEditorPreviewData(
     val editMode: TaskEditMode,
@@ -74,7 +74,7 @@ private class TaskEditorPreviewParameterProvider : PreviewParameterProvider<Task
                     id = TaskId(0),
                     title = "My edited task",
                     dueDate = LocalDate(2018, 6, 23),
-                    position = 0.toTaskPosition(),
+                    position = TodoTaskPosition.fromIndex(0),
                 ),
                 taskList = TaskListUIModel(
                     id = TaskListId(0),

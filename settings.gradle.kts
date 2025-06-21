@@ -62,3 +62,5 @@ include(":tasks-core")
 include(":tasks-app-shared")
 include(":tasks-app-desktop")
 include(":tasks-app-android")
+// Just to isolate/ease license_ios.json file generation
+include(":tasks-app-ios")

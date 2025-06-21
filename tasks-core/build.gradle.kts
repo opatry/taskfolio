@@ -29,6 +29,8 @@ plugins {
 kotlin {
     jvm()
 
+    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
+
     jvmToolchain(17)
 
     sourceSets {
@@ -45,6 +47,12 @@ kotlin {
 
         commonTest.dependencies {
             implementation(kotlin("test"))
+        }
+
+        if (iosTargets.isNotEmpty()) {
+            iosMain.dependencies {
+                implementation(libs.bignum)
+            }
         }
     }
 }

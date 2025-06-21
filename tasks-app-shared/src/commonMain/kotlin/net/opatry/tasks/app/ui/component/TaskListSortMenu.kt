@@ -24,6 +24,7 @@ package net.opatry.tasks.app.ui.component
 
 import Check
 import LucideIcons
+import androidx.annotation.VisibleForTesting
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +43,6 @@ import net.opatry.tasks.resources.task_list_menu_sort_by
 import net.opatry.tasks.resources.task_list_menu_sort_due_date
 import net.opatry.tasks.resources.task_list_menu_sort_manual
 import net.opatry.tasks.resources.task_list_menu_sort_title
-import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
