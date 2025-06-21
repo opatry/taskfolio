@@ -20,6 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import org.gradle.internal.extensions.stdlib.capitalized
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
@@ -44,6 +45,9 @@ compose.resources {
 
 val ciBuild = (findProperty("ci") as? String).toBoolean()
 
+@Suppress("UNCHECKED_CAST")
+val iosTargets = rootProject.extra["enabledIosTargets"] as? List<String> ?: emptyList()
+
 kotlin {
     jvm()
 
@@ -55,8 +59,6 @@ kotlin {
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    val iosTargets = rootProject.extra["enabledIosTargets"] as? List<String> ?: emptyList()
     iosTargets.mapNotNull {
         when (it) {
             "iosX64" -> iosX64()
@@ -168,7 +170,9 @@ room {
 dependencies {
     add("kspJvm", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    iosTargets.forEach { iosTarget ->
+        add("ksp${iosTarget.capitalized()}", libs.androidx.room.compiler)
+    }
 }
 
 android {

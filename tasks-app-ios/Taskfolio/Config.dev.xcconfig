@@ -2,3 +2,4 @@
 
 APP_DISPLAY_NAME=T4skf0l10 d3v
 APP_ID=net.opatry.tasks.app.dev
+IOS_TARGET=simulator

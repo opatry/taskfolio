@@ -124,12 +124,14 @@ kover {
     }
 }
 
-// TODO infer from gradle property (none, all, simulator, device)
-private val iosTargets = listOf(
-//    "iosX64",
-//    "iosArm64",
-    "iosSimulatorArm64",
-)
+// We ignore "iosX64", not considered as a use case
+private val iosTargets = when (findProperty("ios.target") as? String) {
+    "all" -> listOf("iosArm64", "iosSimulatorArm64")
+    "simulator" -> listOf("iosSimulatorArm64")
+    "device" -> listOf("iosArm64")
+    "none" -> emptyList()
+    else -> emptyList()
+}
 ext["enabledIosTargets"] = iosTargets
 
 //private val kmpPluginId = libs.plugins.jetbrains.kotlin.multiplatform.get().pluginId

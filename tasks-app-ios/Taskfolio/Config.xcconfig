@@ -2,3 +2,4 @@
 
 APP_DISPLAY_NAME=Taskfolio
 APP_ID=net.opatry.tasks.app
+IOS_TARGET=all

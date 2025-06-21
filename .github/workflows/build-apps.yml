@@ -57,7 +57,7 @@ jobs:
             -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
         elif [ "${gradle_module}" = "tasks-app-ios" ]; then
           cd tasks-app-ios
-          xcodebuild \
+          IOS_TARGET=simulator xcodebuild \
             -project Taskfolio.xcodeproj \
             -scheme Taskfolio \
             -sdk iphonesimulator \

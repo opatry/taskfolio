@@ -155,7 +155,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew \\\n  :tasks-app-shared:embedAndSignAppleFrameworkForXcode \\\n  :tasks-app-ios:updateXcodeVersionConfig\n";
+			shellScript = "if [ \"${OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED}\" = \"YES\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to 'YES'.\"\n  exit 0\nfi\n\nif [ -z \"${IOS_TARGET}\" ]; then\n  echo \"You must define IOS_TARGET to 'all', 'simulator' or 'device' to allow building for iOS.\"\n  exit 1\nfi\n\necho \"Building for '${IOS_TARGET}' target\"\n\ncd \"${SRCROOT}/..\"\n./gradlew \\\n  :tasks-app-shared:embedAndSignAppleFrameworkForXcode \\\n  :tasks-app-ios:updateXcodeVersionConfig \\\n  -Pios.target=\"${IOS_TARGET}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
