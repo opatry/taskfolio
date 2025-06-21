@@ -10,18 +10,21 @@ on:
 
 jobs:
   build:
-    name: 🔨 Build
-    runs-on: ubuntu-24.04
+    name: 🔨 Build - ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: 📱 Android App
             gradle_module: tasks-app-android
+            os: ubuntu-24.04
           - name: 🖥️ Desktop App
             gradle_module: tasks-app-desktop
+            os: ubuntu-24.04
           - name: 🍎 iOS App
             gradle_module: tasks-app-ios
+            os: macos-14
     permissions:
         contents: write
         checks: write
@@ -37,7 +40,7 @@ jobs:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
       run: ./_ci/decrypt_secrets.sh
 
-    - name: ${{ matrix.name }}
+    - name: ${{ matrix.gradle_module }}
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -53,9 +56,15 @@ jobs:
             -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
             -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
         elif [ "${gradle_module}" = "tasks-app-ios" ]; then
-          ./gradlew --no-daemon --parallel :tasks-app-shared:embedAndSignAppleFrameworkForXcode
+          cd tasks-app-ios
+          xcodebuild \
+            -project Taskfolio.xcodeproj \
+            -scheme Taskfolio \
+            -sdk iphonesimulator \
+            -arch arm64 \
+            -configuration Debug \
+            clean build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
         fi
-# TODO
-# 1 matrix per iOS target or just build for sim and that's it?
-# anyway, need to inject desired list of iOS targets to build and adjust gradle task to invoke accordingly
-# TODO launch iOS app build using xcodebuild (embedAndSignAppleFrameworkForXcode shouldn't be needed then, handled directly by xcodebuild)
