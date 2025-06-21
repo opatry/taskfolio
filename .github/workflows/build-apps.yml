@@ -24,7 +24,7 @@ jobs:
             os: ubuntu-24.04
           - name: 🍎 iOS App
             gradle_module: tasks-app-ios
-            os: macos-14
+            os: macos-15
     permissions:
         contents: write
         checks: write
