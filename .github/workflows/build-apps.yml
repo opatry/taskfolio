@@ -10,16 +10,21 @@ on:
 
 jobs:
   build:
-    name: 🔨 Build
-    runs-on: ubuntu-24.04
+    name: 🔨 Build - ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: 📱 Android App
             gradle_module: tasks-app-android
+            os: ubuntu-24.04
           - name: 🖥️ Desktop App
             gradle_module: tasks-app-desktop
+            os: ubuntu-24.04
+          - name: 🍎 iOS App
+            gradle_module: tasks-app-ios
+            os: macos-15
     permissions:
         contents: write
         checks: write
@@ -30,12 +35,24 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-jdk-gradle
 
+    - name: Cache Gradle
+      if: ${{ matrix.gradle_module == 'tasks-app-ios' }}
+      uses: actions/cache@v4
+      with:
+        path: |
+          .gradle
+          $HOME/.m2/repository
+          $HOME/.konan
+        key: gradle-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties', '**/*.gradle.kts', '**/*.gradle') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
     - name: 🔓 Decrypt secrets
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
       run: ./_ci/decrypt_secrets.sh
 
-    - name: ${{ matrix.name }}
+    - name: ${{ matrix.gradle_module }}
       env:
         PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -50,4 +67,6 @@ jobs:
             -Pplaystore.keystore.file="${PWD}/_ci/tasksApp.keystore" \
             -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
             -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+        elif [ "${gradle_module}" = "tasks-app-ios" ]; then
+          IOS_TARGET=simulator ./gradlew tasks-app-shared:linkDebugFrameworkIosSimulatorArm64
         fi
