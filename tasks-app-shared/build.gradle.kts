@@ -129,13 +129,13 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.testing)
 
-            implementation(libs.bundles.mockito)
-
             implementation(libs.koin.test)
         }
 
         jvmTest.dependencies {
             implementation(compose.desktop.currentOs)
+
+            implementation(libs.bundles.mockito)
         }
 
         androidInstrumentedTest.dependencies {
