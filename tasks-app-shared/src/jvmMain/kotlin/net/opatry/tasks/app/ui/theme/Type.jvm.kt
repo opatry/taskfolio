@@ -20,35 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.app.ui.theme
 
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.dsl.module
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 
-private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
-    .setDriver(BundledSQLiteDriver())
-    .fallbackToDestructiveMigration(dropAllTables = true)
-    .setQueryCoroutineContext(Dispatchers.IO)
-    .build()
-
-val dataModule = module {
-    single {
-        getRoomDatabase(get())
-    }
-
-    factory {
-        get<TasksAppDatabase>().getTaskListDao()
-    }
-
-    factory {
-        get<TasksAppDatabase>().getTaskDao()
-    }
-
-    factory {
-        get<TasksAppDatabase>().getUserDao()
-    }
-}
+internal actual val Typography: androidx.compose.material3.Typography = androidx.compose.material3.Typography(
+    displayLarge = TextStyle(fontSize = 57.sp), // TODO adjust
+    displayMedium = TextStyle(fontSize = 45.sp), // TODO adjust
+    displaySmall = TextStyle(fontSize = 36.sp), // TODO adjust
+    headlineLarge = TextStyle(fontSize = 32.sp), // TODO adjust
+    headlineMedium = TextStyle(fontSize = 28.sp), // TODO adjust
+    headlineSmall = TextStyle(fontSize = 24.sp), // TODO adjust
+    titleLarge = TextStyle(fontSize = 22.sp), // TODO adjust
+    titleMedium = TextStyle(fontSize = 16.sp), // TODO adjust
+    titleSmall = TextStyle(fontSize = 14.sp), // TODO adjust
+    bodyLarge = TextStyle(fontSize = 14.sp),
+    bodyMedium = TextStyle(fontSize = 12.sp),
+    bodySmall = TextStyle(fontSize = 10.sp),
+    labelLarge = TextStyle(fontSize = 12.sp),
+    labelMedium = TextStyle(fontSize = 10.sp),
+    labelSmall = TextStyle(fontSize = 9.sp),
+)

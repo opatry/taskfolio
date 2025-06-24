@@ -24,6 +24,7 @@ package net.opatry.tasks.app.ui.component
 
 import LucideIcons
 import Trash2
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -49,7 +50,6 @@ import net.opatry.tasks.resources.task_list_menu_clear_all_completed_tasks
 import net.opatry.tasks.resources.task_list_menu_default_list_cannot_be_deleted
 import net.opatry.tasks.resources.task_list_menu_delete
 import net.opatry.tasks.resources.task_list_menu_rename
-import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.stringResource
 
 @VisibleForTesting

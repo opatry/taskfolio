@@ -27,6 +27,7 @@ import CalendarX2
 import Circle
 import EllipsisVertical
 import LucideIcons
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -81,7 +82,6 @@ import net.opatry.tasks.resources.task_due_date_label_yesterday
 import net.opatry.tasks.resources.task_due_date_reset
 import net.opatry.tasks.resources.task_due_date_set
 import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
-import org.jetbrains.annotations.VisibleForTesting
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.abs

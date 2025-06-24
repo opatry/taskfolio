@@ -48,7 +48,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
@@ -94,9 +93,9 @@ class UserViewModelTest {
 
     @Test
     fun `signIn stores token and updates state on successful user info fetch`() = runTest {
-        `when`(nowProvider.now())
-            .thenReturn(Instant.fromEpochMilliseconds(42L))
-        `when`(userInfoApi.getUserInfo()).thenReturn(
+        given(nowProvider.now())
+            .willReturn(Instant.fromEpochMilliseconds(42L))
+        given(userInfoApi.getUserInfo()).willReturn(
             UserInfo(
                 id = "remoteId",
                 name = "name",
@@ -145,9 +144,9 @@ class UserViewModelTest {
 
     @Test
     fun `signIn stores token but updates state to Unsigned on failed user info fetch`() = runTest {
-        `when`(nowProvider.now())
-            .thenReturn(Instant.fromEpochMilliseconds(42L))
-        `when`(userInfoApi.getUserInfo()).thenThrow(RuntimeException("Network error"))
+        given(nowProvider.now())
+            .willReturn(Instant.fromEpochMilliseconds(42L))
+        given(userInfoApi.getUserInfo()).willThrow(RuntimeException("Network error"))
 
         viewModel.signIn(
             GoogleAuthenticator.OAuthToken(
@@ -243,7 +242,7 @@ class UserViewModelTest {
 
     @Test
     fun `refreshUserState updates state to Newcomer when no current user exists`() = runTest {
-        `when`(userDao.getCurrentUser()).thenReturn(null)
+        given(userDao.getCurrentUser()).willReturn(null)
 
         viewModel.refreshUserState()
         advanceUntilIdle()
@@ -253,7 +252,7 @@ class UserViewModelTest {
 
     @Test
     fun `refreshUserState updates state to Unsigned when current user has no remote ID`() = runTest {
-        `when`(userDao.getCurrentUser()).thenReturn(
+        given(userDao.getCurrentUser()).willReturn(
             UserEntity(
                 remoteId = null,
                 name = "name",
@@ -268,7 +267,7 @@ class UserViewModelTest {
 
     @Test
     fun `refreshUserState updates state to SignedIn when current user has a remote ID`() = runTest {
-        `when`(userDao.getCurrentUser()).thenReturn(
+        given(userDao.getCurrentUser()).willReturn(
             UserEntity(
                 remoteId = "remoteId",
                 name = "name",

@@ -20,16 +20,18 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks
+package net.opatry.tasks.data.util
 
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.io.IOException
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
 import net.opatry.tasks.data.toTaskPosition
-import java.net.ConnectException
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
@@ -39,6 +41,8 @@ class InMemoryTasksApi(
 ) : TasksApi {
     private val taskId = AtomicLong(0)
     private val storage = mutableMapOf<String, MutableList<Task>>()
+
+    private val mutex = Mutex()
 
     init {
         storage += initialTasks.associate { (taskListId, titles) ->
@@ -51,8 +55,8 @@ class InMemoryTasksApi(
     val requestCount: Int
         get() = requests.size
 
-    private fun <R> handleRequest(requestName: String, logic: () -> R): R {
-        if (!isNetworkAvailable) throw ConnectException("Network unavailable")
+    private suspend fun <R> handleRequest(requestName: String, logic: suspend () -> R): R {
+        if (!isNetworkAvailable) throw IOException("Network unavailable")
         requests += requestName
         return logic()
     }
@@ -60,7 +64,7 @@ class InMemoryTasksApi(
     private fun recomputeTaskPositions(tasks: List<Task>): List<Task> {
         val nextPositions = mutableMapOf<String?, Int>(null to 0)
         return tasks.map { task ->
-            val position = nextPositions.getOrDefault(task.parent, 0)
+            val position = nextPositions.getOrElse(task.parent) { 0 }
             nextPositions[task.parent] = position + 1
             task.copy(position = position.toTaskPosition())
         }
@@ -68,7 +72,7 @@ class InMemoryTasksApi(
 
     override suspend fun clear(taskListId: String) {
         handleRequest("clear") {
-            synchronized(this) {
+            mutex.withLock {
                 val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
                 if (tasks.isEmpty()) {
                     return@handleRequest
@@ -87,7 +91,7 @@ class InMemoryTasksApi(
 
     override suspend fun delete(taskListId: String, taskId: String) {
         handleRequest("delete") {
-            synchronized(this) {
+            mutex.withLock {
                 val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
                 if (tasks.none { it.id == taskId }) {
                     error("Task ($taskId) not found in task list ($taskListId)")
@@ -106,7 +110,7 @@ class InMemoryTasksApi(
 
     override suspend fun get(taskListId: String, taskId: String): Task {
         return handleRequest("get") {
-            val tasks = synchronized(this) {
+            val tasks = mutex.withLock {
                 storage[taskListId] ?: error("Task list ($taskListId) not found")
             }
             tasks.find { task -> task.id == taskId } ?: error("Task ($taskId) not found in task list ($taskListId)")
@@ -127,8 +131,8 @@ class InMemoryTasksApi(
                 parent = parentTaskId,
                 position = "", // will be updated with all together by recomputeTaskPositions
             )
-            synchronized(this) {
-                val tasks = storage.getOrDefault(taskListId, mutableListOf())
+            mutex.withLock {
+                val tasks = storage.getOrElse(taskListId) { mutableListOf() }
                 tasks.add(previousTaskIndex + 1, newTask)
                 val positionedTasks = recomputeTaskPositions(tasks)
                 storage[taskListId] = positionedTasks.toMutableList()
@@ -153,7 +157,7 @@ class InMemoryTasksApi(
     ): ResourceListResponse<Task> {
         return handleRequest("list") {
             // TODO maxResults & token handling
-            val tasks = synchronized(this) {
+            val tasks = mutex.withLock {
                 storage[taskListId] ?: error("Task list ($taskListId) not found")
             }
             val filteredTasks = tasks.filter { task ->
@@ -218,7 +222,7 @@ class InMemoryTasksApi(
         destinationTaskListId: String?
     ): Task {
         return handleRequest("move") {
-            synchronized(this) {
+            mutex.withLock {
                 val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
                 val task = tasks.find { task -> task.id == taskId } ?: error("Task ($taskId) not found in task list ($taskListId)")
                 val targetListId = destinationTaskListId ?: taskListId
@@ -235,7 +239,7 @@ class InMemoryTasksApi(
                     error("Task ($previousTaskId) not found in task list ($targetListId)")
                 }
                 val moved = task.copy(parent = parentTaskId)
-                destinationTasks.removeIf { it.id == moved.id }
+                destinationTasks.removeAll { it.id == moved.id }
                 destinationTasks.add(previousTaskIndex + 1, moved)
                 val positionedDestinationTasks = recomputeTaskPositions(destinationTasks)
                 storage[targetListId] = positionedDestinationTasks.toMutableList()
@@ -254,7 +258,7 @@ class InMemoryTasksApi(
 
     override suspend fun update(taskListId: String, taskId: String, task: Task): Task {
         return handleRequest("update") {
-            synchronized(this) {
+            mutex.withLock {
                 val tasks = storage[taskListId] ?: error("Task list ($taskListId) not found")
                 storage[taskListId] = tasks.map { initialTask ->
                     if (initialTask.id == taskId) {

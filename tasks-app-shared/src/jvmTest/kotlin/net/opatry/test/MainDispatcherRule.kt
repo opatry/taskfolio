@@ -20,35 +20,26 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.test
 
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.dsl.module
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
 
-private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
-    .setDriver(BundledSQLiteDriver())
-    .fallbackToDestructiveMigration(dropAllTables = true)
-    .setQueryCoroutineContext(Dispatchers.IO)
-    .build()
-
-val dataModule = module {
-    single {
-        getRoomDatabase(get())
+@OptIn(ExperimentalCoroutinesApi::class)
+class MainDispatcherRule(
+    val testDispatcher: TestDispatcher = StandardTestDispatcher(),
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        Dispatchers.setMain(testDispatcher)
     }
 
-    factory {
-        get<TasksAppDatabase>().getTaskListDao()
-    }
-
-    factory {
-        get<TasksAppDatabase>().getTaskDao()
-    }
-
-    factory {
-        get<TasksAppDatabase>().getUserDao()
+    override fun finished(description: Description) {
+        Dispatchers.resetMain()
     }
 }

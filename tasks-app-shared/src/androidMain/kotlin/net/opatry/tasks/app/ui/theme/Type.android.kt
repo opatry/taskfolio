@@ -20,35 +20,36 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.tasks.app.di
+package net.opatry.tasks.app.ui.theme
 
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import net.opatry.tasks.data.TasksAppDatabase
-import org.koin.dsl.module
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
-private fun getRoomDatabase(builder: RoomDatabase.Builder<TasksAppDatabase>): TasksAppDatabase = builder
-    .setDriver(BundledSQLiteDriver())
-    .fallbackToDestructiveMigration(dropAllTables = true)
-    .setQueryCoroutineContext(Dispatchers.IO)
-    .build()
-
-val dataModule = module {
-    single {
-        getRoomDatabase(get())
-    }
-
-    factory {
-        get<TasksAppDatabase>().getTaskListDao()
-    }
-
-    factory {
-        get<TasksAppDatabase>().getTaskDao()
-    }
-
-    factory {
-        get<TasksAppDatabase>().getUserDao()
-    }
-}
+internal actual val Typography = Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    )
+    /* Other default text styles to override
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    )
+    */
+)
