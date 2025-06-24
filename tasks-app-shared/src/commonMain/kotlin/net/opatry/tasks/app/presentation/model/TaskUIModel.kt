@@ -23,12 +23,14 @@
 package net.opatry.tasks.app.presentation.model
 
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
-import net.opatry.tasks.data.toTaskPosition
-import java.math.BigInteger
+import net.opatry.tasks.DoneTaskPosition
+import net.opatry.tasks.TaskPosition
+import net.opatry.tasks.TodoTaskPosition
 import kotlin.jvm.JvmInline
 
 sealed class DateRange {
@@ -61,7 +63,7 @@ sealed interface TaskUIModel {
     val id: TaskId
     val title: String
     val notes: String
-    val position: String
+    val position: TaskPosition
     val dueDate: LocalDate?
 
     val dateRange: DateRange
@@ -85,7 +87,7 @@ sealed interface TaskUIModel {
         override val title: String,
         override val dueDate: LocalDate? = null,
         override val notes: String = "",
-        override val position: String = 0.toTaskPosition(),
+        override val position: TodoTaskPosition = TodoTaskPosition.fromIndex(0),
         val indent: Int = 0,
         val canMoveToTop: Boolean = false,
         val canUnindent: Boolean = false,
@@ -97,7 +99,7 @@ sealed interface TaskUIModel {
         override val id: TaskId,
         override val title: String,
         override val notes: String = "",
-        override val position: String = BigInteger("9999999999999999999").toTaskPosition(),
+        override val position: DoneTaskPosition = DoneTaskPosition.fromCompletionDate(Instant.fromEpochMilliseconds(0)),
         override val dueDate: LocalDate? = null,
         val completionDate: LocalDate,
     ) : TaskUIModel

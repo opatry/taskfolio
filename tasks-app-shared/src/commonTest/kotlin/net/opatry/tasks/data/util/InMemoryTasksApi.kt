@@ -31,7 +31,6 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
-import net.opatry.tasks.data.toTaskPosition
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
@@ -66,7 +65,7 @@ class InMemoryTasksApi(
         return tasks.map { task ->
             val position = nextPositions.getOrElse(task.parent) { 0 }
             nextPositions[task.parent] = position + 1
-            task.copy(position = position.toTaskPosition())
+            task.copy(position = position.toString().padStart(20, '0'))
         }
     }
 

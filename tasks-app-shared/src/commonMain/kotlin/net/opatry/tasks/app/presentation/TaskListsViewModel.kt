@@ -43,6 +43,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.logging.Logger
+import net.opatry.tasks.DoneTaskPosition
+import net.opatry.tasks.TodoTaskPosition
 import net.opatry.tasks.app.presentation.model.DateRange
 import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
@@ -54,7 +56,6 @@ import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
-import net.opatry.tasks.data.toTaskPosition
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -110,16 +111,16 @@ internal fun TaskDataModel.asTaskUIModel(): TaskUIModel {
             notes = notes,
             dueDate = dueDate,
             completionDate = requireNotNull(completionDate).toLocalDateTime(TimeZone.UTC).date,
-            position = position,
+            position = DoneTaskPosition.fromPosition(position),
         )
     } else {
-        val isFirstTask = position == 0.toTaskPosition()
+        val isFirstTask = position.toIntOrNull() == 0
         TaskUIModel.Todo(
             id = TaskId(id),
             title = title,
             notes = notes,
             dueDate = dueDate,
-            position = position,
+            position = TodoTaskPosition.fromPosition(position),
             indent = indent,
             canMoveToTop = indent == 0 && !isFirstTask,
             canUnindent = indent > 0,
