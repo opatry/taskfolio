@@ -60,8 +60,8 @@ import org.junit.runner.RunWith
 import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.then
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.given
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -102,7 +102,7 @@ class TaskListsViewModelTest {
 
     @BeforeTest
     fun setUp() {
-        `when`(taskRepository.getTaskLists()).thenReturn(taskListsFlow)
+        given(taskRepository.getTaskLists()).willReturn(taskListsFlow)
 
         // ViewModel must be created **AFTER** `taskRepository.getTaskLists()` is mocked
         viewModel = TaskListsViewModel(logger, taskRepository)
@@ -269,8 +269,8 @@ class TaskListsViewModelTest {
 
     @Test
     fun `createTaskList should select created list`() = runTest {
-        `when`(taskRepository.createTaskList("tasks"))
-            .thenReturn(100)
+        given(taskRepository.createTaskList("tasks"))
+            .willReturn(100)
 
         viewModel.createTaskList("tasks")
         advanceUntilIdle()
@@ -281,8 +281,8 @@ class TaskListsViewModelTest {
     @Test
     fun `createTaskList failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.createTaskList("tasks"))
-            .thenThrow(e)
+        given(taskRepository.createTaskList("tasks"))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -312,8 +312,8 @@ class TaskListsViewModelTest {
     @Test
     fun `createTask should select the task list of the created task`() = runTest {
         val taskListId = TaskListId(100)
-        `when`(taskRepository.createTask(taskListId.value, null, "task"))
-            .thenReturn(1)
+        given(taskRepository.createTask(taskListId.value, null, "task"))
+            .willReturn(1)
 
         viewModel.createTask(taskListId, "task")
         advanceUntilIdle()
@@ -324,8 +324,8 @@ class TaskListsViewModelTest {
     @Test
     fun `createTask failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.createTask(100, null, "task"))
-            .thenThrow(e)
+        given(taskRepository.createTask(100, null, "task"))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -363,8 +363,8 @@ class TaskListsViewModelTest {
     @Test
     fun `createSubTask failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.createTask(100, 1, "subtask"))
-            .thenThrow(e)
+        given(taskRepository.createTask(100, 1, "subtask"))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -402,8 +402,8 @@ class TaskListsViewModelTest {
     @Test
     fun `deleteTask failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.deleteTask(100))
-            .thenThrow(e)
+        given(taskRepository.deleteTask(100))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -442,8 +442,8 @@ class TaskListsViewModelTest {
     @Test
     fun `deleteTaskList failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.deleteTaskList(1))
-            .thenThrow(e)
+        given(taskRepository.deleteTaskList(1))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -471,8 +471,8 @@ class TaskListsViewModelTest {
     @Test
     fun `renameTaskList failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.renameTaskList(1, "newTitle"))
-            .thenThrow(e)
+        given(taskRepository.renameTaskList(1, "newTitle"))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -500,8 +500,8 @@ class TaskListsViewModelTest {
     @Test
     fun `clearTaskListCompletedTasks failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.clearTaskListCompletedTasks(1))
-            .thenThrow(e)
+        given(taskRepository.clearTaskListCompletedTasks(1))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -532,8 +532,8 @@ class TaskListsViewModelTest {
     fun `sortBy(DueDate) failure when calling repository should log error`() = runTest {
         val sorting = TaskListSorting.DueDate
         val e = mock<RuntimeException>()
-        `when`(taskRepository.sortTasksBy(1, sorting))
-            .thenThrow(e)
+        given(taskRepository.sortTasksBy(1, sorting))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -564,8 +564,8 @@ class TaskListsViewModelTest {
     fun `sortBy(Title) failure when calling repository should log error`() = runTest {
         val sorting = TaskListSorting.Title
         val e = mock<RuntimeException>()
-        `when`(taskRepository.sortTasksBy(1, sorting))
-            .thenThrow(e)
+        given(taskRepository.sortTasksBy(1, sorting))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -596,8 +596,8 @@ class TaskListsViewModelTest {
     fun `sortBy(Manual) failure when calling repository should log error`() = runTest {
         val sorting = TaskListSorting.Manual
         val e = mock<RuntimeException>()
-        `when`(taskRepository.sortTasksBy(1, sorting))
-            .thenThrow(e)
+        given(taskRepository.sortTasksBy(1, sorting))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -625,8 +625,8 @@ class TaskListsViewModelTest {
     @Test
     fun `toggleTaskCompletionState failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.toggleTaskCompletionState(100))
-            .thenThrow(e)
+        given(taskRepository.toggleTaskCompletionState(100))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -671,8 +671,8 @@ class TaskListsViewModelTest {
     @Test
     fun `updateTask failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.updateTask(100, "", "", null))
-            .thenThrow(e)
+        given(taskRepository.updateTask(100, "", "", null))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -700,8 +700,8 @@ class TaskListsViewModelTest {
     @Test
     fun `updateTaskTitle failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.updateTaskTitle(100, "title2"))
-            .thenThrow(e)
+        given(taskRepository.updateTaskTitle(100, "title2"))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -729,8 +729,8 @@ class TaskListsViewModelTest {
     @Test
     fun `updateTaskNotes failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.updateTaskNotes(100, "notes2"))
-            .thenThrow(e)
+        given(taskRepository.updateTaskNotes(100, "notes2"))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -760,8 +760,8 @@ class TaskListsViewModelTest {
     fun `updateTaskDueDate failure when calling repository should log error`() = runTest {
         val (dueDate, instant) = buildMoments()
         val e = mock<RuntimeException>()
-        `when`(taskRepository.updateTaskDueDate(100, instant))
-            .thenThrow(e)
+        given(taskRepository.updateTaskDueDate(100, instant))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -789,8 +789,8 @@ class TaskListsViewModelTest {
     @Test
     fun `unindentTask failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.unindentTask(100))
-            .thenThrow(e)
+        given(taskRepository.unindentTask(100))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -818,8 +818,8 @@ class TaskListsViewModelTest {
     @Test
     fun `indentTask failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.indentTask(100))
-            .thenThrow(e)
+        given(taskRepository.indentTask(100))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -847,8 +847,8 @@ class TaskListsViewModelTest {
     @Test
     fun `moveToTop failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.moveToTop(100))
-            .thenThrow(e)
+        given(taskRepository.moveToTop(100))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -876,8 +876,8 @@ class TaskListsViewModelTest {
     @Test
     fun `moveToList failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.moveToList(100, 3))
-            .thenThrow(e)
+        given(taskRepository.moveToList(100, 3))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -905,8 +905,8 @@ class TaskListsViewModelTest {
     @Test
     fun `moveToNewList failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.moveToNewList(100, "newList"))
-            .thenThrow(e)
+        given(taskRepository.moveToNewList(100, "newList"))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -934,8 +934,8 @@ class TaskListsViewModelTest {
     @Test
     fun `restoreTask failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.restoreTask(100))
-            .thenThrow(e)
+        given(taskRepository.restoreTask(100))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -963,8 +963,8 @@ class TaskListsViewModelTest {
     @Test
     fun `updateTaskDueDate with null failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
-        `when`(taskRepository.updateTaskDueDate(100, null))
-            .thenThrow(e)
+        given(taskRepository.updateTaskDueDate(100, null))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
@@ -995,8 +995,8 @@ class TaskListsViewModelTest {
     fun `updateTaskDueDate with date failure when calling repository should log error`() = runTest {
         val e = mock<RuntimeException>()
         val (dueDate, instant) = buildMoments()
-        `when`(taskRepository.updateTaskDueDate(100, instant))
-            .thenThrow(e)
+        given(taskRepository.updateTaskDueDate(100, instant))
+            .willThrow(e)
 
         val events = mutableListOf<TaskEvent>()
         val eventCollectorJob = launch {
