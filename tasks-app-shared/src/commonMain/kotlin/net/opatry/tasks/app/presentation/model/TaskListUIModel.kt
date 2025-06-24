@@ -23,6 +23,7 @@
 package net.opatry.tasks.app.presentation.model
 
 import net.opatry.tasks.data.TaskListSorting
+import kotlin.jvm.JvmInline
 
 
 @JvmInline

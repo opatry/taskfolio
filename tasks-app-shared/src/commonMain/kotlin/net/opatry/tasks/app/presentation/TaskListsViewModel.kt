@@ -22,6 +22,7 @@
 
 package net.opatry.tasks.app.presentation
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +55,6 @@ import net.opatry.tasks.data.TaskRepository
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.toTaskPosition
-import org.jetbrains.annotations.VisibleForTesting
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 

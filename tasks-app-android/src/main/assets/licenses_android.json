@@ -2645,20 +2645,6 @@
             ]
         },
         {
-            "uniqueId": "org.jetbrains.compose.ui:ui-tooling-preview",
-            "developers": [
-                {
-                    "name": "Compose Multiplatform Team"
-                }
-            ],
-            "artifactVersion": "1.8.1",
-            "description": "Compose tooling library API. This library provides the API required to declare @Preview composables in user apps.",
-            "name": "Compose UI Preview Tooling",
-            "licenses": [
-                "Apache-2.0"
-            ]
-        },
-        {
             "uniqueId": "org.jetbrains.compose.ui:ui-unit",
             "developers": [
                 {
