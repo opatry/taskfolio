@@ -1,0 +1,73 @@
+name: 🍎 iOS App Nightly
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-changes:
+    runs-on: macos-15
+    outputs:
+      changes-detected: ${{ steps.check.outputs.changes_detected }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changes
+        id: check
+        run: |
+          git fetch origin main
+          if git log --since="24 hours ago" --pretty=format:%H -- . \
+              ':(exclude)website/' \
+              ':(exclude)fastlane/' \
+              ':(exclude)assets/' \
+              ':(exclude)**/*.md' \
+              | grep .; then
+            echo "changes_detected=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes_detected=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-ios-app:
+    timeout-minutes: 15
+    needs: check-changes
+    if: needs.check-changes.outputs.changes-detected == 'true' || github.event_name == 'workflow_dispatch'
+    name: 🍎 Build iOS App
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: Cache Gradle
+      if: ${{ matrix.gradle_module == 'tasks-app-ios' }}
+      uses: actions/cache@v4
+      with:
+        path: |
+          .gradle
+          $HOME/.m2/repository
+          $HOME/.konan
+        key: gradle-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties', '**/*.gradle.kts', '**/*.gradle') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
+    - name: 🔓 Decrypt secrets
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: ./_ci/decrypt_secrets.sh
+
+    - name: 🔨 Build
+      run: |
+          cd tasks-app-ios
+          IOS_TARGET=simulator xcodebuild \
+            -project Taskfolio.xcodeproj \
+            -scheme Taskfolio \
+            -sdk iphonesimulator \
+            -arch arm64 \
+            -configuration Debug \
+            build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
