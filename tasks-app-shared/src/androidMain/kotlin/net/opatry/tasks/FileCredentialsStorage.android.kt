@@ -28,7 +28,6 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class FileCredentialsStorage actual constructor(filepath: String) : CredentialsStorage {
     private val file: File = File(filepath)
 

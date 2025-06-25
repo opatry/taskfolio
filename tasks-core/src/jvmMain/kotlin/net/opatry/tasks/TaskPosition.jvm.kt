@@ -26,7 +26,6 @@ package net.opatry.tasks
 import kotlinx.datetime.Instant
 import java.math.BigInteger
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class TodoTaskPosition private constructor(internal val rawValue: BigInteger) : TaskPosition {
     actual override val value: String
         get() = rawValue.toString().padStart(20, '0')
@@ -62,7 +61,6 @@ actual class TodoTaskPosition private constructor(internal val rawValue: BigInte
     actual override fun toString(): String = value
 }
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class DoneTaskPosition private constructor(internal val rawValue: BigInteger) : TaskPosition {
     actual companion object {
         private val UpperBound = BigInteger("9999999999999999999")
