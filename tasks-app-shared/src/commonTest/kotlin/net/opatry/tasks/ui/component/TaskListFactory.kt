@@ -22,7 +22,6 @@
 
 package net.opatry.tasks.ui.component
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -30,6 +29,7 @@ import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
+import kotlin.time.Clock
 
 
 val today: LocalDate

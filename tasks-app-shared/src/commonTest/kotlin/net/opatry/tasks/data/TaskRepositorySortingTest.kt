@@ -22,14 +22,14 @@
 
 package net.opatry.tasks.data
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.util.runTaskRepositoryTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
 class TaskRepositorySortingTest {
     private val now: Instant

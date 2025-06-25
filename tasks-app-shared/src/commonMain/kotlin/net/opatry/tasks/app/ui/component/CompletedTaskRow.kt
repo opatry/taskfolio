@@ -41,7 +41,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.DayOfWeekNames
@@ -59,6 +58,7 @@ import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_date_label
 import net.opatry.tasks.resources.task_list_pane_delete_task_icon_content_desc
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 
 @VisibleForTesting
 object CompletedTaskRowTestTag {
