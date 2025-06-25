@@ -23,8 +23,8 @@
 
 package net.opatry.tasks
 
-import kotlinx.datetime.Instant
 import java.math.BigInteger
+import kotlin.time.Instant
 
 actual class TodoTaskPosition private constructor(internal val rawValue: BigInteger) : TaskPosition {
     actual override val value: String
