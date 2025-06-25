@@ -23,8 +23,6 @@
 package net.opatry.tasks.data
 
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import net.opatry.tasks.data.util.runTaskRepositoryTest
@@ -35,7 +33,9 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
 private suspend fun TaskRepository.createAndGetTaskList(title: String): TaskListDataModel {
     createTaskList(title)

@@ -31,7 +31,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Instant
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
@@ -43,6 +42,7 @@ import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
 import java.math.BigInteger
+import kotlin.time.Instant
 
 enum class TaskListSorting {
     Manual,

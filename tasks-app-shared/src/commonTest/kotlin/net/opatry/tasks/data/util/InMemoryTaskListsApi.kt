@@ -22,7 +22,6 @@
 
 package net.opatry.tasks.data.util
 
-import kotlinx.datetime.Clock
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
@@ -30,6 +29,7 @@ import net.opatry.google.tasks.model.TaskList
 import java.net.ConnectException
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.time.Clock
 
 @OptIn(ExperimentalAtomicApi::class)
 class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {

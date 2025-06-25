@@ -26,11 +26,11 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.TaskRepository
+import kotlin.time.Clock
 
 internal suspend fun TaskRepository.printTaskTree() {
     getTaskLists().firstOrNull()?.let { taskLists ->
