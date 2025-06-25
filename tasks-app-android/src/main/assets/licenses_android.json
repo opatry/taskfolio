@@ -2707,7 +2707,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.2.0-RC",
+            "artifactVersion": "2.2.0",
             "description": "Kotlin Standard Library",
             "name": "Kotlin Stdlib",
             "licenses": [
@@ -2721,7 +2721,7 @@
                     "name": "Kotlin Team"
                 }
             ],
-            "artifactVersion": "2.2.0-RC",
+            "artifactVersion": "2.2.0",
             "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
             "name": "Kotlin Stdlib Common",
             "licenses": [
