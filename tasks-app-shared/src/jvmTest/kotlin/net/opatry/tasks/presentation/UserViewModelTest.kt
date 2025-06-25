@@ -26,7 +26,6 @@ import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.profile.UserInfoApi
 import net.opatry.google.profile.model.UserInfo
@@ -51,6 +50,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)

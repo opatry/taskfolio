@@ -60,6 +60,10 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
+    sourceSets.all {
+        languageSettings.optIn("kotlin.time.ExperimentalTime")
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)

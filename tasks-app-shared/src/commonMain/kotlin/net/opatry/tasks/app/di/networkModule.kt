@@ -41,7 +41,6 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.datetime.Clock
 import net.opatry.google.auth.GoogleAuthenticator
 import net.opatry.google.tasks.HttpTaskListsApi
 import net.opatry.google.tasks.HttpTasksApi
@@ -54,6 +53,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ro.cosminmihu.ktor.monitor.ContentLength
 import ro.cosminmihu.ktor.monitor.KtorMonitorLogging
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 import net.opatry.logging.Logger as TaskfolioLogger

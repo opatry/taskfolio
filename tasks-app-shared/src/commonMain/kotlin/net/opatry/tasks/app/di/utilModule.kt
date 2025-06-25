@@ -22,9 +22,9 @@
 
 package net.opatry.tasks.app.di
 
-import kotlinx.datetime.Clock
 import net.opatry.tasks.NowProvider
 import org.koin.dsl.module
+import kotlin.time.Clock
 
 val utilModule = module {
     single<NowProvider> {

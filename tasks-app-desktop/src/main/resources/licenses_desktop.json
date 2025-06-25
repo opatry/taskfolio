@@ -49,6 +49,23 @@
             ]
         },
         {
+            "uniqueId": "androidx.compose.runtime:runtime-annotation",
+            "artifactVersion": "1.9.0-beta01",
+            "name": "Compose Runtime Annotation",
+            "description": "Provides Compose-specific annotations used by the compiler and tooling",
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            },
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "androidx.lifecycle:lifecycle-common",
             "artifactVersion": "2.9.0-beta01",
             "name": "Lifecycle-Common",
@@ -912,7 +929,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.collection-internal:collection",
-            "artifactVersion": "1.8.2",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "collections",
             "description": "Standalone efficient collections.",
             "developers": [
@@ -1107,6 +1124,20 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.compose.runtime:runtime-annotation",
+            "artifactVersion": "1.9.0-alpha03",
+            "name": "Compose Runtime Annotation",
+            "description": "Provides Compose-specific annotations used by the compiler and tooling",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.compose.runtime:runtime-saveable",
             "artifactVersion": "1.8.2",
             "name": "Compose Saveable",
@@ -1136,7 +1167,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-backhandler",
-            "artifactVersion": "1.8.2",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose Multiplatform BackHandler",
             "description": "Provides BackHandler in Compose Multiplatform projects",
             "developers": [
@@ -1360,7 +1391,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlinx:kotlinx-datetime",
-            "artifactVersion": "0.6.2",
+            "artifactVersion": "0.7.1",
             "name": "kotlinx-datetime",
             "description": "Kotlin Datetime Library",
             "developers": [
@@ -1460,8 +1491,22 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.runtime:jbr-api",
+            "artifactVersion": "1.5.0",
+            "name": "jbr-api",
+            "description": "Interface for the functionality specific to https://github.com/JetBrains/JetBrainsRuntime",
+            "developers": [
+                {
+                    "name": "Nikita Gubarkov"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.skiko:skiko",
-            "artifactVersion": "0.9.4.2",
+            "artifactVersion": "0.9.18",
             "name": "Skiko MPP",
             "description": "Kotlin Skia bindings",
             "developers": [
@@ -1565,7 +1610,7 @@
         },
         {
             "uniqueId": "ro.cosminmihu.ktor:ktor-monitor-logging-no-op",
-            "artifactVersion": "1.7.2",
+            "artifactVersion": "1.7.3",
             "name": "Ktor Monitor",
             "description": "Powerful tools to log Ktor Client requests and responses, making it easier to debug and analyze network communication.",
             "developers": [
