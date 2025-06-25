@@ -37,12 +37,12 @@ import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.model.TaskList
+import net.opatry.tasks.DoneTaskPosition
 import net.opatry.tasks.NowProvider
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
-import java.math.BigInteger
 
 enum class TaskListSorting {
     Manual,
@@ -226,7 +226,7 @@ fun computeTaskPositions(tasks: List<TaskEntity>, newPositionStart: Int = 0): Li
         tasksByList.forEach { (_, tasks) ->
             tasks.groupBy(TaskEntity::parentTaskLocalId).forEach { (_, subTasks) ->
                 val (completed, todo) = subTasks.partition { it.isCompleted && it.completionDate != null }
-                val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it)) }
+                val completedWithPositions = completed.map { it.copy(position = computeCompletedTaskPosition(it).value) }
                 val todoWithPositions = todo.mapIndexed { index, taskEntity ->
                     taskEntity.copy(position = (newPositionStart + index).toTaskPosition())
                 }
@@ -238,26 +238,16 @@ fun computeTaskPositions(tasks: List<TaskEntity>, newPositionStart: Int = 0): Li
     }
 }
 
-fun Number.toTaskPosition(): String = this.toString().padStart(20, '0')
+private fun Number.toTaskPosition(): String = this.toString().padStart(20, '0')
 
-fun computeCompletedTaskPosition(task: TaskEntity): String {
+private fun computeCompletedTaskPosition(task: TaskEntity): DoneTaskPosition {
     val completionDate = task.completionDate
     require(task.isCompleted && completionDate != null) {
         "Task must be completed and have a completion date"
     }
     // ignore milliseconds, on backend side, Google Tasks API truncates milliseconds
     val truncatedDate = Instant.fromEpochMilliseconds(completionDate.toEpochMilliseconds() / 1000 * 1000)
-    return truncatedDate.asCompletedTaskPosition()
-}
-
-/**
- * Converts a completion date as the position of a completed task for Google Tasks sorting logic.
- * The sorting of completed tasks puts last completed tasks first.
- */
-fun Instant.asCompletedTaskPosition(): String {
-    val upperBound = BigInteger("9999999999999999999")
-    val sorting = upperBound - this.toEpochMilliseconds().toBigInteger()
-    return sorting.toTaskPosition()
+    return DoneTaskPosition.fromCompletionDate(truncatedDate)
 }
 
 class TaskRepository(

@@ -43,6 +43,8 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import net.opatry.logging.Logger
+import net.opatry.tasks.DoneTaskPosition
+import net.opatry.tasks.TodoTaskPosition
 import net.opatry.tasks.app.presentation.TaskListsViewModel
 import net.opatry.tasks.app.presentation.model.DateRange
 import net.opatry.tasks.app.presentation.model.TaskId
@@ -188,7 +190,7 @@ class TaskListsViewModelTest {
                         title = "task2",
                         dueDate = LastWeek,
                         notes = "notes2",
-                        position = "00000000000000000001",
+                        position = TodoTaskPosition.fromPosition("00000000000000000001"),
                         indent = 0,
                         canMoveToTop = true,
                         canUnindent = false,
@@ -202,7 +204,7 @@ class TaskListsViewModelTest {
                         title = "task1",
                         dueDate = NextWeek,
                         notes = "notes1",
-                        position = "00000000000000000000",
+                        position = TodoTaskPosition.fromPosition("00000000000000000000"),
                         indent = 0,
                         canMoveToTop = false,
                         canUnindent = false,
@@ -222,7 +224,7 @@ class TaskListsViewModelTest {
                     dueDate = null,
                     notes = "notes3",
                     completionDate = yesterday,
-                    position = "09999999999999999999",
+                    position = DoneTaskPosition.fromPosition("09999999999999999999"),
                 )
             ),
             taskList.completedTasks

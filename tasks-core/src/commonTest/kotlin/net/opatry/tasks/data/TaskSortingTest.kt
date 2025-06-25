@@ -25,6 +25,7 @@ package net.opatry.tasks.data
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import net.opatry.tasks.DoneTaskPosition
 import net.opatry.tasks.data.entity.TaskEntity
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -35,21 +36,21 @@ class TaskSortingTest {
     fun `minimum completed date sorting position`() {
         // minimum timestamp sorting value (1970-01-01T00:00:00Z)
         val tMin = LocalDateTime(1970, 1, 1, 0, 0, 0).toInstant(TimeZone.UTC)
-        assertEquals("09999999999999999999", tMin.asCompletedTaskPosition())
+        assertEquals("09999999999999999999", DoneTaskPosition.fromCompletionDate(tMin).value)
     }
 
     @Test
     fun `arbitrary completed date sorting position`() {
         // an arbitrary timestamp (2024-10-29T15:54:12Z)
         val t = LocalDateTime(2024, 10, 29, 15, 54, 12).toInstant(TimeZone.UTC)
-        assertEquals("09999998269782747999", t.asCompletedTaskPosition())
+        assertEquals("09999998269782747999", DoneTaskPosition.fromCompletionDate(t).value)
     }
 
     @Test
     fun `maximum completed date sorting position`() {
         // RFC 3339 timestamp supposed maximum value (9999-12-31T23:59:59Z)
         val tMax = LocalDateTime(9999, 12, 31, 23, 59, 59).toInstant(TimeZone.UTC)
-        assertEquals("09999746597699200999", tMax.asCompletedTaskPosition())
+        assertEquals("09999746597699200999", DoneTaskPosition.fromCompletionDate(tMax).value)
     }
 
     @Test

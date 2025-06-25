@@ -28,6 +28,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import net.opatry.tasks.TodoTaskPosition
 import net.opatry.tasks.app.presentation.asTaskUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.data.model.TaskDataModel
@@ -70,7 +71,7 @@ class TaskUIModelMapperTest {
         assertEquals("title", taskUIModel.title)
         assertEquals("notes", taskUIModel.notes)
         assertEquals(date, taskUIModel.dueDate)
-        assertEquals("00000000000000000042", taskUIModel.position)
+        assertEquals(TodoTaskPosition.fromPosition("00000000000000000042"), taskUIModel.position)
         assertEquals(1, taskUIModel.indent)
     }
 
