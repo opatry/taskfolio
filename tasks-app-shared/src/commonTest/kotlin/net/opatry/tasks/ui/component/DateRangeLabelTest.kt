@@ -124,7 +124,7 @@ class DateRangeLabelTest {
         assertEquals(expectedLabel, actualLabel)
     }
 
-    @Ignore("No proper date formatting with localization")
+    @Ignore // No proper date formatting with localization
     @Test
     fun DueDateLabel_InTwoDays() = runComposeUiTest {
         lateinit var expectedLabel: String
@@ -140,7 +140,7 @@ class DateRangeLabelTest {
         // assertEquals(expectedLabel, actualLabel)
     }
 
-    @Ignore("No proper date formatting with localization")
+    @Ignore // No proper date formatting with localization
     @Test
     fun DueDateLabel_InTwoWeeks() = runComposeUiTest {
         lateinit var expectedLabel: String
@@ -156,7 +156,7 @@ class DateRangeLabelTest {
         // assertEquals(expectedLabel, actualLabel)
     }
 
-    @Ignore("No proper date formatting with localization")
+    @Ignore // No proper date formatting with localization
     @Test
     fun DueDateLabel_NextYear() = runComposeUiTest {
         lateinit var expectedLabel: String

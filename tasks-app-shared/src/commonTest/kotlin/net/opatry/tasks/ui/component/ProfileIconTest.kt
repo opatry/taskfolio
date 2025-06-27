@@ -105,7 +105,7 @@ class ProfileIconTest {
             .assertIsDisplayed()
     }
 
-    @Ignore("AsyncImage seems to cause trouble in tests, need investigation")
+    @Ignore // AsyncImage seems to cause trouble in tests, need investigation
     @Test
     fun `when signed user state with avatar then AVATAR_IMAGE should be displayed`() = runComposeUiTest {
         setContent {
