@@ -426,7 +426,7 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
-    fun `sorting tasks by title should honor title (ignore case) and ignore parent task link and indentation`() =
+    fun `sorting tasks by title should honor title ignore case and ignore parent task link and indentation`() =
         runTaskRepositoryTest { repository ->
             val (taskList, task1) = repository.createAndGetTask("list", "t1")
             val task2 = repository.createAndGetTask(taskList.id, "T1")
@@ -650,7 +650,7 @@ class TaskRepositoryCRUDTest {
     }
 
     @Test
-    fun `sorting tasks manually should honor position & parent task link`() = runTaskRepositoryTest { repository ->
+    fun `sorting tasks manually should honor position and parent task link`() = runTaskRepositoryTest { repository ->
         val (taskList, task1) = repository.createAndGetTask("list", "task1")
         val t1 = Clock.System.now() + 1.days
         repository.updateTaskDueDate(task1.id, t1)

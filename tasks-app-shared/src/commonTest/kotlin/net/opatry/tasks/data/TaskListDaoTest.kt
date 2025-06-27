@@ -197,7 +197,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when sortTasksBy(DueDate) then sorting should be updated to DueDate`() = runTest {
+    fun `when sortTasksBy DueDate then sorting should be updated to DueDate`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "Sortable",
@@ -214,7 +214,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when sortTasksBy(UserDefined) then sorting should be updated to UserDefined`() = runTest {
+    fun `when sortTasksBy UserDefined then sorting should be updated to UserDefined`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "Sortable",

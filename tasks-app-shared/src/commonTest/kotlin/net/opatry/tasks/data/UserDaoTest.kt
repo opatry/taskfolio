@@ -96,7 +96,7 @@ class UserDaoTest {
     }
 
     @Test
-    fun `when insert remote user then getByRemoteId(remoteId) should return the remote user`() = runWithInMemoryDatabase { userDao ->
+    fun `when insert remote user then getByRemoteId remoteId should return the remote user`() = runWithInMemoryDatabase { userDao ->
         val userId = userDao.insert(UserEntity(remoteId = "remoteId", name = "name", isSignedIn = true))
 
         val remoteUser = userDao.getByRemoteId("remoteId")
@@ -117,7 +117,7 @@ class UserDaoTest {
     }
 
     @Test
-    fun `when insert remote user then getById(Id) should return the user`() = runWithInMemoryDatabase { userDao ->
+    fun `when insert remote user then getById id should return the user`() = runWithInMemoryDatabase { userDao ->
         val userId = userDao.insert(UserEntity(name = "name", isSignedIn = false))
 
         val user = userDao.getById(userId)
@@ -156,7 +156,7 @@ class UserDaoTest {
     }
 
     @Test
-    fun `when clearSignedInStatus(id) then signed in user with id should be unsigned`() = runWithInMemoryDatabase { userDao ->
+    fun `when clearSignedInStatus id then signed in user with id should be unsigned`() = runWithInMemoryDatabase { userDao ->
         val user0Id = userDao.insert(UserEntity(name = "name3", isSignedIn = true))
         val user1Id = userDao.insert(UserEntity(remoteId = "remoteId1", name = "name1", isSignedIn = true))
 
