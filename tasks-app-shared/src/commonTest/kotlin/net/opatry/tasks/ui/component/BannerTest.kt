@@ -35,7 +35,7 @@ import net.opatry.tasks.app.ui.component.Banner
 import net.opatry.tasks.app.ui.component.BannerTestTag.CLOSE_ICON
 import net.opatry.tasks.app.ui.component.BannerTestTag.ICON
 import net.opatry.tasks.app.ui.component.BannerTestTag.MESSAGE
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)

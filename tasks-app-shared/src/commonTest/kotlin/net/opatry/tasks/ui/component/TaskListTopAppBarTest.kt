@@ -39,7 +39,7 @@ import net.opatry.tasks.app.ui.component.TaskListTopAppBar
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.MORE_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.SORT_MENU_ICON
 import net.opatry.tasks.data.TaskListSorting
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalTestApi::class)

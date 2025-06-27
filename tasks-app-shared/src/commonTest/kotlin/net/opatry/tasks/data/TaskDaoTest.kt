@@ -29,7 +29,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.util.inMemoryTasksAppDatabaseBuilder
-import org.junit.After
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -54,7 +54,7 @@ class TaskDaoTest {
         taskDao = db.getTaskDao()
     }
 
-    @After
+    @AfterTest
     fun closeDb() = db.close()
 
     @Test

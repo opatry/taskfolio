@@ -42,10 +42,10 @@ import net.opatry.google.tasks.TasksApiHttpResponseValidator
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
 import net.opatry.google.tasks.util.loadJson
-import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 
 class HttpTasksApiTest {
@@ -102,7 +102,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.list("")
                     }
@@ -144,7 +144,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.insert("", Task(""))
                     }
@@ -186,7 +186,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.get("", "")
                     }
@@ -226,7 +226,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.delete("", "")
                     }
@@ -268,7 +268,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.patch("", "", Task(""))
                     }
@@ -310,7 +310,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.update("", "", Task(""))
                     }
@@ -352,7 +352,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.move("", "")
                     }
@@ -391,7 +391,7 @@ class HttpTasksApiTest {
             respondError(HttpStatusCode.BadRequest, loadJson("/error_400.json"))
         }.use { mockEngine ->
             runTasksApi(mockEngine) { tasksApi ->
-                val exception = assertThrows(TasksApiException::class.java) {
+                val exception = assertFailsWith<TasksApiException> {
                     runBlocking {
                         tasksApi.clear("")
                     }
