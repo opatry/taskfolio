@@ -27,4 +27,8 @@ package net.opatry.tasks
 /**
  * ⚠️ Convenience implementation for development, totally unsecure way to store OAuth credentials.
  */
-expect class FileCredentialsStorage(filepath: String) : CredentialsStorage
+expect class FileCredentialsStorage(filepath: String) : CredentialsStorage {
+    // K2 requires override here (wasn't required in K1)
+    override suspend fun load(): TokenCache?
+    override suspend fun store(tokenCache: TokenCache)
+}

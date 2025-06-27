@@ -32,7 +32,7 @@ import java.io.File
 actual class FileCredentialsStorage actual constructor(filepath: String) : CredentialsStorage {
     private val file: File = File(filepath)
 
-    override suspend fun load(): TokenCache? {
+    actual override suspend fun load(): TokenCache? {
         return withContext(Dispatchers.IO) {
             if (file.isFile) {
                 file.readText().let(Json::decodeFromString)
@@ -42,7 +42,7 @@ actual class FileCredentialsStorage actual constructor(filepath: String) : Crede
         }
     }
 
-    override suspend fun store(tokenCache: TokenCache) {
+    actual override suspend fun store(tokenCache: TokenCache) {
         val json = Json { prettyPrint = true }
         withContext(Dispatchers.IO) {
             file.parentFile?.mkdirs()
