@@ -69,6 +69,12 @@ private const val GCP_CLIENT_ID = "191682949161-esokhlfh7uugqptqnu3su9vgqmvltv95
 
 object MainApp
 
+@Suppress(
+    "detekt:LongMethod",
+    "detekt:CyclomaticComplexMethod",
+    "detekt:CognitiveComplexMethod",
+    "detekt:MagicNumber",
+)
 @OptIn(ExperimentalMaterial3Api::class)
 fun main() {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
@@ -86,7 +92,9 @@ fun main() {
         val minSize = Dimension(600, 400)
 
         var windowState = rememberWindowState(
-            position = WindowPosition(Alignment.Center), width = defaultSize.width, height = defaultSize.height
+            position = WindowPosition(Alignment.Center),
+            width = defaultSize.width,
+            height = defaultSize.height
         )
 
         var showNewTaskListDialog by remember { mutableStateOf(false) }
@@ -133,17 +141,19 @@ fun main() {
                 onNetworkLogClick = { showKtorMonitor = true },
             )
 
-            KoinApplication(application = {
-                modules(
-                    utilModule,
-                    loggingModule,
-                    platformModule("desktop"),
-                    dataModule,
-                    authModule(GCP_CLIENT_ID),
-                    networkModule,
-                    tasksAppModule,
-                )
-            }) {
+            KoinApplication(
+                application = {
+                    modules(
+                        utilModule,
+                        loggingModule,
+                        platformModule("desktop"),
+                        dataModule,
+                        authModule(GCP_CLIENT_ID),
+                        networkModule,
+                        tasksAppModule,
+                    )
+                }
+            ) {
                 val userViewModel = koinViewModel<UserViewModel>()
                 val userState by userViewModel.state.collectAsState(null)
 
@@ -156,7 +166,9 @@ fun main() {
                 TaskfolioTheme {
                     Surface {
                         when (userState) {
-                            null -> LoadingPane()
+                            null -> {
+                                LoadingPane()
+                            }
 
                             UserState.Unsigned,
                             is UserState.SignedIn -> {
@@ -199,8 +211,10 @@ fun main() {
                                 TasksApp(aboutApp, userViewModel, tasksViewModel)
                             }
 
-                            UserState.Newcomer -> AuthorizationScreen(userViewModel::skipSignIn) {
-                                AuthorizeGoogleTasksButton(onSuccess = userViewModel::signIn)
+                            UserState.Newcomer -> {
+                                AuthorizationScreen(userViewModel::skipSignIn) {
+                                    AuthorizeGoogleTasksButton(onSuccess = userViewModel::signIn)
+                                }
                             }
                         }
                     }

@@ -19,25 +19,3 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-package net.opatry.tasks.app.util
-
-enum class OS {
-    Mac,
-    Linux,
-    Windows,
-    ;
-
-    val isMac: Boolean by lazy { this == Mac }
-    val isLinux: Boolean by lazy { this == Linux }
-    val isWindows: Boolean by lazy { this == Windows }
-}
-
-val currentOS: OS by lazy {
-    val osName = System.getProperty("os.name")
-    when {
-        osName.contains("mac", ignoreCase = true) -> OS.Mac
-        osName.matches(Regex("n[iu]x", RegexOption.IGNORE_CASE)) -> OS.Linux
-        else -> OS.Windows
-    }
-}
