@@ -137,7 +137,7 @@ class TaskListEditMenuTest {
 
     @Test
     fun `when some completed tasks then CLEAR_COMPLETED_TASKS should be enabled`() = runComposeUiTest {
-        val taskList = createTaskList(completedTaskCount = 0)
+        val taskList = createTaskList(completedTaskCount = 3)
         setContent {
             TaskListEditMenu(
                 taskList = taskList,
@@ -153,7 +153,7 @@ class TaskListEditMenuTest {
 
         onNodeWithTag(CLEAR_COMPLETED_TASKS)
             .assertIsDisplayed()
-            .assertIsNotEnabled()
+            .assertIsEnabled()
 
         onNodeWithTag(DELETE)
             .assertIsDisplayed()
