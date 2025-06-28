@@ -28,6 +28,8 @@ import ListPlus
 import LucideIcons
 import Trash2
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -38,6 +40,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.presentation.model.TaskId
+import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.ADD_SUBTASK
@@ -48,6 +53,7 @@ import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_NEW_LIST
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.MOVE_TO_TOP
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.TASK_MENU
 import net.opatry.tasks.app.ui.component.TaskMenuTestTag.UNINDENT
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_menu_add_subtask
 import net.opatry.tasks.resources.task_menu_delete
@@ -57,6 +63,9 @@ import net.opatry.tasks.resources.task_menu_move_to_top
 import net.opatry.tasks.resources.task_menu_new_list
 import net.opatry.tasks.resources.task_menu_unindent
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @VisibleForTesting
 object TaskMenuTestTag {
@@ -189,6 +198,62 @@ fun TaskMenu(
             },
             modifier = Modifier.testTag(DELETE),
             onClick = { onAction(TaskAction.Delete(task)) }
+        )
+    }
+}
+
+private class TaskPreviewParameterProvider :
+    PreviewParameterProvider<TaskUIModel.Todo> {
+    override val values = sequenceOf(
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "My task",
+            canIndent = true,
+            canUnindent = false,
+            canMoveToTop = true,
+            canCreateSubTask = true,
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(1),
+            title = "My sub task",
+            canIndent = false,
+            canUnindent = true,
+            canMoveToTop = true,
+            canCreateSubTask = false,
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(2),
+            title = "My top task",
+            canIndent = false,
+            canUnindent = false,
+            canMoveToTop = false,
+            canCreateSubTask = true,
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun TaskMenuPreview(
+    @PreviewParameter(TaskPreviewParameterProvider::class) task: TaskUIModel.Todo,
+) {
+    val taskLists = List(3) { index ->
+        TaskListUIModel(
+            id = TaskListId(index.toLong()),
+            title = "My task list ${index + 1}",
+        )
+    }
+
+    TaskfolioThemedPreview(
+        Modifier
+            .padding(24.dp)
+            .size(width = 200.dp, height = 500.dp)
+    ) {
+        TaskMenu(
+            taskLists = taskLists,
+            task = task,
+            expanded = true,
+            onAction = {},
         )
     }
 }

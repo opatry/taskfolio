@@ -23,7 +23,7 @@
 package net.opatry.tasks
 
 import kotlinx.datetime.Instant
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

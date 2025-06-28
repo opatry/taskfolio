@@ -31,7 +31,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LISTS_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LISTS_EMPTY_STATE_CREATE_LIST_BUTTON
 import net.opatry.tasks.app.ui.component.NoTaskListsEmptyState
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)

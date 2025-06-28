@@ -48,6 +48,7 @@ import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASKS_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LISTS_EMPTY_STATE
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LISTS_EMPTY_STATE_CREATE_LIST_BUTTON
 import net.opatry.tasks.app.ui.component.EmptyStatesTestTag.NO_TASK_LIST_SELECTED_EMPTY_STATE
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_empty_list_desc
 import net.opatry.tasks.resources.task_lists_screen_empty_list_title
@@ -61,6 +62,7 @@ import net.opatry.tasks.resources.task_lists_screen_empty_state_no_selection_des
 import net.opatry.tasks.resources.task_lists_screen_empty_state_no_selection_title
 import net.opatry.tasks.resources.task_lists_screen_empty_state_title
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @VisibleForTesting
 object EmptyStatesTestTag {
@@ -147,5 +149,37 @@ fun BrokenListIndentationEmptyState(onDeleteList: () -> Unit, onRepairList: () -
                 Text(stringResource(Res.string.task_lists_screen_empty_state_broken_list_indent_repair_cta))
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun NoTaskListSelectedEmptyStatePreview() {
+    TaskfolioThemedPreview {
+        NoTaskListSelectedEmptyState()
+    }
+}
+
+@Preview
+@Composable
+private fun NoTasksEmptyStatePreview() {
+    TaskfolioThemedPreview {
+        NoTasksEmptyState()
+    }
+}
+
+@Preview
+@Composable
+private fun NoTaskListEmptyStatePreview() {
+    TaskfolioThemedPreview {
+        NoTaskListsEmptyState {}
+    }
+}
+
+@Preview
+@Composable
+private fun BrokenListIndentationEmptyStatePreview() {
+    TaskfolioThemedPreview {
+        BrokenListIndentationEmptyState({}, {})
     }
 }

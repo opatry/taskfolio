@@ -30,7 +30,7 @@ import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.util.inMemoryTasksAppDatabaseBuilder
-import org.junit.After
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -55,7 +55,7 @@ class TaskListDaoTest {
         taskDao = db.getTaskDao()
     }
 
-    @After
+    @AfterTest
     fun closeDb() = db.close()
 
     @Test
@@ -197,7 +197,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when sortTasksBy(DueDate) then sorting should be updated to DueDate`() = runTest {
+    fun `when sortTasksBy DueDate then sorting should be updated to DueDate`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "Sortable",
@@ -214,7 +214,7 @@ class TaskListDaoTest {
     }
 
     @Test
-    fun `when sortTasksBy(UserDefined) then sorting should be updated to UserDefined`() = runTest {
+    fun `when sortTasksBy UserDefined then sorting should be updated to UserDefined`() = runTest {
         val entity = TaskListEntity(
             id = 1L,
             title = "Sortable",

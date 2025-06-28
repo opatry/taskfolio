@@ -22,8 +22,12 @@
 
 package net.opatry.tasks.app.ui.component
 
+import CalendarOff
+import CircleOff
+import LucideIcons
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -35,6 +39,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 
 @Composable
@@ -63,5 +71,35 @@ fun EmptyState(
                 textAlign = TextAlign.Center,
             )
         }
+    }
+}
+
+private data class EmptyStateParam(val icon: ImageVector, val title: String)
+private class EmptyStatePreviewParameterProvider : PreviewParameterProvider<EmptyStateParam> {
+    override val values: Sequence<EmptyStateParam>
+        get() = sequenceOf(
+            EmptyStateParam(
+                icon = LucideIcons.CalendarOff,
+                title = "No scheduled task"
+            ),
+            EmptyStateParam(
+                icon = LucideIcons.CircleOff,
+                title = "No task"
+            )
+        )
+}
+
+@Preview
+@Composable
+private fun EmptyStateNoDescriptionPreview(
+    @PreviewParameter(EmptyStatePreviewParameterProvider::class)
+    param: EmptyStateParam
+) {
+    TaskfolioThemedPreview {
+        EmptyState(
+            icon = param.icon,
+            title = param.title,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }

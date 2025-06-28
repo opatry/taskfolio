@@ -7,4 +7,4 @@ origin=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd) || exit
 cd "${origin}/.."
 
 find . -name "licenses*.json" -delete
-./gradlew "exportLibraryDefinitions" -Pci=true
+./gradlew "exportLibraryDefinitions" -Pci=true --no-configuration-cache

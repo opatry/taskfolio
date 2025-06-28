@@ -156,7 +156,7 @@ class TaskEditorBottomSheetTest {
     }
 
     @Test
-    fun `when editing task with title, notes and due date then all fields should be displayed`() = runComposeUiTest {
+    fun `when editing task with title and notes and due date then all fields should be displayed`() = runComposeUiTest {
         val task = TaskUIModel.Todo(
             id = TaskId(1L),
             title = "Task title",

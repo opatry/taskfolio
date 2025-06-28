@@ -22,12 +22,14 @@
 
 package net.opatry.tasks.data.util
 
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock
+import kotlinx.io.IOException
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.TaskList
-import java.net.ConnectException
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
@@ -35,6 +37,8 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
     private val taskListId = AtomicLong(0)
     private val storage = mutableMapOf<String, TaskList>()
+
+    private val mutex = Mutex()
 
     init {
         storage += initialTaskLists.map { title ->
@@ -54,15 +58,15 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
     val requestCount: Int
         get() = requests.size
 
-    private fun <R> handleRequest(requestName: String, logic: () -> R): R {
-        if (!isNetworkAvailable) throw ConnectException("Network unavailable")
+    private suspend fun <R> handleRequest(requestName: String, logic: suspend () -> R): R {
+        if (!isNetworkAvailable) throw IOException("Network unavailable")
         requests += requestName
         return logic()
     }
 
     override suspend fun delete(taskListId: String) {
         handleRequest("delete") {
-            synchronized(this) {
+            mutex.withLock {
                 storage.remove(taskListId)
             }
         }
@@ -70,7 +74,7 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
 
     override suspend fun default(): TaskList {
         return handleRequest("default") {
-            synchronized(this) {
+            mutex.withLock {
                 storage["1"] ?: error("Task list (@default / 1) not found")
             }
         }
@@ -78,7 +82,7 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
 
     override suspend fun get(taskListId: String): TaskList {
         return handleRequest("get") {
-            synchronized(this) {
+            mutex.withLock {
                 storage[taskListId] ?: error("Task list ($taskListId) not found")
             }
         }
@@ -94,7 +98,7 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
                 updatedDate = Clock.System.now(),
                 selfLink = "selfLink"
             )
-            synchronized(this) {
+            mutex.withLock {
                 storage[newTaskList.id] = newTaskList
             }
             newTaskList
@@ -104,7 +108,7 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
     override suspend fun list(maxResults: Int, pageToken: String?): ResourceListResponse<TaskList> {
         return handleRequest("list") {
             // TODO maxResults & token handling
-            synchronized(this) {
+            mutex.withLock {
                 ResourceListResponse(
                     kind = ResourceType.TaskLists,
                     etag = "etag",
@@ -121,7 +125,7 @@ class InMemoryTaskListsApi(vararg initialTaskLists: String) : TaskListsApi {
 
     override suspend fun update(taskListId: String, taskList: TaskList): TaskList {
         return handleRequest("update") {
-            synchronized(this) {
+            mutex.withLock {
                 if (!storage.containsKey(taskListId)) {
                     error("Task list ($taskListId) not found")
                 }

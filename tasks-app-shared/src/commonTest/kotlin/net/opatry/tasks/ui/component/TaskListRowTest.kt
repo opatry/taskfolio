@@ -35,7 +35,7 @@ import net.opatry.tasks.app.ui.component.TaskListRow
 import net.opatry.tasks.app.ui.component.TaskListRowTestTag.LABEL
 import net.opatry.tasks.app.ui.component.TaskListRowTestTag.REMAINING_TASKS_COUNT_BADGE
 import net.opatry.tasks.app.ui.component.TaskListRowTestTag.REMAINING_TASKS_COUNT_BADGE_LABEL
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)

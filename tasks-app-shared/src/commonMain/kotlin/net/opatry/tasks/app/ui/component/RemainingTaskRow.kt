@@ -52,14 +52,18 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.DayOfWeekNames
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
 import net.opatry.tasks.app.presentation.model.DateRange
+import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.DUE_DATE_CHIP
@@ -71,6 +75,7 @@ import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_CH
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_DUE_DATE_TOMORROW_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.SET_TASK_DUE_DATE_TODAY_CHIP
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.TOGGLE_ICON
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_due_date_label_days_ago
 import net.opatry.tasks.resources.task_due_date_label_no_date
@@ -84,6 +89,9 @@ import net.opatry.tasks.resources.task_due_date_set
 import net.opatry.tasks.resources.task_list_pane_task_options_icon_content_desc
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlin.math.abs
 
 @VisibleForTesting
@@ -276,5 +284,72 @@ fun RemainingTaskRow(
                 action?.let(onAction)
             }
         }
+    }
+}
+
+private class RemainingTaskRowPreviewDataProvider :
+    PreviewParameterProvider<TaskUIModel.Todo> {
+    override val values = sequenceOf(
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "Without due date",
+            dueDate = null,
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With due date",
+            dueDate = Clock.System.todayIn(TimeZone.UTC),
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With notes",
+            notes = "Some notes\nthat are long enough\nto be wrapped on multiple lines",
+            dueDate = Clock.System.todayIn(TimeZone.UTC),
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With very very very very very very very very long title",
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With due date in the past",
+            dueDate = Clock.System.todayIn(TimeZone.UTC).minus(3, DateTimeUnit.MONTH),
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With due date today",
+            dueDate = Clock.System.todayIn(TimeZone.UTC),
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With due date yesterday",
+            dueDate = Clock.System.todayIn(TimeZone.UTC).minus(1, DateTimeUnit.DAY),
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With due date tomorrow",
+            dueDate = Clock.System.todayIn(TimeZone.UTC).plus(1, DateTimeUnit.DAY),
+        ),
+        TaskUIModel.Todo(
+            id = TaskId(0),
+            title = "With due date in distant future",
+            dueDate = Clock.System.todayIn(TimeZone.UTC).plus(1, DateTimeUnit.MONTH),
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun CompletedTaskRowPreviewPreview(
+    @PreviewParameter(RemainingTaskRowPreviewDataProvider::class)
+    task: TaskUIModel.Todo,
+) {
+    TaskfolioThemedPreview {
+        RemainingTaskRow(
+            taskLists = emptyList(),
+            task = task,
+            showDate = true,
+            onAction = {}
+        )
     }
 }

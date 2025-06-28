@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,10 +45,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.screen.AuthorizationScreenTestTags.SKIP_BUTTON
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.onboarding_screen_authorize_explanation
 import net.opatry.tasks.resources.onboarding_screen_skip
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @VisibleForTesting
 object AuthorizationScreenTestTags {
@@ -84,6 +87,21 @@ fun AuthorizationScreen(
             Text(stringResource(Res.string.onboarding_screen_authorize_explanation), textAlign = TextAlign.Center)
 
             authorizeButton()
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun AuthorizationScreenPreview() {
+    TaskfolioThemedPreview {
+        AuthorizationScreen(onSkip = {}) {
+            Button(
+                modifier = Modifier,
+                onClick = {},
+            ) {
+                Text("Authorize")
+            }
         }
     }
 }

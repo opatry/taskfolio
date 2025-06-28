@@ -28,7 +28,6 @@ interface TaskPosition : Comparable<TaskPosition> {
     val value: String
 }
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect class TodoTaskPosition : TaskPosition {
     companion object {
         fun fromIndex(index: Int): TodoTaskPosition
@@ -42,7 +41,6 @@ expect class TodoTaskPosition : TaskPosition {
     override fun toString(): String
 }
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect class DoneTaskPosition : TaskPosition {
     companion object {
         fun fromCompletionDate(completionDate: Instant): DoneTaskPosition

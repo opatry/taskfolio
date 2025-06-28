@@ -55,12 +55,15 @@ import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGG
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.COMPLETED_TASKS_TOGGLE_LABEL
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.DATE_RANGE_STICKY_HEADER
 import net.opatry.tasks.app.ui.component.TasksColumnTestTag.TASKS_COLUMN
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_all_tasks_complete_desc
 import net.opatry.tasks.resources.task_list_pane_all_tasks_complete_title
 import net.opatry.tasks.resources.task_list_pane_completed_section_title_with_count
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @VisibleForTesting
 object TasksColumnTestTag {
@@ -202,3 +205,17 @@ private val DateRange.key: String
         DateRange.None -> "none"
     }
 
+@Preview
+@Composable
+private fun TasksColumnPreview(
+    @PreviewParameter(TaskListPreviewParameterProvider::class)
+    taskList: TaskListUIModel,
+) {
+    TaskfolioThemedPreview {
+        TasksColumn(
+            taskLists = listOf(taskList),
+            selectedTaskList = taskList,
+            showCompletedDefaultValue = true
+        )
+    }
+}

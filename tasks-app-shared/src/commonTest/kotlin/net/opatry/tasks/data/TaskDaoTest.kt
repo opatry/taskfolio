@@ -29,7 +29,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.util.inMemoryTasksAppDatabaseBuilder
-import org.junit.After
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -54,11 +54,11 @@ class TaskDaoTest {
         taskDao = db.getTaskDao()
     }
 
-    @After
+    @AfterTest
     fun closeDb() = db.close()
 
     @Test
-    fun `when insert then getById(taskId) should return created TaskEntity`() = runTest {
+    fun `when insert then getById task should return created TaskEntity`() = runTest {
         val giveNow = now
         val taskId = taskDao.insert(
             TaskEntity(
@@ -108,7 +108,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when upsert with updated title then getById(taskId) should return updated task`() = runTest {
+    fun `when upsert with updated title then getById taskId should return updated task`() = runTest {
         val original = TaskEntity(
             id = 1L,
             parentListLocalId = 1L,
@@ -126,7 +126,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when upsert with new task then getById(taskId) should return created task`() = runTest {
+    fun `when upsert with new task then getById taskId should return created task`() = runTest {
         val entity = TaskEntity(
             id = 1L,
             parentListLocalId = 1L,
@@ -174,7 +174,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when deleteTask then getById(taskId) should return null`() = runTest {
+    fun `when deleteTask then getById taskId should return null`() = runTest {
         val task = TaskEntity(
             id = 1L,
             parentListLocalId = 1L,
@@ -190,7 +190,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when deleteTasks then getById(taskId) should return null for all deleted tasks`() = runTest {
+    fun `when deleteTasks then getById taskId should return null for all deleted tasks`() = runTest {
         taskDao.insertAll(
             listOf(
                 TaskEntity(
@@ -492,7 +492,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getPreviousSiblingTask(task) with mixed tasks and subtasks then should return root level task before task`() = runTest {
+    fun `when getPreviousSiblingTask task with mixed tasks and subtasks then should return root level task before task`() = runTest {
         val task1 = TaskEntity(
             parentListLocalId = 0L,
             title = "task1",
@@ -525,7 +525,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getPreviousSiblingTask(task) without previous sibling then should return null`() = runTest {
+    fun `when getPreviousSiblingTask task without previous sibling then should return null`() = runTest {
         val task = TaskEntity(
             parentListLocalId = 0L,
             title = "task",
@@ -542,7 +542,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getPreviousSiblingTask(subtask) with mixed tasks and subtasks then should return indented task before task`() = runTest {
+    fun `when getPreviousSiblingTask subtask with mixed tasks and subtasks then should return indented task before task`() = runTest {
         val task1 = TaskEntity(
             parentListLocalId = 0L,
             title = "task1",
@@ -576,7 +576,7 @@ class TaskDaoTest {
     }
 
     @Test
-    fun `when getPreviousSiblingTask(subtask) without previous sibling then should return null`() = runTest {
+    fun `when getPreviousSiblingTask subtask without previous sibling then should return null`() = runTest {
         val task = TaskEntity(
             parentListLocalId = 0L,
             title = "task",

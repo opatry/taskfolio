@@ -42,7 +42,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.test.runTest
 import net.opatry.google.profile.model.UserInfo
 import net.opatry.google.tasks.TasksApiHttpResponseValidator
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 

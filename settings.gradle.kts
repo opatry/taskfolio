@@ -21,14 +21,12 @@
  */
 
 pluginManagement {
+    @Suppress("UnstableApiUsage")
     repositories {
         google {
             content {
-                @Suppress("UnstableApiUsage")
                 includeGroupAndSubgroups("com.android")
-                @Suppress("UnstableApiUsage")
                 includeGroupAndSubgroups("com.google")
-                @Suppress("UnstableApiUsage")
                 includeGroupAndSubgroups("androidx")
             }
         }
@@ -38,13 +36,19 @@ pluginManagement {
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
-        google()
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }

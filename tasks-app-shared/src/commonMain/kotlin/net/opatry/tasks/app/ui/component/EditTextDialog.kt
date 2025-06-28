@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -57,11 +58,13 @@ import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.DIALOG_TITLE
 import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.ERROR_MESSAGE
 import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.TEXT_FIELD
 import net.opatry.tasks.app.ui.component.EditTextDialogTestTag.VALIDATE_BUTTON
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.dialog_cancel
 import net.opatry.tasks.resources.edit_text_dialog_empty_title_error
 import net.opatry.tasks.resources.edit_text_dialog_title
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @VisibleForTesting
 object EditTextDialogTestTag {
@@ -159,5 +162,20 @@ fun EditTextDialog(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun EditTextDialogPreview() {
+    TaskfolioThemedPreview(Modifier.size(500.dp, 300.dp)) {
+        EditTextDialog(
+            onDismissRequest = {},
+            validateLabel = "OK",
+            onValidate = {},
+            dialogTitle = "My property",
+            initialText = "My value",
+            allowBlank = true,
+        )
     }
 }

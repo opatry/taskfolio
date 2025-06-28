@@ -22,7 +22,9 @@
 
 package net.opatry.tasks.app.ui.component
 
+import CloudOff
 import LucideIcons
+import WifiOff
 import X
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
@@ -48,6 +50,10 @@ import net.opatry.tasks.app.ui.component.BannerTestTag.BANNER
 import net.opatry.tasks.app.ui.component.BannerTestTag.CLOSE_ICON
 import net.opatry.tasks.app.ui.component.BannerTestTag.ICON
 import net.opatry.tasks.app.ui.component.BannerTestTag.MESSAGE
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @VisibleForTesting
 object BannerTestTag {
@@ -107,5 +113,38 @@ fun Banner(
                 modifier = Modifier.testTag(CLOSE_ICON),
             )
         }
+    }
+}
+
+private data class BannerParam(
+    val message: String,
+    val icon: ImageVector? = null,
+)
+
+private class MessagePreviewParameterProvider : PreviewParameterProvider<BannerParam> {
+    override val values: Sequence<BannerParam>
+        get() = sequenceOf(
+            BannerParam(
+                message = "This is a simple message on 1 line."
+            ),
+            BannerParam(
+                message = "This is a message that span on several lines\nwith a lot of content to check hot\nit could behave",
+                icon = LucideIcons.CloudOff,
+            ),
+            BannerParam(
+                message = "A banner with a decorative icon.",
+                icon = LucideIcons.WifiOff,
+            ),
+        )
+}
+
+@Preview
+@Composable
+private fun BannerPreview(
+    @PreviewParameter(MessagePreviewParameterProvider::class)
+    param: BannerParam,
+) {
+    TaskfolioThemedPreview {
+        Banner(message = param.message, icon = param.icon) { }
     }
 }

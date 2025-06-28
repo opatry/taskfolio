@@ -90,7 +90,7 @@ class RemainingTaskRowTest {
     }
 
     @Test
-    fun `when task has notes and due date then row should have title, notes and date chip`() = runComposeUiTest {
+    fun `when task has notes and due date then row should have title and notes and date chip`() = runComposeUiTest {
         val taskList = createTaskList(remainingTaskCount = 1)
         val task = taskList.allRemainingTasks.first().copy(
             title = "My Task with notes & date",

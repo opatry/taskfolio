@@ -79,6 +79,9 @@ val koverExcludedClasses = listOf(
     "net.opatry.tasks.app.ui.component.AuthorizeGoogleTasksButton*",
     "net.opatry.tasks.app.ui.component.BackHandler*",
     "net.opatry.tasks.app.ui.component.EmptyStateParam*",
+    "net.opatry.tasks.app.ui.component.BannerParam*",
+    "net.opatry.tasks.app.ui.component.*PreviewParameterProvider",
+    "net.opatry.tasks.app.ui.component.*Preview\$1*",
     "net.opatry.tasks.app.ui.icon.*",
     "net.opatry.tasks.app.ui.screen.*",
     "net.opatry.tasks.app.ui.theme.*",
@@ -102,6 +105,11 @@ kover {
             excludes {
                 androidGeneratedClasses()
                 classes(*koverExcludedClasses.toTypedArray())
+                annotatedBy(
+                    "import androidx.compose.ui.tooling.preview.Preview",
+                    "import androidx.compose.ui.tooling.preview.PreviewLightDark",
+                    "org.jetbrains.compose.ui.tooling.preview.Preview",
+                )
             }
         }
 

@@ -69,11 +69,13 @@ import net.opatry.tasks.app.ui.component.ProfileIconTestTag.SIGN_OUT_BUTTON
 import net.opatry.tasks.app.ui.component.ProfileIconTestTag.UNSIGNED_ICON
 import net.opatry.tasks.app.ui.component.ProfileIconTestTag.USER_EMAIL
 import net.opatry.tasks.app.ui.component.ProfileIconTestTag.USER_NAME
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.profile_popup_no_email
 import net.opatry.tasks.resources.profile_popup_sign_explanation
 import net.opatry.tasks.resources.profile_popup_sign_out
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @VisibleForTesting
 internal object ProfileIconTestTag {
@@ -222,6 +224,70 @@ fun ProfileIcon(
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ProfileIconPreview() {
+    TaskfolioThemedPreview {
+        Column {
+            ProfileIcon(
+                userState = UserState.Newcomer,
+            ) {}
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ProfileIconSignedWithEmailMenuPreview() {
+    TaskfolioThemedPreview(Modifier.size(width = 350.dp, height = 300.dp)) {
+        Column {
+            ProfileIcon(
+                userState = UserState.SignedIn(
+                    name = "Bob Razowski",
+                    email = "bob@monster.inc",
+                ),
+                showUserMenu = true,
+            ) {}
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ProfileIconSignedWithoutEmailMenuPreview() {
+    TaskfolioThemedPreview(Modifier.size(width = 350.dp, height = 300.dp)) {
+        Column {
+            ProfileIcon(
+                userState = UserState.SignedIn(
+                    name = "Jane Doe",
+                    email = null,
+                ),
+                showUserMenu = true,
+            ) {}
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ProfileIconUnsignedMenuPreview() {
+    TaskfolioThemedPreview(Modifier.size(width = 350.dp, height = 300.dp)) {
+        Column {
+            ProfileIcon(
+                userState = UserState.Unsigned,
+                showUserMenu = true,
+            ) {
+                Button(
+                    onClick = {},
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Authorize")
                 }
             }
         }

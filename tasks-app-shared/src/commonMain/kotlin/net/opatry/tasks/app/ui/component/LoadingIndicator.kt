@@ -22,6 +22,9 @@
 
 package net.opatry.tasks.app.ui.component
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.runtime.Composable
@@ -29,6 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LoadingIndicator(
@@ -50,5 +55,16 @@ fun LoadingIndicator(
             color = color,
             strokeWidth = 1.dp,
         )
+    }
+}
+
+@Preview
+@Composable
+private fun LoadingIndicatorPreview() {
+    TaskfolioThemedPreview {
+        Row(Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            LoadingIndicator()
+            LoadingIndicator(color = Color.Red)
+        }
     }
 }

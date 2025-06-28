@@ -38,7 +38,7 @@ import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListsColumn
 import net.opatry.tasks.app.ui.component.TaskListsPaneTestTag
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @Suppress("TestFunctionName")

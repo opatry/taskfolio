@@ -70,7 +70,6 @@ abstract class TasksAppDatabase : RoomDatabase() {
 }
 
 // The Room compiler generates the `actual` implementations.
-@Suppress("NO_ACTUAL_FOR_EXPECT", "EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect object TasksAppDatabaseConstructor : RoomDatabaseConstructor<TasksAppDatabase> {
     override fun initialize(): TasksAppDatabase
 }

@@ -22,9 +22,14 @@
 
 package net.opatry.tasks.app.ui.component
 
+import LucideIcons
+import Pen
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -35,6 +40,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @Composable
@@ -57,5 +64,21 @@ fun RowWithIcon(icon: (@Composable () -> Unit)? = null, spacerSize: Dp = 24.dp, 
             Spacer(Modifier.size(spacerSize))
         }
         content()
+    }
+}
+
+@Preview
+@Composable
+private fun RowWithIconPreview() {
+    TaskfolioThemedPreview {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            RowWithIcon("Edit", LucideIcons.Pen)
+            RowWithIcon("Hide")
+        }
     }
 }

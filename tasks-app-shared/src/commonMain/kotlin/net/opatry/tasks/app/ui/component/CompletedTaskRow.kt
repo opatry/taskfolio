@@ -49,16 +49,21 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.datetime.todayIn
+import net.opatry.tasks.app.presentation.model.TaskId
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_COMPLETION_DATE
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_DELETE_ICON
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ICON
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_NOTES
 import net.opatry.tasks.app.ui.component.CompletedTaskRowTestTag.COMPLETED_TASK_ROW
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_pane_completed_date_label
 import net.opatry.tasks.resources.task_list_pane_delete_task_icon_content_desc
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @VisibleForTesting
 object CompletedTaskRowTestTag {
@@ -141,5 +146,41 @@ fun CompletedTaskRow(
         IconButton(onClick = { onAction(TaskAction.Delete(task)) }, Modifier.testTag(COMPLETED_TASK_DELETE_ICON)) {
             Icon(LucideIcons.Trash, stringResource(Res.string.task_list_pane_delete_task_icon_content_desc))
         }
+    }
+}
+
+private class CompletedTaskRowPreviewDataProvider :
+    PreviewParameterProvider<TaskUIModel> {
+    override val values = sequenceOf(
+        TaskUIModel.Done(
+            id = TaskId(0),
+            title = "Completed with this year completion date",
+            completionDate = Clock.System.todayIn(TimeZone.UTC),
+        ),
+        TaskUIModel.Done(
+            id = TaskId(0),
+            title = "Completed with notes",
+            notes = "• This is a \n• multiline note",
+            completionDate = Clock.System.todayIn(TimeZone.UTC),
+        ),
+        TaskUIModel.Done(
+            id = TaskId(0),
+            title = "Completed with +1y old completion date",
+            completionDate = LocalDate.parse("2024-01-01"),
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun CompletedTaskRowPreview(
+    @PreviewParameter(CompletedTaskRowPreviewDataProvider::class)
+    task: TaskUIModel.Done,
+) {
+    TaskfolioThemedPreview {
+        CompletedTaskRow(
+            task = task,
+            onAction = {}
+        )
     }
 }
