@@ -92,7 +92,9 @@ val koverExcludedClasses = listOf(
     "net.opatry.tasks.data.entity.*",
     "net.opatry.tasks.data.model.*",
     "net.opatry.tasks.data.TasksAppDatabase*",
-    "net.opatry.tasks.resources.*",
+    "net.opatry.tasks.resources.*ResourceCollectorsKt*",
+    "net.opatry.tasks.resources.Res*",
+    "net.opatry.tasks.resources.*_commonMainKt*",
 )
 
 kover {
