@@ -55,13 +55,18 @@ dependencies {
 
 val koverExcludedClasses = listOf(
     "net.opatry.logging.*",
+    "net.opatry.logging.PrintLogger*",
     "net.opatry.network.NetworkStatusNotifier_*",
+    "net.opatry.network.*_androidKt",
     "net.opatry.google.tasks.model.*",
     "net.opatry.google.profile.UserInfoErrorResponse*",
     "net.opatry.tasks.TokenCache*",
     "net.opatry.tasks.FileCredentialsStorage*",
     "net.opatry.tasks.app.auth.*",
+    "net.opatry.tasks.app.auth.PlayServicesGoogleAuthenticator*",
     "net.opatry.tasks.app.di.*",
+    "net.opatry.tasks.app.di.*_androidKt",
+    "net.opatry.tasks.app.di.*ModuleKt",
     "net.opatry.tasks.app.presentation.model.*",
     "net.opatry.tasks.app.ui.AppTasksScreen*",
     "net.opatry.tasks.app.ui.Singletons*",
