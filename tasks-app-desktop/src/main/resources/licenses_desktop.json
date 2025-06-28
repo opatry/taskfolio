@@ -987,7 +987,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.0.0-alpha10",
+            "artifactVersion": "1.0.0-alpha11",
             "description": "Compose Hot Reload implementation",
             "name": "hot-reload-runtime-api",
             "licenses": [
@@ -1001,7 +1001,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "1.0.0-alpha10",
+            "artifactVersion": "1.0.0-alpha11",
             "description": "Compose Hot Reload implementation",
             "name": "hot-reload-runtime-jvm",
             "licenses": [
