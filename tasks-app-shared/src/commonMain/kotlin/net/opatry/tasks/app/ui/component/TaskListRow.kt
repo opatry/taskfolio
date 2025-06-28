@@ -45,10 +45,17 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.presentation.model.TaskId
+import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TaskListRowTestTag.LABEL
 import net.opatry.tasks.app.ui.component.TaskListRowTestTag.REMAINING_TASKS_COUNT_BADGE
 import net.opatry.tasks.app.ui.component.TaskListRowTestTag.REMAINING_TASKS_COUNT_BADGE_LABEL
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @VisibleForTesting
 internal object TaskListRowTestTag {
@@ -114,5 +121,59 @@ fun TaskListRow(
                 containerColor = cellBackground
             )
         )
+    }
+}
+
+private class TaskListSimplePreviewParameterProvider : PreviewParameterProvider<TaskListUIModel> {
+    override val values: Sequence<TaskListUIModel>
+        get() = sequenceOf(
+            TaskListUIModel(
+                id = TaskListId(0L),
+                title = "My task list",
+            ),
+            TaskListUIModel(
+                id = TaskListId(0L),
+                title = "My selected task list",
+                isSelected = true,
+            ),
+            TaskListUIModel(
+                id = TaskListId(0L),
+                title = "This is a task list with a very very very long name",
+            ),
+            TaskListUIModel(
+                id = TaskListId(0L),
+                title = "This is a task list with a very very very long name",
+                remainingTasks = mapOf(
+                    null to listOf(
+                        TaskUIModel.Todo(
+                            id = TaskId(0L),
+                            title = "Task 1",
+                        ),
+                    ),
+                )
+            ),
+            TaskListUIModel(
+                id = TaskListId(0L),
+                title = "This is a task list with a very very very long name",
+                remainingTasks = mapOf(
+                    null to List(1500) {
+                        TaskUIModel.Todo(
+                            id = TaskId(it.toLong()),
+                            title = "Task $it",
+                        )
+                    }
+                )
+            ),
+        )
+}
+
+@Preview
+@Composable
+private fun TaskListRowPreview(
+    @PreviewParameter(TaskListSimplePreviewParameterProvider::class)
+    taskList: TaskListUIModel
+) {
+    TaskfolioThemedPreview {
+        TaskListRow(taskList) {}
     }
 }

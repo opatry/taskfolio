@@ -22,11 +22,18 @@
 
 package net.opatry.tasks.app.ui.component
 
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_create_task_list_dialog_confirm
 import net.opatry.tasks.resources.task_lists_screen_create_task_list_dialog_title
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @Composable
 fun NewTaskListDialog(
@@ -42,4 +49,26 @@ fun NewTaskListDialog(
         initialText = defaultTitle,
         allowBlank = false,
     )
+}
+
+private class DefaultTitlePreviewParameterProvider(
+    override val values: Sequence<String> = sequenceOf(
+        "",
+        "My task list",
+    )
+) : PreviewParameterProvider<String>
+
+@Preview
+@Composable
+private fun NewTaskListDialogPreview(
+    @PreviewParameter(DefaultTitlePreviewParameterProvider::class)
+    defaultTitle: String,
+) {
+    TaskfolioThemedPreview(Modifier.size(500.dp, 300.dp)) {
+        NewTaskListDialog(
+            onDismissRequest = {},
+            onCreate = {},
+            defaultTitle = defaultTitle,
+        )
+    }
 }

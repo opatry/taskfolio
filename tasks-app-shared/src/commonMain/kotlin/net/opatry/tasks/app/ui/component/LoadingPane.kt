@@ -29,11 +29,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @Composable
 fun LoadingPane() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         LoadingIndicator(Modifier.size(24.dp))
+    }
+}
+
+@Preview
+@Composable
+private fun LoadingPanePreview() {
+    TaskfolioThemedPreview {
+        LoadingPane()
     }
 }

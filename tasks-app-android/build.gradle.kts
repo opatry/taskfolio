@@ -173,7 +173,7 @@ dependencies {
 
 aboutLibraries {
     // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
-    // - `./gradlew :tasks-app-android:exportLibraryDefinitions -Pci=true`
+    // - `./gradlew :tasks-app-android:exportLibraryDefinitions --no-configuration-cache -Pci=true`
     // - the resulting file can for example be added as part of the SCM
     collect {
         configPath = file("$rootDir/license_config")

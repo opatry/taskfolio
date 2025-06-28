@@ -43,11 +43,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
+import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.MORE_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.SORT_MENU_ICON
 import net.opatry.tasks.app.ui.component.TaskListTopAppBarTestTag.TITLE
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 @VisibleForTesting
 object TaskListTopAppBarTestTag {
@@ -123,4 +128,27 @@ fun TaskListTopAppBar(
             }
         }
     )
+}
+
+private class SortingPreviewParameterProvider(
+    override val values: Sequence<TaskListSorting> = TaskListSorting.entries.asSequence()
+) : PreviewParameterProvider<TaskListSorting>
+
+@Preview
+@Composable
+private fun TaskListTopAppBarPreview(
+    @PreviewParameter(SortingPreviewParameterProvider::class) sorting: TaskListSorting
+) {
+    val taskList = TaskListUIModel(
+        id = TaskListId(0L),
+        title = "Task list with a very very very very long title",
+        sorting = sorting,
+    )
+    TaskfolioThemedPreview {
+        TaskListTopAppBar(
+            taskList = taskList,
+            onSort = {},
+            onEdit = {},
+        )
+    }
 }

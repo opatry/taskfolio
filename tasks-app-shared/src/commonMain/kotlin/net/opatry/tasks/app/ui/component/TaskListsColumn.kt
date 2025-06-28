@@ -41,12 +41,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.presentation.model.TaskId
+import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
+import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.app.ui.component.TaskListsPaneTestTag.NEW_TASK_LIST_BUTTON
 import net.opatry.tasks.app.ui.component.TaskListsPaneTestTag.TASK_LIST_ROW
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_lists_screen_add_task_list_cta
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @VisibleForTesting
@@ -93,5 +98,49 @@ fun TaskListsColumn(
                 onClick = { onItemClick(taskList) }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun TaskListsColumnPreview() {
+    val taskLists = listOf(
+        TaskListUIModel(
+            id = TaskListId(0L),
+            title = "My task list",
+            remainingTasks = mapOf(
+                null to List(12) {
+                    TaskUIModel.Todo(
+                        id = TaskId(it.toLong()),
+                        title = "Task $it",
+                    )
+                },
+            )
+        ),
+        TaskListUIModel(
+            id = TaskListId(1L),
+            title = "My selected task list",
+            isSelected = true,
+        ),
+        TaskListUIModel(
+            id = TaskListId(2L),
+            title = "This is a task list with a very very very long name",
+        ),
+        TaskListUIModel(
+            id = TaskListId(3L),
+            title = "This with remaining task count",
+            remainingTasks = mapOf(
+                null to List(1500) {
+                    TaskUIModel.Todo(
+                        id = TaskId(it.toLong()),
+                        title = "Task $it",
+                    )
+                },
+            )
+        ),
+    )
+
+    TaskfolioThemedPreview {
+        TaskListsColumn(taskLists, {}, {})
     }
 }

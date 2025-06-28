@@ -22,7 +22,6 @@
 
 package net.opatry.tasks.app.ui.component
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlinx.datetime.LocalDate
 import net.opatry.tasks.app.presentation.model.DateRange
 import net.opatry.tasks.app.presentation.model.TaskId
@@ -30,9 +29,10 @@ import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.presentation.model.TaskUIModel
 import net.opatry.tasks.data.TaskListSorting
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 
 
-class TaskListPreviewParameterProvider : PreviewParameterProvider<TaskListUIModel> {
+internal class TaskListPreviewParameterProvider : PreviewParameterProvider<TaskListUIModel> {
     override val values = sequenceOf(
         // fully empty state
         TaskListUIModel(

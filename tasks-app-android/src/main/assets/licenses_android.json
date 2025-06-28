@@ -2463,6 +2463,20 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.compose.components:components-ui-tooling-preview",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.8.2",
+            "description": "Experimental Compose Multiplatform tooling library API. This library provides the API required to declare @Preview composables in user apps.",
+            "name": "Experimental Compose Multiplatform tooling library API. This library provides the API required to declare @Preview composables in user apps.",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.compose.foundation:foundation",
             "developers": [
                 {

@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import net.opatry.tasks.app.ui.component.MyBackHandler
 import net.opatry.tasks.app.ui.icon.CheckCircle
 import net.opatry.tasks.app.ui.icon.MaterialSymbols
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.about_screen_app_version_subtitle
 import net.opatry.tasks.resources.about_screen_credits_item
@@ -70,6 +71,7 @@ import net.opatry.tasks.resources.about_screen_github_item
 import net.opatry.tasks.resources.about_screen_privacy_policy_item
 import net.opatry.tasks.resources.about_screen_website_item
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 data class AboutApp(
@@ -200,4 +202,18 @@ private fun AboutExternalLink(label: String, icon: ImageVector? = null, onClick:
         headlineContent = { Text(label) },
         trailingContent = { Icon(LucideIcons.SquareArrowOutUpRight, null) },
     )
+}
+
+@Preview
+@Composable
+private fun AboutScreenPreview() {
+    TaskfolioThemedPreview {
+        AboutScreen(
+            AboutApp(
+                name = "Taskfolio",
+                version = "1.2.0",
+                aboutLibrariesJsonProvider = suspend { "" }
+            ),
+        )
+    }
 }

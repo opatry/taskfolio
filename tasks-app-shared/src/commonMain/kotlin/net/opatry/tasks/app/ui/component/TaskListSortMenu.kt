@@ -22,21 +22,32 @@
 
 package net.opatry.tasks.app.ui.component
 
+import ArrowDownAZ
 import Check
 import LucideIcons
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import net.opatry.tasks.app.presentation.model.TaskListId
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_DUE_DATE
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MANUAL
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_MENU
 import net.opatry.tasks.app.ui.component.TaskListSortMenuTestTag.SORT_TITLE
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
 import net.opatry.tasks.resources.Res
 import net.opatry.tasks.resources.task_list_menu_sort_by
@@ -45,6 +56,7 @@ import net.opatry.tasks.resources.task_list_menu_sort_manual
 import net.opatry.tasks.resources.task_list_menu_sort_title
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @VisibleForTesting
 internal object TaskListSortMenuTestTag {
@@ -127,4 +139,31 @@ private fun SortMenuItem(
         onClick = onClick,
         modifier = Modifier.testTag(sorting.testTag)
     )
+}
+
+@Preview
+@Composable
+private fun TaskListMenuPreview() {
+    TaskfolioThemedPreview {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(400.dp)
+                .padding(24.dp), contentAlignment = Alignment.TopEnd
+        ) {
+            IconButton(onClick = {}) {
+                Icon(LucideIcons.ArrowDownAZ, null)
+                TaskListSortMenu(
+                    taskList = TaskListUIModel(
+                        id = TaskListId(0L),
+                        title = "My task list",
+                        sorting = TaskListSorting.Title,
+                    ),
+                    expanded = true,
+                    onDismiss = {},
+                    onSortingClick = {},
+                )
+            }
+        }
+    }
 }

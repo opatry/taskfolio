@@ -87,6 +87,8 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
 
+            implementation(compose.components.uiToolingPreview)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
@@ -157,6 +159,8 @@ room {
 dependencies {
     add("kspJvm", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
+
+    debugImplementation(compose.uiTooling)
 }
 
 android {

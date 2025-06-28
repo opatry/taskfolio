@@ -29,7 +29,8 @@ jobs:
         gradle_module="${{ matrix.gradle_module }}"
         license_file="${gradle_module}/${{ matrix.license_path }}"
 
-        ./gradlew --no-daemon --parallel ":${gradle_module}:exportLibraryDefinitions" -Pci=true
+        ./gradlew --no-daemon --parallel --no-configuration-cache\
+          ":${gradle_module}:exportLibraryDefinitions" -Pci=true
         stale_credits=$(git diff "${license_file}")
 
         if [ -n "${stale_credits}" ]; then
@@ -46,7 +47,7 @@ jobs:
             echo "\\\`\\\`\\\`diff\n"
             echo "${stale_credits}\n"
             echo "\\\`\\\`\\\`\n\n"
-            echo Run \\\`./gradlew :${gradle_module}:exportLibraryDefinitions -Pci=true\\\` and commit resulting diff to fix the issue.
+            echo Run \\\`./gradlew :${gradle_module}:exportLibraryDefinitions --no-configuration-cache -Pci=true\\\` and commit resulting diff to fix the issue.
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
         else

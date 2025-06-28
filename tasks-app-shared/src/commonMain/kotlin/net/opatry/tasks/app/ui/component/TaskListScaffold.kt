@@ -38,7 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import net.opatry.tasks.app.presentation.model.TaskListUIModel
 import net.opatry.tasks.app.ui.component.TaskListScaffoldTestTag.ADD_TASK_FAB
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
 import net.opatry.tasks.data.TaskListSorting
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 
 @VisibleForTesting
 object TaskListScaffoldTestTag {
@@ -86,5 +89,19 @@ fun TaskListScaffold(
                 onTaskAction = onTaskAction,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun TaskListScaffoldPreview(
+    @PreviewParameter(TaskListPreviewParameterProvider::class)
+    taskList: TaskListUIModel,
+) {
+    TaskfolioThemedPreview {
+        TaskListScaffold(
+            taskLists = emptyList(),
+            selectedTaskList = taskList,
+        )
     }
 }

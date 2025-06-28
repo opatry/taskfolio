@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import net.opatry.tasks.app.ui.tooling.TaskfolioThemedPreview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MissingScreen(screenName: String, screenIcon: ImageVector? = null) {
@@ -37,4 +39,12 @@ fun MissingScreen(screenName: String, screenIcon: ImageVector? = null) {
         description = "This screen is not implemented yet",
         modifier = Modifier.fillMaxSize(),
     )
+}
+
+@Preview
+@Composable
+private fun MissingScreenPreview() {
+    TaskfolioThemedPreview {
+        MissingScreen("Some feature", LucideIcons.AppWindow)
+    }
 }
