@@ -113,8 +113,8 @@ kover {
                 androidGeneratedClasses()
                 classes(*koverExcludedClasses.toTypedArray())
                 annotatedBy(
-                    "import androidx.compose.ui.tooling.preview.Preview",
-                    "import androidx.compose.ui.tooling.preview.PreviewLightDark",
+                    "androidx.compose.ui.tooling.preview.Preview",
+                    "androidx.compose.ui.tooling.preview.PreviewLightDark",
                     "org.jetbrains.compose.ui.tooling.preview.Preview",
                 )
             }
