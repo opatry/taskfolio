@@ -41,6 +41,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
+@OptIn(ExperimentalCoroutinesApi::class)
 fun TestScope.virtualNow(): Instant {
     return Instant.fromEpochMilliseconds(testScheduler.currentTime)
 }
