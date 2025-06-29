@@ -112,11 +112,7 @@ kover {
             excludes {
                 androidGeneratedClasses()
                 classes(*koverExcludedClasses.toTypedArray())
-                annotatedBy(
-                    "androidx.compose.ui.tooling.preview.Preview",
-                    "androidx.compose.ui.tooling.preview.PreviewLightDark",
-                    "org.jetbrains.compose.ui.tooling.preview.Preview",
-                )
+                annotatedBy("*Preview*")
             }
         }
 
@@ -163,6 +159,15 @@ subprojects {
                     createVariant("coverage") {
                         add("jvm")
                         addWithDependencies("debug", optional = true)
+                    }
+                }
+                reports {
+                    filters {
+                        excludes {
+                            androidGeneratedClasses()
+                            classes(*koverExcludedClasses.toTypedArray())
+                            annotatedBy("*Preview*")
+                        }
                     }
                 }
             }
