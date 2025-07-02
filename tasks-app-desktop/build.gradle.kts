@@ -66,9 +66,9 @@ kotlin {
         implementation(compose.material3)
         implementation(compose.desktop.currentOs)
 
-        implementation(projects.google.oauth)
-        implementation(projects.google.tasks)
-        implementation(projects.tasksAppShared)
+        implementation(project(":google:oauth"))
+        implementation(project(":google:tasks"))
+        implementation(project(":tasks-app-shared"))
 
         if (ciBuild) {
             implementation(libs.ktor.monitor.logging.no.op)

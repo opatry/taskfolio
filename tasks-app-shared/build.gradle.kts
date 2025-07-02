@@ -72,7 +72,7 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation(projects.google.oauthHttp)
+            implementation(project(":google:oauth-http"))
         }
 
         commonMain.dependencies {
@@ -81,8 +81,8 @@ kotlin {
             api(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.client)
             implementation(libs.slf4j.nop)
-            implementation(projects.google.oauth)
-            implementation(projects.google.tasks)
+            implementation(project(":google:oauth"))
+            implementation(project(":google:tasks"))
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
@@ -112,9 +112,9 @@ kotlin {
 
             implementation(libs.about.libraries.core)
 
-            implementation(projects.tasksCore)
+            implementation(project(":tasks-core"))
 
-            implementation(projects.lucideIcons)
+            implementation(project(":lucide-icons"))
 
             if (ciBuild) {
                 implementation(libs.ktor.monitor.logging.no.op)

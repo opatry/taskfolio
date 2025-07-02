@@ -31,7 +31,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.google.oauth)
+            api(project(":google:oauth"))
 
             implementation(libs.bundles.ktor.client)
             implementation(libs.bundles.ktor.server)

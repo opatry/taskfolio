@@ -161,9 +161,9 @@ dependencies {
 
     implementation(libs.play.services.auth)
 
-    implementation(projects.google.oauth)
-    implementation(projects.google.tasks)
-    implementation(projects.tasksAppShared)
+    implementation(project(":google:oauth"))
+    implementation(project(":google:tasks"))
+    implementation(project(":tasks-app-shared"))
 
     debugImplementation(libs.androidx.ui.test.manifest)
 

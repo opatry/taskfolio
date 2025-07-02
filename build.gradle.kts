@@ -42,9 +42,9 @@ plugins {
 }
 
 val koverProjects = listOf(
-    projects.tasksAppShared,
-    projects.tasksCore,
-    projects.google.tasks,
+    project(":tasks-app-shared"),
+    project(":tasks-core"),
+    project(":google:tasks"),
 )
 
 dependencies {
@@ -151,7 +151,7 @@ subprojects {
         }
     }
 
-    if (project.name in koverProjects.map { it.name }) {
+    if (project in koverProjects) {
         project.afterEvaluate {
             apply(plugin = libs.plugins.kover.get().pluginId)
             kover {
