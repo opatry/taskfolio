@@ -115,9 +115,7 @@ kotlin {
             implementation(projects.tasksCore)
 
             implementation(projects.lucideIcons)
-        }
 
-        commonMain.dependencies {
             if (ciBuild) {
                 implementation(libs.ktor.monitor.logging.no.op)
             } else {
