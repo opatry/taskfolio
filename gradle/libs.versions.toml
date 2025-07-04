@@ -3,7 +3,7 @@ tasksApp-name = "1.4.3"
 compileSdk = "36"
 minSdk = "24"
 targetSdk = "36"
-agp = "8.10.1"
+agp = "8.11.0"
 kotlin = "2.2.0"
 ksp = "2.2.0-2.0.2"
 coroutines = "1.10.2"
@@ -11,16 +11,16 @@ ktor = "3.2.1"
 ktor-monitor-logging = "1.7.2"
 activity-compose = "1.11.0-rc01"
 compose-plugin = "1.8.2"
-compose = "1.8.2"
+compose = "1.8.3"
 compose-hot-reload-plugin = "1.0.0-alpha11"
-compose-m3-adaptive = "1.1.1"
-compose-lifecycle = "2.9.0"
-compose-navigation = "2.9.0-beta02"
-room = "2.7.1"
-sqlite = "2.5.1"
+compose-m3-adaptive = "1.1.2"
+compose-lifecycle = "2.9.1"
+compose-navigation = "2.9.0-beta03"
+room = "2.7.2"
+sqlite = "2.5.2"
 koin = "4.1.0"
 coil = "3.2.0"
-about-libraries = "12.2.1"
+about-libraries = "12.2.3"
 mockito = "5.18.0"
 mockito-kotlin = "5.4.0"
 kover = "0.9.1"
@@ -33,7 +33,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.2" }
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.1" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
 
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
@@ -83,7 +83,7 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.14.0" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.16.0" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.3.0" }
@@ -132,7 +132,7 @@ jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugi
 compose-hot-reload = { id = "org.jetbrains.compose.hot-reload", version.ref = "compose-hot-reload-plugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.3" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.3" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.4" }
 about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
