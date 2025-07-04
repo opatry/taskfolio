@@ -22,10 +22,10 @@
 
 package net.opatry.tasks
 
-import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Instant
 
 class TaskPositionTest {
 

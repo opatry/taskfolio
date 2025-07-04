@@ -24,8 +24,6 @@ package net.opatry.tasks.data.util
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.io.IOException
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.model.ResourceListResponse
@@ -33,6 +31,8 @@ import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
 import kotlin.concurrent.atomics.AtomicLong
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 @OptIn(ExperimentalAtomicApi::class)
 class InMemoryTasksApi(
