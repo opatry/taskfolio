@@ -11,7 +11,6 @@
 		4705DD9D2E07520D0008E5F7 /* TaskfolioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4705DD992E07520D0008E5F7 /* TaskfolioApp.swift */; };
 		4705DD9F2E07520D0008E5F7 /* licenses_ios.json in Resources */ = {isa = PBXBuildFile; fileRef = 4705DD922E07520D0008E5F7 /* licenses_ios.json */; };
 		4705DDA02E07520D0008E5F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4705DD942E07520D0008E5F7 /* Assets.xcassets */; };
-		47629B922E1733AD00391C27 /* GoogleOAuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47629B912E1733AD00391C27 /* GoogleOAuthHelper.swift */; };
 		47629B9A2E173EC100391C27 /* IOSGoogleAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47629B992E173EB900391C27 /* IOSGoogleAuthenticator.swift */; };
 		47629B9D2E17407D00391C27 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 47629B9C2E17407D00391C27 /* GoogleSignIn */; };
 		47629B9F2E17407D00391C27 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 47629B9E2E17407D00391C27 /* GoogleSignInSwift */; };
@@ -27,7 +26,6 @@
 		4705DD9A2E07520D0008E5F7 /* Versions.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Versions.xcconfig; sourceTree = "<group>"; };
 		4731FF7D2E1307C0005A081E /* Config.dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.dev.xcconfig; sourceTree = "<group>"; };
 		4734A08F2E05CE9D00175C75 /* T4skf0l10 d3v.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "T4skf0l10 d3v.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		47629B912E1733AD00391C27 /* GoogleOAuthHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleOAuthHelper.swift; sourceTree = "<group>"; };
 		47629B992E173EB900391C27 /* IOSGoogleAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSGoogleAuthenticator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,7 +59,6 @@
 				4705DD972E07520D0008E5F7 /* ContentView.swift */,
 				4705DD982E07520D0008E5F7 /* Info.plist */,
 				4705DD992E07520D0008E5F7 /* TaskfolioApp.swift */,
-				47629B912E1733AD00391C27 /* GoogleOAuthHelper.swift */,
 			);
 			path = Taskfolio;
 			sourceTree = "<group>";
@@ -196,7 +193,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4705DD9C2E07520D0008E5F7 /* ContentView.swift in Sources */,
-				47629B922E1733AD00391C27 /* GoogleOAuthHelper.swift in Sources */,
 				47629B9A2E173EC100391C27 /* IOSGoogleAuthenticator.swift in Sources */,
 				4705DD9D2E07520D0008E5F7 /* TaskfolioApp.swift in Sources */,
 			);
