@@ -2,14 +2,15 @@ import TasksAppShared
 import GoogleSignIn
 import UIKit
 
+@MainActor
 class IOSGoogleAuthenticator: OauthGoogleAuthenticator {
 
     func authorize(scopes: [OauthGoogleAuthenticatorScope], force: Bool, requestUserAuthorization: @escaping (Any) -> Void) async throws -> String {
         let stringScopes = scopes.compactMap { $0.value }
 
-        guard let windowScene = await UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = await windowScene.windows.first,
-              let rootViewController = await window.rootViewController else {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first,
+              let rootViewController = window.rootViewController else {
             throw GoogleSignInError.noRootViewController
         }
 
