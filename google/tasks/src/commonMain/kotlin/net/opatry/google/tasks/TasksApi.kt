@@ -34,10 +34,10 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.datetime.Instant
 import net.opatry.google.tasks.model.ResourceListResponse
 import net.opatry.google.tasks.model.ResourceType
 import net.opatry.google.tasks.model.Task
+import kotlin.time.Instant
 
 /**
  * Service for interacting with the [Google Tasks REST API](https://developers.google.com/tasks/reference/rest/v1/tasks).

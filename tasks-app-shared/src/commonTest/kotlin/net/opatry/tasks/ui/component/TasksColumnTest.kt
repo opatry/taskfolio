@@ -32,7 +32,6 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -63,6 +62,7 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 import net.opatry.tasks.app.ui.component.RemainingTaskRowTestTag.ROW as REMAINING_TASK_ROW
 
 @Suppress("TestFunctionName")

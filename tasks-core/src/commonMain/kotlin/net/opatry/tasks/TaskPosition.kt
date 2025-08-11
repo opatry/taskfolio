@@ -22,7 +22,7 @@
 
 package net.opatry.tasks
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 interface TaskPosition : Comparable<TaskPosition> {
     val value: String
