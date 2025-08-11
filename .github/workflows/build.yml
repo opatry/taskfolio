@@ -29,3 +29,6 @@ jobs:
 
   licenses-check:
     uses: ./.github/workflows/licenses-check.yml
+
+  code-style:
+    uses: ./.github/workflows/code-style.yml

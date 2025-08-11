@@ -24,6 +24,7 @@ about-libraries = "12.2.3"
 mockito = "5.18.0"
 mockito-kotlin = "5.4.0"
 kover = "0.9.1"
+detekt = "1.23.8"
 androidx-test-runner = "1.6.2"
 
 [libraries]
@@ -101,6 +102,8 @@ mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "
 androidx-ui-tooling-preview-android = { module = "androidx.compose.ui:ui-tooling-preview-android", version.ref = "compose" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]
 ktor-client = [
@@ -136,3 +139,4 @@ google-services = { id = "com.google.gms.google-services", version = "4.4.3" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.4" }
 about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
