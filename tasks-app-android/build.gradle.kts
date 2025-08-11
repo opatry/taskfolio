@@ -76,6 +76,11 @@ android {
             manifestPlaceholders["crashlyticsEnabled"] = false
         }
 
+        create("demo") {
+            initWith(getByName("dev"))
+            applicationIdSuffix = ".demo"
+        }
+
         create("store") {
             dimension = "target"
         }
@@ -165,10 +170,15 @@ dependencies {
     implementation(project(":google:tasks"))
     implementation(project(":tasks-app-shared"))
 
+    "demoImplementation"(projects.tasksCore) {
+        because("needed for prefilled content for screenshot generation")
+    }
+
     debugImplementation(libs.androidx.ui.test.manifest)
 
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.uiautomator)
 }
 
 aboutLibraries {
