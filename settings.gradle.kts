@@ -64,3 +64,6 @@ include(":tasks-core")
 include(":tasks-app-shared")
 include(":tasks-app-desktop")
 include(":tasks-app-android")
+// useful to isolate/ease license_ios.json file generation
+// and also sync version from Gradle to Xcode
+include(":tasks-app-ios")
