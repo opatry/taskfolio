@@ -1282,7 +1282,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib",
-            "artifactVersion": "2.2.10",
+            "artifactVersion": "2.2.20-RC",
             "name": "Kotlin Stdlib",
             "description": "Kotlin Standard Library",
             "developers": [
@@ -1296,7 +1296,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-common",
-            "artifactVersion": "2.2.10",
+            "artifactVersion": "2.2.20-RC",
             "name": "Kotlin Stdlib Common",
             "description": "Kotlin Common Standard Library (legacy, use kotlin-stdlib instead)",
             "developers": [
