@@ -84,7 +84,7 @@
         },
         {
             "uniqueId": "androidx.lifecycle:lifecycle-runtime",
-            "artifactVersion": "2.9.1",
+            "artifactVersion": "2.9.2",
             "name": "Lifecycle Runtime",
             "description": "Android Lifecycle Runtime",
             "developers": [
@@ -234,7 +234,7 @@
         },
         {
             "uniqueId": "com.mikepenz:aboutlibraries-core",
-            "artifactVersion": "12.2.3",
+            "artifactVersion": "12.2.4",
             "name": "AboutLibraries Core Library",
             "description": "AboutLibraries automatically detects all dependencies of a project and collects their information including the license. Optionally visualising it via the provided ui components.",
             "developers": [
@@ -248,7 +248,7 @@
         },
         {
             "uniqueId": "com.squareup.okio:okio",
-            "artifactVersion": "3.11.0",
+            "artifactVersion": "3.15.0",
             "name": "okio",
             "description": "A modern I/O library for Android, Java, and Kotlin Multiplatform.",
             "developers": [
@@ -279,7 +279,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil",
-            "artifactVersion": "3.2.0",
+            "artifactVersion": "3.3.0",
             "name": "coil",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "developers": [
@@ -293,7 +293,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-compose",
-            "artifactVersion": "3.2.0",
+            "artifactVersion": "3.3.0",
             "name": "coil-compose",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "developers": [
@@ -307,7 +307,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-compose-core",
-            "artifactVersion": "3.2.0",
+            "artifactVersion": "3.3.0",
             "name": "coil-compose-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "developers": [
@@ -321,7 +321,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-core",
-            "artifactVersion": "3.2.0",
+            "artifactVersion": "3.3.0",
             "name": "coil-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "developers": [
@@ -335,7 +335,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-network-core",
-            "artifactVersion": "3.2.0",
+            "artifactVersion": "3.3.0",
             "name": "coil-network-core",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "developers": [
@@ -349,7 +349,7 @@
         },
         {
             "uniqueId": "io.coil-kt.coil3:coil-network-ktor3",
-            "artifactVersion": "3.2.0",
+            "artifactVersion": "3.3.0",
             "name": "coil-network-ktor3",
             "description": "An image loading library for Android and Compose Multiplatform.",
             "developers": [
@@ -377,7 +377,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-client-auth",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-client-auth",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -391,7 +391,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-client-cio",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-client-cio",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -405,7 +405,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-client-content-negotiation",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-client-content-negotiation",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -419,7 +419,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-client-core",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-client-core",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -433,7 +433,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-client-encoding",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-client-encoding",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -447,7 +447,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-client-logging",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-client-logging",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -461,7 +461,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-events",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-events",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -475,7 +475,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-http",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-http",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -489,7 +489,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-http-cio",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-http-cio",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -503,7 +503,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-io",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-io",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -517,7 +517,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-network",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-network",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -531,7 +531,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-network-tls",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-network-tls",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -545,7 +545,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-serialization",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-serialization",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -559,7 +559,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-serialization-kotlinx",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-serialization-kotlinx",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -573,7 +573,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-serialization-kotlinx-json",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-serialization-kotlinx-json",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -587,7 +587,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-server-cio",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-server-cio",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -601,7 +601,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-server-core-jvm",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-server-core",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -615,7 +615,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-server-html-builder",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-server-html-builder",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -629,7 +629,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-server-status-pages",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-server-status-pages",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -643,7 +643,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-sse",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-sse",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -657,7 +657,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-utils",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-utils",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -671,7 +671,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-websocket-serialization",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-websocket-serialization",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -685,7 +685,7 @@
         },
         {
             "uniqueId": "io.ktor:ktor-websockets",
-            "artifactVersion": "3.2.1",
+            "artifactVersion": "3.2.3",
             "name": "ktor-websockets",
             "description": "Ktor is a framework for quickly creating web applications in Kotlin with minimal effort.",
             "developers": [
@@ -733,7 +733,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-runtime",
-            "artifactVersion": "2.9.1",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle Runtime",
             "description": "Android Lifecycle Runtime",
             "developers": [
@@ -747,7 +747,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose",
-            "artifactVersion": "2.9.1",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle Runtime Compose",
             "description": "Compose integration with Lifecycle",
             "developers": [
@@ -803,7 +803,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.navigation:navigation-common",
-            "artifactVersion": "2.9.0-beta03",
+            "artifactVersion": "2.9.0-rc01",
             "name": "Navigation Common",
             "description": "Android Navigation-Common",
             "developers": [
@@ -817,7 +817,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.navigation:navigation-compose",
-            "artifactVersion": "2.9.0-beta03",
+            "artifactVersion": "2.9.0-rc01",
             "name": "Compose Navigation",
             "description": "Compose integration with Navigation",
             "developers": [
@@ -831,7 +831,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.navigation:navigation-runtime",
-            "artifactVersion": "2.9.0-beta03",
+            "artifactVersion": "2.9.0-rc01",
             "name": "Navigation Runtime",
             "description": "Android Navigation-Runtime",
             "developers": [
@@ -859,7 +859,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.savedstate:savedstate-compose",
-            "artifactVersion": "1.3.1",
+            "artifactVersion": "1.3.3",
             "name": "Saved State Compose",
             "description": "Compose integration with Saved State",
             "developers": [
@@ -1279,7 +1279,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib",
-            "artifactVersion": "2.2.0",
+            "artifactVersion": "2.2.20-RC",
             "name": "Kotlin Stdlib",
             "description": "Kotlin Standard Library",
             "developers": [

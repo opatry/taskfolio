@@ -3,28 +3,28 @@ tasksApp-name = "1.4.3"
 compileSdk = "36"
 minSdk = "24"
 targetSdk = "36"
-agp = "8.11.0"
-kotlin = "2.2.0"
-ksp = "2.2.0-2.0.2"
+agp = "8.12.2"
+kotlin = "2.2.20-RC"
+ksp = "2.2.20-RC-2.0.2"
 coroutines = "1.10.2"
-ktor = "3.2.1"
+ktor = "3.2.3"
 ktor-monitor-logging = "1.7.3"
 activity-compose = "1.11.0-rc01"
 compose-plugin = "1.8.2"
-compose = "1.8.3"
+compose = "1.9.0"
 compose-hot-reload-plugin = "1.0.0-alpha11"
 compose-m3-adaptive = "1.1.2"
-compose-lifecycle = "2.9.1"
-compose-navigation = "2.9.0-beta03"
+compose-lifecycle = "2.9.3"
+compose-navigation = "2.9.0-rc01"
 room = "2.7.2"
 sqlite = "2.5.2"
 koin = "4.1.0"
-coil = "3.2.0"
-about-libraries = "12.2.3"
-mockito = "5.18.0"
-mockito-kotlin = "5.4.0"
+coil = "3.3.0"
+about-libraries = "12.2.4"
+mockito = "5.19.0"
+mockito-kotlin = "6.0.0"
 kover = "0.9.1"
-androidx-test-runner = "1.6.2"
+androidx-test-runner = "1.7.0"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -83,14 +83,14 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.16.0" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "34.2.0" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
-play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.3.0" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.4.0" }
 
 about-libraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "about-libraries" }
 
-androidx-test-core = { module = "androidx.test:core", version = "1.6.1" }
+androidx-test-core = { module = "androidx.test:core", version = "1.7.0" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
 androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
@@ -133,6 +133,6 @@ compose-hot-reload = { id = "org.jetbrains.compose.hot-reload", version.ref = "c
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.3" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.4" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.6" }
 about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
