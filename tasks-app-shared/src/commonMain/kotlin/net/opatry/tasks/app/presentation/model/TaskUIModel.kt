@@ -29,6 +29,7 @@ import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.DoneTaskPosition
 import net.opatry.tasks.TaskPosition
 import net.opatry.tasks.TodoTaskPosition
+import kotlin.jvm.JvmInline
 import kotlin.time.Clock
 import kotlin.time.Instant
 
