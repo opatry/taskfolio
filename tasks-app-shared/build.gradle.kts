@@ -47,13 +47,15 @@ val ciBuild = (findProperty("ci") as? String).toBoolean()
 kotlin {
     jvm()
 
-    jvmToolchain(17)
-
     androidTarget {
         // useful to allow using commonTest in Android instrumentation tests
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant.sourceSetTree.set(KotlinSourceSetTree.test)
     }
+
+    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
+
+    jvmToolchain(17)
 
     compilerOptions {
         // Common compiler options applied to all Kotlin source sets
@@ -161,6 +163,9 @@ room {
 dependencies {
     add("kspJvm", libs.androidx.room.compiler)
     add("kspAndroid", libs.androidx.room.compiler)
+    iosTargets.forEach { iosTarget ->
+        add("ksp${iosTarget.replaceFirstChar(Char::uppercase)}", libs.androidx.room.compiler)
+    }
 
     debugImplementation(compose.uiTooling)
 }
