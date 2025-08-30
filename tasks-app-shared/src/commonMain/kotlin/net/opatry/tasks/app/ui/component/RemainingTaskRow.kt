@@ -143,7 +143,7 @@ internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (th
             chars(", ")
             monthName(MonthNames.ENGLISH_ABBREVIATED) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
         }.format(date)
 
         else -> LocalDate.Format {
@@ -151,7 +151,7 @@ internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (th
             //  byUnicodePattern("MMMM' 'dd', 'yyyy")
             monthName(MonthNames.ENGLISH_FULL) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
             chars(", ")
             year()
         }.format(date)

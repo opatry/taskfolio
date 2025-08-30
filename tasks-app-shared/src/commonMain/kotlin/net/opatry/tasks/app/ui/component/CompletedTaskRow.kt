@@ -84,7 +84,7 @@ private fun LocalDate.toLabel(): String {
             chars(", ")
             monthName(MonthNames.ENGLISH_ABBREVIATED) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
         }.format(this)
     } else {
         LocalDate.Format {
@@ -92,7 +92,7 @@ private fun LocalDate.toLabel(): String {
             //  byUnicodePattern("MMMM' 'dd', 'yyyy")
             monthName(MonthNames.ENGLISH_FULL) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
             chars(", ")
             year()
         }.format(this)

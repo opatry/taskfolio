@@ -77,7 +77,7 @@ val ISO8601Formatter = LocalDate.Format {
     char('-')
     monthNumber(Padding.ZERO)
     char('-')
-    dayOfMonth(Padding.ZERO)
+    day(Padding.ZERO)
 }
 
 private fun buildMoments(dateStr: String = LastWeek.format(ISO8601Formatter)): Pair<LocalDate, Instant> {
