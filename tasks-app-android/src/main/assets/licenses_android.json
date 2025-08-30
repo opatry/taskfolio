@@ -678,7 +678,7 @@
         },
         {
             "uniqueId": "androidx.datastore:datastore",
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.7",
             "name": "DataStore",
             "description": "Android DataStore - contains the underlying store used by each serialization method along with components that require an Android dependency",
             "developers": [
@@ -695,7 +695,7 @@
         },
         {
             "uniqueId": "androidx.datastore:datastore-core",
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.7",
             "name": "DataStore Core",
             "description": "Android DataStore Core - contains the underlying store used by each serialization method",
             "developers": [
@@ -712,7 +712,7 @@
         },
         {
             "uniqueId": "androidx.datastore:datastore-core-okio",
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.7",
             "name": "DataStore Core Okio",
             "description": "Android DataStore Core Okio- contains APIs to use datastore-core in multiplatform via okio",
             "developers": [
@@ -729,7 +729,7 @@
         },
         {
             "uniqueId": "androidx.datastore:datastore-preferences",
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.7",
             "name": "Preferences DataStore",
             "description": "Android Preferences DataStore",
             "developers": [
@@ -746,7 +746,7 @@
         },
         {
             "uniqueId": "androidx.datastore:datastore-preferences-core",
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.7",
             "name": "Preferences DataStore Core",
             "description": "Android Preferences DataStore without the Android Dependencies",
             "developers": [
@@ -763,7 +763,7 @@
         },
         {
             "uniqueId": "androidx.datastore:datastore-preferences-external-protobuf",
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.7",
             "name": "Preferences External Protobuf",
             "description": "Repackaged proto-lite dependency for use by datastore preferences",
             "developers": [
@@ -780,7 +780,7 @@
         },
         {
             "uniqueId": "androidx.datastore:datastore-preferences-proto",
-            "artifactVersion": "1.1.3",
+            "artifactVersion": "1.1.7",
             "name": "Preferences DataStore Proto",
             "description": "Jarjar the generated proto for use by datastore-preferences.",
             "developers": [
@@ -1705,7 +1705,7 @@
         },
         {
             "uniqueId": "com.google.firebase:firebase-crashlytics",
-            "artifactVersion": "20.0.0",
+            "artifactVersion": "20.0.1",
             "name": "com.google.firebase:firebase-crashlytics",
             "description": "",
             "developers": [
@@ -1801,7 +1801,7 @@
         },
         {
             "uniqueId": "com.google.firebase:firebase-sessions",
-            "artifactVersion": "3.0.0",
+            "artifactVersion": "3.0.1",
             "name": "com.google.firebase:firebase-sessions",
             "description": "",
             "developers": [
@@ -2231,7 +2231,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-common",
-            "artifactVersion": "2.9.2",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle-Common",
             "description": "Android Lifecycle-Common",
             "developers": [
@@ -2245,7 +2245,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-runtime",
-            "artifactVersion": "2.9.2",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle Runtime",
             "description": "Android Lifecycle Runtime",
             "developers": [
@@ -2259,7 +2259,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose",
-            "artifactVersion": "2.9.2",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle Runtime Compose",
             "description": "Compose integration with Lifecycle",
             "developers": [
@@ -2273,7 +2273,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel",
-            "artifactVersion": "2.9.2",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle ViewModel",
             "description": "Android Lifecycle ViewModel",
             "developers": [
@@ -2287,7 +2287,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose",
-            "artifactVersion": "2.9.2",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle ViewModel Compose",
             "description": "Compose integration with Lifecycle ViewModel",
             "developers": [
@@ -2301,7 +2301,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate",
-            "artifactVersion": "2.9.2",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle ViewModel with SavedState",
             "description": "Android Lifecycle ViewModel",
             "developers": [
@@ -2315,7 +2315,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.navigation:navigation-common",
-            "artifactVersion": "2.9.0-beta05",
+            "artifactVersion": "2.9.0-rc01",
             "name": "Navigation Common",
             "description": "Android Navigation-Common",
             "developers": [
@@ -2329,7 +2329,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.navigation:navigation-compose",
-            "artifactVersion": "2.9.0-beta05",
+            "artifactVersion": "2.9.0-rc01",
             "name": "Compose Navigation",
             "description": "Compose integration with Navigation",
             "developers": [
@@ -2343,7 +2343,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.navigation:navigation-runtime",
-            "artifactVersion": "2.9.0-beta05",
+            "artifactVersion": "2.9.0-rc01",
             "name": "Navigation Runtime",
             "description": "Android Navigation-Runtime",
             "developers": [
@@ -2357,7 +2357,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.savedstate:savedstate",
-            "artifactVersion": "1.3.2",
+            "artifactVersion": "1.3.3",
             "name": "Saved State",
             "description": "Android Lifecycle Saved State",
             "developers": [
@@ -2371,7 +2371,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.savedstate:savedstate-compose",
-            "artifactVersion": "1.3.2",
+            "artifactVersion": "1.3.3",
             "name": "Saved State Compose",
             "description": "Compose integration with Saved State",
             "developers": [
@@ -2427,7 +2427,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.annotation-internal:annotation",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-rc01",
             "name": "Annotation",
             "description": "Provides source annotations for tooling and readability.",
             "developers": [
@@ -2441,7 +2441,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.collection-internal:collection",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "collections",
             "description": "Standalone efficient collections.",
             "developers": [
@@ -2567,7 +2567,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.runtime:runtime",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose Runtime",
             "description": "Tree composition support for code generated by the Compose compiler plugin and corresponding public API",
             "developers": [
@@ -2580,8 +2580,22 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.compose.runtime:runtime-annotation",
+            "artifactVersion": "1.9.0-alpha03",
+            "name": "Compose Runtime Annotation",
+            "description": "Provides Compose-specific annotations used by the compiler and tooling",
+            "developers": [
+                {
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.compose.runtime:runtime-saveable",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose Saveable",
             "description": "Compose components that allow saving and restoring the local ui state",
             "developers": [
@@ -2595,7 +2609,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose UI primitives",
             "description": "Compose UI primitives. This library contains the primitives that form the Compose UI Toolkit, such as drawing, measurement and layout.",
             "developers": [
@@ -2623,7 +2637,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-geometry",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose Geometry",
             "description": "Compose classes related to dimensions without units",
             "developers": [
@@ -2637,7 +2651,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-graphics",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose Graphics",
             "description": "Compose graphics",
             "developers": [
@@ -2651,7 +2665,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-text",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose UI Text",
             "description": "Compose Text primitives and utilities",
             "developers": [
@@ -2665,7 +2679,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-unit",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose Unit",
             "description": "Compose classes for simple units",
             "developers": [
@@ -2679,7 +2693,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.ui:ui-util",
-            "artifactVersion": "1.9.0-beta03",
+            "artifactVersion": "1.9.0-alpha03",
             "name": "Compose Util",
             "description": "Internal Compose utilities used by other modules",
             "developers": [

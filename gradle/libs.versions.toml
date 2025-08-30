@@ -3,7 +3,7 @@ tasksApp-name = "1.4.3"
 compileSdk = "36"
 minSdk = "24"
 targetSdk = "36"
-agp = "8.11.1"
+agp = "8.12.2"
 kotlin = "2.2.20-RC"
 ksp = "2.2.20-RC-2.0.2"
 coroutines = "1.10.2"
@@ -14,8 +14,8 @@ compose-plugin = "1.8.2"
 compose = "1.9.0"
 compose-hot-reload-plugin = "1.0.0-alpha11"
 compose-m3-adaptive = "1.1.2"
-compose-lifecycle = "2.9.2"
-compose-navigation = "2.9.0-beta05"
+compose-lifecycle = "2.9.3"
+compose-navigation = "2.9.0-rc01"
 room = "2.7.2"
 sqlite = "2.5.2"
 koin = "4.1.0"
@@ -83,7 +83,7 @@ coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "34.1.0" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "34.2.0" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version = "21.4.0" }
