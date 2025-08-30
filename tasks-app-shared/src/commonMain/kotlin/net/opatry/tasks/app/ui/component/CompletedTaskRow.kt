@@ -41,7 +41,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.DayOfWeekNames
@@ -64,6 +63,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
+import kotlin.time.Clock
 
 @VisibleForTesting
 object CompletedTaskRowTestTag {
@@ -84,7 +84,7 @@ private fun LocalDate.toLabel(): String {
             chars(", ")
             monthName(MonthNames.ENGLISH_ABBREVIATED) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
         }.format(this)
     } else {
         LocalDate.Format {
@@ -92,7 +92,7 @@ private fun LocalDate.toLabel(): String {
             //  byUnicodePattern("MMMM' 'dd', 'yyyy")
             monthName(MonthNames.ENGLISH_FULL) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
             chars(", ")
             year()
         }.format(this)

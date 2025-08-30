@@ -22,7 +22,7 @@
 
 package net.opatry.tasks.data.model
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 
 data class TaskDataModel(

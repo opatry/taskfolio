@@ -35,7 +35,6 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextInputSelection
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.text.TextRange
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
@@ -63,6 +62,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 
 @OptIn(ExperimentalTestApi::class, ExperimentalMaterial3Api::class)
 class TaskEditorBottomSheetTest {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -29,10 +29,10 @@ import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import kotlinx.datetime.Instant
 import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.entity.UserEntity
+import kotlin.time.Instant
 
 
 object Converters {

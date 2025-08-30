@@ -22,8 +22,6 @@
 
 package net.opatry.tasks.presentation.model
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -38,6 +36,8 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 private fun buildMoments(dateStr: String = "2024-10-16"): Pair<LocalDate, Instant> {
     val date = LocalDate.parse(dateStr)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Olivier Patry
+ * Copyright (c) 2025 Olivier Patry
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -23,10 +23,10 @@
 package net.opatry.google.tasks.model
 
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import net.opatry.google.tasks.util.loadJsonAsObject
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Instant
 
 class TaskListModelTest {
     @Test

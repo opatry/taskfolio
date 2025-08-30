@@ -51,7 +51,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -93,6 +92,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import kotlin.math.abs
+import kotlin.time.Clock
 
 @VisibleForTesting
 object RemainingTaskRowTestTag {
@@ -143,7 +143,7 @@ internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (th
             chars(", ")
             monthName(MonthNames.ENGLISH_ABBREVIATED) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
         }.format(date)
 
         else -> LocalDate.Format {
@@ -151,7 +151,7 @@ internal fun DateRange.toLabel(sectionLabel: Boolean = false): String = when (th
             //  byUnicodePattern("MMMM' 'dd', 'yyyy")
             monthName(MonthNames.ENGLISH_FULL) // TODO translation
             char(' ')
-            dayOfMonth(Padding.NONE)
+            day(Padding.NONE)
             chars(", ")
             year()
         }.format(date)

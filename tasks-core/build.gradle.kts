@@ -36,6 +36,10 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
+    sourceSets.all {
+        languageSettings.optIn("kotlin.time.ExperimentalTime")
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)

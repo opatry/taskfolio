@@ -22,8 +22,6 @@
 
 package net.opatry.tasks.app.presentation.model
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
@@ -31,7 +29,8 @@ import kotlinx.datetime.toLocalDateTime
 import net.opatry.tasks.DoneTaskPosition
 import net.opatry.tasks.TaskPosition
 import net.opatry.tasks.TodoTaskPosition
-import kotlin.jvm.JvmInline
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 sealed class DateRange {
     open val date: LocalDate? = null

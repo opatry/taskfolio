@@ -24,14 +24,12 @@ package net.opatry.tasks.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Instant
 import net.opatry.google.tasks.TaskListsApi
 import net.opatry.google.tasks.TasksApi
 import net.opatry.google.tasks.listAll
@@ -43,6 +41,7 @@ import net.opatry.tasks.data.entity.TaskEntity
 import net.opatry.tasks.data.entity.TaskListEntity
 import net.opatry.tasks.data.model.TaskDataModel
 import net.opatry.tasks.data.model.TaskListDataModel
+import kotlin.time.Instant
 
 enum class TaskListSorting {
     Manual,

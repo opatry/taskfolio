@@ -28,9 +28,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -68,6 +66,8 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 private val Today = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
 private val LastWeek = Today - DatePeriod(days = 7)
@@ -77,7 +77,7 @@ val ISO8601Formatter = LocalDate.Format {
     char('-')
     monthNumber(Padding.ZERO)
     char('-')
-    dayOfMonth(Padding.ZERO)
+    day(Padding.ZERO)
 }
 
 private fun buildMoments(dateStr: String = LastWeek.format(ISO8601Formatter)): Pair<LocalDate, Instant> {
