@@ -431,7 +431,7 @@
         },
         {
             "uniqueId": "io.insert-koin:koin-core",
-            "artifactVersion": "4.1.0",
+            "artifactVersion": "4.1.1",
             "name": "Koin",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "developers": [
@@ -829,7 +829,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel",
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle ViewModel",
             "description": "Android Lifecycle ViewModel",
             "developers": [
@@ -843,7 +843,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose",
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle ViewModel Compose",
             "description": "Compose integration with Lifecycle ViewModel",
             "developers": [
@@ -857,7 +857,7 @@
         },
         {
             "uniqueId": "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate",
-            "artifactVersion": "2.9.0-beta01",
+            "artifactVersion": "2.9.3",
             "name": "Lifecycle ViewModel with SavedState",
             "description": "Android Lifecycle ViewModel",
             "developers": [
@@ -983,7 +983,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.annotation-internal:annotation",
-            "artifactVersion": "1.8.0",
+            "artifactVersion": "1.10.0-alpha01",
             "name": "Annotation",
             "description": "Provides source annotations for tooling and readability.",
             "developers": [

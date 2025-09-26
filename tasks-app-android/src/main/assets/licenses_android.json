@@ -884,7 +884,7 @@
         },
         {
             "uniqueId": "androidx.fragment:fragment",
-            "artifactVersion": "1.8.8",
+            "artifactVersion": "1.8.9",
             "name": "fragment",
             "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
             "developers": [
@@ -901,7 +901,7 @@
         },
         {
             "uniqueId": "androidx.fragment:fragment-ktx",
-            "artifactVersion": "1.8.8",
+            "artifactVersion": "1.8.9",
             "name": "Fragment Kotlin Extensions",
             "description": "Kotlin extensions for 'fragment' artifact",
             "developers": [
@@ -2026,7 +2026,7 @@
         },
         {
             "uniqueId": "io.insert-koin:koin-android",
-            "artifactVersion": "4.1.0",
+            "artifactVersion": "4.1.1",
             "name": "Koin",
             "description": "KOIN - Kotlin simple Dependency Injection Framework",
             "developers": [
