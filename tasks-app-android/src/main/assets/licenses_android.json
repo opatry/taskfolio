@@ -70,7 +70,7 @@
         },
         {
             "uniqueId": "androidx.annotation:annotation-experimental",
-            "artifactVersion": "1.4.1",
+            "artifactVersion": "1.5.0",
             "name": "Experimental annotation",
             "description": "Java annotation for use on unstable Android API surfaces. When used in conjunction with the Experimental annotation lint checks, this annotation provides functional parity with Kotlin's Experimental annotation.",
             "developers": [
@@ -1221,7 +1221,7 @@
         },
         {
             "uniqueId": "androidx.room:room-common",
-            "artifactVersion": "2.7.2",
+            "artifactVersion": "2.8.2",
             "name": "Room-Common",
             "description": "Android Room-Common",
             "developers": [
@@ -1238,7 +1238,7 @@
         },
         {
             "uniqueId": "androidx.room:room-runtime",
-            "artifactVersion": "2.7.2",
+            "artifactVersion": "2.8.2",
             "name": "Room-Runtime",
             "description": "Android Room-Runtime",
             "developers": [
@@ -1306,7 +1306,7 @@
         },
         {
             "uniqueId": "androidx.sqlite:sqlite",
-            "artifactVersion": "2.5.2",
+            "artifactVersion": "2.6.1",
             "name": "SQLite",
             "description": "SQLite API",
             "developers": [
@@ -1323,7 +1323,7 @@
         },
         {
             "uniqueId": "androidx.sqlite:sqlite-bundled",
-            "artifactVersion": "2.5.2",
+            "artifactVersion": "2.6.1",
             "name": "SQLite Bundled Integration",
             "description": "The implementation of SQLite library using the bundled SQLite.",
             "developers": [
@@ -1340,7 +1340,7 @@
         },
         {
             "uniqueId": "androidx.sqlite:sqlite-framework",
-            "artifactVersion": "2.5.2",
+            "artifactVersion": "2.6.1",
             "name": "SQLite Framework Integration",
             "description": "The implementation of SQLite library using the framework code.",
             "developers": [

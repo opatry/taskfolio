@@ -135,7 +135,7 @@
         },
         {
             "uniqueId": "androidx.room:room-common",
-            "artifactVersion": "2.7.2",
+            "artifactVersion": "2.8.2",
             "name": "Room-Common",
             "description": "Android Room-Common",
             "developers": [
@@ -152,7 +152,7 @@
         },
         {
             "uniqueId": "androidx.room:room-runtime",
-            "artifactVersion": "2.7.2",
+            "artifactVersion": "2.8.2",
             "name": "Room-Runtime",
             "description": "Android Room-Runtime",
             "developers": [
@@ -186,7 +186,7 @@
         },
         {
             "uniqueId": "androidx.sqlite:sqlite",
-            "artifactVersion": "2.5.2",
+            "artifactVersion": "2.6.1",
             "name": "SQLite",
             "description": "SQLite API",
             "developers": [
@@ -203,7 +203,7 @@
         },
         {
             "uniqueId": "androidx.sqlite:sqlite-bundled",
-            "artifactVersion": "2.5.2",
+            "artifactVersion": "2.6.1",
             "name": "SQLite Bundled Integration",
             "description": "The implementation of SQLite library using the bundled SQLite.",
             "developers": [
