@@ -21,9 +21,9 @@ sqlite = "2.6.1"
 koin = "4.1.1"
 coil = "3.3.0"
 about-libraries = "12.2.4"
-mockito = "5.19.0"
-mockito-kotlin = "6.0.0"
-kover = "0.9.1"
+mockito = "5.20.0"
+mockito-kotlin = "6.1.0"
+kover = "0.9.3"
 androidx-test-runner = "1.7.0"
 
 [libraries]
