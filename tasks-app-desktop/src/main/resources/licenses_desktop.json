@@ -1279,7 +1279,7 @@
         },
         {
             "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib",
-            "artifactVersion": "2.2.20-RC",
+            "artifactVersion": "2.2.20",
             "name": "Kotlin Stdlib",
             "description": "Kotlin Standard Library",
             "developers": [
