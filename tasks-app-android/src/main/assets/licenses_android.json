@@ -1756,7 +1756,7 @@
         },
         {
             "uniqueId": "com.google.firebase:firebase-common",
-            "artifactVersion": "22.0.0",
+            "artifactVersion": "22.0.1",
             "name": "com.google.firebase:firebase-common",
             "description": "",
             "developers": [
@@ -1792,7 +1792,7 @@
         },
         {
             "uniqueId": "com.google.firebase:firebase-crashlytics",
-            "artifactVersion": "20.0.1",
+            "artifactVersion": "20.0.3",
             "name": "com.google.firebase:firebase-crashlytics",
             "description": "",
             "developers": [
@@ -1852,7 +1852,7 @@
         },
         {
             "uniqueId": "com.google.firebase:firebase-installations",
-            "artifactVersion": "19.0.0",
+            "artifactVersion": "19.0.1",
             "name": "com.google.firebase:firebase-installations",
             "description": "",
             "developers": [
@@ -1888,7 +1888,7 @@
         },
         {
             "uniqueId": "com.google.firebase:firebase-sessions",
-            "artifactVersion": "3.0.1",
+            "artifactVersion": "3.0.3",
             "name": "com.google.firebase:firebase-sessions",
             "description": "",
             "developers": [
