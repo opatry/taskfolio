@@ -1080,8 +1080,64 @@
             ]
         },
         {
+            "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-annotations",
+            "artifactVersion": "1.0.0-rc02",
+            "name": "hot-reload-annotations",
+            "description": "Compose Hot Reload implementation",
+            "developers": [
+                {
+                    "name": "JetBrains Team"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-core",
+            "artifactVersion": "1.0.0-rc02",
+            "name": "hot-reload-core",
+            "description": "Compose Hot Reload implementation",
+            "developers": [
+                {
+                    "name": "JetBrains Team"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-devtools-api",
+            "artifactVersion": "1.0.0-rc02",
+            "name": "hot-reload-devtools-api",
+            "description": "Compose Hot Reload implementation",
+            "developers": [
+                {
+                    "name": "JetBrains Team"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-orchestration",
+            "artifactVersion": "1.0.0-rc02",
+            "name": "hot-reload-orchestration",
+            "description": "Compose Hot Reload implementation",
+            "developers": [
+                {
+                    "name": "JetBrains Team"
+                }
+            ],
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-runtime-api",
-            "artifactVersion": "1.0.0-alpha11",
+            "artifactVersion": "1.0.0-rc02",
             "name": "hot-reload-runtime-api",
             "description": "Compose Hot Reload implementation",
             "developers": [
@@ -1095,7 +1151,7 @@
         },
         {
             "uniqueId": "org.jetbrains.compose.hot-reload:hot-reload-runtime-jvm",
-            "artifactVersion": "1.0.0-alpha11",
+            "artifactVersion": "1.0.0-rc02",
             "name": "hot-reload-runtime-jvm",
             "description": "Compose Hot Reload implementation",
             "developers": [

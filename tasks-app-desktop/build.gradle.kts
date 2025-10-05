@@ -82,10 +82,6 @@ composeCompiler {
     featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
 }
 
-tasks.withType<ComposeHotRun>().configureEach {
-    mainClass.set("MainAppKt")
-}
-
 compose.desktop {
     application {
         mainClass = "MainAppKt"
