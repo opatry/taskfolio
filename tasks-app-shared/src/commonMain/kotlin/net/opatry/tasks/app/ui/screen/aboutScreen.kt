@@ -38,6 +38,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -173,7 +174,7 @@ private fun AppIcon() {
     Box(
         Modifier
             .padding(8.dp)
-            .fillMaxHeight()
+            .heightIn(min = 24.dp, max = 48.dp)
             .aspectRatio(1f)
             .clip(MaterialTheme.shapes.medium)
             .background(Color(0xFF023232)),
