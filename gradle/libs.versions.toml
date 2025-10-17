@@ -25,6 +25,7 @@ mockito = "5.20.0"
 mockito-kotlin = "6.1.0"
 kover = "0.9.3"
 androidx-test-runner = "1.7.0"
+bignum = "0.3.10"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -100,6 +101,8 @@ mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "
 
 androidx-ui-tooling-preview-android = { module = "androidx.compose.ui:ui-tooling-preview-android", version.ref = "compose" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+
+bignum = { module = "com.ionspin.kotlin:bignum", version.ref = "bignum" }
 
 [bundles]
 ktor-server = ["ktor-server-core", "ktor-server-cio"]

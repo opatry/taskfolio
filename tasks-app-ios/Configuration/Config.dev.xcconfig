@@ -1,0 +1,7 @@
+#include? "Versions.xcconfig"
+
+APP_DISPLAY_NAME=T4skf0l10 d3v
+APP_ID=net.opatry.tasks.app.dev
+IOS_TARGET=simulator
+GCP_CLIENT_ID=191682949161-ockace96gikfsif7hoa9h80p2r096iu4.apps.googleusercontent.com
+GCP_REVERSED_CLIENT_ID=com.googleusercontent.apps.191682949161-ockace96gikfsif7hoa9h80p2r096iu4

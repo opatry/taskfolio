@@ -28,6 +28,8 @@ plugins {
 kotlin {
     jvm()
 
+    // Note: iOS targets are conditionally added dynamically in the root build.gradle.kts
+
     jvmToolchain(17)
 
     sourceSets.all {

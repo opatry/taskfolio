@@ -60,6 +60,7 @@ object Converters {
         AutoMigration(from = 1, to = 2), // add user table
         AutoMigration(from = 2, to = 3), // add sorting column in task_list table
     ],
+    exportSchema = true,
 )
 @ConstructedBy(TasksAppDatabaseConstructor::class)
 @TypeConverters(Converters::class)
