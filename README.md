@@ -166,7 +166,7 @@ The `decrypt_secrets.sh` will take it into account.
 <summary>See details…</summary>
 
 It is possible to use [Compose hot reload](https://github.com/JetBrains/compose-hot-reload) on
-desktop app by running the `:tasks-app-desktop:runHot` Gradle task.
+desktop app by running the `:tasks-app-desktop:hotRun` Gradle task.
 
 You'll see a Compose icon near the top left corner of the window.
 

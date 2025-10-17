@@ -82,10 +82,6 @@ composeCompiler {
     featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
 }
 
-tasks.withType<ComposeHotRun>().configureEach {
-    mainClass.set("MainAppKt")
-}
-
 compose.desktop {
     application {
         mainClass = "MainAppKt"
@@ -169,9 +165,6 @@ aboutLibraries {
         fetchRemoteFunding = false
         // no need of BOM
         includePlatform = false
-    }
-    android {
-        registerAndroidTasks = false
     }
     export {
         outputPath = file("${projectDir}/src/main/resources/licenses_desktop.json")

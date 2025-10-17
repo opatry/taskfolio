@@ -183,9 +183,6 @@ aboutLibraries {
         // no need of BOM
         includePlatform = false
     }
-    android {
-        registerAndroidTasks = false
-    }
     export {
         outputPath = file("${projectDir}/src/main/assets/licenses_android.json")
         excludeFields.addAll("metadata", "funding", "scm", "associated", "website", "Developer.organisationUrl", "Organization.url")
