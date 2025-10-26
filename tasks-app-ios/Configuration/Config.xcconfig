@@ -1,0 +1,7 @@
+#include? "Versions.xcconfig"
+
+APP_DISPLAY_NAME=Taskfolio
+APP_ID=net.opatry.tasks.app
+IOS_TARGET=all
+GCP_CLIENT_ID=191682949161-79vl4dcpf9lppj5cj5k79tpqhv5ab10u.apps.googleusercontent.com
+GCP_REVERSED_CLIENT_ID=com.googleusercontent.apps.191682949161-79vl4dcpf9lppj5cj5k79tpqhv5ab10u

@@ -25,11 +25,9 @@ package net.opatry.google.auth
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.opatry.google.auth.GoogleAuthenticator.OAuthToken.TokenType.Bearer
-import kotlin.jvm.JvmInline
 
 interface GoogleAuthenticator {
-    @JvmInline
-    value class Scope(val value: String) {
+    data class Scope(val value: String) {
         companion object {
             val Profile = Scope("https://www.googleapis.com/auth/userinfo.profile")
             val Email = Scope("https://www.googleapis.com/auth/userinfo.email")
